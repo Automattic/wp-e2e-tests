@@ -1,0 +1,44 @@
+{
+  "name": "calypso-e2e-tests",
+  "version": "0.0.1",
+  "description": "Automated end to end acceptance tests for the Calypso project",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Automattic/calypso-e2e-tests.git"
+  },
+  "main": "greetings.js",
+  "defaultTestArgs": "-g -s $BROWSERSIZE",
+  "scripts": {
+    "test": "./run.sh ${TESTARGS:-$npm_package_defaultTestArgs}"
+  },
+  "dependencies": {
+    "asana-phrase": "0.0.8",
+    "babel-runtime": "^6.3.19",
+    "chai": "^3.4.1",
+    "config": "1.16.0",
+    "esformatter-braces": "^1.2.1",
+    "esformatter-collapse-objects-a8c": "^0.1.0",
+    "esformatter-dot-notation": "^1.3.1",
+    "esformatter-quotes": "^1.0.3",
+    "esformatter-semicolons": "^1.1.2",
+    "esformatter-special-bangs": "^1.0.1",
+    "eyes.selenium": "0.0.41",
+    "fs-extra": "0.22.1",
+	"mailosaur": "^3.0.0",
+    "node-slack-upload": "1.0.4",
+    "random-qoutes-generator": "0.0.1",
+    "selenium-webdriver": "2.47.0",
+    "slack-notify": "0.1.4",
+    "junit-viewer": "4.9.6"
+  },
+  "devDependencies": {
+    "babel-eslint": "^5.0.0-beta6",
+    "babel-plugin-add-module-exports": "^0.1.2",
+    "babel-plugin-syntax-export-extensions": "^6.3.13",
+    "babel-plugin-transform-runtime": "^6.3.13",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-stage-1": "^6.3.13",
+    "babel-register": "^6.3.13"
+  }
+}

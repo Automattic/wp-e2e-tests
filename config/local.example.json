@@ -1,0 +1,51 @@
+/**
+	Example local configuration for running the E2E tests.
+
+	<env> is the NODE_ENV environmental variable you have set.
+
+	In order to set up your own local config, follow these steps:
+
+	* Copy this file to a file named `local-<env>.json` (e.g `local-bisko.json`).
+
+	* Update the necessary keys. The configuration here overrides any keys set in `default.json` and `<env>.json`.
+
+	* Make sure to change all the passwords to something secure.
+
+	* Remove this comment :)
+*/
+{
+	"calypsoBaseURL": "https://wpcalypso.wordpress.com",
+	"testSiteForInvites": "example.wordpress.com",
+	"privateSiteForInvites": "example.wordpress.com",
+	"passwordForNewTestSignUps": "password",
+	"storeSandboxCookieValue": "",
+	"publicizeTwitterAccount": "",
+	"slackHook": "",
+	"mailosaurAPIKey": "",
+	"inviteInboxId": "",
+	"signupInboxId": "",
+	"domainsInboxId": "",
+	"eyesKey": "",
+	"testAccounts": {
+		"defaultUser": [
+			"username",
+			"password"
+		],
+		"multiSiteUser": [
+			"username",
+			"password"
+		],
+		"jetpackUser": [
+			"username",
+			"password"
+		],
+		"visualUser": [
+			"username",
+			"password"
+		],
+		"privateSiteUser": [
+			"username",
+			"password"
+		]
+	}
+}

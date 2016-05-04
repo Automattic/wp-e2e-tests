@@ -1,0 +1,41 @@
+machine:
+  node:
+    version: 5.10.1
+
+general:
+  artifacts:
+    - "screenshots"
+
+checkout:
+  post:
+    - git submodule sync
+    - git submodule update --init
+
+dependencies:
+  pre:
+    - npm pack lib/reporter
+    - npm install ./spec-xunit-slack-reporter-0.0.1.tgz
+
+test:
+  override:
+    - >
+      export TESTARGS="-R -g -s desktop"
+
+      if [ "$RUN_SPECIFIED" == "true" ]; then
+        TESTARGS=$RUN_ARGS
+      elif [ "$CIRCLE_BRANCH" == "master" ]; then
+        TESTARGS="-R -g"
+        if [ "$RUN_VISDIFF" == "true" ] && [ "$DEPLOY_USER" != "" ]; then
+          TESTARGS+=" -v critical"
+        fi
+      fi
+
+      npm test
+  post:
+    - node_modules/.bin/junit-viewer --results=$CIRCLE_TEST_REPORTS --save=$CIRCLE_TEST_REPORTS/consolidated_results.html
+
+experimental:
+  notify:
+    branches:
+      ignore:
+        - /^try.*/

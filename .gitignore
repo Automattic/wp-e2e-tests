@@ -1,0 +1,11 @@
+screenshots/
+node_modules/
+.idea/
+# image-uploads/
+screenshots-i18n/
+.*.swp
+spec-xunit-slack-reporter-0.0.1.tgz
+xunit.xml
+
+# Ignore all local config files, but keep the example there.
+config/local-*

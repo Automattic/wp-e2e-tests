@@ -1,0 +1,6 @@
+{
+  "calypsoBaseURL": "http://calypso.localhost:3000",
+  "explicitWaitMS": 10000,
+  "mochaTimeoutMS": 120000,
+  "browser": "chrome"
+}
