@@ -25,6 +25,7 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const signupInboxId = config.get( 'signupInboxId' );
+const emailPrefix = config.has( 'emailPrefix' ) ? config.get( 'emailPrefix' ) : '';
 
 var driver;
 
@@ -40,7 +41,7 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 		this.bailSuite( true );
 
 		const blogName = 'e2e' + new Date().getTime().toString();
-		const emailName = new Date().getTime().toString();
+		const emailName = emailPrefix + new Date().getTime().toString();
 		const expectedBlogAddress = blogName + '.wordpress.com';
 
 		const emailAddress = dataHelper.getEmailAddress( emailName, signupInboxId );
@@ -176,7 +177,7 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 		this.bailSuite( true );
 
 		const blogName = 'e2e' + new Date().getTime().toString();
-		const emailName = new Date().getTime().toString();
+		const emailName = emailPrefix + new Date().getTime().toString();
 		const expectedDomainName = blogName + '.com';
 		const emailAddress = dataHelper.getEmailAddress( emailName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
@@ -319,7 +320,7 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 		this.bailSuite( true );
 
 		const blogName = 'e2e' + new Date().getTime().toString();
-		const emailName = new Date().getTime().toString();
+		const emailName = emailPrefix + new Date().getTime().toString();
 		const expectedBlogAddress = `${blogName}.wordpress.com`;
 		const emailAddress = dataHelper.getEmailAddress( emailName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );

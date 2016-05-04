@@ -30,6 +30,7 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const calypsoBaseUrl = config.get( 'calypsoBaseURL' );
+const emailPrefix = config.has( 'emailPrefix' ) ? config.get( 'emailPrefix' ) : '';
 
 var driver;
 
@@ -44,7 +45,7 @@ test.describe( 'Invites: (' + screenSize + ')', function() {
 	test.describe( 'Inviting New User as an Editor:', function() {
 		this.bailSuite( true );
 		const inviteInboxId = config.get( 'inviteInboxId' );
-		const newUserName = 'e2eeditor' + new Date().getTime().toString();
+		const newUserName = emailPrefix + 'e2eeditor' + new Date().getTime().toString();
 		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		let acceptInviteURL = '';
@@ -207,8 +208,8 @@ test.describe( 'Invites: (' + screenSize + ')', function() {
 	test.describe( 'Inviting New User as a Follower:', function() {
 		this.bailSuite( true );
 		const inviteInboxId = config.get( 'inviteInboxId' );
-		const newUserName = 'e2efollower' + new Date().getTime().toString();
-		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId);
+		const newUserName = emailPrefix + 'e2efollower' + new Date().getTime().toString();
+		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		let acceptInviteURL = '';
 
@@ -336,8 +337,8 @@ test.describe( 'Invites: (' + screenSize + ')', function() {
 		this.bailSuite( true );
 
 		const inviteInboxId = config.get( 'inviteInboxId' );
-		const newUserName = 'e2eviewer' + new Date().getTime().toString();
-		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId);
+		const newUserName = emailPrefix + 'e2eviewer' + new Date().getTime().toString();
+		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const siteName = config.get( 'privateSiteForInvites' );
 		const siteUrl = `https://${siteName}/`;
@@ -500,8 +501,8 @@ test.describe( 'Invites: (' + screenSize + ')', function() {
 		this.bailSuite( true );
 
 		const inviteInboxId = config.get( 'inviteInboxId' );
-		const newUserName = 'e2econtributor' + new Date().getTime().toString();
-		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId);
+		const newUserName = emailPrefix + 'e2econtributor' + new Date().getTime().toString();
+		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const reviewPostTitle = dataHelper.randomPhrase();
 		const publishPostTitle = dataHelper.randomPhrase();
