@@ -2,6 +2,8 @@
 
 Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Automattic/wp-calypso) client and WordPress.com in general.
 
+[![Circle CI](https://circleci.com/gh/Automattic/wp-e2e-tests/tree/master.svg?style=svg)](https://circleci.com/gh/Automattic/wp-e2e-tests/tree/master)
+
 ## Pre-requisites
 
 #### Make sure you have node-js & chromedriver installed, available via homebrew
