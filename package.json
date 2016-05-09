@@ -33,6 +33,7 @@
     "junit-viewer": "4.9.6"
   },
   "devDependencies": {
+    "eslint": "<2.3.0",
     "babel-eslint": "^5.0.0-beta6",
     "babel-plugin-add-module-exports": "^0.1.2",
     "babel-plugin-syntax-export-extensions": "^6.3.13",
