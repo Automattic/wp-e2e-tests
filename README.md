@@ -6,11 +6,25 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
 
 ## Pre-requisites
 
-#### Make sure you have node-js & chromedriver installed, available via homebrew
 
-`npm install`
-`npm pack lib/reporter`
-`npm install ./spec-xunit-slack-reporter-0.0.1.tgz`
+### Install NodeJS and ChromeDriver
+
+```
+brew install node-js chromedriver
+```
+
+#### Setup Mocha
+```
+git submodule init
+git submodule update
+```
+
+#### Install dependencies
+```
+npm install
+npm pack lib/reporter
+npm install ./spec-xunit-slack-reporter-0.0.1.tgz
+```
 
 #### To run the specs (in default browser size)
 
@@ -18,7 +32,7 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
 
 #### To run an individual spec
 
-`./node_modules/mocha/bin/mocha specs/wp-log-in-out-spec.js lib/after.js`
+`./mocha/bin/mocha specs/wp-log-in-out-spec.js lib/after.js`
 
 Note: you can also change the spec _temporarily_ the use the <code>.only</code> syntax so it is the only spec that runs (making sure this isn't committed)
 
