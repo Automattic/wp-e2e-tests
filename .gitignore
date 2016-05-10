@@ -1,4 +1,5 @@
 screenshots/
+logs/
 node_modules/
 .idea/
 # image-uploads/

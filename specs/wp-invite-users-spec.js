@@ -3,6 +3,7 @@ import test from 'selenium-webdriver/testing';
 
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
+import * as mediaHelper from '../lib/media-helper.js';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
@@ -143,6 +144,12 @@ test.describe( 'Invites: (' + screenSize + ')', function() {
 								this.noticesComponent = new NoticesComponent( driver );
 								this.noticesComponent.inviteMessageTitle().then( ( invitesMessageTitleDisplayed ) => {
 									assert.equal( true, invitesMessageTitleDisplayed.includes( 'Editor' ), `The invite message '${invitesMessageTitleDisplayed}' does not include 'Editor'` );
+								} );
+							} );
+
+							test.it( 'Capture browser logs', function() {
+								driver.manage().logs().get( 'browser' ).then( function( logs ) {
+									mediaHelper.writeTextLogFile( JSON.stringify( logs ), 'editor' );
 								} );
 							} );
 
@@ -302,6 +309,12 @@ test.describe( 'Invites: (' + screenSize + ')', function() {
 								this.readerPage = new ReaderPage( driver );
 							} );
 
+							test.it( 'Capture browser logs', function() {
+								driver.manage().logs().get( 'browser' ).then( function( logs ) {
+									mediaHelper.writeTextLogFile( JSON.stringify( logs ), 'follower' );
+								} );
+							} );
+
 							test.describe( 'As the original user, can see new user added to site', function() {
 								test.before( 'Log in as original user', function() {
 									driverManager.ensureNotLoggedIn( driver );
@@ -440,6 +453,12 @@ test.describe( 'Invites: (' + screenSize + ')', function() {
 
 							test.it( 'Can see the reader stream', function() {
 								this.readerPage = new ReaderPage( driver );
+							} );
+
+							test.it( 'Capture browser logs', function() {
+								driver.manage().logs().get( 'browser' ).then( function( logs ) {
+									mediaHelper.writeTextLogFile( JSON.stringify( logs ), 'viewer-private' );
+								} );
 							} );
 
 							test.it( 'Can visit and see the site', function() {
@@ -595,6 +614,12 @@ test.describe( 'Invites: (' + screenSize + ')', function() {
 								this.noticesComponent = new NoticesComponent( driver );
 								this.noticesComponent.inviteMessageTitle().then( ( invitesMessageTitleDisplayed ) => {
 									assert.equal( true, invitesMessageTitleDisplayed.includes( 'Contributor' ), `The invite message '${invitesMessageTitleDisplayed}' does not include 'Contributor'` );
+								} );
+							} );
+
+							test.it( 'Capture browser logs', function() {
+								driver.manage().logs().get( 'browser' ).then( function( logs ) {
+									mediaHelper.writeTextLogFile( JSON.stringify( logs ), 'contributor' );
 								} );
 							} );
 

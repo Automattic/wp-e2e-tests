@@ -5,6 +5,7 @@ machine:
 general:
   artifacts:
     - "screenshots"
+    - "logs"
 
 checkout:
   post:
