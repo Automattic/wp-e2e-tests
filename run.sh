@@ -1,5 +1,5 @@
 #!/bin/bash
-MOCHA=./mocha/bin/mocha
+MOCHA=./node_modules/mocha/bin/mocha
 REPORTER=""
 PARALLEL=0
 JOBS=0
