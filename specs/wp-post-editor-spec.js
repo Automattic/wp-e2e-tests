@@ -32,11 +32,11 @@ test.before( 'Start Browser', function() {
 } );
 
 test.describe( 'Editor: Posts (' + screenSize + ')', function() {
+	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Public Posts:', function() {
-		this.bailSuite( true );
-		var fileDetails;
+		let fileDetails;
 
 		test.before( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
@@ -100,127 +100,127 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 						} );
 					} );
 
-					test.after( 'Close categories and tags', function() {
+					test.it( 'Close categories and tags', function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 						postEditorSidebarComponent.closeCategoriesAndTags();
 					} );
-				} );
 
-				test.describe( 'Publicize Options', function() {
-					test.before( 'Expand sharing section', function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.expandSharingSection();
-					} );
-
-					test.it( 'Can see the publicise to twitter account', function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.publicizeToTwitterAccountDisplayed().then( function( accountDisplayed ) {
-							assert.equal( accountDisplayed, publicizeTwitterAccount, 'Could not see see the publicize to twitter account ' + publicizeTwitterAccount + ' in the editor' );
+					test.describe( 'Publicize Options', function() {
+						test.before( 'Expand sharing section', function() {
+							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+							postEditorSidebarComponent.expandSharingSection();
 						} );
-					} );
 
-					test.it( 'Can see the default publicise message', function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.publicizeMessagePlaceholder().then( function( placeholderDisplayed ) {
-							assert.equal( placeholderDisplayed, blogPostTitle, 'The placeholder for publicize is not equal to the blog post title. Placeholder: \'' + placeholderDisplayed + '\', Title: \'' + blogPostTitle + '\'' );
+						test.it( 'Can see the publicise to twitter account', function() {
+							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+							postEditorSidebarComponent.publicizeToTwitterAccountDisplayed().then( function( accountDisplayed ) {
+								assert.equal( accountDisplayed, publicizeTwitterAccount, 'Could not see see the publicize to twitter account ' + publicizeTwitterAccount + ' in the editor' );
+							} );
 						} );
-					} );
 
-					test.it( 'Can set a custom publicise message', function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.setPublicizeMessage( publicizeMessage );
-					} );
-
-					test.after( 'Close sharing section', function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.closeSharingSection();
-					} );
-				} );
-
-				test.describe( 'Preview', function() {
-					test.before( 'Can launch post preview', function() {
-						this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						this.postEditorSidebarComponent.ensureSaved();
-						this.postEditorSidebarComponent.launchPreview();
-						this.postPreviewComponent = new PostPreviewComponent( driver );
-					} );
-
-					test.it( 'Can see correct post title in preview', function() {
-						this.postPreviewComponent.postTitle().then( function( postTitle ) {
-							assert.equal( postTitle.toLowerCase(), blogPostTitle.toLowerCase(), 'The blog post preview title is not correct' );
+						test.it( 'Can see the default publicise message', function() {
+							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+							postEditorSidebarComponent.publicizeMessagePlaceholder().then( function( placeholderDisplayed ) {
+								assert.equal( placeholderDisplayed, blogPostTitle, 'The placeholder for publicize is not equal to the blog post title. Placeholder: \'' + placeholderDisplayed + '\', Title: \'' + blogPostTitle + '\'' );
+							} );
 						} );
-					} );
 
-					test.it( 'Can see correct post content in preview', function() {
-						this.postPreviewComponent.postContent().then( function( content ) {
-							assert.equal( content.indexOf( blogPostQuote ) > -1, true, 'The post preview content (' + content + ') does not include the expected content (' + blogPostQuote + ')' );
+						test.it( 'Can set a custom publicise message', function() {
+							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+							postEditorSidebarComponent.setPublicizeMessage( publicizeMessage );
 						} );
-					} );
 
-					test.it( 'Can see the post category in preview', function() {
-						this.postPreviewComponent.categoryDisplayed().then( function( categoryDisplayed ) {
-							assert.equal( categoryDisplayed.toUpperCase(), newCategoryName.toUpperCase(), 'The category: ' + newCategoryName + ' is not being displayed on the post' );
+						test.it( 'Close sharing section', function() {
+							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+							postEditorSidebarComponent.closeSharingSection();
 						} );
-					} );
 
-					test.it( 'Can see the post tag in preview', function() {
-						this.postPreviewComponent.tagDisplayed().then( function( tagDisplayed ) {
-							assert.equal( tagDisplayed.toUpperCase(), newTagName.toUpperCase(), 'The tag: ' + newTagName + ' is not being displayed on the post' );
-						} );
-					} );
+						test.describe( 'Preview', function() {
+							test.before( 'Can launch post preview', function() {
+								this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+								this.postEditorSidebarComponent.ensureSaved();
+								this.postEditorSidebarComponent.launchPreview();
+								this.postPreviewComponent = new PostPreviewComponent( driver );
+							} );
 
-					test.it( 'Can see the image in preview', function() {
-						this.postPreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
-							assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
-						} );
-					} );
+							test.it( 'Can see correct post title in preview', function() {
+								this.postPreviewComponent.postTitle().then( function( postTitle ) {
+									assert.equal( postTitle.toLowerCase(), blogPostTitle.toLowerCase(), 'The blog post preview title is not correct' );
+								} );
+							} );
 
-					test.after( 'Can close post preview', function() {
-						this.postPreviewComponent.close();
-					} );
-				} );
+							test.it( 'Can see correct post content in preview', function() {
+								this.postPreviewComponent.postContent().then( function( content ) {
+									assert.equal( content.indexOf( blogPostQuote ) > -1, true, 'The post preview content (' + content + ') does not include the expected content (' + blogPostQuote + ')' );
+								} );
+							} );
 
-				test.describe( 'Publish and View', function() {
-					test.before( 'Can publish and view content', function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.publishAndViewContent();
-						this.viewPostPage = new ViewPostPage( driver );
-					} );
+							test.it( 'Can see the post category in preview', function() {
+								this.postPreviewComponent.categoryDisplayed().then( function( categoryDisplayed ) {
+									assert.equal( categoryDisplayed.toUpperCase(), newCategoryName.toUpperCase(), 'The category: ' + newCategoryName + ' is not being displayed on the post' );
+								} );
+							} );
 
-					test.it( 'Can see correct post title', function() {
-						this.viewPostPage.postTitle().then( function( postTitle ) {
-							assert.equal( postTitle.toLowerCase(), blogPostTitle.toLowerCase(), 'The published blog post title is not correct' );
-						} );
-					} );
+							test.it( 'Can see the post tag in preview', function() {
+								this.postPreviewComponent.tagDisplayed().then( function( tagDisplayed ) {
+									assert.equal( tagDisplayed.toUpperCase(), newTagName.toUpperCase(), 'The tag: ' + newTagName + ' is not being displayed on the post' );
+								} );
+							} );
 
-					test.it( 'Can see correct post content', function() {
-						this.viewPostPage.postContent().then( function( content ) {
-							assert.equal( content.indexOf( blogPostQuote ) > -1, true, 'The post content (' + content + ') does not include the expected content (' + blogPostQuote + ')' );
-						} );
-					} );
+							test.it( 'Can see the image in preview', function() {
+								this.postPreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
+									assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
+								} );
+							} );
 
-					test.it( 'Can see correct post category', function() {
-						this.viewPostPage.categoryDisplayed().then( function( categoryDisplayed ) {
-							assert.equal( categoryDisplayed.toUpperCase(), newCategoryName.toUpperCase(), 'The category: ' + newCategoryName + ' is not being displayed on the post' );
-						} );
-					} );
+							test.it( 'Can close post preview', function() {
+								this.postPreviewComponent.close();
+							} );
 
-					test.it( 'Can see correct post tag', function() {
-						this.viewPostPage.tagDisplayed().then( function( tagDisplayed ) {
-							assert.equal( tagDisplayed.toUpperCase(), newTagName.toUpperCase(), 'The tag: ' + newTagName + ' is not being displayed on the post' );
-						} );
-					} );
+							test.describe( 'Publish and View', function() {
+								test.before( 'Can publish and view content', function() {
+									let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+									postEditorSidebarComponent.publishAndViewContent();
+									this.viewPostPage = new ViewPostPage( driver );
+								} );
 
-					test.it( 'Can see the image published', function() {
-						this.viewPostPage.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
-							assert.equal( imageDisplayed, true, 'Could not see the image in the published post' );
-						} );
-					} );
+								test.it( 'Can see correct post title', function() {
+									this.viewPostPage.postTitle().then( function( postTitle ) {
+										assert.equal( postTitle.toLowerCase(), blogPostTitle.toLowerCase(), 'The published blog post title is not correct' );
+									} );
+								} );
 
-					test.describe( 'Can see post publicized on twitter', function() {
-						test.it( 'Can see post message', function() {
-							let twitterFeedPage = new TwitterFeedPage( driver, publicizeTwitterAccount, true );
-							twitterFeedPage.checkLatestTweetsContain( publicizeMessage );
+								test.it( 'Can see correct post content', function() {
+									this.viewPostPage.postContent().then( function( content ) {
+										assert.equal( content.indexOf( blogPostQuote ) > -1, true, 'The post content (' + content + ') does not include the expected content (' + blogPostQuote + ')' );
+									} );
+								} );
+
+								test.it( 'Can see correct post category', function() {
+									this.viewPostPage.categoryDisplayed().then( function( categoryDisplayed ) {
+										assert.equal( categoryDisplayed.toUpperCase(), newCategoryName.toUpperCase(), 'The category: ' + newCategoryName + ' is not being displayed on the post' );
+									} );
+								} );
+
+								test.it( 'Can see correct post tag', function() {
+									this.viewPostPage.tagDisplayed().then( function( tagDisplayed ) {
+										assert.equal( tagDisplayed.toUpperCase(), newTagName.toUpperCase(), 'The tag: ' + newTagName + ' is not being displayed on the post' );
+									} );
+								} );
+
+								test.it( 'Can see the image published', function() {
+									this.viewPostPage.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
+										assert.equal( imageDisplayed, true, 'Could not see the image in the published post' );
+									} );
+								} );
+
+								test.describe( 'Can see post publicized on twitter', function() {
+									test.it( 'Can see post message', function() {
+										let twitterFeedPage = new TwitterFeedPage( driver, publicizeTwitterAccount, true );
+										twitterFeedPage.checkLatestTweetsContain( publicizeMessage );
+									} );
+								} );
+							} );
 						} );
 					} );
 				} );

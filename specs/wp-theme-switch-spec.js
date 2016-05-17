@@ -40,7 +40,7 @@ test.describe( 'Themes: (' + screenSize + ')', function() {
 				this.themesPage = new ThemesPage( driver );
 				this.themesPage.searchFor( 'twenty f' );
 				this.themesPage.waitForThemeStartingWith( 'twentyf' );
-				return this.themesPage.selectNewThemeStartingWith( 'twentyf' );
+				return this.themesPage.selectNewThemeStartingWith( 'Twenty F' );
 			} );
 
 			test.it( 'Can preview, customize and save theme', function() {
