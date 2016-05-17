@@ -38,8 +38,8 @@ test.describe( 'Themes: (' + screenSize + ')', function() {
 		test.describe( 'Can switch free themes', function() {
 			test.it( 'Can select a different free theme', function() {
 				this.themesPage = new ThemesPage( driver );
-				this.themesPage.searchFor( 'twenty f' );
-				this.themesPage.waitForThemeStartingWith( 'twentyf' );
+				this.themesPage.searchFor( 'Twenty F' );
+				this.themesPage.waitForThemeStartingWith( 'Twenty F' );
 				return this.themesPage.selectNewThemeStartingWith( 'Twenty F' );
 			} );
 
