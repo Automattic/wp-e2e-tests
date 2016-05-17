@@ -31,6 +31,7 @@ test.before( 'Start Browser', function() {
 } );
 
 test.describe( 'Managing Domains: (' + screenSize + ')', function() {
+	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Partially adding a domain to an existing site (Doesn\'t work in full until we work out a way to cancel the domain automatically)', () => {
