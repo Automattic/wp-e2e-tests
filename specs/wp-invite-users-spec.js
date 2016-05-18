@@ -39,6 +39,10 @@ test.before( 'Start Browser', function() {
 	driver = driverManager.startBrowser();
 } );
 
+if ( process.env.DISABLE_EMAIL === 'true' ) {
+	test.describe = test.xdescribe;
+}
+
 test.describe( 'Invites: (' + screenSize + ')', function() {
 	this.timeout( mochaTimeOut );
 

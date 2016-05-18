@@ -33,6 +33,10 @@ test.before( 'Start Browser', function() {
 	driver = driverManager.startBrowser();
 } );
 
+if ( process.env.DISABLE_EMAIL === 'true' ) {
+	test.describe = test.xdescribe;
+}
+
 test.describe( 'Sign Up (' + screenSize + ')', function() {
 	this.timeout( mochaTimeOut );
 
