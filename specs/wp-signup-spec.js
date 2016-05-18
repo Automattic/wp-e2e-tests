@@ -33,11 +33,13 @@ test.before( 'Start Browser', function() {
 	driver = driverManager.startBrowser();
 } );
 
+// Faked out test.describe function to enable dynamic skipping of e-mail tests
+let testDescribe = test.describe;
 if ( process.env.DISABLE_EMAIL === 'true' ) {
-	test.describe = test.xdescribe;
+	testDescribe = test.xdescribe;
 }
 
-test.describe( 'Sign Up (' + screenSize + ')', function() {
+testDescribe( 'Sign Up (' + screenSize + ')', function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Sign up for a free site', function() {
