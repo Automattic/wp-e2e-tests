@@ -39,7 +39,13 @@ test.before( 'Start Browser', function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Invites: (' + screenSize + ')', function() {
+// Faked out test.describe function to enable dynamic skipping of e-mail tests
+let testDescribe = test.describe;
+if ( process.env.DISABLE_EMAIL === 'true' ) {
+	testDescribe = test.xdescribe;
+}
+
+testDescribe( 'Invites: (' + screenSize + ')', function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Inviting New User as an Editor:', function() {
