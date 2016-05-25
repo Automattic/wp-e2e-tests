@@ -81,10 +81,13 @@ done
 # Ensure no parallel_exec command list file exists
 rm -f parallel_exec.cmd
 
+# Skip any tests in the given variable
+GREP="-i -g '$SKIP_TEST_REGEX'"
+
 IFS=, read -r -a SCREENSIZE_ARRAY <<< "$SCREENSIZES"
 for size in ${SCREENSIZE_ARRAY[@]}; do
   for target in "${TARGETS[@]}"; do
-    CMD="env BROWSERSIZE=$size $MOCHA $REPORTER $target $AFTER"
+    CMD="env BROWSERSIZE=$size $MOCHA $GREP $REPORTER $target $AFTER"
 
     if [ $PARALLEL == 1 ]; then
       echo $CMD >> parallel_exec.cmd
