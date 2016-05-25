@@ -138,3 +138,12 @@ A full list of config values are:
 | Name | Description | Example | Required | Store in file? | 
 | ---- | ----------- | ------- | -------- | ------------------- |
 | slackToken | This is a token for uploading files/screenshots to Slack (https://api.slack.com/tokens -- requires Slack login) | xxxx-##########-##########-###########-XXXXXXXXXX | No | **NO** |
+
+#### CircleCI Environment Variables
+These environment variables are intended for use inside CircleCI, to control which tests are being run
+
+| Name | Description | Default | Required |
+| ---- | ----------- | ------- | -------- |
+| DISABLE_EMAIL | Setting this to `true` will cause the Invite and Signup tests to be skipped | false | No |
+| RUN_VISDIFF | Setting this to `false` will cause the visual diff tests to be skipped | true | No |
+| SKIP_TEST_REGEX | The value of this variable will be used in the `-i -g *****` parameter, to skip any tests that match the given RegEx.  List multiple keywords separated by a `|` (i.e. `Invite|Domain|Theme`) | `Empty String` | No |
