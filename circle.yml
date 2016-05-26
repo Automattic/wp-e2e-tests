@@ -19,19 +19,7 @@ dependencies:
 
 test:
   override:
-    - >
-      export TESTARGS="-R -g -s desktop"
-
-      if [ "$RUN_SPECIFIED" == "true" ]; then
-        TESTARGS=$RUN_ARGS
-      elif [ "$CIRCLE_BRANCH" == "master" ]; then
-        TESTARGS="-R -p" # Parallel execution, implies -g -s mobile,desktop,tablet
-        if [ "$RUN_VISDIFF" == "true" ] && [ "$DEPLOY_USER" != "" ]; then
-          TESTARGS+=" -v critical"
-        fi
-      fi
-
-      npm test:
+    - export TESTARGS="-R -g -s desktop"; if [ "$RUN_SPECIFIED" == "true" ]; then TESTARGS=$RUN_ARGS elif [ "$CIRCLE_BRANCH" == "master" ]; then TESTARGS="-R -p"  if [ "$RUN_VISDIFF" == "true" ] && [ "$DEPLOY_USER" != "" ]; then TESTARGS+=" -v critical" fi fi npm test:
         parallel: true
   post:
     - node_modules/.bin/junit-viewer --results=$CIRCLE_TEST_REPORTS --save=$CIRCLE_TEST_REPORTS/consolidated_results.html
