@@ -126,15 +126,17 @@ if [ $PARALLEL == 1 ]; then
       RETURN+=$?
   fi
 else # Not a parallel run, just queue up the tests in sequence
-  IFS=, read -r -a SCREENSIZE_ARRAY <<< "$SCREENSIZES"
-  for size in ${SCREENSIZE_ARRAY[@]}; do
-    for target in "${TARGETS[@]}"; do
-      CMD="env BROWSERSIZE=$size $MOCHA $GREP $REPORTER $target $AFTER"
-  
-      eval $CMD
-      RETURN+=$?
+  if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
+    IFS=, read -r -a SCREENSIZE_ARRAY <<< "$SCREENSIZES"
+    for size in ${SCREENSIZE_ARRAY[@]}; do
+      for target in "${TARGETS[@]}"; do
+        CMD="env BROWSERSIZE=$size $MOCHA $GREP $REPORTER $target $AFTER"
+
+        eval $CMD
+        RETURN+=$?
+      done
     done
-  done
+  fi
 fi
 
 exit $RETURN
