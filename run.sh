@@ -114,9 +114,9 @@ if [ $PARALLEL == 1 ]; then
   fi
   if [ $CIRCLE_NODE_INDEX == $VISUAL ] && [ $VISDIFF == 1 ]; then
       echo "Executing visdiff tests at all screen widths"
-      CMD1="env BROWSERSIZE=mobile $MOCHA $GREP $REPORTER specs-visdiff/critical/ $AFTER"
-      CMD2="env BROWSERSIZE=desktop $MOCHA $GREP $REPORTER specs-visdiff/critical/ $AFTER"
-      CMD3="env BROWSERSIZE=tablet $MOCHA $GREP $REPORTER specs-visdiff/critical/ $AFTER"
+      CMD1="env BROWSERSIZE=mobile $MOCHA $GREP $REPORTER $VISDIFF_CONFIG specs-visdiff/critical/ $AFTER"
+      CMD2="env BROWSERSIZE=desktop $MOCHA $GREP $REPORTER $VISDIFF_CONFIG specs-visdiff/critical/ $AFTER"
+      CMD3="env BROWSERSIZE=tablet $MOCHA $GREP $REPORTER $VISDIFF_CONFIG specs-visdiff/critical/ $AFTER"
 
       eval $CMD1
       RETURN+=$?
