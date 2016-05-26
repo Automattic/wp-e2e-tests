@@ -19,7 +19,7 @@ dependencies:
 
 test:
   override:
-    - ./run-wrapper.sh
+    - ./run-wrapper.sh:
         parallel: true
   post:
     - node_modules/.bin/junit-viewer --results=$CIRCLE_TEST_REPORTS --save=$CIRCLE_TEST_REPORTS/consolidated_results.html
