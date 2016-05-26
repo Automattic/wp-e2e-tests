@@ -6,6 +6,7 @@ JOBS=0
 AFTER="lib/after.js"
 OPTS=""
 SCREENSIZES="mobile,desktop,tablet"
+VISDIFF=0
 RETURN=0
 
 I18N_CONFIG="--NODE_CONFIG='{\"browser\":\"firefox\",\"proxy\":\"system\",\"neverSaveScreenshots\":\"true\"}'"
@@ -15,7 +16,7 @@ declare -a TARGETS
 usage () {
   cat <<EOF
 -R		  - Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
--p [jobs]	  - Execute [num] jobs in parallel
+-p 		  - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop,tablet)
 -s		  - Screensizes in a comma-separated list (defaults to mobile,desktop,tablet)
 -g		  - Execute general tests in the specs/ directory
 -i		  - Execute i18n tests in the specs-i18n/ directory
@@ -29,7 +30,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rp:s:giv:h" opt; do
+while getopts ":Rps:giv:h" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
@@ -37,7 +38,6 @@ while getopts ":Rp:s:giv:h" opt; do
       ;;
     p)
       PARALLEL=1
-      JOBS=$OPTARG
       continue
       ;;
     s)
@@ -51,6 +51,7 @@ while getopts ":Rp:s:giv:h" opt; do
       TARGET="$I18N_CONFIG specs-i18n/"
       ;;
     v)
+      VISDIFF=1
       if [ "$OPTARG" == "all" ]; then
         TARGET="$VISDIFF_CONFIG specs-visdiff/\*"
       elif [ "$OPTARG" == "critical" ]; then
@@ -78,31 +79,62 @@ while getopts ":Rp:s:giv:h" opt; do
   TARGETS+=("$TARGET")
 done
 
-# Ensure no parallel_exec command list file exists
-rm -f parallel_exec.cmd
-
 # Skip any tests in the given variable
 GREP="-i -g '$SKIP_TEST_REGEX'"
 
-IFS=, read -r -a SCREENSIZE_ARRAY <<< "$SCREENSIZES"
-for size in ${SCREENSIZE_ARRAY[@]}; do
-  for target in "${TARGETS[@]}"; do
-    CMD="env BROWSERSIZE=$size $MOCHA $GREP $REPORTER $target $AFTER"
+if [ $PARALLEL == 1 ]; then
+  # Assign an index to each test segment to run in parallel
+  MOBILE=$(expr 0 % $CIRCLE_NODE_TOTAL)
+  DESKTOP=$(expr 1 % $CIRCLE_NODE_TOTAL)
+  TABLET=$(expr 2 % $CIRCLE_NODE_TOTAL)
+  VISUAL=$(expr 3 % $CIRCLE_NODE_TOTAL)
+  echo "Parallel execution details:"
+  echo "mobile=$MOBILE, desktop=$DESKTOP, tablet=$TABLET, visual=$VISUAL, node=$CIRCLE_NODE_INDEX, total=$CIRCLE_NODE_TOTAL"
+  
+  if [ $CIRCLE_NODE_INDEX == $MOBILE ]; then
+      echo "Executing tests at mobile screen width"
+      CMD="env BROWSERSIZE=mobile $MOCHA $GREP $REPORTER specs/ $AFTER"
 
-    if [ $PARALLEL == 1 ]; then
-      echo $CMD >> parallel_exec.cmd
-    else
       eval $CMD
       RETURN+=$?
-    fi
-  done
-done
+  fi
+  if [ $CIRCLE_NODE_INDEX == $DESKTOP ]; then
+      echo "Executing tests at desktop screen width"
+      CMD="env BROWSERSIZE=desktop $MOCHA $GREP $REPORTER specs/ $AFTER"
 
-if [ $PARALLEL == 1 ]; then
-#  cat parallel_exec.cmd | parallel --jobs $JOBS --pipe bash
-  parallel -a parallel_exec.cmd -j3 --no-notice -u
-  RETURN+=$?
-  rm -f parallel_exec.cmd
+      eval $CMD
+      RETURN+=$?
+  fi
+  if [ $CIRCLE_NODE_INDEX == $TABLET ]; then
+      echo "Executing tests at tablet screen width"
+      CMD="env BROWSERSIZE=tablet $MOCHA $GREP $REPORTER specs/ $AFTER"
+
+      eval $CMD
+      RETURN+=$?
+  fi
+  if [ $CIRCLE_NODE_INDEX == $VISUAL ] && [ $VISDIFF == 1 ]; then
+      echo "Executing visdiff tests at all screen widths"
+      CMD1="env BROWSERSIZE=mobile $MOCHA $GREP $REPORTER specs-visdiff/critical/ $AFTER"
+      CMD2="env BROWSERSIZE=desktop $MOCHA $GREP $REPORTER specs-visdiff/critical/ $AFTER"
+      CMD3="env BROWSERSIZE=tablet $MOCHA $GREP $REPORTER specs-visdiff/critical/ $AFTER"
+
+      eval $CMD1
+      RETURN+=$?
+      eval $CMD2
+      RETURN+=$?
+      eval $CMD3
+      RETURN+=$?
+  fi
+else # Not a parallel run, just queue up the tests in sequence
+  IFS=, read -r -a SCREENSIZE_ARRAY <<< "$SCREENSIZES"
+  for size in ${SCREENSIZE_ARRAY[@]}; do
+    for target in "${TARGETS[@]}"; do
+      CMD="env BROWSERSIZE=$size $MOCHA $GREP $REPORTER $target $AFTER"
+  
+      eval $CMD
+      RETURN+=$?
+    done
+  done
 fi
 
 exit $RETURN
