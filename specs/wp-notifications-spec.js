@@ -146,7 +146,7 @@ test.describe( 'Notifications: (' + screenSize + ')', function() {
 								} );
 
 								test.it( 'Can comment on the latest post in the Reader', function() {
-									this.comment = 'This is great';
+									this.comment = dataHelper.randomPhrase();
 									this.readerPage.commentOnLatestPost( this.comment );
 								} );
 
