@@ -16,6 +16,7 @@ dependencies:
   pre:
     - npm pack lib/reporter
     - npm install ./spec-xunit-slack-reporter-0.0.1.tgz
+    - ./randomize.sh specs
 
 test:
   override:
