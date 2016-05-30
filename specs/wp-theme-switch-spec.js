@@ -39,7 +39,7 @@ test.describe( 'Themes: (' + screenSize + ')', function() {
 				this.themesPage = new ThemesPage( driver );
 				this.themesPage.searchFor( 'Twenty T' );
 				this.themesPage.waitForThemeStartingWith( 'Twenty T' );
-				return this.themesPage.selectNewThemeStartingWith( 'Twenty S' );
+				return this.themesPage.selectNewThemeStartingWith( 'Twenty T' );
 			} );
 
 			test.it( 'Can preview, customize and save theme', function() {
