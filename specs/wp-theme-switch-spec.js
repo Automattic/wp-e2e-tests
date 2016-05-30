@@ -14,7 +14,6 @@ import ThemeDialogComponent from '../lib/components/theme-dialog-component.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
-const explicitWait = config.get( 'explicitWaitMS' );
 const screenSize = driverManager.currentScreenSize();
 
 var driver;
@@ -38,9 +37,9 @@ test.describe( 'Themes: (' + screenSize + ')', function() {
 		test.describe( 'Can switch free themes', function() {
 			test.it( 'Can select a different free theme', function() {
 				this.themesPage = new ThemesPage( driver );
-				this.themesPage.searchFor( 'Twenty F' );
-				this.themesPage.waitForThemeStartingWith( 'Twenty F' );
-				return this.themesPage.selectNewThemeStartingWith( 'Twenty F' );
+				this.themesPage.searchFor( 'Twenty T' );
+				this.themesPage.waitForThemeStartingWith( 'Twenty T' );
+				return this.themesPage.selectNewThemeStartingWith( 'Twenty S' );
 			} );
 
 			test.it( 'Can preview, customize and save theme', function() {
