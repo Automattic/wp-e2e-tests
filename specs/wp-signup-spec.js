@@ -178,7 +178,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Partially Sign up for a site with a paid domain name', function() {
+	test.describe( 'Partially Sign up for a site with a paid domain name - will skip the plans', function() {
 		this.bailSuite( true );
 
 		const blogName = 'e2e' + new Date().getTime().toString();
@@ -251,66 +251,53 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 						return this.findADomainComponent.declineGoogleApps();
 					} );
 
-					test.describe( 'Step Four: Plans', function() {
-						test.it( 'Can then see the plans page', function() {
-							this.pickAPlanPage = new PickAPlanPage( driver );
-							return this.pickAPlanPage.displayed().then( ( displayed ) => {
-								return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
+					test.describe( 'Step Four: Account', function() {
+						test.it( 'Can then see the account page', function() {
+							this.createYourAccountPage = new CreateYourAccountPage( driver );
+							return this.createYourAccountPage.displayed().then( ( displayed ) => {
+								return assert.equal( displayed, true, 'The create account page is not displayed' );
 							} );
 						} );
 
-						test.it( 'Can select the free plan', function() {
-							return this.pickAPlanPage.selectFreePlan();
+						test.it( 'Can then enter account details', function() {
+							return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
 						} );
 
-						test.describe( 'Step Five: Account', function() {
-							test.it( 'Can then see the account page', function() {
-								this.createYourAccountPage = new CreateYourAccountPage( driver );
-								return this.createYourAccountPage.displayed().then( ( displayed ) => {
-									return assert.equal( displayed, true, 'The create account page is not displayed' );
+						test.describe( 'Step Five: Processing', function() {
+							test.it( 'Can then see the account processing page', function() {
+								this.signupProcessingPage = new SignupProcessingPage( driver );
+								return this.signupProcessingPage.displayed().then( ( displayed ) => {
+									return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
 								} );
 							} );
 
-							test.it( 'Can then enter account details', function() {
-								return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
+							test.it( 'The processing page will automatically disapear when finished', function() {
+								return this.signupProcessingPage.waitForPageToDisappear();
 							} );
 
-							test.describe( 'Step Six: Processing', function() {
-								test.it( 'Can then see the account processing page', function() {
-									this.signupProcessingPage = new SignupProcessingPage( driver );
-									return this.signupProcessingPage.displayed().then( ( displayed ) => {
-										return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
+							test.describe( 'Step Six: Check Out Page', function() {
+								test.it( 'Can then see the check out page', function() {
+									this.checkOutPage = new CheckOutPage( driver );
+									return this.checkOutPage.displayed().then( ( displayed ) => {
+										return assert.equal( displayed, true, 'The check out page is not displayed' );
 									} );
 								} );
 
-								test.it( 'The processing page will automatically disapear when finished', function() {
-									return this.signupProcessingPage.waitForPageToDisappear();
+								test.it( 'Can enter domain registrar details and add privacy protection', function() {
+									this.checkOutPage.enterRegistarDetails( firstName, lastName, emailAddress, phoneNumber, countryCode, address, city, stateCode, postalCode );
+									return this.checkOutPage.selectAddPrivacyProtection();
 								} );
 
-								test.describe( 'Step Seven: Check Out Page', function() {
-									test.it( 'Can then see the check out page', function() {
-										this.checkOutPage = new CheckOutPage( driver );
-										return this.checkOutPage.displayed().then( ( displayed ) => {
-											return assert.equal( displayed, true, 'The check out page is not displayed' );
+								test.describe( 'Step Seven: Secure Payment Page', function() {
+									test.it( 'Can then see the secure payment page', function() {
+										this.securePaymentComponent = new SecurePaymentComponent( driver );
+										return this.securePaymentComponent.displayed().then( ( displayed ) => {
+											return assert.equal( displayed, true, 'The secure payment page is not displayed' );
 										} );
 									} );
 
-									test.it( 'Can enter domain registrar details and add privacy protection', function() {
-										this.checkOutPage.enterRegistarDetails( firstName, lastName, emailAddress, phoneNumber, countryCode, address, city, stateCode, postalCode );
-										return this.checkOutPage.selectAddPrivacyProtection();
-									} );
-
-									test.describe( 'Step Eight: Secure Payment Page', function() {
-										test.it( 'Can then see the secure payment page', function() {
-											this.securePaymentComponent = new SecurePaymentComponent( driver );
-											return this.securePaymentComponent.displayed().then( ( displayed ) => {
-												return assert.equal( displayed, true, 'The secure payment page is not displayed' );
-											} );
-										} );
-
-										test.it( 'Can enter test payment details', function() {
-											return this.securePaymentComponent.enterTestCreditCardDetails( testCardHolder, testVisaNumber, testVisaExpiry, testCVV, testCardCountryCode, testCardPostCode );
-										} );
+									test.it( 'Can enter test payment details', function() {
+										return this.securePaymentComponent.enterTestCreditCardDetails( testCardHolder, testVisaNumber, testVisaExpiry, testCVV, testCardCountryCode, testCardPostCode );
 									} );
 								} );
 							} );
