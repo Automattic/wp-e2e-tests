@@ -9,6 +9,7 @@ import WPHomePage from '../lib/pages/wp-home-page.js';
 import ChooseAThemePage from '../lib/pages/signup/choose-a-theme-page.js';
 import StartPage from '../lib/pages/signup/start-page.js';
 import SurveyPage from '../lib/pages/signup/survey-page.js';
+import DesignTypeChoicePage from '../lib/pages/signup/design-type-choice-page.js';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page.js';
 import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.js';
 import SignupProcessingPage from '../lib/pages/signup/signup-processing-page.js';
@@ -69,103 +70,116 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 				this.surveyPage.selectFirstSurveyOptions();
 			} );
 
-			test.describe( 'Step Two: Themes', function() {
-				test.it( 'Can see the choose a theme page', function() {
-					this.chooseAThemePage = new ChooseAThemePage( driver );
-					return this.chooseAThemePage.displayed().then( ( displayed ) => {
-						return assert.equal( displayed, true, 'The choose a theme start page is not displayed' );
+			test.describe( 'Step Two: Design Type Choice', function() {
+				test.it( 'Can see the design type choice page', function() {
+					this.designTypeChoicePage = new DesignTypeChoicePage( driver );
+					return this.designTypeChoicePage.displayed().then( ( displayed ) => {
+						return assert.equal( displayed, true, 'The design type choice page is not displayed' );
 					} );
 				} );
 
-				test.it( 'Can select the first theme', function() {
-					this.chooseAThemePage.selectFirstTheme();
+				test.it( 'Can select the first design type', function() {
+					this.designTypeChoicePage.selectFirstDesignType();
 				} );
 
-				test.describe( 'Step Three: Domains', function() {
-					test.it( 'Can then see the domains page ', function() {
-						this.findADomainComponent = new FindADomainComponent( driver );
-						return this.findADomainComponent.displayed().then( ( displayed ) => {
-							return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
+				test.describe( 'Step Three: Themes', function() {
+					test.it( 'Can see the choose a theme page', function() {
+						this.chooseAThemePage = new ChooseAThemePage( driver );
+						return this.chooseAThemePage.displayed().then( ( displayed ) => {
+							return assert.equal( displayed, true, 'The choose a theme start page is not displayed' );
 						} );
 					} );
 
-					test.it( 'Can search for a blog name, can see and select a free .wordpress address in the results', function() {
-						this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-						this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
-							assert.equal( actualAddress, expectedBlogAddress, 'The expected free address is not shown' )
-						} );
-						return this.findADomainComponent.selectFreeAddress();
+					test.it( 'Can select the first theme', function() {
+						this.chooseAThemePage.selectFirstTheme();
 					} );
 
-					test.describe( 'Step Four: Plans', function() {
-						test.it( 'Can then see the plans page', function() {
-							this.pickAPlanPage = new PickAPlanPage( driver );
-							return this.pickAPlanPage.displayed().then( ( displayed ) => {
-								return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
+					test.describe( 'Step Four: Domains', function() {
+						test.it( 'Can then see the domains page ', function() {
+							this.findADomainComponent = new FindADomainComponent( driver );
+							return this.findADomainComponent.displayed().then( ( displayed ) => {
+								return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
 							} );
 						} );
 
-						test.it( 'Can select the free plan', function() {
-							return this.pickAPlanPage.selectFreePlan();
+						test.it( 'Can search for a blog name, can see and select a free .wordpress address in the results', function() {
+							this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+							this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
+								assert.equal( actualAddress, expectedBlogAddress, 'The expected free address is not shown' )
+							} );
+							return this.findADomainComponent.selectFreeAddress();
 						} );
 
-						test.describe( 'Step Five: Account', function() {
-							test.it( 'Can then see the account page', function() {
-								this.createYourAccountPage = new CreateYourAccountPage( driver );
-								return this.createYourAccountPage.displayed().then( ( displayed ) => {
-									return assert.equal( displayed, true, 'The create account page is not displayed' );
+						test.describe( 'Step Five: Plans', function() {
+							test.it( 'Can then see the plans page', function() {
+								this.pickAPlanPage = new PickAPlanPage( driver );
+								return this.pickAPlanPage.displayed().then( ( displayed ) => {
+									return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
 								} );
 							} );
 
-							test.it( 'Can then enter account details', function() {
-								return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
+							test.it( 'Can select the free plan', function() {
+								return this.pickAPlanPage.selectFreePlan();
 							} );
 
-							test.describe( 'Step Six: Processing', function() {
-								test.it( 'Can then see the account processing page', function() {
-									this.signupProcessingPage = new SignupProcessingPage( driver );
-									return this.signupProcessingPage.displayed().then( ( displayed ) => {
-										return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
+							test.describe( 'Step Six: Account', function() {
+								test.it( 'Can then see the account page', function() {
+									this.createYourAccountPage = new CreateYourAccountPage( driver );
+									return this.createYourAccountPage.displayed().then( ( displayed ) => {
+										return assert.equal( displayed, true, 'The create account page is not displayed' );
 									} );
 								} );
 
-								test.it( 'The processing page will automatically disapear when finished', function() {
-									this.signupProcessingPage = new SignupProcessingPage( driver );
-									return this.signupProcessingPage.waitForPageToDisappear();
+								test.it( 'Can then enter account details', function() {
+									return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
 								} );
 
-								test.describe( 'Step Seven: View Site/Trampoline', function() {
-									test.it( 'We are on the view blog page, can see trampoline, our URL and title', function() {
-										return this.viewBlogPage = new ViewBlogPage( driver );
-									} );
-
-									test.it( 'Can see the trampoline welcome message displayed', function() {
-										this.viewBlogPage.waitForTrampolineWelcomeMessage();
-										return this.viewBlogPage.isTrampolineWelcomeDisplayed().then( ( displayed ) => {
-											return assert.equal( displayed, true, 'The trampoline welcome message is not displayed' );
+								test.describe( 'Step Seven: Processing', function() {
+									test.it( 'Can then see the account processing page', function() {
+										this.signupProcessingPage = new SignupProcessingPage( driver );
+										return this.signupProcessingPage.displayed().then( ( displayed ) => {
+											return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
 										} );
 									} );
 
-									test.it( 'Can see the correct blog URL displayed', function() {
-										return this.viewBlogPage.urlDisplayed().then( ( url ) => {
-											return assert.equal( url, 'https://' + expectedBlogAddress + '/', 'The displayed URL on the view blog page is not as expected' );
-										} );
+									test.it( 'The processing page will automatically disapear when finished', function() {
+										this.signupProcessingPage = new SignupProcessingPage( driver );
+										return this.signupProcessingPage.waitForPageToDisappear();
 									} );
 
-									test.it( 'Can see the correct blog title displayed', function() {
-										return this.viewBlogPage.title().then( ( title ) => {
-											return assert( title.match( blogName ), 'The expected blog title is not displaying correctly' );
-										} );
-									} );
-
-									test.describe( 'Step Eight: Can activate my account from an email', function() {
-										test.before( function() {
-											return this.emailClient = new EmailClient( signupInboxId );
+									test.describe( 'Step Eight: View Site/Trampoline', function() {
+										test.it( 'We are on the view blog page, can see trampoline, our URL and title', function() {
+											return this.viewBlogPage = new ViewBlogPage( driver );
 										} );
 
-										test.it( 'Can see a single activation message', function() {
-											return this.emailClient.pollEmailsByRecipient( emailAddress ).then( function( emails ) {
-												return assert.equal( emails.length, 1, 'The number of invite emails is not equal to 1' );
+										test.it( 'Can see the trampoline welcome message displayed', function() {
+											this.viewBlogPage.waitForTrampolineWelcomeMessage();
+											return this.viewBlogPage.isTrampolineWelcomeDisplayed().then( ( displayed ) => {
+												return assert.equal( displayed, true, 'The trampoline welcome message is not displayed' );
+											} );
+										} );
+
+										test.it( 'Can see the correct blog URL displayed', function() {
+											return this.viewBlogPage.urlDisplayed().then( ( url ) => {
+												return assert.equal( url, 'https://' + expectedBlogAddress + '/', 'The displayed URL on the view blog page is not as expected' );
+											} );
+										} );
+
+										test.it( 'Can see the correct blog title displayed', function() {
+											return this.viewBlogPage.title().then( ( title ) => {
+												return assert( title.match( blogName ), 'The expected blog title is not displaying correctly' );
+											} );
+										} );
+
+										test.describe( 'Step Nine: Can activate my account from an email', function() {
+											test.before( function() {
+												return this.emailClient = new EmailClient( signupInboxId );
+											} );
+
+											test.it( 'Can see a single activation message', function() {
+												return this.emailClient.pollEmailsByRecipient( emailAddress ).then( function( emails ) {
+													return assert.equal( emails.length, 1, 'The number of invite emails is not equal to 1' );
+												} );
 											} );
 										} );
 									} );
@@ -224,92 +238,105 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 				this.surveyPage.selectFirstSurveyOptions();
 			} );
 
-			test.describe( 'Step Two: Themes', function() {
-				test.it( 'Can see the choose a theme page as the starting page', function() {
-					this.chooseAThemePage = new ChooseAThemePage( driver );
-					return this.chooseAThemePage.displayed().then( ( displayed ) => {
-						return assert.equal( displayed, true, 'The choose a theme start page is not displayed' );
+			test.describe( 'Step Two: Design Type Choice', function() {
+				test.it( 'Can see the design type choice page', function() {
+					this.designTypeChoicePage = new DesignTypeChoicePage( driver );
+					return this.designTypeChoicePage.displayed().then( ( displayed ) => {
+						return assert.equal( displayed, true, 'The design type choice page is not displayed' );
 					} );
 				} );
 
-				test.it( 'Can select the first theme', function() {
-					return this.chooseAThemePage.selectFirstTheme();
+				test.it( 'Can select the first design type', function() {
+					this.designTypeChoicePage.selectFirstDesignType();
 				} );
 
-				test.describe( 'Step Three: Domains', function() {
-					test.it( 'Can then see the domains page ', function() {
-						this.findADomainComponent = new FindADomainComponent( driver );
-						return this.findADomainComponent.displayed().then( ( displayed ) => {
-							return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
+				test.describe( 'Step Three: Themes', function() {
+					test.it( 'Can see the choose a theme page as the starting page', function() {
+						this.chooseAThemePage = new ChooseAThemePage( driver );
+						return this.chooseAThemePage.displayed().then( ( displayed ) => {
+							return assert.equal( displayed, true, 'The choose a theme start page is not displayed' );
 						} );
 					} );
 
-					test.it( 'Can search for a blog name, can see and select a custom .com domain name from the results and decline Google Apps', function() {
-						this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-						this.findADomainComponent.selectDotComAddress( expectedDomainName );
-						this.findADomainComponent.waitForGoogleApps();
-						return this.findADomainComponent.declineGoogleApps();
+					test.it( 'Can select the first theme', function() {
+						return this.chooseAThemePage.selectFirstTheme();
 					} );
 
-					test.describe( 'Step Four: Plans', function() {
-						test.it( 'Can then see the plans page', function() {
-							this.pickAPlanPage = new PickAPlanPage( driver );
-							return this.pickAPlanPage.displayed().then( ( displayed ) => {
-								return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
+					test.describe( 'Step Four: Domains', function() {
+						test.it( 'Can then see the domains page ', function() {
+							this.findADomainComponent = new FindADomainComponent( driver );
+							return this.findADomainComponent.displayed().then( ( displayed ) => {
+								return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
 							} );
 						} );
 
-						test.it( 'Can select the free plan', function() {
-							return this.pickAPlanPage.selectFreePlan();
+						test.it( 'Can search for a blog name, can see and select a custom .com domain name from the results and decline Google Apps', function() {
+							this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+							this.findADomainComponent.selectDotComAddress( expectedDomainName );
+							this.findADomainComponent.waitForGoogleApps();
+							return this.findADomainComponent.declineGoogleApps();
 						} );
 
-						test.describe( 'Step Five: Account', function() {
-							test.it( 'Can then see the account page', function() {
-								this.createYourAccountPage = new CreateYourAccountPage( driver );
-								return this.createYourAccountPage.displayed().then( ( displayed ) => {
-									return assert.equal( displayed, true, 'The create account page is not displayed' );
+						test.describe( 'Step Five: Plans', function() {
+							test.it( 'Can then see the plans page', function() {
+								this.pickAPlanPage = new PickAPlanPage( driver );
+								return this.pickAPlanPage.displayed().then( ( displayed ) => {
+									return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
 								} );
 							} );
 
-							test.it( 'Can then enter account details', function() {
-								return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
+							test.it( 'Can select the free plan', function() {
+								return this.pickAPlanPage.selectFreePlan();
 							} );
 
-							test.describe( 'Step Six: Processing', function() {
-								test.it( 'Can then see the account processing page', function() {
-									this.signupProcessingPage = new SignupProcessingPage( driver );
-									return this.signupProcessingPage.displayed().then( ( displayed ) => {
-										return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
+							test.describe( 'Step Six: Account', function() {
+								test.it( 'Can then see the account page', function() {
+									this.createYourAccountPage = new CreateYourAccountPage( driver );
+									return this.createYourAccountPage.displayed().then( ( displayed ) => {
+										return assert.equal( displayed, true, 'The create account page is not displayed' );
 									} );
 								} );
 
-								test.it( 'The processing page will automatically disapear when finished', function() {
-									return this.signupProcessingPage.waitForPageToDisappear();
+								test.it( 'Can then enter account details', function() {
+									return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
 								} );
 
-								test.describe( 'Step Seven: Check Out Page', function() {
-									test.it( 'Can then see the check out page', function() {
-										this.checkOutPage = new CheckOutPage( driver );
-										return this.checkOutPage.displayed().then( ( displayed ) => {
-											return assert.equal( displayed, true, 'The check out page is not displayed' );
+								test.describe( 'Step Seven: Processing', function() {
+									test.it( 'Can then see the account processing page', function() {
+										this.signupProcessingPage = new SignupProcessingPage( driver );
+										return this.signupProcessingPage.displayed().then( ( displayed ) => {
+											return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
 										} );
 									} );
 
-									test.it( 'Can enter domain registrar details and add privacy protection', function() {
-										this.checkOutPage.enterRegistarDetails( firstName, lastName, emailAddress, phoneNumber, countryCode, address, city, stateCode, postalCode );
-										return this.checkOutPage.selectAddPrivacyProtection();
+									test.it( 'The processing page will automatically disapear when finished', function() {
+										return this.signupProcessingPage.waitForPageToDisappear();
 									} );
 
-									test.describe( 'Step Eight: Secure Payment Page', function() {
-										test.it( 'Can then see the secure payment page', function() {
-											this.securePaymentComponent = new SecurePaymentComponent( driver );
-											return this.securePaymentComponent.displayed().then( ( displayed ) => {
-												return assert.equal( displayed, true, 'The secure payment page is not displayed' );
+									test.describe( 'Step Eight: Check Out Page', function() {
+										test.it( 'Can then see the check out page', function() {
+											this.checkOutPage = new CheckOutPage( driver );
+											return this.checkOutPage.displayed().then( ( displayed ) => {
+												return assert.equal( displayed, true, 'The check out page is not displayed' );
 											} );
 										} );
 
-										test.it( 'Can enter test payment details', function() {
-											return this.securePaymentComponent.enterTestCreditCardDetails( testCardHolder, testVisaNumber, testVisaExpiry, testCVV, testCardCountryCode, testCardPostCode );
+										test.it( 'Can enter domain registrar details and add privacy protection', function() {
+											this.checkOutPage.enterRegistarDetails( firstName, lastName, emailAddress, phoneNumber, countryCode, address, city, stateCode, postalCode );
+											return this.checkOutPage.selectAddPrivacyProtection();
+										} );
+
+										test.describe( 'Step Nine: Secure Payment Page', function() {
+											test.it( 'Can then see the secure payment page', function() {
+												this.securePaymentComponent = new SecurePaymentComponent( driver );
+												return this.securePaymentComponent.displayed().then( ( displayed ) => {
+													return assert.equal( displayed, true, 'The secure payment page is not displayed' );
+												} );
+											} );
+
+											test.it( 'Can enter test payment details', function() {
+												return this.securePaymentComponent.enterTestCreditCardDetails( testCardHolder, testVisaNumber, testVisaExpiry, testCVV, testCardCountryCode, testCardPostCode );
+											} );
 										} );
 									} );
 								} );
@@ -359,86 +386,99 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 				this.surveyPage.selectFirstSurveyOptions();
 			} );
 
-			test.describe( 'Step Two: Themes', function() {
-				test.it( 'Can see the choose a theme page as the starting page', function() {
-					this.chooseAThemePage = new ChooseAThemePage( driver );
-					return this.chooseAThemePage.displayed().then( ( displayed ) => {
-						return assert.equal( displayed, true, 'The choose a theme start page is not displayed' );
+			test.describe( 'Step Two: Design Type Choice', function() {
+				test.it( 'Can see the design type choice page', function() {
+					this.designTypeChoicePage = new DesignTypeChoicePage( driver );
+					return this.designTypeChoicePage.displayed().then( ( displayed ) => {
+						return assert.equal( displayed, true, 'The design type choice page is not displayed' );
 					} );
 				} );
 
-				test.it( 'Can select the first theme', function() {
-					return this.chooseAThemePage.selectFirstTheme();
+				test.it( 'Can select the first design type', function() {
+					this.designTypeChoicePage.selectFirstDesignType();
 				} );
 
-				test.describe( 'Step Three: Domains', function() {
-					test.it( 'Can then see the domains page ', function() {
-						this.findADomainComponent = new FindADomainComponent( driver );
-						return this.findADomainComponent.displayed().then( ( displayed ) => {
-							return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
+				test.describe( 'Step Three: Themes', function() {
+					test.it( 'Can see the choose a theme page as the starting page', function() {
+						this.chooseAThemePage = new ChooseAThemePage( driver );
+						return this.chooseAThemePage.displayed().then( ( displayed ) => {
+							return assert.equal( displayed, true, 'The choose a theme start page is not displayed' );
 						} );
 					} );
 
-					test.it( 'Can search for a blog name, can see and select a free WordPress.com blog address in results', function() {
-						this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-						this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
-							assert.equal( actualAddress, expectedBlogAddress, 'The expected free address is not shown' )
-						} );
-						return this.findADomainComponent.selectFreeAddress();
+					test.it( 'Can select the first theme', function() {
+						return this.chooseAThemePage.selectFirstTheme();
 					} );
 
-					test.describe( 'Step Four: Plans', function() {
-						test.it( 'Can then see the plans page', function() {
-							this.pickAPlanPage = new PickAPlanPage( driver );
-							return this.pickAPlanPage.displayed().then( ( displayed ) => {
-								return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
+					test.describe( 'Step Four: Domains', function() {
+						test.it( 'Can then see the domains page ', function() {
+							this.findADomainComponent = new FindADomainComponent( driver );
+							return this.findADomainComponent.displayed().then( ( displayed ) => {
+								return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
 							} );
 						} );
 
-						test.it( 'Can select the premium plan', function() {
-							return this.pickAPlanPage.selectPremiumPlan();
+						test.it( 'Can search for a blog name, can see and select a free WordPress.com blog address in results', function() {
+							this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+							this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
+								assert.equal( actualAddress, expectedBlogAddress, 'The expected free address is not shown' )
+							} );
+							return this.findADomainComponent.selectFreeAddress();
 						} );
 
-						test.describe( 'Step Five: Account', function() {
-							test.it( 'Can then enter account details', function() {
-								this.createYourAccountPage = new CreateYourAccountPage( driver );
-								this.createYourAccountPage.displayed().then( ( displayed ) => {
-									assert.equal( displayed, true, 'The create account page is not displayed' );
+						test.describe( 'Step Five: Plans', function() {
+							test.it( 'Can then see the plans page', function() {
+								this.pickAPlanPage = new PickAPlanPage( driver );
+								return this.pickAPlanPage.displayed().then( ( displayed ) => {
+									return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
 								} );
-								return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
 							} );
 
-							test.describe( 'Step Six: Processing', function() {
-								test.it( 'Can then see the account processing page', function() {
-									this.signupProcessingPage = new SignupProcessingPage( driver );
-									return this.signupProcessingPage.displayed().then( ( displayed ) => {
-										return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
+							test.it( 'Can select the premium plan', function() {
+								return this.pickAPlanPage.selectPremiumPlan();
+							} );
+
+							test.describe( 'Step Six: Account', function() {
+								test.it( 'Can then enter account details', function() {
+									this.createYourAccountPage = new CreateYourAccountPage( driver );
+									this.createYourAccountPage.displayed().then( ( displayed ) => {
+										assert.equal( displayed, true, 'The create account page is not displayed' );
 									} );
+									return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
 								} );
 
-								test.it( 'The processing page will automatically disapear when finished', function() {
-									return this.signupProcessingPage.waitForPageToDisappear();
-								} );
-
-								test.describe( 'Step Seven: Secure Payment Page', function() {
-									test.it( 'Can then see the secure payment page', function() {
-										this.securePaymentComponent = new SecurePaymentComponent( driver );
-										return this.securePaymentComponent.displayed().then( ( displayed ) => {
-											return assert.equal( displayed, true, 'The secure payment page is not displayed' );
+								test.describe( 'Step Seven: Processing', function() {
+									test.it( 'Can then see the account processing page', function() {
+										this.signupProcessingPage = new SignupProcessingPage( driver );
+										return this.signupProcessingPage.displayed().then( ( displayed ) => {
+											return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
 										} );
 									} );
 
-									test.it( 'Can enter and submit test payment details', function() {
-										this.securePaymentComponent.enterTestCreditCardDetails( testCardHolder, testVisaNumber, testVisaExpiry, testCVV, testCardCountryCode, testCardPostCode );
-										this.securePaymentComponent.submitPaymentDetails();
-										return this.securePaymentComponent.waitForPageToDisappear();
+									test.it( 'The processing page will automatically disapear when finished', function() {
+										return this.signupProcessingPage.waitForPageToDisappear();
 									} );
 
-									test.describe( 'Step Eight: Checkout Thank You Page', function() {
-										test.it( 'Can see the secure check out thank you page', function() {
-											this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
-											return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
-												return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
+									test.describe( 'Step Eight: Secure Payment Page', function() {
+										test.it( 'Can then see the secure payment page', function() {
+											this.securePaymentComponent = new SecurePaymentComponent( driver );
+											return this.securePaymentComponent.displayed().then( ( displayed ) => {
+												return assert.equal( displayed, true, 'The secure payment page is not displayed' );
+											} );
+										} );
+
+										test.it( 'Can enter and submit test payment details', function() {
+											this.securePaymentComponent.enterTestCreditCardDetails( testCardHolder, testVisaNumber, testVisaExpiry, testCVV, testCardCountryCode, testCardPostCode );
+											this.securePaymentComponent.submitPaymentDetails();
+											return this.securePaymentComponent.waitForPageToDisappear();
+										} );
+
+										test.describe( 'Step Nine: Checkout Thank You Page', function() {
+											test.it( 'Can see the secure check out thank you page', function() {
+												this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
+												return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
+													return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
+												} );
 											} );
 										} );
 									} );
