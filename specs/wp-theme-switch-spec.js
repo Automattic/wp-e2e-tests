@@ -37,9 +37,9 @@ test.describe( 'Themes: (' + screenSize + ')', function() {
 		test.describe( 'Can switch free themes', function() {
 			test.it( 'Can select a different free theme', function() {
 				this.themesPage = new ThemesPage( driver );
-				this.themesPage.searchFor( 'Twenty T' );
-				this.themesPage.waitForThemeStartingWith( 'Twenty T' );
-				return this.themesPage.selectNewThemeStartingWith( 'Twenty T' );
+				this.themesPage.searchFor( 'Twenty F' );
+				this.themesPage.waitForThemeStartingWith( 'Twenty F' );
+				return this.themesPage.selectNewThemeStartingWith( 'Twenty F' );
 			} );
 
 			test.it( 'Can preview, customize and save theme', function() {
