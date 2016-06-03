@@ -25,7 +25,7 @@ test.before( function() {
 	this.driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Themes: All sites (' + screenSize + ')', function() {
+test.xdescribe( 'Themes: All sites (' + screenSize + ')', function() {
 
 	test.describe( 'Preview a theme', function() {
 		this.bailSuite( true );
