@@ -25,6 +25,10 @@ test:
   post:
     - node_modules/.bin/junit-viewer --results=$CIRCLE_TEST_REPORTS --save=$CIRCLE_TEST_REPORTS/consolidated_results.html
 
+notify:
+  webhooks:
+    - url: https://battle-snap.hyperdev.space/ciResponse
+
 experimental:
   notify:
     branches:
