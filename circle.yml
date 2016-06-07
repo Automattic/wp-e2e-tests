@@ -27,7 +27,7 @@ test:
 
 notify:
   webhooks:
-    - url: https://fancy-hair.hyperdev.space/dreams
+    - url: http://wpe2ebridge-srstancil.rhcloud.com/dreams
 
 experimental:
   notify:
