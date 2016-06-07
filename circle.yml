@@ -27,7 +27,7 @@ test:
 
 notify:
   webhooks:
-    - url: https://fancy-hair.hyperdev.space/ciResponse
+    - url: https://fancy-hair.hyperdev.space/dreams
 
 experimental:
   notify:
