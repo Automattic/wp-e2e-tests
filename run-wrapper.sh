@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export TESTARGS="-R -g -s desktop"
+export TESTARGS="-R -p"
 
 if [ "$RUN_SPECIFIED" == "true" ]; then
   TESTARGS=$RUN_ARGS
