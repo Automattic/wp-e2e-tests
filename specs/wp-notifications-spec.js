@@ -60,6 +60,12 @@ test.describe( 'Notifications: (' + screenSize + ')', function() {
 				return this.viewPostPage.leaveAComment( this.comment );
 			} );
 
+			test.it( 'Can see the comment', function() {
+				return this.viewPostPage.commentShown( this.comment ).then( ( shown ) => {
+					return assert.equal( shown, true, `The comment: '${this.comment}' was not shown on the blog post page after submitting it` );
+				} );
+			} );
+
 			test.describe( 'Log in as notifications user', function() {
 				test.it( 'Can log in as notifications user', function() {
 					this.loginFlow = new LoginFlow( driver, 'notificationsUser' );
