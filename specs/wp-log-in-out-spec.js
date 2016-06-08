@@ -35,6 +35,7 @@ test.describe( 'Authentication: (' + screenSize + ')', function() {
 			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
 				loginFlow.login();
+assert.equal( true, false, 'ASSERTTTTT!!!!!' );
 			} );
 
 			test.it( 'Can see Reader Page after logging in', function() {
