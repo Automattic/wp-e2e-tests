@@ -1,3 +1,4 @@
+#DONOTMERGE
 # WordPress.com End to End Tests
 
 Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Automattic/wp-calypso) client and WordPress.com in general.
