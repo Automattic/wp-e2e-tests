@@ -648,6 +648,12 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 				editorPage.enterContent( blogPostQuote );
 			} );
 
+			// Shouldn't need to publish first, but putting in temporarily to workaround Trac bug #7753
+			test.it( 'Can publish post', function() {
+				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				postEditorSidebarComponent.publishPost();
+			} );
+
 			test.it( 'Can trash the new post', function() {
 				const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 				postEditorSidebarComponent.ensureSaved();
