@@ -11,4 +11,8 @@ elif [ "$CIRCLE_BRANCH" == "master" ]; then
   fi
 fi
 
+if [ "$liveBranches" == "true" ]; then
+  TESTARGS+=" -b $branchName"
+fi
+
 npm test
