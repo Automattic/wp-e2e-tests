@@ -138,6 +138,8 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 
 						test.it( 'Can enter new username and password and sign up', function() {
 							this.acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
+							this.acceptInvitePage.waitUntilNotVisible();
+							return this.acceptInvitePage.ensureWeAreLoggedIn( newUserName, password );
 						} );
 
 						test.describe( 'User has been added as Editor', function() {
@@ -300,6 +302,8 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 
 						test.it( 'Can enter new username and password and sign up', function() {
 							this.acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
+							this.acceptInvitePage.waitUntilNotVisible();
+							this.acceptInvitePage.ensureWeAreLoggedIn( newUserName, password );
 						} );
 
 						test.describe( 'User has been added as a Follower', function() {
@@ -446,6 +450,8 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 
 						test.it( 'Can enter new username and password and sign up', function() {
 							this.acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
+							this.acceptInvitePage.waitUntilNotVisible();
+							this.acceptInvitePage.ensureWeAreLoggedIn( newUserName, password );
 						} );
 
 						test.describe( 'User has been added as a Viewer', function() {
@@ -608,6 +614,8 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 
 						test.it( 'Can enter new username and password and sign up', function() {
 							this.acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
+							this.acceptInvitePage.waitUntilNotVisible();
+							this.acceptInvitePage.ensureWeAreLoggedIn( newUserName, password );
 						} );
 
 						test.describe( 'User has been added as Contributor - Can edit but not publish a post', function() {
