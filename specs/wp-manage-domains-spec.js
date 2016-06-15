@@ -61,12 +61,13 @@ test.describe( 'Managing Domains: (' + screenSize + ')', function() {
 		} );
 
 		test.describe( 'Can search for and select a paid domain', function() {
-			test.before( 'Can choose add a domain', () => {
+			test.it( 'Can choose add a domain', () => {
 				const domainsPage = new DomainsPage( driver );
 				domainsPage.setABTestControlGroupsInLocalStorage();
 				domainsPage.clickAddDomain();
 			} );
-			test.before( 'Can see the domain search component', () => {
+
+			test.it( 'Can see the domain search component', () => {
 				const findADomainComponent = new FindADomainComponent( driver );
 				findADomainComponent.waitForResults();
 			} );

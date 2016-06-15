@@ -34,7 +34,7 @@ test.describe( 'Plans: (' + screenSize + ')', function() {
 			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.before( 'Login and Select My Site', function() {
+		test.it( 'Login and Select My Site', function() {
 			this.loginFlow = new LoginFlow( driver );
 			return this.loginFlow.loginAndSelectMySite();
 		} );

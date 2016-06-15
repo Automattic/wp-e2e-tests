@@ -47,7 +47,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 			var pageTitle = dataHelper.randomPhrase();
 			var pageQuote = 'If you have the same problem for a long time, maybe it’s not a problem. Maybe it’s a fact..\n— Itzhak Rabin';
 
-			test.before( 'Can log in', function() {
+			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
 				loginFlow.loginAndStartNewPage();
 			} );
@@ -68,7 +68,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 			} );
 
 			test.describe( 'Preview', function() {
-				test.before( 'Can launch page preview', function() {
+				test.it( 'Can launch page preview', function() {
 					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					postEditorSidebarComponent.ensureSaved();
 					postEditorSidebarComponent.launchPreview();
@@ -99,7 +99,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 			} );
 
 			test.describe( 'Publish and View', function() {
-				test.before( 'Can publish and view content', function() {
+				test.it( 'Can publish and view content', function() {
 					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					this.postEditorSidebarComponent.publishAndViewContent();
 					this.viewPagePage = new ViewPagePage( driver );
@@ -148,7 +148,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 			var pageTitle = dataHelper.randomPhrase();
 			var pageQuote = 'Few people know how to take a walk. The qualifications are endurance, plain clothes, old shoes, an eye for nature, good humor, vast curiosity, good speech, good silence and nothing too much.\n— Ralph Waldo Emerson\n';
 
-			test.before( 'Can log in', function() {
+			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
 				loginFlow.loginAndStartNewPage();
 			} );
@@ -167,7 +167,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 			} );
 
 			test.describe( 'Publish and View', function() {
-				test.before( 'Can publish and view content', function() {
+				test.it( 'Can publish and view content', function() {
 					let editorPage = new EditorPage( driver );
 					editorPage.viewPublishedPostOrPage();
 				} );
@@ -210,7 +210,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 			var pageQuote = 'If you don’t like something, change it. If you can’t change it, change the way you think about it.\n— Mary Engelbreit\n';
 			var postPassword = 'e2e' + new Date().getTime().toString();
 
-			test.before( 'Can log in', function() {
+			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
 				loginFlow.loginAndStartNewPage();
 			} );
@@ -225,7 +225,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 			} );
 
 			test.describe( 'Publish and View', function() {
-				test.before( 'Can publish and view content', function() {
+				test.it( 'Can publish and view content', function() {
 					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					postEditorSidebarComponent.publishAndViewContent();
 				} );
@@ -255,7 +255,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 					} );
 
 					test.describe( 'With incorrect password entered', function() {
-						test.before( 'Enter incorrect password', function() {
+						test.it( 'Enter incorrect password', function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.enterPassword( 'password' );
 						} );
@@ -283,7 +283,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 					} );
 
 					test.describe( 'With correct password entered', function() {
-						test.before( 'Enter correct password', function() {
+						test.it( 'Enter correct password', function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.enterPassword( postPassword );
 						} );
@@ -311,7 +311,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 					} );
 				} );
 				test.describe( 'As a non-logged in user', function() {
-					test.before( 'Clear cookies (log out)', function() {
+					test.it( 'Clear cookies (log out)', function() {
 						driver.manage().deleteAllCookies();
 						driver.navigate().refresh();
 					} );
@@ -339,7 +339,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 					} );
 
 					test.describe( 'With incorrect password entered', function() {
-						test.before( 'Enter incorrect password', function() {
+						test.it( 'Enter incorrect password', function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.enterPassword( 'password' );
 						} );
@@ -367,7 +367,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 					} );
 
 					test.describe( 'With correct password entered', function() {
-						test.before( 'Enter correct password', function() {
+						test.it( 'Enter correct password', function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.enterPassword( postPassword );
 						} );
