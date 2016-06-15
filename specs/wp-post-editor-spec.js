@@ -56,7 +56,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			const publicizeMessage = dataHelper.randomPhrase();
 			const publicizeTwitterAccount = config.has( 'publicizeTwitterAccount' ) ? config.get( 'publicizeTwitterAccount' ) : '';
 
-			test.before( 'Can log in', function() {
+			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
 				loginFlow.loginAndStartNewPost();
 			} );
@@ -74,7 +74,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 				} );
 
 				test.describe( 'Categories and Tags', function() {
-					test.before( 'Expand Categories and Tags', function() {
+					test.it( 'Expand Categories and Tags', function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 						postEditorSidebarComponent.expandCategoriesAndTags();
 					} );
@@ -106,7 +106,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 					} );
 
 					test.describe( 'Publicize Options', function() {
-						test.before( 'Expand sharing section', function() {
+						test.it( 'Expand sharing section', function() {
 							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 							postEditorSidebarComponent.expandSharingSection();
 						} );
@@ -136,7 +136,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 						} );
 
 						test.describe( 'Preview', function() {
-							test.before( 'Can launch post preview', function() {
+							test.it( 'Can launch post preview', function() {
 								this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 								this.postEditorSidebarComponent.ensureSaved();
 								this.postEditorSidebarComponent.launchPreview();
@@ -178,7 +178,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 							} );
 
 							test.describe( 'Publish and View', function() {
-								test.before( 'Can publish and view content', function() {
+								test.it( 'Can publish and view content', function() {
 									let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 									postEditorSidebarComponent.publishAndViewContent();
 									this.viewPostPage = new ViewPostPage( driver );
@@ -245,7 +245,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = 'If you’re not prepared to be wrong; you’ll never come up with anything original.\n— Sir Ken Robinson\n';
 
-			test.before( 'Can log in', function() {
+			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
 				loginFlow.loginAndStartNewPost();
 			} );
@@ -270,7 +270,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			} );
 
 			test.describe( 'Set to private which publishes it', function() {
-				test.before( 'Ensure the post is saved', function() {
+				test.it( 'Ensure the post is saved', function() {
 					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					postEditorSidebarComponent.ensureSaved();
 				} );
@@ -313,7 +313,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			} );
 
 			test.describe( 'As a non-logged in user ', function() {
-				test.before( 'Delete cookies (log out)', function() {
+				test.it( 'Delete cookies (log out)', function() {
 					driverManager.clearCookiesAndDeleteLocalStorage( driver );
 					driver.navigate().refresh();
 				} );
@@ -637,7 +637,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = 'The only victory that counts is the victory over yourself.\n— Jesse Owens\n';
 
-			test.before( 'Can log in', function() {
+			test.it( 'Can log in', function() {
 				const loginFlow = new LoginFlow( driver );
 				loginFlow.loginAndStartNewPost();
 			} );

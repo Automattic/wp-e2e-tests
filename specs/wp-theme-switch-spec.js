@@ -28,7 +28,7 @@ test.describe( 'Themes: (' + screenSize + ')', function() {
 	this.bailSuite( true );
 
 	test.describe( 'Switching Themes:', function() {
-		test.before( 'Delete Cookies and Login', function() {
+		test.it( 'Delete Cookies and Login', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			let loginFlow = new LoginFlow( driver );
 			loginFlow.loginAndSelectThemes();

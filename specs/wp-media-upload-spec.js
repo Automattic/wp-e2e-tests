@@ -33,7 +33,7 @@ test.describe( 'Editor: Media Upload (' + screenSize + ')', function() {
 
 		test.describe( 'Can upload many media types', () => {
 
-			test.before( 'Can log in and navigate to Editor page', () => {
+			test.it( 'Can log in and navigate to Editor page', () => {
 				const loginFlow = new LoginFlow( driver );
 				loginFlow.loginAndStartNewPage();
 				editorPage = new EditorPage( driver );
@@ -42,7 +42,7 @@ test.describe( 'Editor: Media Upload (' + screenSize + ')', function() {
 			test.describe( 'Can upload a normal image', function() {
 				let fileDetails;
 
-				test.before( 'Create image file for upload', function() {
+				test.it( 'Create image file for upload', function() {
 					mediaHelper.createFileWithFilename( 'normal.jpg' ).then( function( details ) {
 						fileDetails = details;
 					} );
@@ -62,13 +62,12 @@ test.describe( 'Editor: Media Upload (' + screenSize + ')', function() {
 						mediaHelper.deleteFile( fileDetails ).then( function() {} );
 					}
 				} );
-
 			} );
 
 			test.describe( 'Can upload an image with reserved url chars in the filename', function() {
 				let fileDetails;
 
-				test.before( 'Create image file for upload', function() {
+				test.it( 'Create image file for upload', function() {
 					mediaHelper.createFileWithFilename( 'filewith#?#?reservedurlchars.jpg', true ).then( function( details ) {
 						fileDetails = details;
 					} );
@@ -93,7 +92,7 @@ test.describe( 'Editor: Media Upload (' + screenSize + ')', function() {
 			test.describe( 'Can upload an mp3', function() {
 				let fileDetails;
 
-				test.before( 'Create mp3 for upload', function() {
+				test.it( 'Create mp3 for upload', function() {
 					mediaHelper.createFileWithFilename( 'fake.mp3' ).then( function( details ) {
 						fileDetails = details;
 					} );
