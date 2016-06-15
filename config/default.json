@@ -13,5 +13,5 @@
   "neverSaveScreenshots": false,
   "useNewMobileEditor": false,
   "useNewMailosaur": true,
-  "knownABTestKeys": [ "freeTrials", "freePlansDefault", "multiDomainRegistrationV1", "translatorInvitation", "freeTrialsInSignup", "freeTrialNudgeOnThankYouPage", "monthlyPlanPricing", "privacyCheckbox", "verticalThemes", "domainSuggestionVendor", "guidedTours", "triforce", "domainCreditsInfoNotice", "themesHeaderNudge", "planPricing", "domainsWithPlansOnly", "sidebarPlanLinkMyPlan", "wpcomPluginsInSidebar", "wordadsInstantActivation" ]
+  "knownABTestKeys": [ "freeTrials", "freePlansDefault", "multiDomainRegistrationV1", "translatorInvitation", "freeTrialsInSignup", "freeTrialNudgeOnThankYouPage", "monthlyPlanPricing", "privacyCheckbox", "verticalThemes", "domainSuggestionVendor", "guidedTours", "triforce", "domainCreditsInfoNotice", "themesHeaderNudge", "planPricing", "domainsWithPlansOnly", "sidebarPlanLinkMyPlan", "wpcomPluginsInSidebar", "wordadsInstantActivation", "googleVouchers" ]
 }
