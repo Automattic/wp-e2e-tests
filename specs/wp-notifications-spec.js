@@ -61,8 +61,8 @@ test.describe( 'Notifications: (' + screenSize + ')', function() {
 			} );
 
 			test.it( 'Can see the comment', function() {
-				return this.viewPostPage.commentShown( this.comment ).then( ( shown ) => {
-					return assert.equal( shown, true, `The comment: '${this.comment}' was not shown on the blog post page after submitting it` );
+				return this.viewPostPage.commentEventuallyShown( this.comment ).then( ( shown ) => {
+					return assert.equal( shown, true, `The comment: '${this.comment}' was not shown on the blog post page after submitting it and waiting for it` );
 				} );
 			} );
 
