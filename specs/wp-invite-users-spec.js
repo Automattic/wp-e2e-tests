@@ -107,6 +107,9 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 							if ( link.href.includes( 'accept-invite' ) ) {
 								acceptInviteURL = link.href;
 								acceptInviteURL = acceptInviteURL.replace( 'https://wordpress.com', calypsoBaseUrl );
+								if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) === 'true' ) {
+									acceptInviteURL = acceptInviteURL + '?branch=' + config.get( 'branchName' );
+								}
 							}
 						}
 						assert.notEqual( acceptInviteURL, '', 'Could not locate the accept invite URL in the invite email' );
@@ -271,6 +274,9 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 							if ( link.href.includes( 'accept-invite' ) ) {
 								acceptInviteURL = link.href;
 								acceptInviteURL = acceptInviteURL.replace( 'https://wordpress.com', calypsoBaseUrl );
+								if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) === 'true' ) {
+									acceptInviteURL = acceptInviteURL + '?branch=' + config.get( 'branchName' );
+								}
 							}
 						}
 						assert.notEqual( acceptInviteURL, '', 'Could not locate the accept invite URL in the invite email' );
@@ -419,6 +425,9 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 							if ( link.href.includes( 'accept-invite' ) ) {
 								acceptInviteURL = link.href;
 								acceptInviteURL = acceptInviteURL.replace( 'https://wordpress.com', calypsoBaseUrl );
+								if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) === 'true' ) {
+									acceptInviteURL = acceptInviteURL + '?branch=' + config.get( 'branchName' );
+								}
 							}
 						}
 						assert.notEqual( acceptInviteURL, '', 'Could not locate the accept invite URL in the invite email' );
@@ -583,6 +592,9 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 							if ( link.href.includes( 'accept-invite' ) ) {
 								acceptInviteURL = link.href;
 								acceptInviteURL = acceptInviteURL.replace( 'https://wordpress.com', calypsoBaseUrl );
+								if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) === 'true' ) {
+									acceptInviteURL = acceptInviteURL + '?branch=' + config.get( 'branchName' );
+								}
 							}
 						}
 						assert.notEqual( acceptInviteURL, '', 'Could not locate the accept invite URL in the invite email' );
