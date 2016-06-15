@@ -53,7 +53,7 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 		} );
 
 		test.describe( 'when a theme more button is clicked', function() {
-			test.it( function() {
+			test.it( 'click theme more button', function() {
 				this.themesPage.clickNewThemeMoreButton();
 			} );
 
@@ -62,7 +62,7 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 			} );
 
 			test.describe( 'when Preview is clicked', function() {
-				test.it( function() {
+				test.it( 'click preview popover', function() {
 					this.themesPage.clickPopoverItem( 'Preview' );
 					this.themePreviewPage = new ThemePreviewPage( this.driver );
 				} );
@@ -72,7 +72,7 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 				} );
 
 				test.describe( 'when Try & Customize is clicked', function() {
-					test.it( function() {
+					test.it( 'choose customize', function() {
 						this.themePreviewPage.customize();
 						this.siteSelector = new SiteSelectorComponent( this.driver );
 					} );
@@ -84,7 +84,7 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 					} );
 
 					test.describe( 'when a site is selected, and Customize is clicked', function() {
-						test.it( function() {
+						test.it( 'select first site', function() {
 							this.siteSelector.selectFirstSite();
 							this.siteSelector.ok();
 						} );
@@ -137,7 +137,7 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 		} );
 
 		test.describe( 'when a theme more button is clicked', function() {
-			test.it( function() {
+			test.it( 'click new theme more button', function() {
 				this.themesPage.clickNewThemeMoreButton();
 			} );
 
