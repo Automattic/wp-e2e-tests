@@ -128,17 +128,20 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 									return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
 								} );
 
-								test.describe( 'Step Seven: Processing', function() {
-									test.it( 'Can then see the account processing page', function() {
+								test.describe( 'Step Seven: Sign Up Processing', function() {
+									test.it( 'Can then see the sign up processing page', function() {
 										this.signupProcessingPage = new SignupProcessingPage( driver );
 										return this.signupProcessingPage.displayed().then( ( displayed ) => {
 											return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
 										} );
 									} );
 
-									test.it( 'The processing page will automatically disapear when finished', function() {
-										this.signupProcessingPage = new SignupProcessingPage( driver );
-										return this.signupProcessingPage.waitForPageToDisappear();
+									test.it( 'The sign up processing page will finish and show a \'Continue\' button', function() {
+										this.signupProcessingPage.waitForContinueButtonToBeEnabled();
+									} );
+
+									test.it( 'Clicking the \'Continue\' button continues the process', function() {
+										this.signupProcessingPage.continueAlong();
 									} );
 
 									test.describe( 'Step Eight: View Site/Trampoline', function() {
@@ -286,15 +289,19 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 								} );
 
 								test.describe( 'Step Seven: Processing', function() {
-									test.it( 'Can then see the account processing page', function() {
+									test.it( 'Can then see the sign up processing page', function() {
 										this.signupProcessingPage = new SignupProcessingPage( driver );
 										return this.signupProcessingPage.displayed().then( ( displayed ) => {
 											return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
 										} );
 									} );
 
-									test.it( 'The processing page will automatically disapear when finished', function() {
-										return this.signupProcessingPage.waitForPageToDisappear();
+									test.it( 'The sign up processing page will finish and show a \'Continue\' button', function() {
+										this.signupProcessingPage.waitForContinueButtonToBeEnabled();
+									} );
+
+									test.it( 'Clicking the \'Continue\' button continues the process', function() {
+										this.signupProcessingPage.continueAlong();
 									} );
 
 									test.describe( 'Step Eight: Secure Payment Page', function() {
