@@ -10,8 +10,6 @@ import ThemesPage from '../lib/pages/themes-page.js';
 import ThemePreviewPage from '../lib/pages/theme-preview-page.js';
 import CustomizerPage from '../lib/pages/customizer-page.js';
 
-import ThemeDialogComponent from '../lib/components/theme-dialog-component.js';
-
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
@@ -48,11 +46,6 @@ test.describe( 'Themes: (' + screenSize + ')', function() {
 
 				this.customizerPage = new CustomizerPage( driver );
 				return this.customizerPage.saveNewTheme();
-			} );
-
-			test.it( 'Can see theme selection message dialog and go back to themes', function() {
-				this.themeDialogComponent = new ThemeDialogComponent( driver );
-				return this.themeDialogComponent.goBackToThemes();
 			} );
 
 			test.it( 'Can see themes page', function() {
