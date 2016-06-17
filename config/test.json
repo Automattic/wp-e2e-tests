@@ -1,6 +1,8 @@
 {
-  "calypsoBaseURL": "https://wordpress.com",
-  "explicitWaitMS": 20000,
+  "calypsoBaseURL": "https://calypso.live",
+  "liveBranch": "true",
+  "branchName": "try/branch-for-e2e-testing",
+  "explicitWaitMS": 30000,
   "mochaTimeoutMS": 160000,
   "mochaVisDiffTimeoutMS": 320000,
   "mochaDevDocsTimeoutMS": 500000,
