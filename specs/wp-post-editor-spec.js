@@ -43,7 +43,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 
 		test.before( 'Create image file for upload', function() {
-			mediaHelper.createFile().then( function( details ) {
+			return mediaHelper.createFile().then( function( details ) {
 				fileDetails = details;
 			} );
 		} );
@@ -58,7 +58,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 
 			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
-				loginFlow.loginAndStartNewPost();
+				return loginFlow.loginAndStartNewPost();
 			} );
 
 			test.describe( 'Create, Preview and Post', function() {

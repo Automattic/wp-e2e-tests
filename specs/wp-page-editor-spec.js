@@ -31,14 +31,14 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 
 	test.describe( 'Public Pages:', function() {
 		this.bailSuite( true );
-		var fileDetails;
+		let fileDetails;
 
 		test.before( 'Delete Cookies and Local Storage', function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		test.before( 'Create image file for upload', function() {
-			mediaHelper.createFile().then( function( details ) {
+			return mediaHelper.createFile().then( function( details ) {
 				fileDetails = details;
 			} );
 		} );
@@ -57,7 +57,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 				editorPage.enterTitle( pageTitle );
 				editorPage.enterContent( pageQuote + '\n' );
 				editorPage.enterPostImage( fileDetails );
-				editorPage.waitUntilImageInserted( fileDetails );
+				return editorPage.waitUntilImageInserted( fileDetails );
 			} );
 
 			test.it( 'Can disable sharing buttons', function() {
