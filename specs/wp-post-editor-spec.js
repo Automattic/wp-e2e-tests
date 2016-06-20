@@ -235,8 +235,6 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 	} );
 
 	test.describe( 'Private Posts:', function() {
-		this.bailSuite( true );
-
 		test.before( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
@@ -276,52 +274,59 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 				} );
 
 				test.it( 'Can set visibility to private which immediately publishes it', function() {
-					let editorPage = new EditorPage( driver );
-					editorPage.setVisibilityToPrivate();
+					if ( config.get( 'useNewMobileEditor' ) === true ) {
+						const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						postEditorSidebarComponent.setVisibilityToPrivate();
+					} else {
+						const editorPage = new EditorPage( driver );
+						editorPage.setVisibilityToPrivate();
+					}
+					const editorPage = new EditorPage( driver );
 					editorPage.viewPublishedPostOrPage();
 				} );
-			} );
 
-			test.describe( 'As a logged in user ', function() {
-				test.it( 'Can see correct post title', function() {
-					let viewPostPage = new ViewPostPage( driver );
-					viewPostPage.postTitle().then( function( postTitle ) {
-						assert.equal( postTitle.toLowerCase(), 'private: ' + blogPostTitle.toLowerCase(), 'The published blog post title is not correct' );
+				test.describe( 'As a logged in user ', function() {
+					test.it( 'Can see correct post title', function() {
+						let viewPostPage = new ViewPostPage( driver );
+						viewPostPage.postTitle().then( function( postTitle ) {
+							assert.equal( postTitle.toLowerCase(), 'private: ' + blogPostTitle.toLowerCase(), 'The published blog post title is not correct' );
+						} );
 					} );
-				} );
 
-				test.it( 'Can see correct post content', function() {
-					let viewPostPage = new ViewPostPage( driver );
-					viewPostPage.postContent().then( function( content ) {
-						assert.equal( content.indexOf( blogPostQuote ) > -1, true, 'The post content (' + content + ') does not include the expected content (' + blogPostQuote + ')' );
+					test.it( 'Can see correct post content', function() {
+						let viewPostPage = new ViewPostPage( driver );
+						viewPostPage.postContent().then( function( content ) {
+							assert.equal( content.indexOf( blogPostQuote ) > -1, true, 'The post content (' + content + ') does not include the expected content (' + blogPostQuote + ')' );
+						} );
 					} );
-				} );
 
-				test.it( 'Can see comments enabled', function() {
-					let viewPostPage = new ViewPostPage( driver );
-					viewPostPage.commentsVisible().then( function( visible ) {
-						assert.equal( visible, true, 'Comments are not shown even though they were enabled when creating the post.' );
+					test.it( 'Can see comments enabled', function() {
+						let viewPostPage = new ViewPostPage( driver );
+						viewPostPage.commentsVisible().then( function( visible ) {
+							assert.equal( visible, true, 'Comments are not shown even though they were enabled when creating the post.' );
+						} );
 					} );
-				} );
 
-				test.it( 'Can\'t see sharing buttons', function() {
-					let viewPostPage = new ViewPostPage( driver );
-					viewPostPage.sharingButtonsVisible().then( function( visible ) {
-						assert.equal( visible, false, 'Sharing buttons are shown even though they were disabled when creating the post.' );
+					test.it( 'Can\'t see sharing buttons', function() {
+						let viewPostPage = new ViewPostPage( driver );
+						viewPostPage.sharingButtonsVisible().then( function( visible ) {
+							assert.equal( visible, false, 'Sharing buttons are shown even though they were disabled when creating the post.' );
+						} );
 					} );
-				} );
-			} );
 
-			test.describe( 'As a non-logged in user ', function() {
-				test.it( 'Delete cookies (log out)', function() {
-					driverManager.clearCookiesAndDeleteLocalStorage( driver );
-					driver.navigate().refresh();
-				} );
 
-				test.it( 'Can\'t see post at all', function() {
-					let notFoundPage = new NotFoundPage( driver );
-					notFoundPage.displayed().then( function( displayed ) {
-						assert.equal( displayed, true, 'Could not see the not found (404) page. Check that it is displayed' );
+					test.describe( 'As a non-logged in user ', function() {
+						test.it( 'Delete cookies (log out)', function() {
+							driverManager.clearCookiesAndDeleteLocalStorage( driver );
+							driver.navigate().refresh();
+						} );
+
+						test.it( 'Can\'t see post at all', function() {
+							let notFoundPage = new NotFoundPage( driver );
+							notFoundPage.displayed().then( function( displayed ) {
+								assert.equal( displayed, true, 'Could not see the not found (404) page. Check that it is displayed' );
+							} );
+						} );
 					} );
 				} );
 			} );
@@ -340,18 +345,24 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			var blogPostQuote = 'The best thing about the future is that it comes only one day at a time.\n— Abraham Lincoln\n';
 			var postPassword = 'e2e' + new Date().getTime().toString();
 
-			test.before( 'Can log in', function() {
+			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
 				loginFlow.loginAndStartNewPost();
 			} );
 
 			test.it( 'Can enter post title and content and set to password protected', function() {
-				let editorPage = new EditorPage( driver );
-				editorPage.enterTitle( blogPostTitle );
-				editorPage.setVisibilityToPasswordProtected( postPassword );
-				editorPage.enterContent( blogPostQuote );
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				postEditorSidebarComponent.ensureSaved();
+				this.editorPage = new EditorPage( driver );
+				this.editorPage.enterTitle( blogPostTitle );
+				if ( config.get( 'useNewMobileEditor' ) === true ) {
+					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+					this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
+				} else {
+					this.editorPage.setVisibilityToPasswordProtected( postPassword );
+				}
+				this.editorPage = new EditorPage( driver );
+				this.editorPage.enterContent( blogPostQuote );
+				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				this.postEditorSidebarComponent.ensureSaved();
 			} );
 
 			test.it( 'Can enable sharing buttons', function() {
@@ -652,13 +663,18 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			test.it( 'Can publish post', function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 				postEditorSidebarComponent.publishPost();
+				postEditorSidebarComponent.waitForSuccessViewPostNotice();
 			} );
 
 			test.it( 'Can trash the new post', function() {
-				const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				postEditorSidebarComponent.ensureSaved();
-				const editorPage = new EditorPage( driver );
-				editorPage.trashPost();
+				let editorPage = new EditorPage( driver );
+				if ( config.get( 'useNewMobileEditor' ) === true ) {
+					const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+					postEditorSidebarComponent.trashPost();
+				} else {
+					editorPage = new EditorPage( driver );
+					editorPage.trashPost();
+				}
 			} );
 
 			test.it( 'Can then see the Reader page', function() {

@@ -162,8 +162,13 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 			} );
 
 			test.it( 'Can set visibility to private', function() {
-				let editorPage = new EditorPage( driver );
-				editorPage.setVisibilityToPrivate();
+				if ( config.get( 'useNewMobileEditor' ) === true ) {
+					const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+					postEditorSidebarComponent.setVisibilityToPrivate();
+				} else {
+					const editorPage = new EditorPage( driver );
+					editorPage.setVisibilityToPrivate();
+				}
 			} );
 
 			test.describe( 'Publish and View', function() {
@@ -216,12 +221,19 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 			} );
 
 			test.it( 'Can enter page title and content and set to password protected', function() {
-				let editorPage = new EditorPage( driver );
-				editorPage.enterTitle( pageTitle );
-				editorPage.setVisibilityToPasswordProtected( postPassword );
-				editorPage.enterContent( pageQuote );
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				postEditorSidebarComponent.ensureSaved();
+				this.editorPage = new EditorPage( driver );
+				this.editorPage.enterTitle( pageTitle );
+				if ( config.get( 'useNewMobileEditor' ) === true ) {
+					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+					this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
+				} else {
+					this.editorPage = new EditorPage( driver );
+					this.editorPage.setVisibilityToPasswordProtected( postPassword );
+				}
+				this.editorPage = new EditorPage( driver );
+				this.editorPage.enterContent( pageQuote );
+				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				this.postEditorSidebarComponent.ensureSaved();
 			} );
 
 			test.describe( 'Publish and View', function() {
