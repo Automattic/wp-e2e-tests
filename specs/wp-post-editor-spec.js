@@ -353,14 +353,14 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			test.it( 'Can enter post title and content and set to password protected', function() {
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterTitle( blogPostTitle );
-				this.editorPage.enterContent( blogPostQuote );
 				if ( config.get( 'useNewMobileEditor' ) === true ) {
 					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				} else {
-					this.editorPage = new EditorPage( driver );
 					this.editorPage.setVisibilityToPasswordProtected( postPassword );
 				}
+				this.editorPage = new EditorPage( driver );
+				this.editorPage.enterContent( blogPostQuote );
 				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 				this.postEditorSidebarComponent.ensureSaved();
 			} );
