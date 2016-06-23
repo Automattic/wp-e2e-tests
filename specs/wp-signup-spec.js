@@ -8,12 +8,12 @@ import * as dataHelper from '../lib/data-helper.js';
 import WPHomePage from '../lib/pages/wp-home-page.js';
 import ChooseAThemePage from '../lib/pages/signup/choose-a-theme-page.js';
 import StartPage from '../lib/pages/signup/start-page.js';
+import StartPremiumPage from '../lib/pages/signup/start-premium-page.js';
 import SurveyPage from '../lib/pages/signup/survey-page.js';
 import DesignTypeChoicePage from '../lib/pages/signup/design-type-choice-page.js';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page.js';
 import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.js';
 import SignupProcessingPage from '../lib/pages/signup/signup-processing-page.js';
-import CheckOutPage from '../lib/pages/signup/checkout-page.js';
 import CheckOutThankyouPage from '../lib/pages/signup/checkout-thankyou-page.js';
 import ViewBlogPage from '../lib/pages/signup/view-blog-page.js';
 
@@ -189,7 +189,7 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Sign up for a site on a premium paid plan', function() {
+	test.describe( 'Sign up for a site on a premium paid plan through main flow', function() {
 		this.bailSuite( true );
 
 		const blogName = 'e2e' + new Date().getTime().toString();
@@ -324,6 +324,140 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 												return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
 													return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
 												} );
+											} );
+										} );
+									} );
+								} );
+							} );
+						} );
+					} );
+				} );
+			} );
+		} );
+	} );
+
+	test.describe( 'Sign up for a site on a premium paid plan coming in via /create as premium flow', function() {
+		this.bailSuite( true );
+
+		const blogName = 'e2e' + new Date().getTime().toString();
+		const emailName = new Date().getTime().toString();
+		const expectedBlogAddress = `${blogName}.wordpress.com`;
+		const emailAddress = dataHelper.getEmailAddress( emailName, signupInboxId );
+		const password = config.get( 'passwordForNewTestSignUps' );
+		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
+		const testCardHolder = 'End To End Testing';
+		const testVisaNumber = '4483910254901646';
+		const testVisaExpiry = '02/19';
+		const testCVV = '300';
+		const testCardCountryCode = 'AU';
+		const testCardPostCode = '4000';
+
+		test.it( 'Ensure we are not logged in as anyone', function() {
+			return driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		test.it( 'We can set the sandbox cookie for payments', function() {
+			this.WPHomePage = new WPHomePage( driver, { visit: true } );
+			this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+		} );
+
+		test.describe( 'Step One: Survey', function() {
+			test.it( 'When we visit the /start/premium URL we see the survey page', function() {
+				this.startPage = new StartPremiumPage( driver, { visit: true } );
+				this.surveyPage = new SurveyPage( driver );
+				return this.surveyPage.displayed().then( ( displayed ) => {
+					return assert.equal( displayed, true, 'The survey starting page is not displayed' );
+				} );
+			} );
+
+			test.it( 'Can select the first survey option', function() {
+				this.surveyPage.selectFirstSurveyOptions();
+			} );
+
+			test.describe( 'Step Two: Design Type Choice', function() {
+				test.it( 'Can see the design type choice page', function() {
+					this.designTypeChoicePage = new DesignTypeChoicePage( driver );
+					return this.designTypeChoicePage.displayed().then( ( displayed ) => {
+						return assert.equal( displayed, true, 'The design type choice page is not displayed' );
+					} );
+				} );
+
+				test.it( 'Can select the first design type', function() {
+					this.designTypeChoicePage.selectFirstDesignType();
+				} );
+
+				test.describe( 'Step Three: Themes', function() {
+					test.it( 'Can see the choose a theme page as the starting page', function() {
+						this.chooseAThemePage = new ChooseAThemePage( driver );
+						return this.chooseAThemePage.displayed().then( ( displayed ) => {
+							return assert.equal( displayed, true, 'The choose a theme start page is not displayed' );
+						} );
+					} );
+
+					test.it( 'Can select the first theme', function() {
+						return this.chooseAThemePage.selectFirstTheme();
+					} );
+
+					test.describe( 'Step Four: Domains', function() {
+						test.it( 'Can then see the domains page ', function() {
+							this.findADomainComponent = new FindADomainComponent( driver );
+							return this.findADomainComponent.displayed().then( ( displayed ) => {
+								return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
+							} );
+						} );
+
+						test.it( 'Can search for a blog name, can see and select a free WordPress.com blog address in results', function() {
+							this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+							this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
+								assert.equal( actualAddress, expectedBlogAddress, 'The expected free address is not shown' )
+							} );
+							return this.findADomainComponent.selectFreeAddress();
+						} );
+
+						test.describe( 'Step Five: Account', function() {
+							test.it( 'Can then enter account details', function() {
+								this.createYourAccountPage = new CreateYourAccountPage( driver );
+								this.createYourAccountPage.displayed().then( ( displayed ) => {
+									assert.equal( displayed, true, 'The create account page is not displayed' );
+								} );
+								return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
+							} );
+
+							test.describe( 'Step Six: Processing', function() {
+								test.it( 'Can then see the sign up processing page', function() {
+									this.signupProcessingPage = new SignupProcessingPage( driver );
+									return this.signupProcessingPage.displayed().then( ( displayed ) => {
+										return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
+									} );
+								} );
+
+								test.it( 'The sign up processing page will finish and show a \'Continue\' button', function() {
+									this.signupProcessingPage.waitForContinueButtonToBeEnabled();
+								} );
+
+								test.it( 'Clicking the \'Continue\' button continues the process', function() {
+									this.signupProcessingPage.continueAlong();
+								} );
+
+								test.describe( 'Step Seven: Secure Payment Page', function() {
+									test.it( 'Can then see the secure payment page', function() {
+										this.securePaymentComponent = new SecurePaymentComponent( driver );
+										return this.securePaymentComponent.displayed().then( ( displayed ) => {
+											return assert.equal( displayed, true, 'The secure payment page is not displayed' );
+										} );
+									} );
+
+									test.it( 'Can enter and submit test payment details', function() {
+										this.securePaymentComponent.enterTestCreditCardDetails( testCardHolder, testVisaNumber, testVisaExpiry, testCVV, testCardCountryCode, testCardPostCode );
+										this.securePaymentComponent.submitPaymentDetails();
+										return this.securePaymentComponent.waitForPageToDisappear();
+									} );
+
+									test.describe( 'Step Eight: Checkout Thank You Page', function() {
+										test.it( 'Can see the secure check out thank you page', function() {
+											this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
+											return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
+												return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
 											} );
 										} );
 									} );
