@@ -10,6 +10,7 @@
   "browser": "chrome",
   "proxy": "direct",
   "saveAllScreenshots": false,
+  "reportWarningsToSlack": false,
   "neverSaveScreenshots": false,
   "useNewMobileEditor": false,
   "useNewMailosaur": true,
