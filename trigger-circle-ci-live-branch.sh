@@ -14,7 +14,7 @@ post_data=$(cat <<EOF
     "RUN_SPECIFIED": "true",
     "RUN_ARGS": "${_run_args}",
     "liveBranches": "true",
-    "NODE_ENV": "live-branches",
+    "NODE_ENV_OVERRIDE": "live-branches",
     "branchName": "${_calypso_branch}"
   }
 }

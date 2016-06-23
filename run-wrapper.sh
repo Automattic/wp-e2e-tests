@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ "$NODE_ENV_OVERRIDE" != "" ]; then
+  NODE_ENV=$NODE_ENV_OVERRIDE
+fi
+
 export TESTARGS="-R -p"
 
 if [ "$RUN_SPECIFIED" == "true" ]; then
