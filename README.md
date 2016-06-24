@@ -13,12 +13,6 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
 brew install node-js chromedriver
 ```
 
-#### Setup Mocha
-```
-git submodule init
-git submodule update
-```
-
 #### Install dependencies
 ```
 npm install
@@ -32,7 +26,7 @@ npm install ./spec-xunit-slack-reporter-0.0.1.tgz
 
 #### To run an individual spec
 
-`./mocha/bin/mocha specs/wp-log-in-out-spec.js lib/after.js`
+`./node_modules/mocha/bin/mocha specs/wp-log-in-out-spec.js lib/after.js`
 
 Note: you can also change the spec _temporarily_ the use the <code>.only</code> syntax so it is the only spec that runs (making sure this isn't committed)
 
