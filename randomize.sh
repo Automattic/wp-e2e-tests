@@ -10,6 +10,7 @@ DIR=$1
 
 NUM=0
 for file in $(ls $DIR | shuf); do
+	echo $file
 	mv $DIR/$file $DIR/${NUM}_${file}
 	((NUM++))
 done
