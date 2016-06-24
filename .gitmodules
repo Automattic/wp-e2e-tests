@@ -1,3 +1,0 @@
-[submodule "mocha"]
-	path = mocha
-	url = git@github.com:hoverduck/mocha.git

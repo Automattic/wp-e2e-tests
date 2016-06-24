@@ -7,11 +7,6 @@ general:
     - "screenshots"
     - "logs"
 
-checkout:
-  post:
-    - git submodule sync
-    - git submodule update --init
-
 dependencies:
   pre:
     - npm pack lib/reporter
