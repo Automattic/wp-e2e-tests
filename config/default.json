@@ -14,5 +14,5 @@
   "neverSaveScreenshots": false,
   "useNewMobileEditor": false,
   "useNewMailosaur": true,
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "translatorInvitation", "freeTrialsInSignup", "freeTrialNudgeOnThankYouPage", "privacyCheckbox", "domainSuggestionVendor", "guidedTours", "domainCreditsInfoNotice", "domainsWithPlansOnly", "wordadsInstantActivation", "googleVouchers", "personalPlan", "wordpressAdCredits" ]
+  "knownABTestKeys": [ "multiDomainRegistrationV1", "translatorInvitation", "freeTrialsInSignup", "freeTrialNudgeOnThankYouPage", "privacyCheckbox", "domainSuggestionVendor", "guidedTours", "domainCreditsInfoNotice", "domainsWithPlansOnly", "wordadsInstantActivation", "googleVouchers", "wordpressAdCredits" ]
 }
