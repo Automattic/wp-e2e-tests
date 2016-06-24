@@ -13,12 +13,6 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
 brew install node-js chromedriver
 ```
 
-#### Setup Mocha
-```
-git submodule init
-git submodule update
-```
-
 #### Install dependencies
 ```
 npm install
@@ -32,7 +26,7 @@ npm install ./spec-xunit-slack-reporter-0.0.1.tgz
 
 #### To run an individual spec
 
-`./mocha/bin/mocha specs/wp-log-in-out-spec.js lib/after.js`
+`./node_modules/mocha/bin/mocha specs/wp-log-in-out-spec.js lib/after.js`
 
 Note: you can also change the spec _temporarily_ the use the <code>.only</code> syntax so it is the only spec that runs (making sure this isn't committed)
 
@@ -69,8 +63,8 @@ Or you can use the -s option on the run.sh script:
 `./run.sh -g -s desktop,tablet`
 
 #### Config / Environment Variables
- 
-The tests use the node config library to specify config values for the tests. 
+
+The tests use the node config library to specify config values for the tests.
 
 Under the config directory, there are files for each environment: <code>default.json</code> is the base for all environments, then <code>development.json</code> for local, and <code>test.json</code> for CI.
 
@@ -99,7 +93,7 @@ The local configurations are excluded from the repository, in order to prevent a
 
 A full list of config values are:
 
-| Name | Description | Example | Required | Store in file? | 
+| Name | Description | Example | Required | Store in file? |
 | ---- | ----------- | ------- | -------- | ------------------- |
 | browser | The browser to use: either <code>firefox</code> or <code>chrome</code> | <code>chrome</code> | Yes |  Yes |
 | proxy | The type of proxy to use: either <code>system</code> to use whatever your system is configured to use, or <code>direct</code> to use no proxy. | <code>direct</code> | Yes |  Yes |
@@ -136,7 +130,7 @@ A full list of config values are:
 #### Standalone Environment Variables
 
 
-| Name | Description | Example | Required | Store in file? | 
+| Name | Description | Example | Required | Store in file? |
 | ---- | ----------- | ------- | -------- | ------------------- |
 | slackToken | This is a token for uploading files/screenshots to Slack (https://api.slack.com/tokens -- requires Slack login) | xxxx-##########-##########-###########-XXXXXXXXXX | No | **NO** |
 
