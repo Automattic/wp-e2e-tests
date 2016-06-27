@@ -61,9 +61,9 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 				this.themesPage.popOverMenuDisplayed().then( ( displayed ) => assert( displayed, true, 'Popover menu not displayed' ) );
 			} );
 
-			test.describe( 'when Preview is clicked', function() {
-				test.it( 'click preview popover', function() {
-					this.themesPage.clickPopoverItem( 'Preview' );
+			test.describe( 'when "Live demo" is clicked', function() {
+				test.it( 'click live demo popover', function() {
+					this.themesPage.clickPopoverItem( 'Live demo' );
 					this.themePreviewPage = new ThemePreviewPage( this.driver );
 				} );
 
