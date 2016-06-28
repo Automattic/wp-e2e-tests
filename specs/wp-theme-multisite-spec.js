@@ -63,12 +63,14 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 
 			test.describe( 'when "Live demo" is clicked', function() {
 				test.it( 'click live demo popover', function() {
-					this.themesPage.clickPopoverItem( 'Live demo' );
-					this.themePreviewPage = new ThemePreviewPage( this.driver );
+					return this.themesPage.clickPopoverItem( 'Live demo' );
 				} );
 
 				test.it( 'should show a preview when Preview is clicked', function() {
-					assert( this.themePreviewPage.foundPage, true, 'Theme preview not found' );
+					this.themePreviewPage = new ThemePreviewPage( this.driver );
+					this.themePreviewPage.displayed().then( ( displayed ) => {
+						assert.equal( displayed, true, 'Could not locate the theme preview page' );
+					} );
 				} );
 
 				test.describe( 'when Try & Customize is clicked', function() {
