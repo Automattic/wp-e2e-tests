@@ -8,6 +8,7 @@ import LoginFlow from '../lib/flows/login-flow.js';
 
 import ThemesPage from '../lib/pages/themes-page.js';
 import ThemePreviewPage from '../lib/pages/theme-preview-page.js';
+import ThemeDetailPage from '../lib/pages/theme-detail-page.js';
 import CustomizerPage from '../lib/pages/customizer-page.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
@@ -38,6 +39,11 @@ test.describe( 'Themes: (' + screenSize + ')', function() {
 				this.themesPage.searchFor( 'Twenty F' );
 				this.themesPage.waitForThemeStartingWith( 'Twenty F' );
 				return this.themesPage.selectNewThemeStartingWith( 'Twenty F' );
+			} );
+
+			test.it( 'Can see theme Details page, open Preview/Live Demo', function() {
+				this.themeDetailPage = new ThemeDetailPage( driver );
+				return this.themeDetailPage.openLiveDemo();
 			} );
 
 			test.it( 'Can preview, customize and save theme', function() {
