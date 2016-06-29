@@ -11,7 +11,7 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 
-var driver;
+let driver;
 
 test.before( 'Start Browser', function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -25,7 +25,7 @@ test.describe( 'Guided Tours: (' + screenSize + ')', function() {
 	test.describe( 'Forcing a tour:', function() {
 		test.before( 'Logs in', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
-			let loginFlow = new LoginFlow( driver );
+			const loginFlow = new LoginFlow( driver );
 			loginFlow.login( '?tour=main' );
 			this.step = new GuidedTourFirstStep( driver );
 		} );
