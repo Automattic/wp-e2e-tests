@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Notify Slack if any tests are being skipped
+if [ "$SKIP_TEST_REGEX" != "" ]; then
+  babel-node --presets es2015 lib/slack-ping-cli.js "Attention! Tests are being skipped with pattern $SKIP_TEST_REGEX"
+fi
+if [ "$RUN_VISDIFF" != "true" ]; then
+  babel-node --presets es2015 lib/slack-ping-cli.js "Attention! Visual Diff tests are currently disabled!"
+fi
+
 if [ "$NODE_ENV_OVERRIDE" != "" ]; then
   NODE_ENV=$NODE_ENV_OVERRIDE
 fi
