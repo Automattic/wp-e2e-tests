@@ -31,7 +31,7 @@ test.describe( 'Guided Tours: (' + screenSize + ')', function() {
 		} );
 
 		it( 'Shows the initial step', function() {
-			return this.step.isFirstStepShown().then( shown => assert.equal( true, shown ) );
+			return this.step.isFirstStepShown().then( shown => assert.equal( shown, true ) );
 		} );
 	} );
 } );
