@@ -6,6 +6,7 @@
   "mochaTimeoutMS": 120000,
   "mochaVisDiffTimeoutMS": 240000,
   "startBrowserTimeoutMS": 10000,
+  "startBrowserTimeoutMS": 30000,
   "afterHookTimeoutMS": 20000,
   "browser": "chrome",
   "proxy": "direct",
@@ -14,5 +15,51 @@
   "neverSaveScreenshots": false,
   "useNewMobileEditor": false,
   "useNewMailosaur": true,
+  "sauceConfigurations": {
+    "osx-chrome": {
+        "browserName": "chrome",
+        "platform": "OS X 10.11",
+        "screenResolution": "2048x1536",
+        "name": "Sample selenium-webdriver test",
+        "nativeEvents": true,
+        "version": "50.0"
+    },
+    "osx-firefox": {
+        "browserName": "firefox",
+        "platform": "OS X 10.9",
+        "screenResolution": "1920x1440",
+        "name": "Sample selenium-webdriver test",
+        "nativeEvents": true,
+        "version": "46.0"
+    },
+    "osx-safari": {
+        "browserName": "safari",
+        "platform": "OS X 10.11",
+        "screenResolution": "2048x1536",
+        "name": "Sample selenium-webdriver test",
+        "nativeEvents": true,
+        "version": "9.0"
+    },
+    "win-firefox": {
+        "browserName": "firefox",
+        "platform": "Windows 10",
+        "name": "Sample selenium-webdriver test",
+        "nativeEvents": true,
+        "version": "46.0"
+    },
+    "linux-firefox": {
+        "browserName": "firefox",
+        "platform": "Linux",
+        "name": "Sample selenium-webdriver test",
+        "nativeEvents": true,
+        "version": "45.0"
+    },
+    "win-ie11": {
+        "browserName": "Internet Explorer",
+        "platform": "Windows 10",
+        "screenResolution": "1280x1024",
+        "version": "11.103"
+    }
+  },
   "knownABTestKeys": [ "multiDomainRegistrationV1", "translatorInvitation", "freeTrialsInSignup", "freeTrialNudgeOnThankYouPage", "privacyCheckbox", "domainSuggestionVendor", "guidedTours", "domainCreditsInfoNotice", "domainsWithPlansOnly", "wordadsInstantActivation", "googleVouchers", "personalPlan", "wordpressAdCredits" ]
 }
