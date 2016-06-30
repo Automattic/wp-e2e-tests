@@ -55,9 +55,8 @@
         "version": "45.0"
     },
     "win-ie11": {
-        "browserName": "internet explorer",
+        "browserName": "Internet Explorer",
         "platform": "Windows 10",
-        "name": "IE11 Test",
         "screenResolution": "1280x1024",
         "version": "11.103"
     }
