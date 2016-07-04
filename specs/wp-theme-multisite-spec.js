@@ -68,7 +68,9 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 				} );
 
 				test.it( 'should show a preview when Preview is clicked', function() {
-					assert( this.themePreviewPage.foundPage, true, 'Theme preview not found' );
+					this.themePreviewPage.displayed().then( ( displayed ) => {
+						assert( displayed, 'Theme preview not found' );
+					} );
 				} );
 
 				test.describe( 'when Try & Customize is clicked', function() {
