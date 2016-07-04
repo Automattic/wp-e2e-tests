@@ -2,7 +2,7 @@ import test from 'selenium-webdriver/testing';
 import config from 'config';
 import * as driverManager from '../../lib/driver-manager.js';
 import * as driverHelper from '../../lib/driver-helper.js';
-import * as slackNotifier from './slack-notifier';
+import * as slackNotifier from '../../lib/slack-notifier';
 
 import LoginFlow from '../../lib/flows/login-flow.js';
 
