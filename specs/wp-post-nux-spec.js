@@ -77,6 +77,11 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 					customizerPage.clickSiteTitleIconInPreview();
 					assert( customizerPage.waitForTitleFieldDisplayed(), 'The title field is not displayed' );
 				} );
+
+				test.it( 'Close the customizer', function() {
+					const customizerPage = new CustomizerPage( driver );
+					return customizerPage.close();
+				} );
 			} );
 		} );
 	} );
