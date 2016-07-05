@@ -5,7 +5,7 @@
   "emailWaitMS": 60000,
   "mochaTimeoutMS": 120000,
   "mochaVisDiffTimeoutMS": 240000,
-  "startBrowserTimeoutMS": 10000,
+  "mochaDevDocsTimeoutMS": 500000,
   "startBrowserTimeoutMS": 30000,
   "afterHookTimeoutMS": 20000,
   "browser": "chrome",
@@ -20,8 +20,6 @@
         "browserName": "chrome",
         "platform": "OS X 10.11",
         "screenResolution": "2048x1536",
-        "name": "Sample selenium-webdriver test",
-        "nativeEvents": true,
         "version": "50.0"
     },
     "osx-firefox": {

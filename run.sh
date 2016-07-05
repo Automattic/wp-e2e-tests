@@ -37,7 +37,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rpb:s:giv:wh" opt; do
+while getopts ":Rpb:s:giv:wl:h" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
@@ -66,6 +66,10 @@ while getopts ":Rpb:s:giv:wh" opt; do
       NODE_CONFIG_ARGS+=$IE11_CONFIG
       SCREENSIZES=desktop
       TARGET="specs/*wp-signup-spec.js" # wildcard needed to account for random filename ordering
+      ;;
+    l)
+      NODE_CONFIG_ARGS+="\"sauce\":\"true\",\"sauceConfig\":\"$OPTARG\""
+      TARGET="specs-visdiff/critical/"
       ;;
     v)
       VISDIFF=1

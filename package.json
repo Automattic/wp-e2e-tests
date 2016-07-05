@@ -34,7 +34,13 @@
     "sanitize-filename": "1.6.0",
     "saucelabs": "^1.2.0",
     "selenium-webdriver": "2.47.0",
-    "slack-notify": "0.1.4"
+    "slack-notify": "0.1.4",
+    "parallel-mocha": "~0.0.7",
+    "saucelabs": "^1.2.0",
+    "grunt": "0.4.5",
+    "grunt-shell": "^1.1.2",
+    "grunt-parallel": "^0.4.1",
+    "grunt-cli": "^0.1.13"
   },
   "devDependencies": {
     "eslint": "<2.3.0",
