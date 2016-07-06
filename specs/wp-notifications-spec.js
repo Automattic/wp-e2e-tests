@@ -83,6 +83,12 @@ test.describe( 'Notifications: (' + screenSize + ')', function() {
 							assert.equal( content.includes( expectedContent ), true, `The actual notifications content '${content}' does not contain expected content '${expectedContent}'` );
 						} );
 					} );
+
+					test.it( 'Can delete the comment', function() {
+						this.notificationsComponent.selectCommentByText( this.comment );
+						this.notificationsComponent.trashComment();
+						this.notificationsComponent.waitForUndoMessage();
+					} );
 				} );
 			} );
 		} );
