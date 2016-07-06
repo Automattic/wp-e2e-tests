@@ -43,9 +43,9 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 		this.bailSuite( true );
 
 		const blogName = 'e2e' + new Date().getTime().toString();
+		let newBlogAddress = '';
+		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailName = new Date().getTime().toString();
-		const expectedBlogAddress = blogName + '.wordpress.com';
-
 		const emailAddress = dataHelper.getEmailAddress( emailName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 
@@ -100,8 +100,10 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 
 						test.it( 'Can search for a blog name, can see and select a free .wordpress address in the results', function() {
 							this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+							this.findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
 							this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
-								assert.equal( actualAddress, expectedBlogAddress, 'The expected free address is not shown' )
+								assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
+								newBlogAddress = actualAddress;
 							} );
 							return this.findADomainComponent.selectFreeAddress();
 						} );
@@ -160,7 +162,7 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 
 										test.it( 'Can see the correct blog URL displayed', function() {
 											return this.viewBlogPage.urlDisplayed().then( ( url ) => {
-												return assert.equal( url, 'https://' + expectedBlogAddress + '/', 'The displayed URL on the view blog page is not as expected' );
+												return assert.equal( url, 'https://' + newBlogAddress + '/', 'The displayed URL on the view blog page is not as expected' );
 											} );
 										} );
 
@@ -195,8 +197,8 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 		this.bailSuite( true );
 
 		const blogName = 'e2e' + new Date().getTime().toString();
+		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailName = new Date().getTime().toString();
-		const expectedBlogAddress = `${blogName}.wordpress.com`;
 		const emailAddress = dataHelper.getEmailAddress( emailName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
@@ -263,8 +265,9 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 
 						test.it( 'Can search for a blog name, can see and select a free WordPress.com blog address in results', function() {
 							this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+							this.findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
 							this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
-								assert.equal( actualAddress, expectedBlogAddress, 'The expected free address is not shown' )
+								assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
 							} );
 							return this.findADomainComponent.selectFreeAddress();
 						} );
@@ -342,8 +345,8 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 		this.bailSuite( true );
 
 		const blogName = 'e2e' + new Date().getTime().toString();
+		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailName = new Date().getTime().toString();
-		const expectedBlogAddress = `${blogName}.wordpress.com`;
 		const emailAddress = dataHelper.getEmailAddress( emailName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
@@ -410,8 +413,9 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 
 						test.it( 'Can search for a blog name, can see and select a free WordPress.com blog address in results', function() {
 							this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+							this.findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
 							this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
-								assert.equal( actualAddress, expectedBlogAddress, 'The expected free address is not shown' )
+								assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
 							} );
 							return this.findADomainComponent.selectFreeAddress();
 						} );
