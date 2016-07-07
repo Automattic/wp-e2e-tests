@@ -593,14 +593,15 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 										} );
 									} );
 
+									test.it( 'Can choose domain privacy option', () => {
+										this.checkOutPage = new CheckOutPage( driver );
+										this.checkOutPage.selectAddPrivacyProtectionCheckbox();
+									} );
+
 									test.it( 'Can enter domain registrar details', () => {
 										this.checkOutPage = new CheckOutPage( driver );
 										this.checkOutPage.enterRegistarDetails( firstName, lastName, emailAddress, phoneNumber, countryCode, address, city, stateCode, postalCode );
-									} );
-
-									test.it( 'Can choose domain privacy option', () => {
-										this.checkOutPage = new CheckOutPage( driver );
-										this.checkOutPage.selectAddPrivacyProtection();
+										this.checkOutPage.submitForm();
 									} );
 
 									test.it( 'Can then see secure payment component', () => {
