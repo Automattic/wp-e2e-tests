@@ -347,7 +347,7 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 		} );
 	} );
 
-	test.describe( 'Add a new site on a personal paid plan with currency in CAD', function() {
+	test.describe( 'Add a new site on a business paid plan with currency in CAD', function() {
 		this.bailSuite( true );
 
 		const blogName = 'e2e' + new Date().getTime().toString();
@@ -376,7 +376,7 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 
 		test.describe( 'Step One: Survey', function() {
 			test.it( 'When we visit the start URL we see the survey page', function() {
-				this.startPage = new StartPage( driver, { visit: true, personalPlanSetting: 'show' } );
+				this.startPage = new StartPage( driver, { visit: true } );
 				this.surveyPage = new SurveyPage( driver );
 				return this.surveyPage.displayed().then( ( displayed ) => {
 					return assert.equal( displayed, true, 'The survey starting page is not displayed' );
@@ -438,9 +438,6 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 
 							test.it( 'Can see prices in CAD', function() {
 								const cadSymbol = 'C$';
-								this.pickAPlanPage.personalPlanPrice().then( ( price ) => {
-									assert( price.indexOf( cadSymbol ) === 0, `The personal plan price '${price} does not start with '${cadSymbol}'` );
-								} );
 								this.pickAPlanPage.premiumPlanPrice().then( ( price ) => {
 									assert( price.indexOf( cadSymbol ) === 0, `The premium plan price '${price} does not start with '${cadSymbol}'` );
 								} );
@@ -449,8 +446,8 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 								} );
 							} );
 
-							test.it( 'Can select the personal plan', function() {
-								return this.pickAPlanPage.selectPersonalPlan();
+							test.it( 'Can select the business plan', function() {
+								return this.pickAPlanPage.selectBusinessPlan();
 							} );
 
 							test.describe( 'Step Six: Processing', function() {
@@ -821,7 +818,7 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 		} );
 	} );
 
-	test.describe( 'Add a new site on a personal paid plan with currency in USD', function() {
+	test.describe( 'Add a new site on a premium paid plan with currency in USD', function() {
 		this.bailSuite( true );
 
 		const blogName = 'e2e' + new Date().getTime().toString();
@@ -850,7 +847,7 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 
 		test.describe( 'Step One: Survey', function() {
 			test.it( 'When we visit the start URL we see the survey page', function() {
-				this.startPage = new StartPage( driver, { visit: true, personalPlanSetting: 'show' } );
+				this.startPage = new StartPage( driver, { visit: true } );
 				this.surveyPage = new SurveyPage( driver );
 				return this.surveyPage.displayed().then( ( displayed ) => {
 					return assert.equal( displayed, true, 'The survey starting page is not displayed' );
@@ -912,9 +909,6 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 
 							test.it( 'Can see prices in USD', function() {
 								const usdSymbol = '$';
-								this.pickAPlanPage.personalPlanPrice().then( ( price ) => {
-									assert( price.indexOf( usdSymbol ) === 0, `The personal plan price '${price} does not start with '${usdSymbol}'` );
-								} );
 								this.pickAPlanPage.premiumPlanPrice().then( ( price ) => {
 									assert( price.indexOf( usdSymbol ) === 0, `The premium plan price '${price} does not start with '${usdSymbol}'` );
 								} );
@@ -923,8 +917,8 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 								} );
 							} );
 
-							test.it( 'Can select the personal plan', function() {
-								return this.pickAPlanPage.selectPersonalPlan();
+							test.it( 'Can select the premium plan', function() {
+								return this.pickAPlanPage.selectPremiumPlan();
 							} );
 
 							test.describe( 'Step Six: Processing', function() {
