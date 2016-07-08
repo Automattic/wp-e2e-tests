@@ -89,14 +89,15 @@ test.describe( 'Managing Domains: (' + screenSize + ')', function() {
 					} );
 				} );
 
+				test.it( 'Can choose domain privacy option', () => {
+					const checkOutPage = new CheckOutPage( driver );
+					checkOutPage.selectAddPrivacyProtectionCheckbox();
+				} );
+
 				test.it( 'Can enter domain registrar details', () => {
 					const checkOutPage = new CheckOutPage( driver );
 					checkOutPage.enterRegistarDetails( firstName, lastName, domainEmailAddress, phoneNumber, countryCode, address, city, stateCode, postalCode );
-				} );
-
-				test.it( 'Can choose domain privacy option', () => {
-					const checkOutPage = new CheckOutPage( driver );
-					checkOutPage.selectAddPrivacyProtection();
+					checkOutPage.submitForm();
 				} );
 
 				test.it( 'Can then see secure payment component', () => {
