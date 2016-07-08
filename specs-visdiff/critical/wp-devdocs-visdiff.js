@@ -64,6 +64,7 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 
 	test.it( 'Verify UI Components', function() {
 		this.timeout( mochaDevDocsTimeOut * 2 );
+require("assert").equals( 1, 0, 'OH NOES!' );
 		devdocsDesignPage.openUIComponents().then( function() {
 			devdocsDesignPage.getAllDesignElementLinks().then( function( hrefs ) {
 				let flow = driver.controlFlow();

@@ -37,7 +37,7 @@
     "saucelabs": "^1.2.0",
     "grunt": "0.4.5",
     "grunt-shell": "^1.1.2",
-    "grunt-parallel": "^0.4.1",
+    "grunt-concurrent": "^2.3.0",
     "grunt-cli": "^0.1.13"
   },
   "devDependencies": {
