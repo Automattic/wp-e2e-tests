@@ -97,8 +97,8 @@ NODE_CONFIG_ARG="$(joinStr , ${NODE_CONFIG_ARGS[*]})"
 if [ $PARALLEL == 1 ]; then
   # Assign an index to each test segment to run in parallel
   MOBILE=$(expr 0 % $CIRCLE_NODE_TOTAL)
-  DESKTOP=$(expr 1 % $CIRCLE_NODE_TOTAL)
-  TABLET=$(expr 2 % $CIRCLE_NODE_TOTAL)
+  TABLET=$(expr 1 % $CIRCLE_NODE_TOTAL)
+  DESKTOP=$(expr 2 % $CIRCLE_NODE_TOTAL)
   VISUAL=$(expr 3 % $CIRCLE_NODE_TOTAL)
   echo "Parallel execution details:"
   echo "mobile=$MOBILE, desktop=$DESKTOP, tablet=$TABLET, visual=$VISUAL, node=$CIRCLE_NODE_INDEX, total=$CIRCLE_NODE_TOTAL"
