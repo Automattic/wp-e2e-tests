@@ -78,6 +78,25 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 					assert( customizerPage.waitForTitleFieldDisplayed(), 'The title field is not displayed' );
 				} );
 
+				test.it( 'Close site identity', function() {
+					const customizerPage = new CustomizerPage( driver );
+					return customizerPage.closeOpenSection();
+				} );
+
+				test.it( 'Can update and see the site\'s colors', function() {
+					const customizerPage = new CustomizerPage( driver );
+					customizerPage.expandColorsAndBackgrounds();
+					customizerPage.chooseBackgroundColor();
+					customizerPage.previewShowsCustomBackgroundColor().then( ( displayed ) => {
+						assert( displayed, 'The customizer preview is not showing the custom background color' );
+					} );
+				} );
+
+				test.it( 'Close custom colors', function() {
+					const customizerPage = new CustomizerPage( driver );
+					return customizerPage.closeOpenSection();
+				} );
+
 				test.it( 'Close the customizer', function() {
 					const customizerPage = new CustomizerPage( driver );
 					return customizerPage.close();
