@@ -97,9 +97,40 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 					return customizerPage.closeOpenSection();
 				} );
 
-				test.it( 'Close the customizer', function() {
-					const customizerPage = new CustomizerPage( driver );
-					return customizerPage.close();
+				test.describe( 'Customize Heading Font', function() {
+					let headingFontName = '';
+
+					test.it( 'Expand fonts', function() {
+						const customizerPage = new CustomizerPage( driver );
+						customizerPage.expandFonts();
+					} );
+
+					test.it( 'Can set the site\'s heading font', function() {
+						const customizerPage = new CustomizerPage( driver );
+						return customizerPage.chooseFirstHeadingsFont().then( ( font ) => {
+							headingFontName = font.toLowerCase().replace( /\s/g, '' );
+						} );
+					} );
+
+					test.it( 'Can see the site\'s heading font in preview', function() {
+						const customizerPage = new CustomizerPage( driver );
+						assert( headingFontName !== '', 'The heading font was not retrieved from the customizer' );
+						customizerPage.previewUsesFont( headingFontName ).then( ( fontUsed ) => {
+							assert( fontUsed, `The font '${headingFontName}' does not appear to be used in the customizer preview` );
+						} );
+					} );
+
+					test.it( 'Close custom fonts', function() {
+						const customizerPage = new CustomizerPage( driver );
+						return customizerPage.closeOpenSection();
+					} );
+				} );
+
+				test.describe( 'Closing the customizer', function() {
+					test.it( 'Close the customizer', function() {
+						const customizerPage = new CustomizerPage( driver );
+						return customizerPage.close();
+					} );
 				} );
 			} );
 		} );
