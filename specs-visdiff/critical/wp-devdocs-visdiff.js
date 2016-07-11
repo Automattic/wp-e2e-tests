@@ -27,7 +27,6 @@ if ( process.env.CIRCLE_BUILD_NUM ) {
 }
 
 test.before( function() {
-	console.log( 'First test.before() in wp-devdocs-visdiff.js' );
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 	screenSize = driverManager.getSizeAsObject();
@@ -35,31 +34,20 @@ test.before( function() {
 
 test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 	var devdocsDesignPage;
-	console.log( 'Beginning DevDocs visdiff' );
 	this.timeout( mochaDevDocsTimeOut );
 
 	test.before( function() {
-		var timer;
-
-		console.log( 'Second test.before() in wp-devdocs-visdiff.js, about to open eyes object' );
-		eyes.open( driver, 'WordPress.com', 'DevDocs Design [' + screenSizeName + ']', screenSize ).then( function() {
-			console.log( 'The eyes object is open' );
-		} );
+		if ( config.has( 'sauce' ) && config.get( 'sauce' ) ) {
+			eyes.setBaselineName( 'cross-browser-devdocs' );
+			eyes.setMatchLevel( 'LAYOUT2' );
+		}
+		eyes.open( driver, 'WordPress.com', 'DevDocs Design [' + screenSizeName + ']', screenSize );
 
 		let loginFlow = new LoginFlow( driver );
-		loginFlow.login().then( function() {
-			console.log( 'Logged in' );
-			timer = setTimeout( function() {
-				console.log( 'DevDocs Page failed to load in time, calling window.stop()' );
-				driver.executeScript( 'window.stop()' );
-			}, 45000 );
-		} );
+		loginFlow.login();
 
 		devdocsDesignPage = new DevdocsDesignPage( driver, true );
-		driver.wait( devdocsDesignPage.displayed(), mochaVisDiffTimeOut ).then( function() {
-			console.log( 'Design Page Loaded' );
-			clearTimeout( timer );
-		} );
+		return devdocsDesignPage.displayed();
 	} );
 
 	test.it( 'Verify UI Components', function() {
@@ -87,10 +75,10 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 //							title = _title;
 //						} );
 //					} );
-//					// Hide the masterbar for clean CSS stitching
-//					flow.execute( function() {
-//						return devdocsDesignPage.hideMasterbar();
-//					} );
+					// Hide the masterbar for clean CSS stitching
+					flow.execute( function() {
+						return devdocsDesignPage.hideMasterbar();
+					} );
 					// Take the screenshot
 					flow.execute( function() {
 						return driverHelper.eyesScreenshot( driver, eyes, title, by.id( 'primary' ) );

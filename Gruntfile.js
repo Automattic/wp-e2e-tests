@@ -13,10 +13,10 @@ module.exports = function (grunt) {
 
 		concurrent: {
 			target: {
-				tasks: [ 'run_mobile_osx-chrome', 'run_desktop_osx-chrome', 'run_tablet_osx-chrome',
-					'run_mobile_win-firefox', 'run_desktop_win-firefox', 'run_tablet_win-firefox',
-					'run_mobile_osx-safari', 'run_desktop_osx-safari', 'run_tablet_osx-safari',
-					'run_mobile_win-ie11', 'run_desktop_win-ie11', 'run_tablet_win-ie11' ],
+				tasks: [ 'run_mobile_osx-chrome', 'run_desktop_osx-chrome', 'run_tablet_osx-chrome' ],
+//					'run_mobile_win-firefox', 'run_desktop_win-firefox', 'run_tablet_win-firefox',
+//					'run_mobile_osx-safari', 'run_desktop_osx-safari', 'run_tablet_osx-safari',
+//					'run_mobile_win-ie11', 'run_desktop_win-ie11', 'run_tablet_win-ie11' ],
 				options: {
 					limit: 5
 				}
