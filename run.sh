@@ -108,7 +108,7 @@ if [ $PARALLEL == 1 ]; then
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
       CMD="env BROWSERSIZE=mobile $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
 
-      echo $CMD
+      eval $CMD
       RETURN+=$?
   fi
   if [ $CIRCLE_NODE_INDEX == $DESKTOP ]; then
@@ -116,7 +116,7 @@ if [ $PARALLEL == 1 ]; then
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
       CMD="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
 
-      echo $CMD
+      eval $CMD
       RETURN+=$?
   fi
   if [ $CIRCLE_NODE_INDEX == $TABLET ] && [ "$CIRCLE_BRANCH" == "master" ]; then # only run tablet screensize on master branch
@@ -124,7 +124,7 @@ if [ $PARALLEL == 1 ]; then
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
       CMD="env BROWSERSIZE=tablet $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
 
-      echo $CMD
+      eval $CMD
       RETURN+=$?
   fi
   if [ $CIRCLE_NODE_INDEX == $VISUAL ] && [ $VISDIFF == 1 ]; then
@@ -139,11 +139,11 @@ if [ $PARALLEL == 1 ]; then
       CMD2="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER specs-visdiff/critical/ $AFTER"
       CMD3="env BROWSERSIZE=tablet $MOCHA $NC $GREP $REPORTER specs-visdiff/critical/ $AFTER"
 
-      echo $CMD1
+      eval $CMD1
       RETURN+=$?
-      echo $CMD2
+      eval $CMD2
       RETURN+=$?
-      echo $CMD3
+      eval $CMD3
       RETURN+=$?
   fi
 else # Not a parallel run, just queue up the tests in sequence
@@ -155,7 +155,7 @@ else # Not a parallel run, just queue up the tests in sequence
       for target in "${TARGETS[@]}"; do
         CMD="env BROWSERSIZE=$size $MOCHA $NC $GREP $REPORTER $target $AFTER"
 
-        echo $CMD
+        eval $CMD
         RETURN+=$?
       done
     done
