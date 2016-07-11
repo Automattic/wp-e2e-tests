@@ -97,8 +97,8 @@ NODE_CONFIG_ARG="$(joinStr , ${NODE_CONFIG_ARGS[*]})"
 if [ $PARALLEL == 1 ]; then
   # Assign an index to each test segment to run in parallel
   MOBILE=$(expr 0 % $CIRCLE_NODE_TOTAL)
-  TABLET=$(expr 1 % $CIRCLE_NODE_TOTAL)
-  DESKTOP=$(expr 2 % $CIRCLE_NODE_TOTAL)
+  DESKTOP=$(expr 1 % $CIRCLE_NODE_TOTAL)
+  TABLET=$(expr 2 % $CIRCLE_NODE_TOTAL)
   VISUAL=$(expr 3 % $CIRCLE_NODE_TOTAL)
   echo "Parallel execution details:"
   echo "mobile=$MOBILE, desktop=$DESKTOP, tablet=$TABLET, visual=$VISUAL, node=$CIRCLE_NODE_INDEX, total=$CIRCLE_NODE_TOTAL"
@@ -108,7 +108,7 @@ if [ $PARALLEL == 1 ]; then
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
       CMD="env BROWSERSIZE=mobile $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
 
-      eval $CMD
+      echo $CMD
       RETURN+=$?
   fi
   if [ $CIRCLE_NODE_INDEX == $DESKTOP ]; then
@@ -116,7 +116,7 @@ if [ $PARALLEL == 1 ]; then
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
       CMD="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
 
-      eval $CMD
+      echo $CMD
       RETURN+=$?
   fi
   if [ $CIRCLE_NODE_INDEX == $TABLET ] && [ "$CIRCLE_BRANCH" == "master" ]; then # only run tablet screensize on master branch
@@ -124,7 +124,7 @@ if [ $PARALLEL == 1 ]; then
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
       CMD="env BROWSERSIZE=tablet $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
 
-      eval $CMD
+      echo $CMD
       RETURN+=$?
   fi
   if [ $CIRCLE_NODE_INDEX == $VISUAL ] && [ $VISDIFF == 1 ]; then
@@ -139,11 +139,11 @@ if [ $PARALLEL == 1 ]; then
       CMD2="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER specs-visdiff/critical/ $AFTER"
       CMD3="env BROWSERSIZE=tablet $MOCHA $NC $GREP $REPORTER specs-visdiff/critical/ $AFTER"
 
-      eval $CMD1
+      echo $CMD1
       RETURN+=$?
-      eval $CMD2
+      echo $CMD2
       RETURN+=$?
-      eval $CMD3
+      echo $CMD3
       RETURN+=$?
   fi
 else # Not a parallel run, just queue up the tests in sequence
@@ -155,7 +155,7 @@ else # Not a parallel run, just queue up the tests in sequence
       for target in "${TARGETS[@]}"; do
         CMD="env BROWSERSIZE=$size $MOCHA $NC $GREP $REPORTER $target $AFTER"
 
-        eval $CMD
+        echo $CMD
         RETURN+=$?
       done
     done
