@@ -119,7 +119,7 @@ if [ $PARALLEL == 1 ]; then
       eval $CMD
       RETURN+=$?
   fi
-  if [ $CIRCLE_NODE_INDEX == $TABLET ]; then
+  if [ $CIRCLE_NODE_INDEX == $TABLET ] && [ "$CIRCLE_BRANCH" == "master" ]; then # only run tablet screensize on master branch
       echo "Executing tests at tablet screen width"
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
       CMD="env BROWSERSIZE=tablet $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
