@@ -7,5 +7,5 @@
   "browser": "chrome",
   "saveAllScreenshots": false,
   "reportWarningsToSlack": true,
-  "checkForConsoleErrors": true
+  "checkForConsoleErrors": false
 }
