@@ -60,8 +60,8 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 				} );
 
 				test.it( 'Can update and view site tagline', function() {
-					if ( screenSize === 'mobile' ) {
-						console.log( 'Preview of Taglines not supported on mobile - skipping test' );
+					if ( screenSize !== 'desktop' ) {
+						console.log( 'Preview of Taglines not supported on mobile & tablet - skipping test' );
 						return true;
 					}
 					const newTagline = dataHelper.randomPhrase();
