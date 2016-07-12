@@ -70,7 +70,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 			test.describe( 'Preview', function() {
 				test.it( 'Can launch page preview', function() {
 					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.ensureSaved();
+// wp-calypso issue#6612		postEditorSidebarComponent.ensureSaved();
 					postEditorSidebarComponent.launchPreview();
 					this.pagePreviewComponent = new PagePreviewComponent( driver );
 				} );

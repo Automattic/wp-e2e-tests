@@ -15,6 +15,7 @@ function joinStr { local IFS="$1"; shift; echo "$*"; }
 
 I18N_CONFIG="\"browser\":\"firefox\",\"proxy\":\"system\",\"neverSaveScreenshots\":\"true\""
 VISDIFF_CONFIG="\"browser\":\"firefox\", \"proxy\":\"system\", \"neverSaveScreenshots\":\"true\""
+IE11_CONFIG="\"sauce\":\"true\",\"sauceConfig\":\"win-ie11\""
 declare -a TARGETS
 
 usage () {
@@ -24,6 +25,7 @@ usage () {
 -b [branch]	  - Run tests on given branch via https://calypso.live
 -s		  - Screensizes in a comma-separated list (defaults to mobile,desktop,tablet)
 -g		  - Execute general tests in the specs/ directory
+-w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
 -i		  - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
 -v [all/critical] - Execute the visdiff tests in specs-visdiff[/critical].  Must specify either 'all' or 'critical'.  Only accessible in combination with -p flag
 -h		  - This help listing
@@ -35,7 +37,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rpb:s:giv:h" opt; do
+while getopts ":Rpb:s:giv:wh" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
@@ -59,6 +61,11 @@ while getopts ":Rpb:s:giv:h" opt; do
     i)
       NODE_CONFIG_ARGS+=$I18N_CONFIG
       TARGET="specs-i18n/"
+      ;;
+    w)
+      NODE_CONFIG_ARGS+=$IE11_CONFIG
+      SCREENSIZES=desktop
+      TARGET="specs/*wp-signup-spec.js" # wildcard needed to account for random filename ordering
       ;;
     v)
       VISDIFF=1
@@ -112,7 +119,7 @@ if [ $PARALLEL == 1 ]; then
       eval $CMD
       RETURN+=$?
   fi
-  if [ $CIRCLE_NODE_INDEX == $TABLET ]; then
+  if [ $CIRCLE_NODE_INDEX == $TABLET ] && [ "$CIRCLE_BRANCH" == "master" ]; then # only run tablet screensize on master branch
       echo "Executing tests at tablet screen width"
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
       CMD="env BROWSERSIZE=tablet $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
@@ -122,11 +129,15 @@ if [ $PARALLEL == 1 ]; then
   fi
   if [ $CIRCLE_NODE_INDEX == $VISUAL ] && [ $VISDIFF == 1 ]; then
       echo "Executing visdiff tests at all screen widths"
-      NC="--NODE_CONFIG='{$VISDIFF_CONFIG,$NODE_CONFIG_ARG}'"
+      if [ "$NODE_CONFIG_ARG" == "" ]; then
+        NC="--NODE_CONFIG='{$VISDIFF_CONFIG}'"
+      else
+        NC="--NODE_CONFIG='{$VISDIFF_CONFIG,$NODE_CONFIG_ARG}'"
+      fi
 
-      CMD1="env BROWSERSIZE=mobile $MOCHA $NC $GREP $REPORTER $VISDIFF_CONFIG specs-visdiff/critical/ $AFTER"
-      CMD2="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER $VISDIFF_CONFIG specs-visdiff/critical/ $AFTER"
-      CMD3="env BROWSERSIZE=tablet $MOCHA $NC $GREP $REPORTER $VISDIFF_CONFIG specs-visdiff/critical/ $AFTER"
+      CMD1="env BROWSERSIZE=mobile $MOCHA $NC $GREP $REPORTER specs-visdiff/critical/ $AFTER"
+      CMD2="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER specs-visdiff/critical/ $AFTER"
+      CMD3="env BROWSERSIZE=tablet $MOCHA $NC $GREP $REPORTER specs-visdiff/critical/ $AFTER"
 
       eval $CMD1
       RETURN+=$?

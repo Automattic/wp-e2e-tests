@@ -2,6 +2,7 @@ import test from 'selenium-webdriver/testing';
 import config from 'config';
 import * as driverManager from '../../lib/driver-manager.js';
 import * as driverHelper from '../../lib/driver-helper.js';
+import * as slackNotifier from '../../lib/slack-notifier';
 
 import LoginFlow from '../../lib/flows/login-flow.js';
 
@@ -112,12 +113,18 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 	test.after( function() {
 		try {
 			eyes.close( false ).then( function( testResults ) {
+				let message = '';
+
 				if ( testResults.mismatches ) {
-					throw new Error( `Visual diff failed with ${testResults.mismatches} mismatches - ${testResults.url}` );
+                                        message = `<!here> Visual diff failed with ${testResults.mismatches} mismatches - ${testResults.url}`;
 				} else if ( testResults.missing ) {
-					throw new Error( `Visual diff failed with ${testResults.missing} missing steps out of ${testResults.steps} - ${testResults.url}` );
+					message = `<!here> Visual diff failed with ${testResults.missing} missing steps out of ${testResults.steps} - ${testResults.url}`;
 				} else if ( testResults.isNew ) {
-					throw new Error( `Visual diff marked as failed because it is a new baseline - ${testResults.url}` );
+					message = `<!here> Visual diff marked as failed because it is a new baseline - ${testResults.url}`;
+				}
+
+				if ( message !== '' ) {
+                                	slackNotifier.warn( message );
 				}
 			} );
 		} finally {
