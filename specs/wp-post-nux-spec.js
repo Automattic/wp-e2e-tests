@@ -126,6 +126,35 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 					} );
 				} );
 
+				test.describe( 'Customize Base Font', function() {
+					let baseFontName = '';
+
+					test.it( 'Expand fonts', function() {
+						const customizerPage = new CustomizerPage( driver );
+						customizerPage.expandFonts();
+					} );
+
+					test.it( 'Can set the site\'s base font', function() {
+						const customizerPage = new CustomizerPage( driver );
+						return customizerPage.chooseFirstBaseFont().then( ( font ) => {
+							baseFontName = font.toLowerCase().replace( /\s/g, '' );
+						} );
+					} );
+
+					test.it( 'Can see the site\'s heading font in preview', function() {
+						const customizerPage = new CustomizerPage( driver );
+						assert( baseFontName !== '', 'The heading font was not retrieved from the customizer' );
+						customizerPage.previewUsesFont( baseFontName ).then( ( fontUsed ) => {
+							assert( fontUsed, `The font '${baseFontName}' does not appear to be used in the customizer preview` );
+						} );
+					} );
+
+					test.it( 'Close custom fonts', function() {
+						const customizerPage = new CustomizerPage( driver );
+						return customizerPage.closeOpenSection();
+					} );
+				} );
+
 				test.describe( 'Closing the customizer', function() {
 					test.it( 'Close the customizer', function() {
 						const customizerPage = new CustomizerPage( driver );
