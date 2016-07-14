@@ -76,7 +76,7 @@ while getopts ":Rpb:s:giv:wl:ch" opt; do
       ;;
     l)
       NODE_CONFIG_ARGS+="\"sauce\":\"true\",\"sauceConfig\":\"$OPTARG\""
-      TARGET="specs-visdiff/critical/"
+      TARGET="specs-visdiff/cross-browser/"
       ;;
     v)
       VISDIFF=1
