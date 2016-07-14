@@ -17,6 +17,7 @@
     "babel-runtime": "^6.3.19",
     "chai": "^3.4.1",
     "config": "1.16.0",
+    "creditcard-generator": "0.0.7",
     "esformatter-braces": "^1.2.1",
     "esformatter-collapse-objects-a8c": "^0.1.0",
     "esformatter-dot-notation": "^1.3.1",
