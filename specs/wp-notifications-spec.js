@@ -3,6 +3,7 @@ import test from 'selenium-webdriver/testing';
 
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
+import * as slackNotifier from '../lib/slack-notifier';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
@@ -61,6 +62,12 @@ test.describe( 'Notifications: (' + screenSize + ')', function() {
 			} );
 
 			test.it( 'Can see the comment', function() {
+				this.viewPostPage.commentEventuallyShown( this.comment ).then( ( shown ) => {
+					if ( shown === false ) {
+						slackNotifier.warn( `Could not see newly added comment '${this.comment}' on blog page - refreshing now` );
+						driver.navigate().refresh();
+					}
+				} );
 				return this.viewPostPage.commentEventuallyShown( this.comment ).then( ( shown ) => {
 					return assert.equal( shown, true, `The comment: '${this.comment}' was not shown on the blog post page after submitting it and waiting for it` );
 				} );
@@ -82,6 +89,12 @@ test.describe( 'Notifications: (' + screenSize + ')', function() {
 						this.notificationsComponent.allCommentsContent().then( ( content ) => {
 							assert.equal( content.includes( expectedContent ), true, `The actual notifications content '${content}' does not contain expected content '${expectedContent}'` );
 						} );
+					} );
+
+					test.it( 'Can delete the comment', function() {
+						this.notificationsComponent.selectCommentByText( this.comment );
+						this.notificationsComponent.trashComment();
+						this.notificationsComponent.waitForUndoMessage();
 					} );
 				} );
 			} );

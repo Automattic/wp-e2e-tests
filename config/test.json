@@ -6,5 +6,6 @@
   "mochaDevDocsTimeoutMS": 500000,
   "browser": "chrome",
   "saveAllScreenshots": false,
-  "reportWarningsToSlack": true
+  "reportWarningsToSlack": true,
+  "checkForConsoleErrors": false
 }

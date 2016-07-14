@@ -99,6 +99,7 @@ A full list of config values are:
 | proxy | The type of proxy to use: either <code>system</code> to use whatever your system is configured to use, or <code>direct</code> to use no proxy. | <code>direct</code> | Yes |  Yes |
 | saveAllScreenshots | Whether screenshots should be saved for all steps, including those that pass | <code>false</code> | Yes |  Yes |
 | neverSaveScreenshots | Overrides the screenshot function so nothing is captured.  This is intended for use with the Applitools visual diff specs, since the screenshots are handled via their utilities instead. | <code>false</code> | Yes |  Yes |
+| checkForConsoleErrors | Automatically report on console errors in the browser | <code>true</code> | Yes |  Yes |
 | reportWarningsToSlack | Specifies whether warnings should be reported to Slack - should be used for CI builds | <code>false</code> | Yes |  Yes |
 | authURL | The page where you authenticate to use calypso - this **should not** include the redirect | https://wordpress.com/wp-login.php | Yes | Yes |
 | calypsoBaseURL | The home page for calypso | https://wpcalypso.wordpress.com | Yes | Yes |

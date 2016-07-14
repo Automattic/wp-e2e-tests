@@ -11,6 +11,7 @@
   "browser": "chrome",
   "proxy": "direct",
   "saveAllScreenshots": false,
+  "checkForConsoleErrors": false,
   "reportWarningsToSlack": false,
   "neverSaveScreenshots": false,
   "useNewMobileEditor": false,
@@ -55,5 +56,5 @@
         "version": "11.103"
     }
   },
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "translatorInvitation", "freeTrialsInSignup", "freeTrialNudgeOnThankYouPage", "privacyCheckbox", "domainSuggestionVendor", "guidedTours", "domainCreditsInfoNotice", "domainsWithPlansOnly", "wordadsInstantActivation", "googleVouchers", "personalPlan", "wordpressAdCredits", "verticalThemes", "signupStore", "coldStartReader" ]
+  "knownABTestKeys": [ "multiDomainRegistrationV1", "translatorInvitation", "freeTrialsInSignup", "freeTrialNudgeOnThankYouPage", "privacyCheckbox", "domainSuggestionVendor", "guidedTours", "domainCreditsInfoNotice", "domainsWithPlansOnly", "wordadsInstantActivation", "googleVouchers", "personalPlan", "wordpressAdCredits", "verticalThemes", "signupStore", "coldStartReader", "browserNotifications" ]
 }

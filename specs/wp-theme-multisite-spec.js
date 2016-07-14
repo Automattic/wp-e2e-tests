@@ -9,7 +9,6 @@ import CustomizerPage from '../lib/pages/customizer-page.js';
 import ThemePreviewPage from '../lib/pages/theme-preview-page.js';
 
 import SidebarComponent from '../lib/components/sidebar-component';
-import NavbarComponent from '../lib/components/navbar-component';
 import SiteSelectorComponent from '../lib/components/site-selector-component';
 import ThemeDialogComponent from '../lib/components/theme-dialog-component';
 import CurrentThemeComponent from '../lib/components/current-theme-component';

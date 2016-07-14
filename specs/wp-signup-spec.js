@@ -1,6 +1,7 @@
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 import assert from 'assert';
+import * as ccGenerator from 'creditcard-generator';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper.js';
@@ -203,7 +204,7 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCardHolder = 'End To End Testing';
-		const testVisaNumber = '4483910254901646';
+		const testVisaNumber = ccGenerator.GenCC( 'VISA' );
 		const testVisaExpiry = '02/19';
 		const testCVV = '300';
 		const testCardCountryCode = 'AU';
@@ -351,9 +352,9 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCardHolder = 'End To End Testing';
-		const testVisaNumber = '4483910254901646';
+		const testVisaNumber = ccGenerator.GenCC( 'VISA' );
 		const testVisaExpiry = '02/19';
-		const testCVV = '300';
+		const testCVV = '301';
 		const testCardCountryCode = 'AU';
 		const testCardPostCode = '4000';
 
@@ -486,9 +487,9 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCardHolder = 'End To End Testing';
-		const testVisaNumber = '4483910254901646';
+		const testVisaNumber = ccGenerator.GenCC( 'VISA' );
 		const testVisaExpiry = '02/19';
-		const testCVV = '300';
+		const testCVV = '303';
 		const testCardCountryCode = 'AU';
 		const testCardPostCode = '4000';
 		const firstName = 'End to End';
