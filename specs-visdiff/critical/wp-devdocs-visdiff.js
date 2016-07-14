@@ -124,7 +124,7 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 				}
 
 				if ( message !== '' ) {
-                                	slackNotifier.warn( message );
+					slackNotifier.warn( message );
 				}
 			} );
 		} finally {

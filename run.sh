@@ -9,6 +9,7 @@ SCREENSIZES="mobile,desktop,tablet"
 BRANCH=""
 VISDIFF=0
 RETURN=0
+CLEAN=0
 
 # Function to join arrays into a string
 function joinStr { local IFS="$1"; shift; echo "$*"; }
@@ -26,6 +27,8 @@ usage () {
 -s		  - Screensizes in a comma-separated list (defaults to mobile,desktop,tablet)
 -g		  - Execute general tests in the specs/ directory
 -w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
+-l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration
+-c		  - Exit with status code 0 regardless of test results
 -i		  - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
 -v [all/critical] - Execute the visdiff tests in specs-visdiff[/critical].  Must specify either 'all' or 'critical'.  Only accessible in combination with -p flag
 -h		  - This help listing
@@ -37,7 +40,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rpb:s:giv:wh" opt; do
+while getopts ":Rpb:s:giv:wl:ch" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
@@ -45,6 +48,10 @@ while getopts ":Rpb:s:giv:wh" opt; do
       ;;
     p)
       PARALLEL=1
+      continue
+      ;;
+    c)
+      CLEAN=1
       continue
       ;;
     b)
@@ -66,6 +73,10 @@ while getopts ":Rpb:s:giv:wh" opt; do
       NODE_CONFIG_ARGS+=$IE11_CONFIG
       SCREENSIZES=desktop
       TARGET="specs/*wp-signup-spec.js" # wildcard needed to account for random filename ordering
+      ;;
+    l)
+      NODE_CONFIG_ARGS+="\"sauce\":\"true\",\"sauceConfig\":\"$OPTARG\""
+      TARGET="specs-visdiff/cross-browser/"
       ;;
     v)
       VISDIFF=1
@@ -160,6 +171,10 @@ else # Not a parallel run, just queue up the tests in sequence
       done
     done
   fi
+fi
+
+if [ $CLEAN == 1 ]; then
+  exit  0
 fi
 
 exit $RETURN
