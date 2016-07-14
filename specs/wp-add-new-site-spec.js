@@ -170,18 +170,18 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 
 									test.it( 'Can enter and submit test payment details', function() {
 										this.securePaymentComponent.enterTestCreditCardDetails( testCardHolder, testVisaNumber, testVisaExpiry, testCVV, testCardCountryCode, testCardPostCode );
-										this.securePaymentComponent.submitPaymentDetails();
-										return this.securePaymentComponent.waitForPageToDisappear();
+										// this.securePaymentComponent.submitPaymentDetails();
+										// return this.securePaymentComponent.waitForPageToDisappear();
 									} );
 
-									test.describe( 'Step Eight: Checkout Thank You Page', function() {
-										test.it( 'Can see the secure check out thank you page', function() {
-											this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
-											return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
-												return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
-											} );
-										} );
-									} );
+									// test.describe( 'Step Eight: Checkout Thank You Page', function() {
+									// 	test.it( 'Can see the secure check out thank you page', function() {
+									// 		this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
+									// 		return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
+									// 			return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
+									// 		} );
+									// 	} );
+									// } );
 								} );
 							} );
 						} );
@@ -327,18 +327,18 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 
 									test.it( 'Can enter and submit test payment details', function() {
 										this.securePaymentComponent.enterTestCreditCardDetails( testCardHolder, testVisaNumber, testVisaExpiry, testCVV, testCardCountryCode, testCardPostCode );
-										this.securePaymentComponent.submitPaymentDetails();
-										return this.securePaymentComponent.waitForPageToDisappear();
+										// this.securePaymentComponent.submitPaymentDetails();
+										// return this.securePaymentComponent.waitForPageToDisappear();
 									} );
 
-									test.describe( 'Step Eight: Checkout Thank You Page', function() {
-										test.it( 'Can see the secure check out thank you page', function() {
-											this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
-											return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
-												return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
-											} );
-										} );
-									} );
+									// test.describe( 'Step Eight: Checkout Thank You Page', function() {
+									// 	test.it( 'Can see the secure check out thank you page', function() {
+									// 		this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
+									// 		return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
+									// 			return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
+									// 		} );
+									// 	} );
+									// } );
 								} );
 							} );
 						} );
@@ -484,18 +484,18 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 
 									test.it( 'Can enter and submit test payment details', function() {
 										this.securePaymentComponent.enterTestCreditCardDetails( testCardHolder, testVisaNumber, testVisaExpiry, testCVV, testCardCountryCode, testCardPostCode );
-										this.securePaymentComponent.submitPaymentDetails();
-										return this.securePaymentComponent.waitForPageToDisappear();
+										// this.securePaymentComponent.submitPaymentDetails();
+										// return this.securePaymentComponent.waitForPageToDisappear();
 									} );
 
-									test.describe( 'Step Eight: Checkout Thank You Page', function() {
-										test.it( 'Can see the secure check out thank you page', function() {
-											this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
-											return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
-												return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
-											} );
-										} );
-									} );
+									// test.describe( 'Step Eight: Checkout Thank You Page', function() {
+									// 	test.it( 'Can see the secure check out thank you page', function() {
+									// 		this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
+									// 		return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
+									// 			return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
+									// 		} );
+									// 	} );
+									// } );
 								} );
 							} );
 						} );
@@ -641,18 +641,18 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 
 									test.it( 'Can enter and submit test payment details', function() {
 										this.securePaymentComponent.enterTestCreditCardDetails( testCardHolder, testVisaNumber, testVisaExpiry, testCVV, testCardCountryCode, testCardPostCode );
-										this.securePaymentComponent.submitPaymentDetails();
-										return this.securePaymentComponent.waitForPageToDisappear();
+										// this.securePaymentComponent.submitPaymentDetails();
+										// return this.securePaymentComponent.waitForPageToDisappear();
 									} );
 
-									test.describe( 'Step Eight: Checkout Thank You Page', function() {
-										test.it( 'Can see the secure check out thank you page', function() {
-											this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
-											return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
-												return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
-											} );
-										} );
-									} );
+									// test.describe( 'Step Eight: Checkout Thank You Page', function() {
+									// 	test.it( 'Can see the secure check out thank you page', function() {
+									// 		this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
+									// 		return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
+									// 			return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
+									// 		} );
+									// 	} );
+									// } );
 								} );
 							} );
 						} );
@@ -798,18 +798,18 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 
 									test.it( 'Can enter and submit test payment details', function() {
 										this.securePaymentComponent.enterTestCreditCardDetails( testCardHolder, testVisaNumber, testVisaExpiry, testCVV, testCardCountryCode, testCardPostCode );
-										this.securePaymentComponent.submitPaymentDetails();
-										return this.securePaymentComponent.waitForPageToDisappear();
+										// this.securePaymentComponent.submitPaymentDetails();
+										// return this.securePaymentComponent.waitForPageToDisappear();
 									} );
 
-									test.describe( 'Step Eight: Checkout Thank You Page', function() {
-										test.it( 'Can see the secure check out thank you page', function() {
-											this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
-											return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
-												return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
-											} );
-										} );
-									} );
+									// test.describe( 'Step Eight: Checkout Thank You Page', function() {
+									// 	test.it( 'Can see the secure check out thank you page', function() {
+									// 		this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
+									// 		return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
+									// 			return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
+									// 		} );
+									// 	} );
+									// } );
 								} );
 							} );
 						} );
@@ -955,18 +955,18 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 
 									test.it( 'Can enter and submit test payment details', function() {
 										this.securePaymentComponent.enterTestCreditCardDetails( testCardHolder, testVisaNumber, testVisaExpiry, testCVV, testCardCountryCode, testCardPostCode );
-										this.securePaymentComponent.submitPaymentDetails();
-										return this.securePaymentComponent.waitForPageToDisappear();
+										// this.securePaymentComponent.submitPaymentDetails();
+										// return this.securePaymentComponent.waitForPageToDisappear();
 									} );
 
-									test.describe( 'Step Eight: Checkout Thank You Page', function() {
-										test.it( 'Can see the secure check out thank you page', function() {
-											this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
-											return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
-												return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
-											} );
-										} );
-									} );
+									// test.describe( 'Step Eight: Checkout Thank You Page', function() {
+									// 	test.it( 'Can see the secure check out thank you page', function() {
+									// 		this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
+									// 		return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
+									// 			return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
+									// 		} );
+									// 	} );
+									// } );
 								} );
 							} );
 						} );
