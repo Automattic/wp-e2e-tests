@@ -65,6 +65,7 @@ test.describe( 'Notifications: (' + screenSize + ')', function() {
 				this.viewPostPage.commentEventuallyShown( this.comment ).then( ( shown ) => {
 					if ( shown === false ) {
 						slackNotifier.warn( `Could not see newly added comment '${this.comment}' on blog page - refreshing now` );
+						driver.navigate().refresh();
 					}
 				} );
 				return this.viewPostPage.commentEventuallyShown( this.comment ).then( ( shown ) => {
