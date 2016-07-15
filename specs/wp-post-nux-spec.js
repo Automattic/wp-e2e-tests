@@ -156,42 +156,44 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 					} );
 				} );
 
-				test.describe( 'Custom Header Image', function() {
-					let fileDetails = null;
+				if ( screenSize !== 'mobile' ) { // header images broken on mobile https://github.com/Automattic/wp-calypso/issues/2380
+					test.describe( 'Custom Header Image', function() {
+						let fileDetails = null;
 
-					test.before( 'Create header image file for upload', function() {
-						this.customizerPage = new CustomizerPage( driver );
-						return mediaHelper.createFile().then( function( details ) {
-							fileDetails = details;
+						test.before( 'Create header image file for upload', function() {
+							this.customizerPage = new CustomizerPage( driver );
+							return mediaHelper.createFile().then( function( details ) {
+								fileDetails = details;
+							} );
+						} );
+
+						test.it( 'Expand header image', function() {
+							this.customizerPage.expandHeaderImage();
+						} );
+
+						test.it( 'Can set a custom header image', function() {
+							this.customizerPage.setHeaderImage( fileDetails );
+							this.customizerPage.waitForPreviewRefresh();
+						} );
+
+						test.it( 'Can see the custom header image in preview', function() {
+							this.customizerPage.previewShowsHeader( fileDetails ).then( ( showsHeader ) => {
+								assert( showsHeader, 'The preview is not showing the recently uploaded header image' );
+							} );
+						} );
+
+						test.it( 'Close custom header', function() {
+							const customizerPage = new CustomizerPage( driver );
+							return customizerPage.closeOpenSection();
+						} );
+
+						test.after( function() {
+							if ( fileDetails ) {
+								mediaHelper.deleteFile( fileDetails ).then( function() {} );
+							}
 						} );
 					} );
-
-					test.it( 'Expand header image', function() {
-						this.customizerPage.expandHeaderImage();
-					} );
-
-					test.it( 'Can set a custom header image', function() {
-						this.customizerPage.setHeaderImage( fileDetails );
-						this.customizerPage.waitForPreviewRefresh();
-					} );
-
-					test.it( 'Can see the custom header image in preview', function() {
-						this.customizerPage.previewShowsHeader( fileDetails ).then( ( showsHeader ) => {
-							assert( showsHeader, 'The preview is not showing the recently uploaded header image' );
-						} );
-					} );
-
-					test.it( 'Close custom header', function() {
-						const customizerPage = new CustomizerPage( driver );
-						return customizerPage.closeOpenSection();
-					} );
-
-					test.after( function() {
-						if ( fileDetails ) {
-							mediaHelper.deleteFile( fileDetails ).then( function() {} );
-						}
-					} );
-				} );
+				}
 
 				test.describe( 'Closing the customizer', function() {
 					test.it( 'Close the customizer', function() {
