@@ -4,6 +4,7 @@ import assert from 'assert';
 
 import * as driverManager from '../lib/driver-manager';
 import * as dataHelper from '../lib/data-helper';
+import * as mediaHelper from '../lib/media-helper';
 import LoginFlow from '../lib/flows/login-flow';
 import CustomizerPage from '../lib/pages/customizer-page';
 import SidebarComponent from '../lib/components/sidebar-component';
@@ -152,6 +153,43 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 					test.it( 'Close custom fonts', function() {
 						const customizerPage = new CustomizerPage( driver );
 						return customizerPage.closeOpenSection();
+					} );
+				} );
+
+				test.describe( 'Custom Header Image', function() {
+					let fileDetails = null;
+
+					test.before( 'Create header image file for upload', function() {
+						this.customizerPage = new CustomizerPage( driver );
+						return mediaHelper.createFile().then( function( details ) {
+							fileDetails = details;
+						} );
+					} );
+
+					test.it( 'Expand header image', function() {
+						this.customizerPage.expandHeaderImage();
+					} );
+
+					test.it( 'Can set a custom header image', function() {
+						this.customizerPage.setHeaderImage( fileDetails );
+						this.customizerPage.waitForPreviewRefresh();
+					} );
+
+					test.it( 'Can see the custom header image in preview', function() {
+						this.customizerPage.previewShowsHeader( fileDetails ).then( ( showsHeader ) => {
+							assert( showsHeader, 'The preview is not showing the recently uploaded header image' );
+						} );
+					} );
+
+					test.it( 'Close custom header', function() {
+						const customizerPage = new CustomizerPage( driver );
+						return customizerPage.closeOpenSection();
+					} );
+
+					test.after( function() {
+						if ( fileDetails ) {
+							mediaHelper.deleteFile( fileDetails ).then( function() {} );
+						}
 					} );
 				} );
 
