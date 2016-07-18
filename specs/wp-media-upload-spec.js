@@ -1,3 +1,4 @@
+import assert from 'assert';
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 
@@ -31,9 +32,10 @@ test.describe( 'Editor: Media Upload (' + screenSize + ')', function() {
 		} );
 
 		test.describe( 'Can upload many media types', () => {
+
 			test.it( 'Can log in and navigate to Editor page', () => {
 				const loginFlow = new LoginFlow( driver );
-				loginFlow.loginAndStartNewPost();
+				loginFlow.loginAndStartNewPage();
 				editorPage = new EditorPage( driver );
 			} );
 
