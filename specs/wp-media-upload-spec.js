@@ -4,7 +4,6 @@ import config from 'config';
 import LoginFlow from '../lib/flows/login-flow.js';
 
 import EditorPage from '../lib/pages/editor-page.js';
-import SidebarComponent from '../lib/components/post-editor-sidebar-component.js';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as mediaHelper from '../lib/media-helper.js';
@@ -34,7 +33,7 @@ test.describe( 'Editor: Media Upload (' + screenSize + ')', function() {
 		test.describe( 'Can upload many media types', () => {
 			test.it( 'Can log in and navigate to Editor page', () => {
 				const loginFlow = new LoginFlow( driver );
-				loginFlow.loginAndStartNewPage();
+				loginFlow.loginAndStartNewPost();
 				editorPage = new EditorPage( driver );
 			} );
 
@@ -111,14 +110,6 @@ test.describe( 'Editor: Media Upload (' + screenSize + ')', function() {
 						mediaHelper.deleteFile( fileDetails ).then( function() {} );
 					}
 				} );
-			} );
-
-			// Workaround for https://github.com/Automattic/wp-calypso/issues/6859
-			test.after( 'Can save and trash page', () => {
-				let sidebarComponent = new SidebarComponent( driver );
-				editorPage.enterTitle( 'Workaround for wp-calypso/6859' );
-				sidebarComponent.ensureSaved();
-				editorPage.trashPost();
 			} );
 		} );
 	} );
