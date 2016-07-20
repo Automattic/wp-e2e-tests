@@ -183,8 +183,7 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 						} );
 
 						test.it( 'Close custom header', function() {
-							const customizerPage = new CustomizerPage( driver );
-							return customizerPage.closeOpenSection();
+							this.customizerPage.closeOpenSection();
 						} );
 
 						test.after( function() {
@@ -194,6 +193,29 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 						} );
 					} );
 				}
+
+				test.describe( 'Add a new menu', function() {
+					let newMenuName = dataHelper.getMenuName();
+
+					test.it( 'Expand menus', function() {
+						this.customizerPage = new CustomizerPage( driver );
+						return this.customizerPage.expandMenus();
+					} );
+
+					test.it( 'Can add a new menu as the primary menu', function() {
+						return this.customizerPage.addNewMenuAndSetAsPrimary( newMenuName );
+					} );
+
+					test.it( 'Can see the new menu listed as primary', function() {
+						return this.customizerPage.menuDisplayedAsPrimary( newMenuName ).then( ( displayed ) => {
+							return assert( displayed, `The menu '${newMenuName}' was not displayed as the primary menu` );
+						} );
+					} );
+
+					test.it( 'Close menus', function() {
+						this.customizerPage.closeOpenPanel();
+					} );
+				} );
 
 				test.describe( 'Closing the customizer', function() {
 					test.it( 'Close the customizer', function() {
