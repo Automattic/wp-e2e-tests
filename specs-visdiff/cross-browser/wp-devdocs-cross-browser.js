@@ -20,6 +20,7 @@ let Eyes = require( 'eyes.selenium' ).Eyes;
 let eyes = new Eyes();
 eyes.setApiKey( config.get( 'eyesKey' ) );
 eyes.setForceFullPageScreenshot( true );
+eyes.setHideScrollbars( true )
 let batchName = '';
 
 if ( process.env.CIRCLE_BUILD_NUM ) {
