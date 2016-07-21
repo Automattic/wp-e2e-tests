@@ -56,5 +56,5 @@
         "version": "11.103"
     }
   },
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "translatorInvitation", "freeTrialsInSignup", "freeTrialNudgeOnThankYouPage", "privacyCheckbox", "domainSuggestionVendor", "guidedTours", "domainCreditsInfoNotice", "domainsWithPlansOnly", "wordadsInstantActivation", "googleVouchers", "personalPlan", "wordpressAdCredits", "verticalThemes", "signupStore", "coldStartReader", "browserNotifications", "skipPlansLinkForFree" ]
+  "knownABTestKeys": [ "multiDomainRegistrationV1", "translatorInvitation", "freeTrialsInSignup", "freeTrialNudgeOnThankYouPage", "privacyCheckbox", "domainSuggestionVendor", "guidedTours", "domainCreditsInfoNotice", "domainsWithPlansOnly", "wordadsInstantActivation", "googleVouchers", "personalPlan", "wordpressAdCredits", "verticalThemes", "signupStore", "coldStartReader", "browserNotifications", "skipPlansLinkForFree", "planFeatures" ]
 }
