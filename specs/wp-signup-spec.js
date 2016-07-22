@@ -204,10 +204,10 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCardHolder = 'End To End Testing';
-		const testVisaNumber = ccGenerator.GenCC( 'VISA' );
+		const testVisaNumber = '4242424242424242'; // https://stripe.com/docs/testing#cards
 		const testVisaExpiry = '02/19';
 		const testCVV = '300';
-		const testCardCountryCode = 'AU';
+		const testCardCountryCode = 'TR'; // using Turkey to force Stripe as payment processor
 		const testCardPostCode = '4000';
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
@@ -352,10 +352,10 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCardHolder = 'End To End Testing';
-		const testVisaNumber = ccGenerator.GenCC( 'VISA' );
+		const testVisaNumber = '4242424242424242'; // https://stripe.com/docs/testing#cards
 		const testVisaExpiry = '02/19';
 		const testCVV = '301';
-		const testCardCountryCode = 'AU';
+		const testCardCountryCode = 'TR'; // using Turkey to force Stripe as payment processor
 		const testCardPostCode = '4000';
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
@@ -487,10 +487,10 @@ test.describe( 'Sign Up (' + screenSize + ')', function() {
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCardHolder = 'End To End Testing';
-		const testVisaNumber = ccGenerator.GenCC( 'VISA' );
+		const testVisaNumber = '4242424242424242'; // https://stripe.com/docs/testing#cards
 		const testVisaExpiry = '02/19';
 		const testCVV = '303';
-		const testCardCountryCode = 'AU';
+		const testCardCountryCode = 'TR'; // using Turkey to force Stripe as payment processor
 		const testCardPostCode = '4000';
 		const firstName = 'End to End';
 		const lastName = 'Testing';
