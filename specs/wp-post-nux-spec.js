@@ -241,12 +241,31 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 					} );
 				} );
 
-				test.describe( 'Closing the customizer', function() {
-					test.it( 'Close the customizer', function() {
-						const customizerPage = new CustomizerPage( driver );
-						return customizerPage.close();
+				test.describe( 'Setting static front page', function() {
+					test.it( 'Expand static front page', function() {
+						this.customizerPage = new CustomizerPage( driver );
+						return this.customizerPage.expandStaticFrontPage();
+					} );
+
+					test.it( 'Can see the front page option', function() {
+						return this.customizerPage.frontPageOptionDisplayed();
+					} );
+
+					test.it( 'Can see the posts page option', function() {
+						return this.customizerPage.postsPageOptionDisplayed();
+					} );
+
+					test.it( 'Close front page section', function() {
+						this.customizerPage.closeOpenSection();
 					} );
 				} );
+
+				// test.describe( 'Closing the customizer', function() {
+				// 	test.it( 'Close the customizer', function() {
+				// 		const customizerPage = new CustomizerPage( driver );
+				// 		return customizerPage.close();
+				// 	} );
+				// } );
 			} );
 		} );
 	} );
