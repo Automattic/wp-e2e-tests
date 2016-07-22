@@ -260,12 +260,12 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 					} );
 				} );
 
-				// test.describe( 'Closing the customizer', function() {
-				// 	test.it( 'Close the customizer', function() {
-				// 		const customizerPage = new CustomizerPage( driver );
-				// 		return customizerPage.close();
-				// 	} );
-				// } );
+				test.describe( 'Closing the customizer', function() {
+					test.it( 'Close the customizer', function() {
+						const customizerPage = new CustomizerPage( driver );
+						return customizerPage.close();
+					} );
+				} );
 			} );
 		} );
 	} );
