@@ -41,10 +41,10 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCardHolder = 'End To End Testing';
-		const testVisaNumber = ccGenerator.GenCC( 'VISA' );
+		const testVisaNumber = '4242424242424242'; // https://stripe.com/docs/testing#cards
 		const testVisaExpiry = '02/19';
 		const testCVV = '304';
-		const testCardCountryCode = 'AU';
+		const testCardCountryCode = 'TR'; // using Turkey to force Stripe as payment processor
 		const testCardPostCode = '4000';
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
@@ -198,10 +198,10 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCardHolder = 'End To End Testing';
-		const testVisaNumber = ccGenerator.GenCC( 'VISA' );
+		const testVisaNumber = '4242424242424242'; // https://stripe.com/docs/testing#cards
 		const testVisaExpiry = '02/19';
 		const testCVV = '305';
-		const testCardCountryCode = 'AU';
+		const testCardCountryCode = 'TR'; // using Turkey to force Stripe as payment processor
 		const testCardPostCode = '4000';
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
@@ -355,10 +355,10 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCardHolder = 'End To End Testing';
-		const testVisaNumber = ccGenerator.GenCC( 'VISA' );
+		const testVisaNumber = '4242424242424242'; // https://stripe.com/docs/testing#cards
 		const testVisaExpiry = '02/19';
 		const testCVV = '306';
-		const testCardCountryCode = 'AU';
+		const testCardCountryCode = 'TR'; // using Turkey to force Stripe as payment processor
 		const testCardPostCode = '4000';
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
@@ -512,10 +512,10 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCardHolder = 'End To End Testing';
-		const testVisaNumber = ccGenerator.GenCC( 'VISA' );
+		const testVisaNumber = '4242424242424242'; // https://stripe.com/docs/testing#cards
 		const testVisaExpiry = '02/19';
 		const testCVV = '307';
-		const testCardCountryCode = 'AU';
+		const testCardCountryCode = 'TR'; // using Turkey to force Stripe as payment processor
 		const testCardPostCode = '4000';
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
@@ -669,10 +669,10 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCardHolder = 'End To End Testing';
-		const testVisaNumber = ccGenerator.GenCC( 'VISA' );
+		const testVisaNumber = '4242424242424242'; // https://stripe.com/docs/testing#cards
 		const testVisaExpiry = '02/19';
 		const testCVV = '308';
-		const testCardCountryCode = 'AU';
+		const testCardCountryCode = 'TR'; // using Turkey to force Stripe as payment processor
 		const testCardPostCode = '4000';
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
@@ -826,10 +826,10 @@ test.describe( 'Add new site to existing account (' + screenSize + ')', function
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCardHolder = 'End To End Testing';
-		const testVisaNumber = ccGenerator.GenCC( 'VISA' );
+		const testVisaNumber = '4242424242424242'; // https://stripe.com/docs/testing#cards
 		const testVisaExpiry = '02/19';
 		const testCVV = '309';
-		const testCardCountryCode = 'AU';
+		const testCardCountryCode = 'TR'; // using Turkey to force Stripe as payment processor
 		const testCardPostCode = '4000';
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
