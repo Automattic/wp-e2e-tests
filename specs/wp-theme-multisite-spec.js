@@ -60,50 +60,37 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 				this.themesPage.popOverMenuDisplayed().then( ( displayed ) => assert( displayed, true, 'Popover menu not displayed' ) );
 			} );
 
-			test.describe( 'when "Live demo" is clicked', function() {
-				test.it( 'click live demo popover', function() {
-					this.themesPage.clickPopoverItem( 'Live demo' );
-					this.themePreviewPage = new ThemePreviewPage( this.driver );
+			test.describe( 'when "Try & Customize" is clicked', function() {
+				test.it( 'click try and customize popover', function() {
+					this.themesPage.clickPopoverItem( 'Try & Customize' );
+					this.siteSelector = new SiteSelectorComponent( this.driver );
 				} );
 
-				test.it( 'should show a preview when Preview is clicked', function() {
-					this.themePreviewPage.displayed().then( ( displayed ) => {
-						assert( displayed, 'Theme preview not found' );
+				test.it( 'should show the site selector', function() {
+					return this.siteSelector.displayed().then( function( siteSelectorShown ) {
+						return assert.equal( siteSelectorShown, true, 'The site selector was not shown' );
 					} );
 				} );
 
-				test.describe( 'when Try & Customize is clicked', function() {
-					test.it( 'choose customize', function() {
-						this.themePreviewPage.customize();
-						this.siteSelector = new SiteSelectorComponent( this.driver );
+				test.describe( 'when a site is selected, and Customize is clicked', function() {
+					test.it( 'select first site', function() {
+						this.siteSelector.selectFirstSite();
+						this.siteSelector.ok();
 					} );
 
-					test.it( 'should show the site selector', function() {
-						return this.siteSelector.displayed().then( function( siteSelectorShown ) {
-							return assert.equal( siteSelectorShown, true, 'The site selector was not shown' );
+					test.it( 'should open the customizer with the selected site and theme', function( done ) {
+						this.customizerPage = new CustomizerPage( this.driver );
+						this.driver.getCurrentUrl().then( ( url ) => {
+							assert.include( url, this.siteSelector.selectedSiteDomain, 'Wrong site domain' );
+							assert.include( url, this.themeSearchName, 'Wrong theme' );
+							done();
 						} );
 					} );
 
-					test.describe( 'when a site is selected, and Customize is clicked', function() {
-						test.it( 'select first site', function() {
-							this.siteSelector.selectFirstSite();
-							this.siteSelector.ok();
-						} );
-
-						test.it( 'should open the customizer with the selected site and theme', function( done ) {
-							this.customizerPage = new CustomizerPage( this.driver );
-							this.driver.getCurrentUrl().then( ( url ) => {
-								assert.include( url, this.siteSelector.selectedSiteDomain, 'Wrong site domain' );
-								assert.include( url, this.themeSearchName, 'Wrong theme' );
-								done();
-							} );
-						} );
-
-						test.after( function() {
-							this.customizerPage.close();
-						} );
+					test.after( function() {
+						this.customizerPage.close();
 					} );
-				} )
+				} );
 			} );
 		} );
 	} );
