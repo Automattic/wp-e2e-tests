@@ -183,8 +183,7 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 						} );
 
 						test.it( 'Close custom header', function() {
-							const customizerPage = new CustomizerPage( driver );
-							return customizerPage.closeOpenSection();
+							this.customizerPage.closeOpenSection();
 						} );
 
 						test.after( function() {
@@ -194,6 +193,72 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 						} );
 					} );
 				}
+
+				test.describe( 'Add a new menu', function() {
+					const newMenuName = dataHelper.getMenuName();
+
+					test.it( 'Expand menus', function() {
+						this.customizerPage = new CustomizerPage( driver );
+						return this.customizerPage.expandMenus();
+					} );
+
+					test.it( 'Can add a new menu as the primary menu', function() {
+						return this.customizerPage.addNewMenuAndSetAsPrimary( newMenuName );
+					} );
+
+					test.it( 'Can see the new menu listed as primary', function() {
+						return this.customizerPage.menuDisplayedAsPrimary( newMenuName ).then( ( displayed ) => {
+							return assert( displayed, `The menu '${newMenuName}' was not displayed as the primary menu` );
+						} );
+					} );
+
+					test.it( 'Close menus', function() {
+						this.customizerPage.closeOpenPanel();
+					} );
+				} );
+
+				test.describe( 'Add a new widget', function() {
+					const widgetTitle = dataHelper.getWidgetTitle();
+					const widgetContent = dataHelper.getWidgetContent();
+
+					test.it( 'Expand widgets', function() {
+						this.customizerPage = new CustomizerPage( driver );
+						return this.customizerPage.expandWidgets();
+					} );
+
+					test.it( 'Can add a new sidebar widget as a text widget', function() {
+						return this.customizerPage.addNewSidebarTextWidget( widgetTitle, widgetContent );
+					} );
+
+					test.it( 'Can see the new widget in the preview pane', function() {
+						return this.customizerPage.previewShowsWidget( widgetTitle, widgetContent ).then( ( displayed ) => {
+							return assert( displayed, `The widget with title '${widgetTitle}' and content '${widgetContent}' was not displayed in the preview` );
+						} );
+					} );
+
+					test.it( 'Close widgets', function() {
+						this.customizerPage.closeOpenPanel();
+					} );
+				} );
+
+				test.describe( 'Setting static front page', function() {
+					test.it( 'Expand static front page', function() {
+						this.customizerPage = new CustomizerPage( driver );
+						return this.customizerPage.expandStaticFrontPage();
+					} );
+
+					test.it( 'Can see the front page option', function() {
+						return this.customizerPage.frontPageOptionDisplayed();
+					} );
+
+					test.it( 'Can see the posts page option', function() {
+						return this.customizerPage.postsPageOptionDisplayed();
+					} );
+
+					test.it( 'Close front page section', function() {
+						this.customizerPage.closeOpenSection();
+					} );
+				} );
 
 				test.describe( 'Closing the customizer', function() {
 					test.it( 'Close the customizer', function() {
