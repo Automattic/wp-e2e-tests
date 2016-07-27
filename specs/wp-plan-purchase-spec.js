@@ -56,8 +56,8 @@ test.describe( 'Plans: (' + screenSize + ')', function() {
 			test.it( 'Can Compare Plans', function() {
 				this.plansPage = new PlansPage( driver );
 				this.plansPage.clickComparePlans();
-				this.plansPage.waitForComparison();
-				return this.plansPage.returnFromComparison();
+				return this.plansPage.waitForComparison();
+//				return this.plansPage.returnFromComparison();
 			} );
 		} );
 
