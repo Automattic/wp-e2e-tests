@@ -7,7 +7,7 @@
   "mochaVisDiffTimeoutMS": 480000,
   "mochaDevDocsTimeoutMS": 1000000,
   "startBrowserTimeoutMS": 30000,
-  "afterHookTimeoutMS": 20000,
+  "afterHookTimeoutMS": 30000,
   "browser": "chrome",
   "proxy": "direct",
   "saveAllScreenshots": false,
