@@ -119,7 +119,7 @@ if [ $PARALLEL == 1 ]; then
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
       CMD="env BROWSERSIZE=mobile $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
 
-      eval $CMD
+      echo $CMD
       RETURN+=$?
   fi
   if [ $CIRCLE_NODE_INDEX == $DESKTOP ]; then
@@ -127,7 +127,7 @@ if [ $PARALLEL == 1 ]; then
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
       CMD="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
 
-      eval $CMD
+      echo $CMD
       RETURN+=$?
   fi
   if [ $CIRCLE_NODE_INDEX == $TABLET ] && [ "$CIRCLE_BRANCH" == "master" ]; then # only run tablet screensize on master branch
@@ -135,7 +135,7 @@ if [ $PARALLEL == 1 ]; then
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
       CMD="env BROWSERSIZE=tablet $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
 
-      eval $CMD
+      echo $CMD
       RETURN+=$?
   fi
   if [ $CIRCLE_NODE_INDEX == $VISUAL ] && [ $VISDIFF == 1 ]; then
