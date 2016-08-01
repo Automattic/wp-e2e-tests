@@ -668,12 +668,11 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			} );
 
 			test.it( 'Can trash the new post', function() {
-				let editorPage = new EditorPage( driver );
 				if ( config.get( 'useNewMobileEditor' ) === true ) {
 					const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					postEditorSidebarComponent.trashPost();
 				} else {
-					editorPage = new EditorPage( driver );
+					let editorPage = new EditorPage( driver );
 					editorPage.trashPost();
 				}
 			} );
