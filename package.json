@@ -24,7 +24,7 @@
     "esformatter-quotes": "^1.0.3",
     "esformatter-semicolons": "^1.1.2",
     "esformatter-special-bangs": "^1.0.1",
-    "eyes.selenium": "0.0.41",
+    "eyes.selenium": "0.0.52",
     "fs-extra": "0.22.1",
     "junit-viewer": "4.9.6",
     "lodash": "^4.13.1",
