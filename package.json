@@ -33,7 +33,7 @@
     "node-slack-upload": "1.0.4",
     "random-qoutes-generator": "0.0.1",
     "sanitize-filename": "1.6.0",
-    "selenium-webdriver": "2.53.3",
+    "selenium-webdriver": "2.47.0",
     "slack-notify": "0.1.4",
     "parallel-mocha": "~0.0.7",
     "saucelabs": "^1.2.0",
