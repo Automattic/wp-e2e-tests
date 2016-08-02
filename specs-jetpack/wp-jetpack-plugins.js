@@ -22,6 +22,10 @@ test.describe( 'Jetpack Plugins', function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
+	test.before( 'Delete cookies and local storage, and log in', function() {
+		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	} );
+
 	test.it( 'can see Jetpack installed and capture version', function() {
 		const wpAdminLogonPage = new WPAdminLogonPage( driver, true );
 		wpAdminLogonPage.logonAsJetpackAdmin();
