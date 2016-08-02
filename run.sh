@@ -15,7 +15,6 @@ CLEAN=0
 function joinStr { local IFS="$1"; shift; echo "$*"; }
 
 I18N_CONFIG="\"browser\":\"firefox\",\"proxy\":\"system\",\"neverSaveScreenshots\":\"true\""
-VISDIFF_CONFIG="\"browser\":\"firefox\", \"proxy\":\"system\", \"neverSaveScreenshots\":\"true\""
 IE11_CONFIG="\"sauce\":\"true\",\"sauceConfig\":\"win-ie11\""
 declare -a TARGETS
 
@@ -119,7 +118,7 @@ if [ $PARALLEL == 1 ]; then
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
       CMD="env BROWSERSIZE=mobile $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
 
-      echo $CMD
+      eval $CMD
       RETURN+=$?
   fi
   if [ $CIRCLE_NODE_INDEX == $DESKTOP ]; then
@@ -127,7 +126,7 @@ if [ $PARALLEL == 1 ]; then
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
       CMD="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
 
-      echo $CMD
+      eval $CMD
       RETURN+=$?
   fi
   if [ $CIRCLE_NODE_INDEX == $TABLET ] && [ "$CIRCLE_BRANCH" == "master" ]; then # only run tablet screensize on master branch
@@ -135,26 +134,22 @@ if [ $PARALLEL == 1 ]; then
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
       CMD="env BROWSERSIZE=tablet $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
 
-      echo $CMD
+      eval $CMD
       RETURN+=$?
   fi
   if [ $CIRCLE_NODE_INDEX == $VISUAL ] && [ $VISDIFF == 1 ]; then
       echo "Executing visdiff tests at all screen widths"
-      if [ "$NODE_CONFIG_ARG" == "" ]; then
-        NC="--NODE_CONFIG='{$VISDIFF_CONFIG}'"		
-      else		
-        NC="--NODE_CONFIG='{$VISDIFF_CONFIG,$NODE_CONFIG_ARG}'"		
-      fi
+      NC="--NODE_CONFIG='{$VISDIFF_CONFIG}'"
 
       CMD1="env BROWSERSIZE=mobile $MOCHA $NC $GREP $REPORTER specs-visdiff/critical/ $AFTER"
       CMD2="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER specs-visdiff/critical/ $AFTER"
       CMD3="env BROWSERSIZE=tablet $MOCHA $NC $GREP $REPORTER specs-visdiff/critical/ $AFTER"
 
-      echo $CMD1
+      eval $CMD1
       RETURN+=$?
       eval $CMD2
       RETURN+=$?
-      echo $CMD3
+      eval $CMD3
       RETURN+=$?
   fi
 else # Not a parallel run, just queue up the tests in sequence

@@ -66,16 +66,6 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 						title = titleSplit[ titleSplit.length - 1 ];
 						return driver.get( href );
 					} );
-//					// Scroll back to the top of the page
-//					flow.execute( function() {
-//						return driver.executeScript( 'window.scrollTo( 0, 0 )' );
-//					} );
-//					// Get the title
-//					flow.execute( function() {
-//						return devdocsDesignPage.getCurrentElementTitle().then( function( _title ) {
-//							title = _title;
-//						} );
-//					} );
 					// Hide the masterbar for clean CSS stitching
 					flow.execute( function() {
 						return devdocsDesignPage.hideMasterbar();
@@ -84,10 +74,6 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 					flow.execute( function() {
 						return driverHelper.eyesScreenshot( driver, eyes, title, by.id( 'primary' ) );
 					} );
-//					// Scroll back to the top of the page
-//					flow.execute( function() {
-//						return driver.executeScript( 'window.scrollTo( 0, 0 )' );
-//					} );
 					// Check for Compact button
 					flow.execute( function() {
 						return devdocsDesignPage.isCurrentElementCompactable().then( function( compactable ) {
@@ -107,14 +93,6 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 							}
 						} );
 					} );
-//					// Scroll back to the top of the page
-//					flow.execute( function() {
-//						return driver.executeScript( 'window.scrollTo( 0, 0 )' );
-//					} );
-//					// Return to the main list
-//					flow.execute( function() {
-//						return devdocsDesignPage.returnToAllComponents();
-//					} );
 				}
 			} );
 		} );
