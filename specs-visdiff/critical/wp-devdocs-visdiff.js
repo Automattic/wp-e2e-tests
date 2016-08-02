@@ -27,12 +27,8 @@ if ( process.env.CIRCLE_BUILD_NUM ) {
 	batchName = `wp-e2e-tests #${process.env.CIRCLE_BUILD_NUM}`
 }
 
-if ( config.has( 'sauce' ) && config.get( 'sauce' ) ) {
-	batchName = `Cross Browser Diffs #${process.env.CIRCLE_BUILD_NUM}`
-}
-
 if ( batchName !== '' ) {
-	eyes.setBatch( batchName, process.env.CIRCLE_BUILD_NUM );
+	eyes.setBatch( batchName, 'wp-e2e-tests-' + process.env.CIRCLE_BUILD_NUM );
 }
 
 test.before( function() {
@@ -46,9 +42,7 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 	this.timeout( mochaDevDocsTimeOut );
 
 	test.before( function() {
-		eyes.setBaselineName( `cross-browser-devdocs-${screenSizeName}-2` );
-		eyes.setMatchLevel( 'LAYOUT2' );
-		eyes.open( driver, 'WordPress.com', 'DevDocs Cross-Browser [' + screenSizeName + ']', screenSize );
+		eyes.open( driver, 'WordPress.com', 'DevDocs Design [' + screenSizeName + ']', screenSize );
 
 		let loginFlow = new LoginFlow( driver );
 		loginFlow.login();
