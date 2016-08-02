@@ -18,7 +18,7 @@ test.before( 'Start Browser', function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Jetpack Plugin', function() {
+test.describe( 'Jetpack Plugins', function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
