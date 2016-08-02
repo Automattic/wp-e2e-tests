@@ -151,13 +151,12 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 			eyes.close( false ).then( function( testResults ) {
 				let message = '';
 
-console.log( testResults );
 				if ( testResults.mismatches ) {
-					message = `<!here> Visual diff failed with ${testResults.mismatches} mismatches - ${testResults.url}`;
+					message = `<!here> Visual diff failed with ${testResults.mismatches} mismatches - ${testResults.appUrls.session}`;
 				} else if ( testResults.missing ) {
-					message = `<!here> Visual diff failed with ${testResults.missing} missing steps out of ${testResults.steps} - ${testResults.url}`;
+					message = `<!here> Visual diff failed with ${testResults.missing} missing steps out of ${testResults.steps} - ${testResults.appUrls.session}`;
 				} else if ( testResults.isNew ) {
-					message = `<!here> Visual diff marked as failed because it is a new baseline - ${testResults.url}`;
+					message = `<!here> Visual diff marked as failed because it is a new baseline - ${testResults.appUrls.session}`;
 				}
 
 				if ( message !== '' ) {
