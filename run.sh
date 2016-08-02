@@ -150,11 +150,11 @@ if [ $PARALLEL == 1 ]; then
       CMD2="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER specs-visdiff/critical/ $AFTER"
       CMD3="env BROWSERSIZE=tablet $MOCHA $NC $GREP $REPORTER specs-visdiff/critical/ $AFTER"
 
-      eval $CMD1
+      echo $CMD1
       RETURN+=$?
       eval $CMD2
       RETURN+=$?
-      eval $CMD3
+      echo $CMD3
       RETURN+=$?
   fi
 else # Not a parallel run, just queue up the tests in sequence
