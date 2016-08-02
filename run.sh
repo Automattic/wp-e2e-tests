@@ -15,7 +15,6 @@ CLEAN=0
 function joinStr { local IFS="$1"; shift; echo "$*"; }
 
 I18N_CONFIG="\"browser\":\"firefox\",\"proxy\":\"system\",\"neverSaveScreenshots\":\"true\""
-VISDIFF_CONFIG="\"browser\":\"firefox\", \"proxy\":\"system\", \"neverSaveScreenshots\":\"true\""
 IE11_CONFIG="\"sauce\":\"true\",\"sauceConfig\":\"win-ie11\""
 declare -a TARGETS
 
@@ -140,11 +139,7 @@ if [ $PARALLEL == 1 ]; then
   fi
   if [ $CIRCLE_NODE_INDEX == $VISUAL ] && [ $VISDIFF == 1 ]; then
       echo "Executing visdiff tests at all screen widths"
-      if [ "$NODE_CONFIG_ARG" == "" ]; then
-        NC="--NODE_CONFIG='{$VISDIFF_CONFIG}'"
-      else
-        NC="--NODE_CONFIG='{$VISDIFF_CONFIG,$NODE_CONFIG_ARG}'"
-      fi
+      NC="--NODE_CONFIG='{$VISDIFF_CONFIG}'"
 
       CMD1="env BROWSERSIZE=mobile $MOCHA $NC $GREP $REPORTER specs-visdiff/critical/ $AFTER"
       CMD2="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER specs-visdiff/critical/ $AFTER"
