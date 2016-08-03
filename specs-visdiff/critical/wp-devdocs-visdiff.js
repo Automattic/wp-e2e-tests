@@ -33,7 +33,7 @@ if ( batchName !== '' ) {
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser();
+	driver = driverManager.startBrowser( false ); // Start browser with default UA string
 	screenSize = driverManager.getSizeAsObject();
 } );
 
