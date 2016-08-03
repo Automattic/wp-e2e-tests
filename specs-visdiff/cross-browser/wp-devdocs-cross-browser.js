@@ -2,6 +2,7 @@ import test from 'selenium-webdriver/testing';
 import config from 'config';
 import * as driverManager from '../../lib/driver-manager.js';
 import * as driverHelper from '../../lib/driver-helper.js';
+import * as slackNotifier from '../../lib/slack-notifier';
 
 import LoginFlow from '../../lib/flows/login-flow.js';
 
@@ -20,7 +21,6 @@ let Eyes = require( 'eyes.selenium' ).Eyes;
 let eyes = new Eyes();
 eyes.setApiKey( config.get( 'eyesKey' ) );
 eyes.setForceFullPageScreenshot( true );
-eyes.setHideScrollbars( true )
 let batchName = '';
 
 if ( process.env.CIRCLE_BUILD_NUM ) {
@@ -32,12 +32,12 @@ if ( config.has( 'sauce' ) && config.get( 'sauce' ) ) {
 }
 
 if ( batchName !== '' ) {
-	eyes.setBatch( batchName, process.env.CIRCLE_BUILD_NUM );
+	eyes.setBatch( batchName, 'wp-e2e-tests-cross-browser' + process.env.CIRCLE_BUILD_NUM );
 }
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser();
+	driver = driverManager.startBrowser( false ); // Start browser with default UA string
 	screenSize = driverManager.getSizeAsObject();
 } );
 
@@ -46,6 +46,7 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 	this.timeout( mochaDevDocsTimeOut );
 
 	test.before( function() {
+		eyes.setHideScrollbars( true )
 		eyes.setBaselineName( `cross-browser-devdocs-${screenSizeName}-2` );
 		eyes.setMatchLevel( 'LAYOUT2' );
 		eyes.open( driver, 'WordPress.com', 'DevDocs Cross-Browser [' + screenSizeName + ']', screenSize );
@@ -72,16 +73,6 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 						title = titleSplit[ titleSplit.length - 1 ];
 						return driver.get( href );
 					} );
-//					// Scroll back to the top of the page
-//					flow.execute( function() {
-//						return driver.executeScript( 'window.scrollTo( 0, 0 )' );
-//					} );
-//					// Get the title
-//					flow.execute( function() {
-//						return devdocsDesignPage.getCurrentElementTitle().then( function( _title ) {
-//							title = _title;
-//						} );
-//					} );
 					// Hide the masterbar for clean CSS stitching
 					flow.execute( function() {
 						return devdocsDesignPage.hideMasterbar();
@@ -90,10 +81,6 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 					flow.execute( function() {
 						return driverHelper.eyesScreenshot( driver, eyes, title, by.id( 'primary' ) );
 					} );
-//					// Scroll back to the top of the page
-//					flow.execute( function() {
-//						return driver.executeScript( 'window.scrollTo( 0, 0 )' );
-//					} );
 					// Check for Compact button
 					flow.execute( function() {
 						return devdocsDesignPage.isCurrentElementCompactable().then( function( compactable ) {
@@ -113,14 +100,6 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 							}
 						} );
 					} );
-//					// Scroll back to the top of the page
-//					flow.execute( function() {
-//						return driver.executeScript( 'window.scrollTo( 0, 0 )' );
-//					} );
-//					// Return to the main list
-//					flow.execute( function() {
-//						return devdocsDesignPage.returnToAllComponents();
-//					} );
 				}
 			} );
 		} );
@@ -149,12 +128,18 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 	test.after( function() {
 		try {
 			eyes.close( false ).then( function( testResults ) {
+				let message = '';
+
 				if ( testResults.mismatches ) {
-					throw new Error( `Visual diff failed with ${testResults.mismatches} mismatches - ${testResults.url}` );
+					message = `<!here> Visual diff failed with ${testResults.mismatches} mismatches - ${testResults.appUrls.session}`;
 				} else if ( testResults.missing ) {
-					throw new Error( `Visual diff failed with ${testResults.missing} missing steps out of ${testResults.steps} - ${testResults.url}` );
+					message = `<!here> Visual diff failed with ${testResults.missing} missing steps out of ${testResults.steps} - ${testResults.appUrls.session}`;
 				} else if ( testResults.isNew ) {
-					throw new Error( `Visual diff marked as failed because it is a new baseline - ${testResults.url}` );
+					message = `<!here> Visual diff marked as failed because it is a new baseline - ${testResults.appUrls.session}`;
+				}
+
+				if ( message !== '' ) {
+					slackNotifier.warn( message );
 				}
 			} );
 		} finally {

@@ -74,8 +74,8 @@ while getopts ":Rpb:s:giv:wl:ch" opt; do
       TARGET="specs/*wp-signup-spec.js" # wildcard needed to account for random filename ordering
       ;;
     l)
-      NODE_CONFIG_ARGS+="\"sauce\":\"true\",\"sauceConfig\":\"$OPTARG\""
-      TARGET="specs-visdiff/cross-browser/"
+      NODE_CONFIG_ARGS+="\"sauce\":\"true\",\"sauceConfig\":\"$OPTARG\",\"crossBrowser\":\"true\""
+      TARGET="specs-visdiff/critical/"
       ;;
     v)
       VISDIFF=1
