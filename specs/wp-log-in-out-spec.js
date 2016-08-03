@@ -80,7 +80,7 @@ test.describe( 'User Agent: (' + screenSize + ')', function() {
 	test.it( 'Can see the correct user agent set', function() {
 		this.wpHomePage = new WPHomePage( driver, { visit: true } );
 		driver.executeScript( 'return navigator.userAgent;' ).then( ( userAgent ) => {
-			assert.equal( userAgent, 'Mozilla/5.0 (wp-e2e-tests) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36' );
+			assert( userAgent.match( 'wp-e2e-tests' ), `User Agent does not contain 'wp-e2e-tests'.  [${userAgent}]` );
 		} );
 	} );
 } );
