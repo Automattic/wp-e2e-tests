@@ -27,6 +27,8 @@ import * as dataHelper from '../lib/data-helper.js';
 
 import EmailClient from '../lib/email-client.js';
 
+import * as SlackNotifier from '../lib/slack-notifier';
+
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
@@ -42,6 +44,7 @@ test.before( 'Start Browser', function() {
 // Faked out test.describe function to enable dynamic skipping of e-mail tests
 let testDescribe = test.describe;
 if ( process.env.DISABLE_EMAIL === 'true' ) {
+	SlackNotifier.warn( 'WARNING::: Any test that uses email is currently disabled as DISABLE_EMAIL is set to true' );
 	testDescribe = test.xdescribe;
 }
 
