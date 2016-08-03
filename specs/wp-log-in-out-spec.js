@@ -4,8 +4,9 @@ import test from 'selenium-webdriver/testing';
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 
-import ReaderPage from '../lib/pages/reader-page.js';
-import ProfilePage from '../lib/pages/profile-page.js';
+import ReaderPage from '../lib/pages/reader-page';
+import ProfilePage from '../lib/pages/profile-page';
+import WPHomePage from '../lib/pages/wp-home-page';
 
 import NavbarComponent from '../lib/components/navbar-component.js';
 
@@ -64,6 +65,22 @@ test.describe( 'Authentication: (' + screenSize + ')', function() {
 					assert.equal( url, 'https://wordpress.com', 'The home page url was incorrect after signing out' );
 				} );
 			} );
+		} );
+	} );
+} );
+
+test.describe( 'User Agent: (' + screenSize + ')', function() {
+	this.timeout( mochaTimeOut );
+	this.bailSuite( true );
+
+	test.before( 'Delete Cookies and Local Storage', function() {
+		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	} );
+
+	test.it( 'Can see the correct user agent set', function() {
+		this.wpHomePage = new WPHomePage( driver, { visit: true } );
+		driver.executeScript( 'return navigator.userAgent;' ).then( ( userAgent ) => {
+			assert( userAgent.match( 'wp-e2e-tests' ), `User Agent does not contain 'wp-e2e-tests'.  [${userAgent}]` );
 		} );
 	} );
 } );
