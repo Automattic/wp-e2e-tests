@@ -23,6 +23,8 @@ import ViewBlogPage from '../lib/pages/signup/view-blog-page.js';
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
 
+import * as SlackNotifier from '../lib/slack-notifier';
+
 import EmailClient from '../lib/email-client.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
@@ -37,7 +39,14 @@ test.before( 'Start Browser', function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Sign Up (' + screenSize + ')', function() {
+// Faked out test.describe function to enable dynamic skipping of e-mail tests
+let testDescribe = test.describe;
+if ( process.env.DISABLE_EMAIL === 'true' ) {
+	SlackNotifier.warn( 'WARNING::: Any test that uses email is currently disabled as DISABLE_EMAIL is set to true' );
+	testDescribe = test.xdescribe;
+}
+
+testDescribe( 'Sign Up (' + screenSize + ')', function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Sign up for a free site', function() {
