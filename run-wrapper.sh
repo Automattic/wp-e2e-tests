@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# Notify Slack if any tests are being skipped -- Only runs on Node 0 so you just get one ping
+# -- Note that since this is called before run.sh the BROWSERSIZE variable is not yet set and 
+#    it will always say "screen size 'desktop'"
+if [ "$CIRCLE_NODE_INDEX" == "0" ]; then
+  if [ "$SKIP_TEST_REGEX" != "" ]; then
+    babel-node --presets es2015 lib/slack-ping-cli.js "Attention! Tests are being skipped with pattern [$SKIP_TEST_REGEX]"
+  fi
+  if [ "$RUN_VISDIFF" != "true" ]; then
+    babel-node --presets es2015 lib/slack-ping-cli.js "Attention! Visual Diff tests are currently disabled!"
+  fi
+fi
+
 if [ "$NODE_ENV_OVERRIDE" != "" ]; then
   NODE_ENV=$NODE_ENV_OVERRIDE
 fi
