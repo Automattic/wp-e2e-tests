@@ -20,7 +20,7 @@ test.before( 'Start Browser', function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Jetpack Plugins: (' + screenSize + ')', function() {
+test.describe( `Jetpack Plugins Calypso: '${ screenSize }'`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 

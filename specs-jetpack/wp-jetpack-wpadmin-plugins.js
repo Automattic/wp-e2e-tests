@@ -10,6 +10,7 @@ import WPAdminPluginsPage from '../lib/pages/wp-admin/wp-admin-plugins-page';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
+const screenSize = driverManager.currentScreenSize();
 
 var driver;
 
@@ -18,7 +19,7 @@ test.before( 'Start Browser', function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Jetpack Plugins', function() {
+test.describe( `Jetpack Plugins WP Admin: '${ screenSize }'`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
