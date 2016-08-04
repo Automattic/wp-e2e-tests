@@ -1,0 +1,36 @@
+import assert from 'assert';
+import test from 'selenium-webdriver/testing';
+
+import config from 'config';
+import * as driverManager from '../lib/driver-manager.js';
+
+import WPAdminLogonPage from '../lib/pages/wp-admin/wp-admin-logon-page';
+import WPAdminSidebar from '../lib/pages/wp-admin/wp-admin-sidebar';
+import WPAdminPluginsPage from '../lib/pages/wp-admin/wp-admin-plugins-page';
+
+const mochaTimeOut = config.get( 'mochaTimeoutMS' );
+const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
+const screenSize = driverManager.currentScreenSize();
+
+var driver;
+
+test.before( 'Start Browser', function() {
+	this.timeout( startBrowserTimeoutMS );
+	driver = driverManager.startBrowser();
+} );
+
+test.describe( `Jetpack WordPress.com Connect: '${ screenSize }'`, function() {
+	this.timeout( mochaTimeOut );
+	this.bailSuite( true );
+
+	test.before( 'Delete cookies and local storage, and log in', function() {
+		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	} );
+
+	test.it( 'can see Jetpack installed and capture version', function() {
+		const wpAdminLogonPage = new WPAdminLogonPage( driver, true );
+		wpAdminLogonPage.logonAsJetpackAdmin();
+		const wpAdminSidebar = new WPAdminSidebar( driver );
+		wpAdminSidebar.selectJetpack();
+	} );
+} );
