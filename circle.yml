@@ -6,6 +6,9 @@ general:
   artifacts:
     - "screenshots"
     - "logs"
+  branches:
+    ignore:
+      - /.*[j,J]etpack.*/ # ignore branches with jetpack in their name for Circle - these are run in a separate build
 
 dependencies:
   pre:
