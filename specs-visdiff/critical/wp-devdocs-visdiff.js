@@ -121,11 +121,12 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 		} );
 	} );
 
-	test.it( 'Verify App Components', function() {
+	test.it( 'Verify Blocks Page', function() {
 		devdocsDesignPage.openAppComponents().then( function() {
 			devdocsDesignPage.hideMasterbar().then( function() {
 				devdocsDesignPage.hideEnvironmentBadge().then( function() {
-					driverHelper.eyesScreenshot( driver, eyes, 'DevDocs Design (App Components)', by.id( 'primary' ) );
+					slackNotifier.warn( 'The Blocks page is currently being ignored, pending wp-calypso/7257 resolution' );
+					driverHelper.eyesScreenshot( driver, eyes, 'DevDocs Design (Blocks)', by.id( 'primary' ) );
 				} );
 			} );
 		} );
