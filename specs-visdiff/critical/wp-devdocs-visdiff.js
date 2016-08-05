@@ -31,6 +31,7 @@ if ( process.env.CIRCLE_BUILD_NUM ) {
 if ( config.has( 'crossBrowser' ) && config.get( 'crossBrowser' ) ) {
 	batchName = `Cross Browser Diffs #${process.env.CIRCLE_BUILD_NUM}`
 	crossBrowser = true;
+	mochaDevDocsTimeOut *= 3;
 }
 
 if ( batchName !== '' ) {
