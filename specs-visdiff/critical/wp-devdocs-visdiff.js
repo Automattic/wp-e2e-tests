@@ -11,7 +11,7 @@ import DevdocsDesignPage from '../../lib/pages/devdocs-design-page.js';
 import webdriver from 'selenium-webdriver';
 const by = webdriver.By;
 
-const mochaDevDocsTimeOut = config.get( 'mochaDevDocsTimeoutMS' );
+let mochaDevDocsTimeOut = config.get( 'mochaDevDocsTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 
 let driver, screenSize, screenSizeName;
@@ -22,9 +22,16 @@ let eyes = new Eyes();
 eyes.setApiKey( config.get( 'eyesKey' ) );
 eyes.setForceFullPageScreenshot( true );
 let batchName = '';
+let crossBrowser = false;
 
 if ( process.env.CIRCLE_BUILD_NUM ) {
 	batchName = `wp-e2e-tests #${process.env.CIRCLE_BUILD_NUM}`
+}
+
+if ( config.has( 'crossBrowser' ) && config.get( 'crossBrowser' ) ) {
+	batchName = `Cross Browser Diffs #${process.env.CIRCLE_BUILD_NUM}`
+	crossBrowser = true;
+	mochaDevDocsTimeOut *= 3;
 }
 
 if ( batchName !== '' ) {
@@ -42,8 +49,15 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 	this.timeout( mochaDevDocsTimeOut );
 
 	test.before( function() {
-		eyes.open( driver, 'WordPress.com', 'DevDocs Design [' + screenSizeName + ']', screenSize );
+		let testName = `DevDocs Design [${screenSizeName}]`;
+		if ( crossBrowser ) {
+			eyes.setHideScrollbars( true )
+			eyes.setBaselineName( `devdocs-cross-browser-${screenSizeName}` );
+			eyes.setMatchLevel( 'LAYOUT2' );
+			testName = `DevDocs Cross-Browser [${screenSizeName}]`;
+		}
 
+		eyes.open( driver, 'WordPress.com', testName, screenSize );
 		let loginFlow = new LoginFlow( driver );
 		loginFlow.login();
 
@@ -108,11 +122,12 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 		} );
 	} );
 
-	test.it( 'Verify App Components', function() {
+	test.it( 'Verify Blocks Page', function() {
 		devdocsDesignPage.openAppComponents().then( function() {
 			devdocsDesignPage.hideMasterbar().then( function() {
 				devdocsDesignPage.hideEnvironmentBadge().then( function() {
-					driverHelper.eyesScreenshot( driver, eyes, 'DevDocs Design (App Components)', by.id( 'primary' ) );
+					slackNotifier.warn( 'The Blocks page is currently being ignored, pending wp-calypso/7257 resolution' );
+					driverHelper.eyesScreenshot( driver, eyes, 'DevDocs Design (Blocks)', by.id( 'primary' ) );
 				} );
 			} );
 		} );
