@@ -11,7 +11,7 @@ import DevdocsDesignPage from '../../lib/pages/devdocs-design-page.js';
 import webdriver from 'selenium-webdriver';
 const by = webdriver.By;
 
-const mochaDevDocsTimeOut = config.get( 'mochaDevDocsTimeoutMS' );
+let mochaDevDocsTimeOut = config.get( 'mochaDevDocsTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 
 let driver, screenSize, screenSizeName;
