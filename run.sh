@@ -82,7 +82,9 @@ while getopts ":Rpb:s:giv:wl:cdh" opt; do
       VISDIFF=1
       ;;
     d)
-      grunt
+      if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
+        grunt
+      fi
       exit $?
       ;;
     h)
