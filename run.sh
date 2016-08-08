@@ -29,6 +29,7 @@ usage () {
 -l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration
 -c		  - Exit with status code 0 regardless of test results
 -d		  - Execute the cross-browser visual-diff tests via grunt (overrides all other arguments)
+-f		  - Tell visdiffs to fail the tests rather than just send an alert
 -i		  - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
 -v [all/critical] - Execute the visdiff tests in specs-visdiff[/critical].  Must specify either 'all' or 'critical'.  Only accessible in combination with -p flag
 -h		  - This help listing
@@ -40,7 +41,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rpb:s:giv:wl:cdh" opt; do
+while getopts ":Rpb:s:giv:wl:cdfh" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
@@ -75,7 +76,7 @@ while getopts ":Rpb:s:giv:wl:cdh" opt; do
       TARGET="specs/*wp-signup-spec.js" # wildcard needed to account for random filename ordering
       ;;
     l)
-      NODE_CONFIG_ARGS+="\"sauce\":\"true\",\"sauceConfig\":\"$OPTARG\",\"crossBrowser\":\"true\""
+      NODE_CONFIG_ARGS+=("\"sauce\":\"true\",\"sauceConfig\":\"$OPTARG\",\"crossBrowser\":\"true\"")
       TARGET="specs-visdiff/critical/"
       ;;
     v)
@@ -86,6 +87,9 @@ while getopts ":Rpb:s:giv:wl:cdh" opt; do
         grunt
       fi
       exit $?
+      ;;
+    f)
+      NODE_CONFIG_ARGS+=("\"failVisdiffs\":\"true\"")
       ;;
     h)
       usage

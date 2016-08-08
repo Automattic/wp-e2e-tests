@@ -6,7 +6,7 @@ module.exports = function (grunt) {
 		shell: {
 			runTests: {
 				command: function(browserSize, sauceConfig) {
-					return './run.sh -R -c -l ' + sauceConfig + ' -s ' + browserSize
+					return './run.sh -R -c -f -l ' + sauceConfig + ' -s ' + browserSize
 				}
 			}
 		},
