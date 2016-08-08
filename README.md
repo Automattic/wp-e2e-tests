@@ -127,6 +127,7 @@ A full list of config values are:
 | slackHook | This is a Slack incoming webhook where notifications are sent for new accounts that are created (https://my.slack.com/services/new/incoming-webhook -- requires Slack login) | https://hooks.slack.com/services/XXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX | No | **NO** |
 | emailPrefix | A string to stick on the beginning of the e-mail addresses used for invites and signups | username | No | **NO** |
 | testAccounts | A JSON object with username/password pairs assigned to keynames for easy retrieval.  The necessary keys are shown in the example to the right.  | {"defaultUser": ["username1","password1"], "multiSiteUser": ["username2","password2"], "jetpackUser": ["username3","password3"], "visualUser": ["username4", "password4"]}, "privateSiteUser": ["username5", "password5"] | No | **NO** |
+| highlightElements | Boolean to indicate whether to visually highlight elements being interacted with on the page | true | No | Yes |
 
 #### Standalone Environment Variables
 
