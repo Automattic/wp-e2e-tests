@@ -1,4 +1,5 @@
 import test from 'selenium-webdriver/testing';
+import assert from 'assert';
 import config from 'config';
 import * as driverManager from '../../lib/driver-manager.js';
 import * as driverHelper from '../../lib/driver-helper.js';
@@ -148,7 +149,11 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 
 				if ( message !== '' ) {
 					slackNotifier.warn( message );
+					if ( config.has( 'failVisdiffs' ) && config.get( 'failVisdiffs' ) ) {
+						assert( false, message );
+					}
 				}
+
 			} );
 		} finally {
 			eyes.abortIfNotClosed();
