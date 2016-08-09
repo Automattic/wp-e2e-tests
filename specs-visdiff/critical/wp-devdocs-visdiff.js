@@ -52,10 +52,11 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 	test.before( function() {
 		let testName = `DevDocs Design [${screenSizeName}]`;
 		if ( crossBrowser ) {
+			let parsedScreenSize = screenSizeName.replace( /-small/, '' );
 			eyes.setHideScrollbars( true )
-			eyes.setBaselineName( `devdocs-cross-browser-${screenSizeName}` );
+			eyes.setBaselineName( `devdocs-cross-browser-${parsedScreenSize}` );
 			eyes.setMatchLevel( 'LAYOUT2' );
-			testName = `DevDocs Cross-Browser [${screenSizeName}]`;
+			testName = `DevDocs Cross-Browser [${parsedScreenSize}]`;
 		}
 
 		eyes.open( driver, 'WordPress.com', testName, screenSize );
@@ -153,7 +154,6 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 						assert( false, message );
 					}
 				}
-
 			} );
 		} finally {
 			eyes.abortIfNotClosed();
