@@ -23,14 +23,20 @@ test.describe( `Jetpack WordPress.com Connect: '${ screenSize }'`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
-	test.before( 'Delete cookies and local storage, and log in', function() {
+	test.before( 'Delete cookies and local storage', function() {
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
-	test.it( 'can see Jetpack installed and capture version', function() {
-		const wpAdminLogonPage = new WPAdminLogonPage( driver, true );
-		wpAdminLogonPage.logonAsJetpackAdmin();
-		const wpAdminSidebar = new WPAdminSidebar( driver );
-		wpAdminSidebar.selectJetpack();
+	test.it( 'Log on to our Jetpack site', function() {
+		this.wpAdminLogonPage = new WPAdminLogonPage( driver, true );
+		this.wpAdminLogonPage.logonAsJetpackAdmin();
+	} );
+
+	test.it( 'Make sure that Jetpack is disconnected by deactivating and reactivating Jetpack', function() {
+		this.wpAdminSidebar = new WPAdminSidebar( driver );
+		this.wpAdminSidebar.selectPlugins();
+		this.wpAdminPluginsPage = new WPAdminPluginsPage( driver );
+		this.wpAdminPluginsPage.deactivateJetpack();
+		this.wpAdminPluginsPage.activateJetpack();
 	} );
 } );
