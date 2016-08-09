@@ -7,6 +7,8 @@ import * as driverManager from '../lib/driver-manager.js';
 import WPAdminLogonPage from '../lib/pages/wp-admin/wp-admin-logon-page';
 import WPAdminSidebar from '../lib/pages/wp-admin/wp-admin-sidebar';
 import WPAdminPluginsPage from '../lib/pages/wp-admin/wp-admin-plugins-page';
+import WPAdminJetpackPage from '../lib/pages/wp-admin/wp-admin-jetpack-page';
+import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -38,5 +40,13 @@ test.describe( `Jetpack WordPress.com Connect: '${ screenSize }'`, function() {
 		this.wpAdminPluginsPage = new WPAdminPluginsPage( driver );
 		this.wpAdminPluginsPage.deactivateJetpack();
 		this.wpAdminPluginsPage.activateJetpack();
+	} );
+
+	test.it( 'Can connect Jetpack to WordPress.com', function() {
+		this.wpAdminSidebar = new WPAdminSidebar( driver );
+		this.wpAdminSidebar.selectJetpack();
+		this.wpAdminJetpackPage = new WPAdminJetpackPage( driver );
+		this.wpAdminJetpackPage.connectWordPressCom();
+		this.jetpackAuthorizePage = new JetpackAuthorizePage( driver );
 	} );
 } );
