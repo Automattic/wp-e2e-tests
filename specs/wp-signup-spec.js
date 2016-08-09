@@ -178,7 +178,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 
 										test.it( 'Can see the correct blog title displayed', function() {
 											return this.viewBlogPage.title().then( ( title ) => {
-												return assert( title.match( blogName ), 'The expected blog title is not displaying correctly' );
+												return assert.equal( title, 'Site Title', 'The expected blog title is not displaying correctly' );
 											} );
 										} );
 
