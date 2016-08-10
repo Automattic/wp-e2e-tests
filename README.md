@@ -19,6 +19,7 @@ npm install
 npm pack lib/reporter
 npm install ./spec-xunit-slack-reporter-0.0.1.tgz
 ```
+Note - One of the dependencies for mobile app testing is [Appium](http://appium.io/), which in turn requires Java.  If you don't plan on running any mobile tests and don't have Java installed you can safely ignore the warnings given by `npm install`
 
 #### To run the specs (in default browser size)
 
@@ -72,7 +73,7 @@ You can also use local config files that are not committed.
 
 The config files should be added under the `config/` tree and should follow the naming scheme: `local-<env>.json`
 
-The properties in the local configuration override the `default.json` properties. This is useful for local testing of different configurations on local, e.g. testing on local Calypso instance, instead of live one.
+The properties in the local configuration override the `default.json` properties. This is useful for local testing of different configurations on local, e.g. testing on local Calypso instance, instead of production, by setting the `calypsoBaseURL` property to `http://calypso.localhost:3000`.
 
 If the configuration doesn't exist, the code falls back to using the environmental variables.
 

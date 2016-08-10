@@ -15,6 +15,7 @@
 */
 {
 	"calypsoBaseURL": "https://wpcalypso.wordpress.com",
+	"highlightElements": true,
 	"testSiteForInvites": "example.wordpress.com",
 	"privateSiteForInvites": "example.wordpress.com",
 	"passwordForNewTestSignUps": "password",
@@ -26,6 +27,15 @@
 	"signupInboxId": "",
 	"domainsInboxId": "",
 	"eyesKey": "",
+	"testSiteForNotifications": "example.wordpress.com",
+	"jetpackSiteId": "",
+	"sauceUsername": "",
+	"sauceAccessKey": "",
+	"sauceUsernameIOS": "",
+	"sauceAccessKeyIOS": "",
+        "selfHostedURL": "",
+	"iOSLocalApp": "",
+	"reportWarningsToSlack": true,
 	"testAccounts": {
 		"defaultUser": [
 			"username",
@@ -44,6 +54,46 @@
 			"password"
 		],
 		"privateSiteUser": [
+			"username",
+			"password"
+		],
+		"commentingUser": [
+		  "username",
+		  "password"
+		],
+		"notificationsUser": [
+		  "username",
+		  "password"
+		],
+		"eurAccountUser": [
+		  "username",
+		  "password"
+		],
+		"audAccountUser": [
+		  "username",
+		  "password"
+		],
+		"cadAccountUser": [
+		  "username",
+		  "password"
+		],
+		"gbpAccountUser": [
+		  "username",
+		  "password"
+		],
+		"jpyAccountUser": [
+		  "username",
+		  "password"
+		],
+		"usdAccountUser": [
+		  "username",
+		  "password"
+		],
+		"postNUXUser": [
+			"username",
+			"password"
+		]
+		"selfHostedUser": [
 			"username",
 			"password"
 		]
