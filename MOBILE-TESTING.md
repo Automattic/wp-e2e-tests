@@ -7,6 +7,10 @@ This document is a supplement to the main [README](README.md) file for this proj
 #### Appium
 These tests are written to use [Appium](http://appium.io) as the interface for talking to the device/simulator.  You can either run it standalone, or connect to the [SauceLabs](https://saucelabs.com/) interface.  Appium is included as an npm dependency, but you can also download and install it manually.  Just be sure to start the server before running any tests (if you're not using SauceLabs)
 
+#### App Location
+* If using SauceLabs, the compiled app needs to be uploaded to their [temporary storage](https://wiki.saucelabs.com/display/DOCS/Temporary+Storage+Methods) under the name `WordPress-iOS.zip`
+* If running locally, the app location needs to be accessible in the NODE_CONFIG parameter `iOSLocalApp`
+
 #### Specs
 
 The iOS specs are kept in the [specs-ios](/specs-ios) folder.
