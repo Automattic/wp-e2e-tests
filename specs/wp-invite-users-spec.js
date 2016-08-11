@@ -355,6 +355,17 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 									this.peoplePage.numberSearchResults().then( ( numberPeopleShown ) => {
 										assert.equal( numberPeopleShown, 0, `After deletion, the number of email follower search results for '${newUserName}' was incorrect` );
 									} );
+									this.peoplePage.cancelSearch();
+								} );
+
+								test.it( 'Can remove the follower account from the site', function() {
+									this.peoplePage.selectFollowers();
+									this.peoplePage.waitForSearchResults();
+									this.peoplePage.removeUserByName( newUserName, true );
+									this.peoplePage.waitForSearchResults();
+									this.peoplePage.viewerDisplayed( newUserName ).then( ( displayed ) => {
+										assert.equal( displayed, false, `The username of '${newUserName}' was still displayed as a site viewer` );
+									} );
 								} );
 							} );
 						} );
@@ -508,7 +519,7 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 
 								test.describe( 'As the original user, I can remove the new user added to site', function() {
 									test.it( 'Can remove the team member from the site', function() {
-										this.peoplePage.removeViewer( newUserName );
+										this.peoplePage.removeUserByName( newUserName, false );
 										this.peoplePage.waitForSearchResults();
 										this.peoplePage.viewerDisplayed( newUserName ).then( ( displayed ) => {
 											assert.equal( displayed, false, `The username of '${newUserName}' was still displayed as a site viewer` );
