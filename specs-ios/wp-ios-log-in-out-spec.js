@@ -15,13 +15,12 @@ import NavbarComponent from '../lib/components/ios/navbar-component-ios.js';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startAppTimeoutMS = config.get( 'startAppTimeoutMS' );
 
-var driver, wdDriver;
+var driver;
 
 test.before( 'Start App', function() {
 	this.timeout( startAppTimeoutMS );
 	return driverManager.startApp().then( function() {
 		driver = global.__BROWSER__;
-		wdDriver = global.__WDDRIVER__;
 	} );
 } );
 
@@ -29,7 +28,7 @@ test.describe( 'Authentication (' + process.env.ORIENTATION + '):', function() {
 	this.timeout( mochaTimeOut );
 	test.describe( 'Logging In and Out (.com):', function() {
 		test.before( 'Restart app', function() {
-			return wdDriver.resetApp();
+			return driverManager.resetApp();
 		} );
 
 		test.describe( 'Can Log In', function() {
@@ -70,7 +69,7 @@ test.describe( 'Authentication (' + process.env.ORIENTATION + '):', function() {
 
 	test.describe( 'Logging In and Out (.org):', function() {
 		test.before( 'Restart app', function() {
-			return wdDriver.resetApp();
+			return driverManager.resetApp();
 		} );
 
 		test.describe( 'Can Log In', function() {

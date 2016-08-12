@@ -12,13 +12,12 @@ import MainPage from '../lib/pages/ios/main-page-ios.js';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startAppTimeoutMS = config.get( 'startAppTimeoutMS' );
 
-var driver, wdDriver;
+var driver;
 
 test.before( 'Start App', function() {
 	this.timeout( startAppTimeoutMS );
 	return driverManager.startApp().then( function() {
 		driver = global.__BROWSER__;
-		wdDriver = global.__WDDRIVER__;
 	} );
 } );
 
@@ -27,7 +26,7 @@ test.describe( 'Signup (' + process.env.ORIENTATION + '):', function() {
 	test.describe( 'Test error conditions:', function() {
 		let signupPage, loginPage;
 		test.before( 'Restart app', function() {
-			return wdDriver.resetApp();
+			return driverManager.resetApp();
 		} );
 
 		test.it( 'Open signup page', function() {
@@ -70,7 +69,7 @@ test.describe( 'Signup (' + process.env.ORIENTATION + '):', function() {
 	test.describe( 'Sign up for a free site (.com):', function() {
 		let signupPage
 		test.before( 'Restart app', function() {
-			return wdDriver.resetApp();
+			return driverManager.resetApp();
 		} );
 
 		test.it( 'Open signup page', function() {
