@@ -170,10 +170,12 @@ else # Not a parallel run, just queue up the tests in sequence
     IFS=, read -r -a SCREENSIZE_ARRAY <<< "$SCREENSIZES"
     for size in ${SCREENSIZE_ARRAY[@]}; do
       for target in "${TARGETS[@]}"; do
-        CMD="env BROWSERSIZE=$size $MOCHA $NC $GREP $REPORTER $target $AFTER"
+        if [ "$target" != "" ]; then
+          CMD="env BROWSERSIZE=$size $MOCHA $NC $GREP $REPORTER $target $AFTER"
 
-        eval $CMD
-        RETURN+=$?
+          eval $CMD
+          RETURN+=$?
+        fi
       done
     done
   fi
