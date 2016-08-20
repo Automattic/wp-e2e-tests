@@ -96,7 +96,7 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 							if ( compactable ) {
 								return devdocsDesignPage.getCurrentElementCompactButton().then( function( button ) {
 									// Chrome needs a more precise click on the mobile width to avoid overlapping elements
-									if ( global.browserName.toLowerCase() === 'chrome' ) {
+									if ( global.browserName.toLowerCase() === 'chrome' || global.browserName.toLowerCase() === 'firefox' ) {
 										return driver.actions().mouseMove( button, {x: 3, y: 3} ).click().perform().then( function() {
 											return driverHelper.eyesScreenshot( driver, eyes, title + ' (Compact)', by.id( 'primary' ) );
 										} );
@@ -129,7 +129,11 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 			devdocsDesignPage.hideMasterbar().then( function() {
 				devdocsDesignPage.hideEnvironmentBadge().then( function() {
 					slackNotifier.warn( 'The Blocks page is currently being ignored, pending wp-calypso/7257 resolution' );
-					driverHelper.eyesScreenshot( driver, eyes, 'DevDocs Design (Blocks)', by.id( 'primary' ) );
+					if ( screenSizeName === 'desktop-small' ) {
+						console.log( 'Skipping Blocks screenshot entirely for cross-browser desktop' );
+					} else {
+						driverHelper.eyesScreenshot( driver, eyes, 'DevDocs Design (Blocks)', by.id( 'primary' ) );
+					}
 				} );
 			} );
 		} );
