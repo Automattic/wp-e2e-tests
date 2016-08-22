@@ -8,7 +8,9 @@ import * as slackNotifier from '../lib/slack-notifier';
 import WPAdminLogonPage from '../lib/pages/wp-admin/wp-admin-logon-page';
 import WPAdminSidebar from '../lib/pages/wp-admin/wp-admin-sidebar';
 import WPAdminPluginsPage from '../lib/pages/wp-admin/wp-admin-plugins-page';
+import WPAdminSettingsSharingPage from '../lib/pages/wp-admin/wp-admin-settings-sharing-page';
 import WPAdminJetpackPage from '../lib/pages/wp-admin/wp-admin-jetpack-page';
+import WPAdminJetpackSettingsPage from '../lib/pages/wp-admin/wp-admin-jetpack-settings-page';
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 import JetpackPlansPage from '../lib/pages/jetpack-plans-page';
 
@@ -54,7 +56,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			this.wpAdminJetpackPage.connectWordPressCom();
 			this.jetpackAuthorizePage = new JetpackAuthorizePage( driver );
 			this.jetpackAuthorizePage.chooseSignIn();
-			this.loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
+			this.loginFlow = new LoginFlow( driver, 'jetpackConnectAdminUser' );
 			this.loginFlow.loginUsingExistingForm();
 			this.jetpackAuthorizePage = new JetpackAuthorizePage( driver );
 			this.jetpackAuthorizePage.approveConnection();
@@ -67,10 +69,24 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		} );
 	} );
 
-	test.xdescribe( 'Publicize', function() {
-		test.it( 'With an image to all the sites', function() { } );
-		test.it( 'With a custom message to all the sites', function() { } );
-		test.it( 'Without a custom message or image to all the sites', function() { } );
+	test.describe( 'Publicize', function() {
+		test.it( 'Can see, activate and connect publicize functionality for Jetpack', function() {
+			this.wpAdminSidebar = new WPAdminSidebar( driver );
+			this.wpAdminSidebar.selectJetpackSettings();
+			this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+			this.jetpackSettingsPage.chooseTabNamed( 'Engagement' );
+			this.jetpackSettingsPage.disableFeatureNamed( 'Publicize' );
+			this.jetpackSettingsPage.enableFeatureNamed( 'Publicize' );
+			this.jetpackSettingsPage.expandFeatureNamed( 'Publicize' );
+			this.jetpackSettingsPage.followPublicizeSettingsLink();
+			this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
+			this.wpAdminSettingsSharingPage.displayed().then( ( isDisplayed ) => {
+				assert( isDisplayed, 'The Settings-Sharing Page is NOT displayed' );
+			} );
+		} );
+		test.xit( 'With an image to all the sites', function() { } );
+		test.xit( 'With a custom message to all the sites', function() { } );
+		test.xit( 'Without a custom message or image to all the sites', function() { } );
 	} );
 
 	test.xdescribe( 'Sharing buttons', function() {
