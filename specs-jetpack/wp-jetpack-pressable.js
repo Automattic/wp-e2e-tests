@@ -84,6 +84,15 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 				assert( isDisplayed, 'The Settings-Sharing Page is NOT displayed' );
 			} );
 		} );
+		test.it( 'Can add a connection to a Twitter test account for Publicize', function() {
+			const twitterAccountUsername = config.get( 'twitterAccount' );
+			const twitterAccountPassword = config.get( 'twitterPassword' );
+			this.wpAdminSidebar = new WPAdminSidebar( driver );
+			this.wpAdminSidebar.selectSettingsSharing();
+			this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
+			this.wpAdminSettingsSharingPage.removeTwitterIfExists();
+			this.wpAdminSettingsSharingPage.addTwitterConnection();
+		} );
 		test.xit( 'With an image to all the sites', function() { } );
 		test.xit( 'With a custom message to all the sites', function() { } );
 		test.xit( 'Without a custom message or image to all the sites', function() { } );
