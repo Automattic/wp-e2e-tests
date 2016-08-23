@@ -41,7 +41,7 @@ if ( batchName !== '' ) {
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser( false ); // Start browser with default UA string
+	driver = driverManager.startBrowser( { useCustomUA: false, resizeBrowserWindow: false } ); // Start browser with default UA string and do not resize (rely on Eyes to do that)
 	screenSize = driverManager.getSizeAsObject();
 } );
 
@@ -129,11 +129,7 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 			devdocsDesignPage.hideMasterbar().then( function() {
 				devdocsDesignPage.hideEnvironmentBadge().then( function() {
 					slackNotifier.warn( 'The Blocks page is currently being ignored, pending wp-calypso/7257 resolution' );
-					if ( screenSizeName === 'desktop-small' ) {
-						console.log( 'Skipping Blocks screenshot entirely for cross-browser desktop' );
-					} else {
-						driverHelper.eyesScreenshot( driver, eyes, 'DevDocs Design (Blocks)', by.id( 'primary' ) );
-					}
+					driverHelper.eyesScreenshot( driver, eyes, 'DevDocs Design (Blocks)', by.id( 'primary' ) );
 				} );
 			} );
 		} );
