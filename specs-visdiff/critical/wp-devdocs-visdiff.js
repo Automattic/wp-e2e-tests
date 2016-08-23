@@ -41,7 +41,8 @@ if ( batchName !== '' ) {
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser( { useCustomUA: false, resizeBrowserWindow: false } ); // Start browser with default UA string and do not resize (rely on Eyes to do that)
+	let resizeBrowser = screenSizeName === 'desktop-small' ? false : true; // Do not resize browser ahead of time for desktop-small runs to work around Applitools bug
+	driver = driverManager.startBrowser( { useCustomUA: false, resizeBrowserWindow: resizeBrowser } );
 	screenSize = driverManager.getSizeAsObject();
 } );
 
