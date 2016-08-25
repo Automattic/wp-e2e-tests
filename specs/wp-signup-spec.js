@@ -52,7 +52,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 	test.describe( 'Sign up for a free site', function() {
 		this.bailSuite( true );
 
-		const blogName = 'e2e' + new Date().getTime().toString();
+		const blogName = 'e2eflowtesting' + new Date().getTime().toString();
 		let newBlogAddress = '';
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailName = new Date().getTime().toString();
@@ -206,7 +206,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 	test.describe( 'Sign up for a site on a premium paid plan through main flow', function() {
 		this.bailSuite( true );
 
-		const blogName = 'e2e' + new Date().getTime().toString();
+		const blogName = 'e2eflowtesting' + new Date().getTime().toString();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailName = new Date().getTime().toString();
 		const emailAddress = dataHelper.getEmailAddress( emailName, signupInboxId );
@@ -354,7 +354,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 	test.describe( 'Sign up for a site on a premium paid plan coming in via /create as premium flow', function() {
 		this.bailSuite( true );
 
-		const blogName = 'e2e' + new Date().getTime().toString();
+		const blogName = 'e2eflowtesting' + new Date().getTime().toString();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailName = new Date().getTime().toString();
 		const emailAddress = dataHelper.getEmailAddress( emailName, signupInboxId );
@@ -489,7 +489,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 	test.describe( 'Partially sign up for a site on a business paid plan w/ domain name coming in via /create as business flow', function() {
 		this.bailSuite( true );
 
-		const siteName = 'e2e' + new Date().getTime().toString();
+		const siteName = 'e2eflowtesting' + new Date().getTime().toString();
 		const emailName = new Date().getTime().toString();
 		const expectedDomainName = `${siteName}.com`;
 		const emailAddress = dataHelper.getEmailAddress( emailName, signupInboxId );
