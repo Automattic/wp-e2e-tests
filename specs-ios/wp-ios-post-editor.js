@@ -35,10 +35,17 @@ test.describe( 'Editor: Posts (' + process.env.ORIENTATION + '):', function() {
 				return loginFlow.loginAndStartNewPost();
 			} );
 
-			test.it( 'Can fill out title and body', function() {
+			test.it( 'Can fill out title', function() {
 				this.editorPage = new EditorPage( driver );
-				this.editorPage.enterContent( blogPostQuote );
-				this.editorPage.enterTitle( blogPostTitle );
+				return this.editorPage.enterTitle( blogPostTitle );
+			} );
+
+			test.it( 'Can fill out body', function() {
+				return this.editorPage.enterContent( blogPostQuote );
+			} );
+
+			test.it( 'Can Post', function() {
+				return this.editorPage.clickPost();
 			} );
 		} );
 	} );
