@@ -80,7 +80,7 @@ test.describe( 'Signup (' + process.env.ORIENTATION + '):', function() {
 
 		test.it( 'Fill in account details', function() {
 			const signupInboxId = config.get( 'signupInboxId' );
-			const newUsername = 'e2e' + new Date().getTime().toString();
+			const newUsername = 'e2eflowtesting' + new Date().getTime().toString();
 			const newSignupEmailAddress = dataHelper.getEmailAddress( newUsername, signupInboxId );
 			const newPassword = config.get( 'passwordForNewTestSignUps' );
 

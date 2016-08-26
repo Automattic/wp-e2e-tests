@@ -54,7 +54,7 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 	test.describe( 'Inviting New User as an Editor:', function() {
 		this.bailSuite( true );
 		const inviteInboxId = config.get( 'inviteInboxId' );
-		const newUserName = 'e2eeditor' + new Date().getTime().toString();
+		const newUserName = 'e2eflowtestingeditor' + new Date().getTime().toString();
 		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		let acceptInviteURL = '';
@@ -228,7 +228,7 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 	test.describe( 'Inviting New User as a Follower:', function() {
 		this.bailSuite( true );
 		const inviteInboxId = config.get( 'inviteInboxId' );
-		const newUserName = 'e2efollower' + new Date().getTime().toString();
+		const newUserName = 'e2eflowtestingfollower' + new Date().getTime().toString();
 		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		let acceptInviteURL = '';
@@ -379,7 +379,7 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 		this.bailSuite( true );
 
 		const inviteInboxId = config.get( 'inviteInboxId' );
-		const newUserName = 'e2eviewer' + new Date().getTime().toString();
+		const newUserName = 'e2eflowtestingviewer' + new Date().getTime().toString();
 		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const siteName = config.get( 'privateSiteForInvites' );
@@ -554,7 +554,7 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 		this.bailSuite( true );
 
 		const inviteInboxId = config.get( 'inviteInboxId' );
-		const newUserName = 'e2econtributor' + new Date().getTime().toString();
+		const newUserName = 'e2eflowtestingcontributor' + new Date().getTime().toString();
 		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const reviewPostTitle = dataHelper.randomPhrase();

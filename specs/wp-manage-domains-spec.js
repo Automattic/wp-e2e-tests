@@ -38,7 +38,7 @@ test.describe( 'Managing Domains: (' + screenSize + ')', function() {
 		this.bailSuite( true );
 
 		//TODO: work out about sandbox payments and automatically cancelling domains
-		const blogName = 'e2e' + new Date().getTime().toString();
+		const blogName = 'e2eflowtesting' + new Date().getTime().toString();
 		const emailName = new Date().getTime().toString();
 		const domainEmailAddress = dataHelper.getEmailAddress( emailName, domainsInboxId );
 		const expectedDomainName = blogName + '.com';
