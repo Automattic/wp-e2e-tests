@@ -43,7 +43,8 @@
     "grunt-cli": "^0.1.13",
     "appium": "1.5.3",
     "wd": "^0.4.0",
-    "wd-bridge": "^0.0.2"
+    "wd-bridge": "^0.0.2",
+    "xml2json-command": "^0.0.3"
   },
   "devDependencies": {
     "eslint": "<2.3.0",
