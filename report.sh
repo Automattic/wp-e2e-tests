@@ -10,6 +10,13 @@ if [ $RC != 0 ];then
   exit 1
 fi
 
+which xml2json > /dev/null 2>&1
+RC=$?
+if [ $RC != 0 ];then
+  echo "Please npm install to get xml2json-command"
+  exit 1
+fi
+
 red='\E[31;40m'
 reset='\e[0m'
 
@@ -38,7 +45,7 @@ for BUILD_NUM in $(ls); do
   head -1 $(ls | head -1) | sed 's/^.*timestamp="//' | sed 's/".*$//'
     
   # Loop through the files that have a failure recorded
-  for file in $(grep -l failures=\"[^0]\" *); do
+  for file in $(grep -l failures=\"[^0]\" * 2>/dev/null); do
     # Convert the XML to JSON
     json=$(xml2json < $file)
     failures=$(echo $json | jq -M '.testsuite.testcase | map( select( .failure ) | { classname: .classname, name: .name, failure: .failure."$cd" } )')
