@@ -11,8 +11,10 @@ import WPAdminPluginsPage from '../lib/pages/wp-admin/wp-admin-plugins-page';
 import WPAdminSettingsSharingPage from '../lib/pages/wp-admin/wp-admin-settings-sharing-page';
 import WPAdminJetpackPage from '../lib/pages/wp-admin/wp-admin-jetpack-page';
 import WPAdminJetpackSettingsPage from '../lib/pages/wp-admin/wp-admin-jetpack-settings-page';
+import WPAdminTbDialogPage from '../lib/pages/wp-admin/wp-admin-tb-dialog';
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 import JetpackPlansPage from '../lib/pages/jetpack-plans-page';
+import TwitterAuthorizePage from '../lib/pages/external/twitter-authorize-page';
 
 import LoginFlow from '../lib/flows/login-flow';
 
@@ -92,6 +94,16 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
 			this.wpAdminSettingsSharingPage.removeTwitterIfExists();
 			this.wpAdminSettingsSharingPage.addTwitterConnection();
+			this.twitterAuthorizePage = new TwitterAuthorizePage( driver );
+			this.twitterAuthorizePage.signInAndAllow( twitterAccountUsername, twitterAccountPassword );
+			this.wPAdminTbDialogPage = new WPAdminTbDialogPage( driver );
+			this.wPAdminTbDialogPage.updatedMessageShown().then( ( shown ) => {
+				assert( shown, 'The twitter connected dialog was not displayed in wp-admin' );
+			} );
+			this.wPAdminTbDialogPage.clickOK();
+			this.wpAdminSettingsSharingPage.twitterAccountShown( twitterAccountUsername ).then( ( shown ) => {
+				assert( shown, 'The twitter account just added is not appearing on the publicize wp-admin page' );
+			} );
 		} );
 		test.xit( 'With an image to all the sites', function() { } );
 		test.xit( 'With a custom message to all the sites', function() { } );
