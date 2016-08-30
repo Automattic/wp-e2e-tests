@@ -15,6 +15,7 @@ import WPAdminTbDialogPage from '../lib/pages/wp-admin/wp-admin-tb-dialog';
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 import JetpackPlansPage from '../lib/pages/jetpack-plans-page';
 import TwitterAuthorizePage from '../lib/pages/external/twitter-authorize-page';
+import TumblrAuthorizePage from '../lib/pages/external/tumblr-authorize-page';
 
 import LoginFlow from '../lib/flows/login-flow';
 
@@ -85,9 +86,8 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			this.wpAdminSettingsSharingPage.displayed().then( ( isDisplayed ) => {
 				assert( isDisplayed, 'The Settings-Sharing Page is NOT displayed' );
 			} );
-			return driver.sleep( 5000 ); // This is so that the settings changes take effect - otherwise connecting twitter will fail
+			return driver.sleep( 10000 ); // This is so that the settings changes take effect - otherwise connecting twitter will fail
 		} );
-
 		test.it( 'Can add a connection to a Twitter test account for Publicize', function() {
 			const twitterAccountUsername = config.get( 'twitterAccount' );
 			const twitterAccountPassword = config.get( 'twitterPassword' );
@@ -105,6 +105,27 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			this.wPAdminTbDialogPage.clickOK();
 			this.wpAdminSettingsSharingPage.twitterAccountShown( twitterAccountUsername ).then( ( shown ) => {
 				assert( shown, 'The twitter account just added is not appearing on the publicize wp-admin page' );
+			} );
+		} );
+		test.it( 'Can add a connection to a Tumblr test account for Publicize', function() {
+			const tumblrAccountEmail = config.get( 'tumblrAccountEmail' );
+			const tumblrBlogName = config.get( 'tumblrBlogName' );
+			const tumblrAccountPassword = config.get( 'tumblrPassword' );
+			this.wpAdminSidebar = new WPAdminSidebar( driver );
+			this.wpAdminSidebar.selectSettingsSharing();
+			this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
+			this.wpAdminSettingsSharingPage.removeTumblrIfExists();
+			this.wpAdminSettingsSharingPage.addTumblrConnection();
+
+			this.tumblrAuthorizePage = new TumblrAuthorizePage( driver );
+			this.tumblrAuthorizePage.signInAndAllow( tumblrAccountEmail, tumblrAccountPassword );
+			this.wPAdminTbDialogPage = new WPAdminTbDialogPage( driver );
+			this.wPAdminTbDialogPage.updatedMessageShown().then( ( shown ) => {
+				assert( shown, 'The tumblr connected dialog was not displayed in wp-admin' );
+			} );
+			this.wPAdminTbDialogPage.clickOK();
+			this.wpAdminSettingsSharingPage.tumblrBlogShown( tumblrBlogName ).then( ( shown ) => {
+				assert( shown, 'The tumblr blog just added is not appearing on the publicize wp-admin page' );
 			} );
 		} );
 		test.xit( 'With an image to all the sites', function() { } );
