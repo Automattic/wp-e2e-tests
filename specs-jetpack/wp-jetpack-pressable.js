@@ -85,7 +85,9 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			this.wpAdminSettingsSharingPage.displayed().then( ( isDisplayed ) => {
 				assert( isDisplayed, 'The Settings-Sharing Page is NOT displayed' );
 			} );
+			return driver.sleep( 5000 ); // This is so that the settings changes take effect - otherwise connecting twitter will fail
 		} );
+
 		test.it( 'Can add a connection to a Twitter test account for Publicize', function() {
 			const twitterAccountUsername = config.get( 'twitterAccount' );
 			const twitterAccountPassword = config.get( 'twitterPassword' );
