@@ -44,7 +44,8 @@
     "appium": "1.5.3",
     "wd": "^0.4.0",
     "wd-bridge": "^0.0.2",
-    "xml2json-command": "^0.0.3"
+    "xml2json-command": "^0.0.3",
+    "curlrequest": "^0.5.7"
   },
   "devDependencies": {
     "eslint": "<2.3.0",
