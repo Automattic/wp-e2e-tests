@@ -3,19 +3,25 @@ import test from 'selenium-webdriver/testing';
 
 import config from 'config';
 import * as driverManager from '../lib/driver-manager';
+import * as dataHelper from '../lib/data-helper';
+import * as mediaHelper from '../lib/media-helper';
 import * as slackNotifier from '../lib/slack-notifier';
 
 import WPAdminLogonPage from '../lib/pages/wp-admin/wp-admin-logon-page';
 import WPAdminSidebar from '../lib/pages/wp-admin/wp-admin-sidebar';
+import WPAdminTopbar from '../lib/pages/wp-admin/wp-admin-topbar';
 import WPAdminPluginsPage from '../lib/pages/wp-admin/wp-admin-plugins-page';
 import WPAdminSettingsSharingPage from '../lib/pages/wp-admin/wp-admin-settings-sharing-page';
 import WPAdminJetpackPage from '../lib/pages/wp-admin/wp-admin-jetpack-page';
 import WPAdminJetpackSettingsPage from '../lib/pages/wp-admin/wp-admin-jetpack-settings-page';
 import WPAdminTbDialogPage from '../lib/pages/wp-admin/wp-admin-tb-dialog';
+import WPAdminAddPostPage from '../lib/pages/wp-admin/wp-admin-add-post-page';
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 import JetpackPlansPage from '../lib/pages/jetpack-plans-page';
 import TwitterAuthorizePage from '../lib/pages/external/twitter-authorize-page';
 import TumblrAuthorizePage from '../lib/pages/external/tumblr-authorize-page';
+import TwitterFeedPage from '../lib/pages/twitter-feed-page';
+import FacebookPage from '../lib/pages/external/facebook-page';
 
 import LoginFlow from '../lib/flows/login-flow';
 
@@ -73,21 +79,40 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 	} );
 
 	test.describe( 'Publicize', function() {
-		test.it( 'Can see, activate and connect publicize functionality for Jetpack', function() {
-			this.wpAdminSidebar = new WPAdminSidebar( driver );
-			this.wpAdminSidebar.selectJetpackSettings();
-			this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
-			this.jetpackSettingsPage.chooseTabNamed( 'Engagement' );
-			this.jetpackSettingsPage.disableFeatureNamed( 'Publicize' );
-			this.jetpackSettingsPage.enableFeatureNamed( 'Publicize' );
-			this.jetpackSettingsPage.expandFeatureNamed( 'Publicize' );
-			this.jetpackSettingsPage.followPublicizeSettingsLink();
-			this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
-			this.wpAdminSettingsSharingPage.displayed().then( ( isDisplayed ) => {
-				assert( isDisplayed, 'The Settings-Sharing Page is NOT displayed' );
+		let fileDetails;
+
+		test.before( 'Create image file for upload', function() {
+			return mediaHelper.createFile().then( function( details ) {
+				fileDetails = details;
 			} );
-			return driver.sleep( 10000 ); // This is so that the settings changes take effect - otherwise connecting twitter will fail
 		} );
+
+		test.describe( 'Can see, activate and connect publicize functionality for Jetpack', function() {
+			test.before( 'Can open Jetpack Engagement Settings', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectJetpackSettings();
+				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+				this.jetpackSettingsPage.chooseTabNamed( 'Engagement' );
+			} );
+
+			test.it( 'Can disable publicize', function() {
+				this.jetpackSettingsPage.disableFeatureNamed( 'Publicize' );
+			} );
+
+			test.it( 'Can enable publicize', function() {
+				this.jetpackSettingsPage.enableFeatureNamed( 'Publicize' );
+			} );
+
+			test.it( 'Can link to sharing settings from publicize', function() {
+				this.jetpackSettingsPage.expandFeatureNamed( 'Publicize' );
+				this.jetpackSettingsPage.followPublicizeSettingsLink();
+				this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
+				return this.wpAdminSettingsSharingPage.displayed().then( ( isDisplayed ) => {
+					return assert( isDisplayed, 'The Settings-Sharing Page is NOT displayed' );
+				} );
+			} );
+		} );
+
 		test.it( 'Can add a connection to a Twitter test account for Publicize', function() {
 			const twitterAccountUsername = config.get( 'twitterAccount' );
 			const twitterAccountPassword = config.get( 'twitterPassword' );
@@ -107,6 +132,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 				assert( shown, 'The twitter account just added is not appearing on the publicize wp-admin page' );
 			} );
 		} );
+
 		test.it( 'Can add a connection to a Tumblr test account for Publicize', function() {
 			const tumblrAccountEmail = config.get( 'tumblrAccountEmail' );
 			const tumblrBlogName = config.get( 'tumblrBlogName' );
@@ -128,9 +154,67 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 				assert( shown, 'The tumblr blog just added is not appearing on the publicize wp-admin page' );
 			} );
 		} );
-		test.xit( 'With an image to all the sites', function() { } );
+
+		test.it( 'Can see an existing connection to a Facebook Page for Publicize', function() {
+			const facebookPageName = config.get( 'facebookPageName' );
+			this.wpAdminSidebar = new WPAdminSidebar( driver );
+			this.wpAdminSidebar.selectSettingsSharing();
+			this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
+			this.wpAdminSettingsSharingPage.facebookPageShown( facebookPageName ).then( ( shown ) => {
+				assert( shown, `The facebook page name '${facebookPageName}' is not appearing on the publicize wp-admin page` );
+			} );
+		} );
+
+		test.describe( 'Can publish a post with an image and see it on all the connected sites', function() {
+			const blogPostTitle = dataHelper.randomPhrase();
+			const blogPostQuote = 'You can never get a cup of tea large enough or a book long enough to suit me.\nC.S. Lewis\n';
+			const facebookPageName = config.get( 'facebookPageName' );
+			const twitterAccountUsername = config.get( 'twitterAccount' );
+			const tumblrBlogTitle = config.get( 'tumblrBlogTitle' );
+			let publicizeMessage = '';
+
+			test.it( 'Can open the new post page', function() {
+				this.wpAdminTopbar = new WPAdminTopbar( driver );
+				this.wpAdminTopbar.createNewPost();
+				this.wpAdminAddPostPage = new WPAdminAddPostPage( driver );
+			} );
+
+			test.it( 'Can see the correct publicize defaults', function() {
+				return this.wpAdminAddPostPage.publicizeDefaults().then( ( defaultPublicizeText ) => {
+					const expectedPublicizeText = `Facebook: ${facebookPageName}, Twitter: @${twitterAccountUsername}, Tumblr: ${tumblrBlogTitle}`;
+					assert.equal( defaultPublicizeText, expectedPublicizeText );
+				} );
+			} );
+
+			test.it( 'Can enter a title, content and an image and publish it', function() {
+				this.wpAdminAddPostPage.enterTitle( blogPostTitle );
+				this.wpAdminAddPostPage.enterContent( blogPostQuote );
+				this.wpAdminAddPostPage.enterPostImage( fileDetails );
+				this.wpAdminAddPostPage.waitUntilImageInserted( fileDetails );
+				this.wpAdminAddPostPage.publicizeMessageShown().then( ( message ) => {
+					assert( message.length > 0 );
+					publicizeMessage = message;
+				} );
+				return this.wpAdminAddPostPage.publish();
+			} );
+
+			test.it( 'Can see the post on twitter timeline with an image', function() {
+				this.twitterFeedPage = new TwitterFeedPage( driver, twitterAccountUsername, true );
+				this.twitterFeedPage.checkTweetWithPhotoDisplayed( publicizeMessage );
+			} );
+
+			test.it( 'Can see the post on Facebook page with an image', function() {
+				this.facebookPage = new FacebookPage( driver, facebookPageName, true );
+				this.facebookPage.checkPostWithPhotoDisplayed( publicizeMessage );
+			} );
+		} );
 		test.xit( 'With a custom message to all the sites', function() { } );
 		test.xit( 'Without a custom message or image to all the sites', function() { } );
+		test.after( function() {
+			if ( fileDetails ) {
+				mediaHelper.deleteFile( fileDetails ).then( function() {} );
+			}
+		} );
 	} );
 
 	test.xdescribe( 'Sharing buttons', function() {
