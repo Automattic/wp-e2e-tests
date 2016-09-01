@@ -53,7 +53,7 @@
     "win-ie11": {
         "browserName": "Internet Explorer",
         "platform": "Windows 10",
-        "screenResolution": "1280x1024",
+        "screenResolution": "2560x1600",
         "version": "11.103"
     }
   },

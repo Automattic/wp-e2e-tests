@@ -41,8 +41,7 @@ if ( batchName !== '' ) {
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
-	let resizeBrowser = screenSizeName === 'desktop-small' ? false : true; // Do not resize browser ahead of time for desktop-small runs to work around Applitools bug
-	driver = driverManager.startBrowser( { useCustomUA: false, resizeBrowserWindow: resizeBrowser } );
+	driver = driverManager.startBrowser( { useCustomUA: false } );
 	screenSize = driverManager.getSizeAsObject();
 } );
 
@@ -53,11 +52,17 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 	test.before( function() {
 		let testName = `DevDocs Design [${screenSizeName}]`;
 		if ( crossBrowser ) {
-			let parsedScreenSize = screenSizeName.replace( /-small/, '' );
 			eyes.setHideScrollbars( true )
-			eyes.setBaselineName( `devdocs-cross-browser-${parsedScreenSize}` );
+			eyes.setBaselineName( `devdocs-cross-browser-${screenSizeName}-31Aug16` ); // Appending this date to initiate a new baseline
 			eyes.setMatchLevel( 'LAYOUT2' );
-			testName = `DevDocs Cross-Browser [${parsedScreenSize}]`;
+
+			// Chrome is the baseline for cross-browser tests, so automatically save all results
+			// -- This might cause problems if the Chrome tests crash and record missing steps...just FYI
+			if ( global.browserName.toLowerCase() === 'chrome' ) {
+				eyes.setSaveFailedTests( true );
+			}
+
+			testName = `DevDocs Cross-Browser [${screenSizeName}]`;
 		}
 
 		eyes.open( driver, 'WordPress.com', testName, screenSize );
