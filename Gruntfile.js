@@ -31,13 +31,13 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'default', ['concurrent:target'] );
 
 	grunt.registerTask( 'run_mobile_osx-chrome', ['shell:runTests:mobile:osx-chrome'] );
-	grunt.registerTask( 'run_desktop_osx-chrome', ['shell:runTests:desktop-small:osx-chrome'] );
+	grunt.registerTask( 'run_desktop_osx-chrome', ['shell:runTests:desktop:osx-chrome'] );
 	grunt.registerTask( 'run_tablet_osx-chrome', ['shell:runTests:tablet:osx-chrome'] );
 	grunt.registerTask( 'run_mobile_osx-firefox', ['shell:runTests:mobile:osx-firefox'] );
-	grunt.registerTask( 'run_desktop_osx-firefox', ['shell:runTests:desktop-small:osx-firefox'] );
+	grunt.registerTask( 'run_desktop_osx-firefox', ['shell:runTests:desktop:osx-firefox'] );
 	grunt.registerTask( 'run_tablet_osx-firefox', ['shell:runTests:tablet:osx-firefox'] );
 	grunt.registerTask( 'run_mobile_osx-safari', ['shell:runTests:mobile:osx-safari'] );
-	grunt.registerTask( 'run_desktop_osx-safari', ['shell:runTests:desktop-small:osx-safari'] );
+	grunt.registerTask( 'run_desktop_osx-safari', ['shell:runTests:desktop:osx-safari'] );
 	grunt.registerTask( 'run_tablet_osx-safari', ['shell:runTests:tablet:osx-safari'] );
-	grunt.registerTask( 'run_desktop_win-ie11', ['shell:runTests:desktop-small:win-ie11'] );
+	grunt.registerTask( 'run_desktop_win-ie11', ['shell:runTests:desktop:win-ie11'] );
 };
