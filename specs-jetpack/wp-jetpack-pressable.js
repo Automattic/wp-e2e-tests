@@ -155,13 +155,15 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			} );
 		} );
 
-		test.it( 'Can see an existing connection to a Facebook Page for Publicize', function() {
-			const facebookPageName = config.get( 'facebookPageName' );
-			this.wpAdminSidebar = new WPAdminSidebar( driver );
-			this.wpAdminSidebar.selectSettingsSharing();
-			this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
-			this.wpAdminSettingsSharingPage.facebookPageShown( facebookPageName ).then( ( shown ) => {
-				assert( shown, `The facebook page name '${facebookPageName}' is not appearing on the publicize wp-admin page` );
+		test.describe( 'Can see an existing connection to a Facebook Page for Publicize', function() {
+			test.it( 'Can see the Facebook connection', function() {
+				const facebookPageName = config.get( 'facebookPageName' );
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectSettingsSharing();
+				this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
+				this.wpAdminSettingsSharingPage.facebookPageShown( facebookPageName ).then( ( shown ) => {
+					assert( shown, `The facebook page name '${facebookPageName}' is not appearing on the publicize wp-admin page` );
+				} );
 			} );
 		} );
 
@@ -208,7 +210,55 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 				this.facebookPage.checkPostWithPhotoDisplayed( publicizeMessage );
 			} );
 		} );
-		test.xit( 'With a custom message to all the sites', function() { } );
+
+		test.describe( 'Can publish a post with a custom message (no image) and see it on all the connected sites', function() {
+			const blogPostTitle = dataHelper.randomPhrase();
+			const blogPostQuote = 'The mind is not a vessel that needs filling, but wood that needs igniting.\nPlutarch\n';
+			const facebookPageName = config.get( 'facebookPageName' );
+			const twitterAccountUsername = config.get( 'twitterAccount' );
+			const tumblrBlogTitle = config.get( 'tumblrBlogTitle' );
+			const publicizeMessage = dataHelper.randomPhrase();
+
+			test.it( 'Can open the new post page', function() {
+				this.wpAdminTopbar = new WPAdminTopbar( driver );
+				this.wpAdminTopbar.createNewPost();
+				this.wpAdminAddPostPage = new WPAdminAddPostPage( driver );
+			} );
+
+			test.it( 'Can see the correct publicize defaults', function() {
+				return this.wpAdminAddPostPage.publicizeDefaults().then( ( defaultPublicizeText ) => {
+					const expectedPublicizeText = `Facebook: ${facebookPageName}, Twitter: @${twitterAccountUsername}, Tumblr: ${tumblrBlogTitle}`;
+					assert.equal( defaultPublicizeText, expectedPublicizeText );
+				} );
+			} );
+
+			test.it( 'Can enter a title, content and an image and publish it', function() {
+				this.wpAdminAddPostPage.enterTitle( blogPostTitle );
+				return this.wpAdminAddPostPage.enterContent( blogPostQuote );
+			} );
+
+			test.it( 'Can enter a custom publicize message', function() {
+				return this.wpAdminAddPostPage.enterCustomPublicizeMessage( publicizeMessage );
+			} );
+
+			test.it( 'Can publish the post', function() {
+				return this.wpAdminAddPostPage.publish();
+			} );
+
+			test.it( 'Can see the post on twitter timeline without an image but with the publicize message', function() {
+				this.twitterFeedPage = new TwitterFeedPage( driver, twitterAccountUsername, true );
+				this.twitterFeedPage.checkTweetWithTextAppears( publicizeMessage );
+				this.twitterFeedPage.isTweetWithPhotoImmediatelyDisplayed( publicizeMessage ).then( ( displayed ) => {
+					assert( !displayed, 'A photo was displayed on Twitter without an image being in the original post' )
+				} );
+			} );
+
+			test.it( 'Can see the post on Facebook page with an image', function() {
+				this.facebookPage = new FacebookPage( driver, facebookPageName, true );
+				this.facebookPage.checkPostWithTextDisplayed( publicizeMessage );
+			} );
+		} );
+
 		test.xit( 'Without a custom message or image to all the sites', function() { } );
 		test.after( function() {
 			if ( fileDetails ) {
