@@ -28,7 +28,7 @@ test.describe( 'Editor: Posts (' + process.env.ORIENTATION + '):', function() {
 			return driverManager.resetApp();
 		} );
 
-		test.describe( 'Preview and Publish a Public Post', function() {
+		test.describe( 'Publish a Public Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = 'The foolish man seeks happiness in the distance. The wise grows it under his feet.\n— James Oppenheim';
 			const blogTag = 'tag-' + new Date().getTime();

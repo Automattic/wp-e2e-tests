@@ -107,7 +107,7 @@ test.describe( 'Authentication (' + process.env.ORIENTATION + '):', function() {
 
 			test.it( 'Can open Settings', function() {
 				let siteDetailsPage = new SiteDetailsPage( driver );
-				siteDetailsPage.clickSettings();
+				siteDetailsPage.clickMenuItem( 'Settings' );
 			} );
 
 			test.it( 'Can logout from settings page', function() {
