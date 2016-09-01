@@ -5,6 +5,7 @@ REPORTER=""
 AFTER="lib/after.js"
 OPTS=""
 DEVICE="ios92"
+CLEAN=0
 RETURN=0
 
 declare -a TARGETS
@@ -16,6 +17,7 @@ TARGETS+=("specs-ios/")
 usage () {
   cat <<EOF
 -R	- Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
+-c	- Exit with status code 0 regardless of test results
 -p	- Portrait orientation
 -l	- Landscape orientation
 -s	- Use SauceLabs
@@ -28,10 +30,14 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rplsd:h" opt; do
+while getopts ":Rplscd:h" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
+      continue
+      ;;
+    c)
+      CLEAN=1
       continue
       ;;
     p)
@@ -82,5 +88,9 @@ for orientation in "${ORIENTATIONS[@]}"; do
     RETURN+=$?
   done
 done
+
+if [ $CLEAN == 1 ]; then
+  exit  0
+fi
 
 exit $RETURN
