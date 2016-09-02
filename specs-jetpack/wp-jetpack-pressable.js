@@ -114,7 +114,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 
 			test.it( 'Can link to sharing settings from publicize', function() {
 				this.jetpackSettingsPage.expandFeatureNamed( 'Publicize' );
-				this.jetpackSettingsPage.followPublicizeSettingsLink();
+				this.jetpackSettingsPage.followSettingsLink( 'Publicize' );
 				this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
 				return this.wpAdminSettingsSharingPage.displayed().then( ( isDisplayed ) => {
 					return assert( isDisplayed, 'The Settings-Sharing Page is NOT displayed' );
@@ -350,9 +350,40 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		} );
 	} );
 
-	test.xdescribe( 'Sharing buttons', function() {
-		test.it( 'Add and see all the buttons', function() { } );
-		test.it( 'Buttons work', function() { } );
+	test.describe( 'Sharing buttons', function() {
+		test.describe( 'Can see and activate sharing buttons functionality for Jetpack', function() {
+
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.before( 'Can open Jetpack Engagement Settings', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectJetpackSettings();
+				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+				this.jetpackSettingsPage.chooseTabNamed( 'Engagement' );
+			} );
+
+			test.it( 'Can disable sharing', function() {
+				this.jetpackSettingsPage.disableFeatureNamed( 'Sharing' );
+			} );
+
+			test.it( 'Can enable sharing', function() {
+				this.jetpackSettingsPage.enableFeatureNamed( 'Sharing' );
+			} );
+
+			test.it( 'Can link to sharing settings from publicize', function() {
+				this.jetpackSettingsPage.expandFeatureNamed( 'Sharing' );
+				this.jetpackSettingsPage.followSettingsLink( 'Sharing' );
+				this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
+				return this.wpAdminSettingsSharingPage.displayed().then( ( isDisplayed ) => {
+					return assert( isDisplayed, 'The Settings-Sharing Page is NOT displayed' );
+				} );
+			} );
+		} );
+
+		test.xit( 'Add and see all the buttons', function() { } );
+		test.xit( 'Buttons work', function() { } );
 	} );
 
 	test.xdescribe( 'Email Subscriptions', function() {
