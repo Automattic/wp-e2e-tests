@@ -23,6 +23,7 @@ import TwitterAuthorizePage from '../lib/pages/external/twitter-authorize-page';
 import TumblrAuthorizePage from '../lib/pages/external/tumblr-authorize-page';
 import TwitterFeedPage from '../lib/pages/twitter-feed-page';
 import FacebookPage from '../lib/pages/external/facebook-page';
+import ViewSitePage from '../lib/pages/view-site-page';
 
 import LoginFlow from '../lib/flows/login-flow';
 
@@ -382,8 +383,221 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			} );
 		} );
 
-		test.xit( 'Add and see all the buttons', function() { } );
-		test.xit( 'Buttons work', function() { } );
+		test.describe( 'Add and see all the buttons', function() {
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.before( 'Can open sharing settings', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectSettingsSharing();
+				this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
+				return this.wpAdminSettingsSharingPage.displayed().then( ( isDisplayed ) => {
+					return assert( isDisplayed, 'The Settings-Sharing Page is NOT displayed' );
+				} );
+			} );
+
+			test.it( 'Can set sharing buttons to be icon + text ', function() {
+				return this.wpAdminSettingsSharingPage.setButtonStyleToIconAndText();
+			} );
+
+			test.it( 'Can see zero available buttons (all should be enabled)', function() {
+				this.wpAdminSettingsSharingPage.availableSharingButtons().then( ( buttons ) => {
+					assert.equal( buttons.length, 0, 'Available sharing buttons are shown when they all should already be enabled' );
+				} );
+			} );
+
+			test.describe( 'Can see all the individual buttons in both activated and preview', function() {
+
+				test.it( 'Can see Skype sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'skype' ).then( ( activated ) => {
+						return assert( activated, 'Skype sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Skype sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'skype' ).then( ( activated ) => {
+						return assert( activated, 'Skype sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Telegram sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'telegram' ).then( ( activated ) => {
+						return assert( activated, 'Telegram sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Telegram sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'telegram' ).then( ( activated ) => {
+						return assert( activated, 'Telegram sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Email sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'email' ).then( ( activated ) => {
+						return assert( activated, 'Email sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Email sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'email' ).then( ( activated ) => {
+						return assert( activated, 'Email sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see LinkedIn sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'linkedin' ).then( ( activated ) => {
+						return assert( activated, 'LinkedIn sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see LinkedIn sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'linkedin' ).then( ( activated ) => {
+						return assert( activated, 'LinkedIn sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Print sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'print' ).then( ( activated ) => {
+						return assert( activated, 'Print sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Print sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'print' ).then( ( activated ) => {
+						return assert( activated, 'Print sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Tumblr sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'tumblr' ).then( ( activated ) => {
+						return assert( activated, 'Tumblr sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Tumblr sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'tumblr' ).then( ( activated ) => {
+						return assert( activated, 'Tumblr sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Google+ sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'google-plus-1' ).then( ( activated ) => {
+						return assert( activated, 'Google+ sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Google+ sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'google-plus-1' ).then( ( activated ) => {
+						return assert( activated, 'Google+ sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Reddit sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'reddit' ).then( ( activated ) => {
+						return assert( activated, 'Reddit sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Reddit sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'reddit' ).then( ( activated ) => {
+						return assert( activated, 'Reddit sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Whatsapp sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'jetpack-whatsapp' ).then( ( activated ) => {
+						return assert( activated, 'Whatsapp sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Whatsapp sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'jetpack-whatsapp' ).then( ( activated ) => {
+						return assert( activated, 'Whatsapp sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Facebook sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'facebook' ).then( ( activated ) => {
+						return assert( activated, 'Facebook sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Facebook sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'facebook' ).then( ( activated ) => {
+						return assert( activated, 'Facebook sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Pinterest sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'pinterest' ).then( ( activated ) => {
+						return assert( activated, 'Pinterest sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Pinterest sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'pinterest' ).then( ( activated ) => {
+						return assert( activated, 'Pinterest sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Pocket sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'pocket' ).then( ( activated ) => {
+						return assert( activated, 'Pocket sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Pocket sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'pocket' ).then( ( activated ) => {
+						return assert( activated, 'Pocket sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Twitter sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'twitter' ).then( ( activated ) => {
+						return assert( activated, 'Twitter sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Twitter sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'twitter' ).then( ( activated ) => {
+						return assert( activated, 'Twitter sharing is not in the sharing preview' );
+					} );
+				} );
+			} );
+
+			test.it( 'Can make sure sharing buttons are shown everywhere', function() {
+				this.wpAdminSettingsSharingPage.showButtonsOnFrontPage();
+				this.wpAdminSettingsSharingPage.showButtonsOnPosts();
+				this.wpAdminSettingsSharingPage.showButtonsOnPages();
+				return this.wpAdminSettingsSharingPage.showButtonsOnMedia();
+			} );
+
+			test.it( 'Can save changes', function() {
+				return this.wpAdminSettingsSharingPage.saveChanges();
+			} );
+
+			test.describe( 'All the buttons work from the home page', function() {
+
+				test.before( 'Visit the home page', function() {
+					const siteUrl = `https://${config.get( 'jetpacksite' )}`;
+					this.viewSitePage = new ViewSitePage( driver, true, siteUrl );
+				} );
+
+				test.describe( 'Can see all the individual sharing buttons', function() {
+
+					test.it( 'Can see Skype sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'skype' ).then( ( shown ) => {
+							assert( shown, 'The skype sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'skype' ).then( ( link ) => {
+							assert( link.match( /\/\?share=skype&nb=1$/ ), 'The skype sharing button does not have the correct URL' );
+						} );
+					} );
+				} );
+			} );
+		} );
 	} );
 
 	test.xdescribe( 'Email Subscriptions', function() {
