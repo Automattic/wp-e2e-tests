@@ -23,6 +23,7 @@ import TwitterAuthorizePage from '../lib/pages/external/twitter-authorize-page';
 import TumblrAuthorizePage from '../lib/pages/external/tumblr-authorize-page';
 import TwitterFeedPage from '../lib/pages/twitter-feed-page';
 import FacebookPage from '../lib/pages/external/facebook-page';
+import ViewSitePage from '../lib/pages/view-site-page';
 
 import LoginFlow from '../lib/flows/login-flow';
 
@@ -382,8 +383,64 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			} );
 		} );
 
-		test.xit( 'Add and see all the buttons', function() { } );
-		test.xit( 'Buttons work', function() { } );
+		test.describe( 'Add and see all the buttons', function() {
+			let numberSharingButtonsEnabled = 0;
+
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.before( 'Can open sharing settings', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectSettingsSharing();
+				this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
+				return this.wpAdminSettingsSharingPage.displayed().then( ( isDisplayed ) => {
+					return assert( isDisplayed, 'The Settings-Sharing Page is NOT displayed' );
+				} );
+			} );
+
+			test.it( 'Can see zero available buttons (all should be enabled)', function() {
+				this.wpAdminSettingsSharingPage.availableSharingButtons().then( ( buttons ) => {
+					assert.equal( buttons.length, 0, 'Available sharing buttons are shown when they all should already be enabled' );
+				} );
+			} );
+
+			test.it( 'Can set sharing buttons to be icon + text ', function() {
+				return this.wpAdminSettingsSharingPage.setButtonStyleToIconAndText();
+			} );
+
+			test.it( 'Can make sure sharing buttons are shown everywhere', function() {
+				this.wpAdminSettingsSharingPage.showButtonsOnFrontPage();
+				this.wpAdminSettingsSharingPage.showButtonsOnPosts();
+				this.wpAdminSettingsSharingPage.showButtonsOnPages();
+				return this.wpAdminSettingsSharingPage.showButtonsOnMedia();
+			} );
+
+			test.it( 'Can save changes', function() {
+				return this.wpAdminSettingsSharingPage.saveChanges();
+			} );
+
+			test.xit( 'The number of preview buttons is equal to the number of activated buttons', function() {
+				const self = this;
+				self.wpAdminSettingsSharingPage.enabledSharingButtons().then( ( enabledButtons ) => {
+					self.wpAdminSettingsSharingPage.previewedSharingButtons().then( ( previewedButtons ) => {
+						numberSharingButtonsEnabled = enabledButtons.length;
+						return assert( previewedButtons.length, enabledButtons.length, 'The number of previewed sharing buttons is not equal to the number of enabled sharing buttons' );
+					} );
+				} );
+			} );
+
+			test.xdescribe( 'All the buttons work', function() {
+
+				test.before( 'Visit the home page', function() {
+					const siteUrl = `https://${config.get( 'jetpacksite' )}`;
+					this.viewSitePage = new ViewSitePage( driver, true, siteUrl );
+				} );
+
+				test.it( 'Can see sharing buttons', function() {
+				} );
+			} );
+		} );
 	} );
 
 	test.xdescribe( 'Email Subscriptions', function() {
