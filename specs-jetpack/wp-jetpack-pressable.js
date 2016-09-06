@@ -22,6 +22,7 @@ import JetpackPlansPage from '../lib/pages/jetpack-plans-page';
 import TwitterAuthorizePage from '../lib/pages/external/twitter-authorize-page';
 import TumblrAuthorizePage from '../lib/pages/external/tumblr-authorize-page';
 import TwitterFeedPage from '../lib/pages/twitter-feed-page';
+import TwitterIntentPage from '../lib/pages/external/twitter-intent-page';
 import FacebookPage from '../lib/pages/external/facebook-page';
 import ViewSitePage from '../lib/pages/view-site-page';
 
@@ -578,7 +579,6 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			} );
 
 			test.describe( 'All the buttons work from the home page', function() {
-
 				test.before( 'Visit the home page', function() {
 					const siteUrl = `https://${config.get( 'jetpacksite' )}`;
 					this.viewSitePage = new ViewSitePage( driver, true, siteUrl );
@@ -593,6 +593,147 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 
 						this.viewSitePage.sharingButtonLink( 'skype' ).then( ( link ) => {
 							assert( link.match( /\/\?share=skype&nb=1$/ ), 'The skype sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Telegram sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'telegram' ).then( ( shown ) => {
+							assert( shown, 'The telegram sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'telegram' ).then( ( link ) => {
+							assert( link.match( /\/\?share=telegram&nb=1$/ ), 'The telegram sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Email sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'email' ).then( ( shown ) => {
+							assert( shown, 'The email sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'email' ).then( ( link ) => {
+							assert( link.match( /\/\?share=email&nb=1$/ ), 'The email sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see LinkedIn sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'linkedin' ).then( ( shown ) => {
+							assert( shown, 'The linkedin sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'linkedin' ).then( ( link ) => {
+							assert( link.match( /\/\?share=linkedin&nb=1$/ ), 'The linkedin sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see the print sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'print' ).then( ( shown ) => {
+							assert( shown, 'The print sharing button was not shown' );
+						} );
+					} );
+
+					test.it( 'Can see Tumblr sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'tumblr' ).then( ( shown ) => {
+							assert( shown, 'The Tumblr sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'tumblr' ).then( ( link ) => {
+							assert( link.match( /\/\?share=tumblr&nb=1$/ ), 'The Tumblr sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Google+ sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'google-plus-1' ).then( ( shown ) => {
+							assert( shown, 'The Google+ sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'google-plus-1' ).then( ( link ) => {
+							assert( link.match( /\/\?share=google-plus-1&nb=1$/ ), 'The Google+ sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Reddit sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'reddit' ).then( ( shown ) => {
+							assert( shown, 'The Reddit sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'reddit' ).then( ( link ) => {
+							assert( link.match( /\/\?share=reddit&nb=1$/ ), 'The Reddit sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Whatsapp sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'jetpack-whatsapp' ).then( ( shown ) => {
+							assert( shown, 'The Whatsapp sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'jetpack-whatsapp' ).then( ( link ) => {
+							assert( link.match( /^whatsapp:\/\/send\?/ ), 'The Whatsapp sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Facebook sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'facebook' ).then( ( shown ) => {
+							assert( shown, 'The Facebook sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'facebook' ).then( ( link ) => {
+							assert( link.match( /\/\?share=facebook&nb=1$/ ), 'The Facebook sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Pinterest sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'pinterest' ).then( ( shown ) => {
+							assert( shown, 'The Pinterest sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'pinterest' ).then( ( link ) => {
+							assert( link.match( /\/\?share=pinterest&nb=1$/ ), 'The Pinterest sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Pocket sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'pocket' ).then( ( shown ) => {
+							assert( shown, 'The Pocket sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'pocket' ).then( ( link ) => {
+							assert( link.match( /\/\?share=pocket&nb=1$/ ), 'The Pocket sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Twitter sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'twitter' ).then( ( shown ) => {
+							assert( shown, 'The Twitter sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'twitter' ).then( ( link ) => {
+							assert( link.match( /\/\?share=twitter&nb=1$/ ), 'The Twitter sharing button does not have the correct URL' );
+						} );
+					} );
+				} );
+
+				test.describe( 'Can share the content to twitter', function() {
+					let postTitle = '';
+					let postURL = '';
+
+					test.it( 'Can capture values for expected tweet text', function() {
+						this.viewSitePage.firstPostTitle().then( ( title ) => {
+							postTitle = title;
+						} );
+
+						this.viewSitePage.firstPostURL().then( ( url ) => {
+							postURL = url;
+						} );
+					} );
+
+					test.it( 'The share to twitter button works when clicked', function() {
+						const twitterAccountUsername = config.get( 'twitterAccount' );
+						const expectedTweetText = `${postTitle} ${postURL} via @${twitterAccountUsername}`;
+						this.viewSitePage.followShareToTwitter();
+						this.twitterIntentPage = new TwitterIntentPage( driver );
+						return this.twitterIntentPage.prefilledTweet().then( ( tweetText ) => {
+							assert.equal( tweetText, expectedTweetText, 'The actual tweet text is not expected' );
 						} );
 					} );
 				} );
