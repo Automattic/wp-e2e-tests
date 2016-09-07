@@ -25,6 +25,7 @@ import TwitterFeedPage from '../lib/pages/twitter-feed-page';
 import TwitterIntentPage from '../lib/pages/external/twitter-intent-page';
 import FacebookPage from '../lib/pages/external/facebook-page';
 import ViewSitePage from '../lib/pages/view-site-page';
+import ViewPostPage from '../lib/pages/view-post-page';
 
 import LoginFlow from '../lib/flows/login-flow';
 
@@ -773,7 +774,27 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			} );
 		} );
 
-		test.xit( 'Related posts are shown when enabled', function() { } );
+		test.describe( 'Related posts are shown as large and with header', function() {
+			test.before( 'Visit the home page and open the first post', function() {
+				const siteUrl = `https://${config.get( 'jetpacksite' )}`;
+				this.viewSitePage = new ViewSitePage( driver, true, siteUrl );
+				this.viewSitePage.viewFirstPost();
+				this.viewPostPage = new ViewPostPage( driver );
+			} );
+
+			test.it( 'Can see Large Related Posts', function() {
+				this.viewPostPage.relatedPostsLargeShown().then( ( shown ) => {
+					assert( shown, 'Large related posts aren\'t being shown on the posts page' );
+				} );
+			} );
+
+			test.it( 'Can see Related Posts Header', function() {
+				this.viewPostPage.relatedPostsHeaderShown().then( ( shown ) => {
+					assert( shown, 'The related posts header isn\'t being shown on the posts page' );
+				} );
+			} );
+		} );
+
 		test.xit( 'A related posts filter works as expected', function() { } );
 	} );
 
