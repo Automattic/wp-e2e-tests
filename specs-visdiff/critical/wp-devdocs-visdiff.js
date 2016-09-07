@@ -55,13 +55,6 @@ test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
 			eyes.setHideScrollbars( true )
 			eyes.setBaselineName( `devdocs-cross-browser-${screenSizeName}-31Aug16` ); // Appending this date to initiate a new baseline
 			eyes.setMatchLevel( 'LAYOUT2' );
-
-			// Chrome is the baseline for cross-browser tests, so automatically save all results
-			// -- This might cause problems if the Chrome tests crash and record missing steps...just FYI
-			if ( global.browserName.toLowerCase() === 'chrome' ) {
-				eyes.setSaveFailedTests( true );
-			}
-
 			testName = `DevDocs Cross-Browser [${screenSizeName}]`;
 		}
 
