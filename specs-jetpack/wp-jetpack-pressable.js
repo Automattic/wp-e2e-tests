@@ -17,6 +17,7 @@ import WPAdminJetpackPage from '../lib/pages/wp-admin/wp-admin-jetpack-page';
 import WPAdminJetpackSettingsPage from '../lib/pages/wp-admin/wp-admin-jetpack-settings-page';
 import WPAdminTbDialogPage from '../lib/pages/wp-admin/wp-admin-tb-dialog';
 import WPAdminAddPostPage from '../lib/pages/wp-admin/wp-admin-add-post-page';
+import WPAdminSnippetsPage from '../lib/pages/wp-admin/wp-admin-snippets-page';
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 import JetpackPlansPage from '../lib/pages/jetpack-plans-page';
 import TwitterAuthorizePage from '../lib/pages/external/twitter-authorize-page';
@@ -25,6 +26,7 @@ import TwitterFeedPage from '../lib/pages/twitter-feed-page';
 import TwitterIntentPage from '../lib/pages/external/twitter-intent-page';
 import FacebookPage from '../lib/pages/external/facebook-page';
 import ViewSitePage from '../lib/pages/view-site-page';
+import ViewPostPage from '../lib/pages/view-post-page';
 
 import LoginFlow from '../lib/flows/login-flow';
 
@@ -741,14 +743,89 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		} );
 	} );
 
+	test.describe( 'Related Posts', function() {
+		test.describe( 'Can see and activate related posts functionality for Jetpack', function() {
+
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.before( 'Can open Jetpack Engagement Settings', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectJetpackSettings();
+				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+				return this.jetpackSettingsPage.chooseTabNamed( 'Engagement' );
+			} );
+
+			test.it( 'Can disable related posts', function() {
+				return this.jetpackSettingsPage.disableFeatureNamed( 'Related Posts' );
+			} );
+
+			test.it( 'Can enable related posts', function() {
+				return this.jetpackSettingsPage.enableFeatureNamed( 'Related Posts' );
+			} );
+
+			test.it( 'Can set related posts options directly within the Jetpack dashboard', function() {
+				this.jetpackSettingsPage.expandFeatureNamed( 'Related Posts' );
+				this.jetpackSettingsPage.unsetRelatedPostsHeader();
+				this.jetpackSettingsPage.unsetRelatedPostsLarge();
+				this.jetpackSettingsPage.setRelatedPostsHeader();
+				this.jetpackSettingsPage.setRelatedPostsLarge();
+				return this.jetpackSettingsPage.saveRelatedPostsSettings();
+			} );
+		} );
+
+		test.describe( 'Related posts are shown as large and with header', function() {
+			test.before( 'Visit the home page and open the first post', function() {
+				const siteUrl = `https://${config.get( 'jetpacksite' )}`;
+				this.viewSitePage = new ViewSitePage( driver, true, siteUrl );
+				this.viewSitePage.viewFirstPost();
+				this.viewPostPage = new ViewPostPage( driver );
+			} );
+
+			test.it( 'Can see Large Related Posts', function() {
+				this.viewPostPage.relatedPostsLargeShown().then( ( shown ) => {
+					assert( shown, 'Large related posts aren\'t being shown on the posts page' );
+				} );
+			} );
+
+			test.it( 'Can see Related Posts Header', function() {
+				this.viewPostPage.relatedPostsHeaderShown().then( ( shown ) => {
+					assert( shown, 'The related posts header isn\'t being shown on the posts page' );
+				} );
+			} );
+		} );
+
+		test.describe( 'A related posts filter works as expected', function() {
+
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.it( 'Make sure the snippet to show four related posts is active', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectSnippets();
+				this.wpAdminSnippetsPage = new WPAdminSnippetsPage( driver );
+				this.wpAdminSnippetsPage.snippetIsActive( 'Related Posts Show Four' ).then( ( active ) => {
+					assert( active, 'The snippet to show four related posts does not exist or is not active' );
+				} );
+			} );
+
+			test.it( 'Make sure four related posts are shown on the posts page', function() {
+				const siteUrl = `https://${config.get( 'jetpacksite' )}`;
+				this.viewSitePage = new ViewSitePage( driver, true, siteUrl );
+				this.viewSitePage.viewFirstPost();
+				this.viewPostPage = new ViewPostPage( driver );
+				this.viewPostPage.relatedPostsShown().then( ( relatedPosts ) => {
+					assert( relatedPosts.length, 4, 'The number of related posts isn\'t correct' );
+				} );
+			} );
+		} );
+	} );
+
 	test.xdescribe( 'Email Subscriptions', function() {
 		test.it( 'Emails are sent', function() { } );
 		test.it( 'An email filter works as expected', function() { } );
-	} );
-
-	test.xdescribe( 'Related Posts', function() {
-		test.it( 'Related posts are shown when enabled', function() { } );
-		test.it( 'A related posts filter works as expected', function() { } );
 	} );
 
 	test.xdescribe( 'Jetpack Comments', function() {
