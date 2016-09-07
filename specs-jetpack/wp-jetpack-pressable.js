@@ -17,6 +17,7 @@ import WPAdminJetpackPage from '../lib/pages/wp-admin/wp-admin-jetpack-page';
 import WPAdminJetpackSettingsPage from '../lib/pages/wp-admin/wp-admin-jetpack-settings-page';
 import WPAdminTbDialogPage from '../lib/pages/wp-admin/wp-admin-tb-dialog';
 import WPAdminAddPostPage from '../lib/pages/wp-admin/wp-admin-add-post-page';
+import WPAdminSnippetsPage from '../lib/pages/wp-admin/wp-admin-snippets-page';
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 import JetpackPlansPage from '../lib/pages/jetpack-plans-page';
 import TwitterAuthorizePage from '../lib/pages/external/twitter-authorize-page';
@@ -795,7 +796,31 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			} );
 		} );
 
-		test.xit( 'A related posts filter works as expected', function() { } );
+		test.describe( 'A related posts filter works as expected', function() {
+
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.it( 'Make sure the snippet to show four related posts is active', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectSnippets();
+				this.wpAdminSnippetsPage = new WPAdminSnippetsPage( driver );
+				this.wpAdminSnippetsPage.snippetIsActive( 'Related Posts Show Four' ).then( ( active ) => {
+					assert( active, 'The snippet to show four related posts does not exist or is not active' );
+				} );
+			} );
+
+			test.it( 'Make sure four related posts are shown on the posts page', function() {
+				const siteUrl = `https://${config.get( 'jetpacksite' )}`;
+				this.viewSitePage = new ViewSitePage( driver, true, siteUrl );
+				this.viewSitePage.viewFirstPost();
+				this.viewPostPage = new ViewPostPage( driver );
+				this.viewPostPage.relatedPostsShown().then( ( relatedPosts ) => {
+					assert( relatedPosts.length, 4, 'The number of related posts isn\'t correct' );
+				} );
+			} );
+		} );
 	} );
 
 	test.xdescribe( 'Email Subscriptions', function() {
