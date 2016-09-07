@@ -741,14 +741,45 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		} );
 	} );
 
+	test.describe( 'Related Posts', function() {
+		test.describe( 'Can see and activate related posts functionality for Jetpack', function() {
+
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.before( 'Can open Jetpack Engagement Settings', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectJetpackSettings();
+				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+				return this.jetpackSettingsPage.chooseTabNamed( 'Engagement' );
+			} );
+
+			test.it( 'Can disable related posts', function() {
+				return this.jetpackSettingsPage.disableFeatureNamed( 'Related Posts' );
+			} );
+
+			test.it( 'Can enable related posts', function() {
+				return this.jetpackSettingsPage.enableFeatureNamed( 'Related Posts' );
+			} );
+
+			test.it( 'Can set related posts options directly within the Jetpack dashboard', function() {
+				this.jetpackSettingsPage.expandFeatureNamed( 'Related Posts' );
+				this.jetpackSettingsPage.unsetRelatedPostsHeader();
+				this.jetpackSettingsPage.unsetRelatedPostsLarge();
+				this.jetpackSettingsPage.setRelatedPostsHeader();
+				this.jetpackSettingsPage.setRelatedPostsLarge();
+				return this.jetpackSettingsPage.saveRelatedPostsSettings();
+			} );
+		} );
+
+		test.xit( 'Related posts are shown when enabled', function() { } );
+		test.xit( 'A related posts filter works as expected', function() { } );
+	} );
+
 	test.xdescribe( 'Email Subscriptions', function() {
 		test.it( 'Emails are sent', function() { } );
 		test.it( 'An email filter works as expected', function() { } );
-	} );
-
-	test.xdescribe( 'Related Posts', function() {
-		test.it( 'Related posts are shown when enabled', function() { } );
-		test.it( 'A related posts filter works as expected', function() { } );
 	} );
 
 	test.xdescribe( 'Jetpack Comments', function() {
