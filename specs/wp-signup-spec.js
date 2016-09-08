@@ -443,8 +443,16 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 									} );
 								} );
 
-								test.it( 'The sign up processing page will finish automatically move along', function() {
-									this.signupProcessingPage.waitToDisappear();
+								// test.it( 'The sign up processing page will finish automatically move along', function() {
+								// 	this.signupProcessingPage.waitToDisappear();
+								// } );
+
+								test.it( 'The sign up processing page will finish and show a \'Continue\' button', function() {
+									this.signupProcessingPage.waitForContinueButtonToBeEnabled();
+								} );
+
+								test.it( 'Clicking the \'Continue\' button continues the process', function() {
+									this.signupProcessingPage.continueAlong();
 								} );
 
 								test.describe( 'Step Seven: Secure Payment Page', function() {
