@@ -771,7 +771,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 				this.jetpackSettingsPage.unsetRelatedPostsLarge();
 				this.jetpackSettingsPage.setRelatedPostsHeader();
 				this.jetpackSettingsPage.setRelatedPostsLarge();
-				return this.jetpackSettingsPage.saveRelatedPostsSettings();
+				return this.jetpackSettingsPage.saveFeatureSettings( 'Related Posts' );
 			} );
 		} );
 
@@ -823,6 +823,45 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		} );
 	} );
 
+	test.describe( 'Likes', function() {
+		test.describe( 'Can see and activate likes functionality for Jetpack', function() {
+
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.before( 'Can open Jetpack Engagement Settings', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectJetpackSettings();
+				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+				return this.jetpackSettingsPage.chooseTabNamed( 'Engagement' );
+			} );
+
+			test.it( 'Can disable Likes', function() {
+				return this.jetpackSettingsPage.disableFeatureNamed( 'Likes' );
+			} );
+
+			test.it( 'Can enable Likes', function() {
+				return this.jetpackSettingsPage.enableFeatureNamed( 'Likes' );
+			} );
+
+			test.it( 'Can set Likes options directly within the Jetpack dashboard - and follow link to settings', function() {
+				this.jetpackSettingsPage.expandFeatureNamed( 'Likes' );
+				this.jetpackSettingsPage.chooseLikesPerPost();
+				this.jetpackSettingsPage.chooseLikesForAllPosts();
+				this.jetpackSettingsPage.saveFeatureSettings( 'Likes' );
+				this.jetpackSettingsPage.followLikeSettingsLink();
+				this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
+				return this.wpAdminSettingsSharingPage.displayed().then( ( isDisplayed ) => {
+					return assert( isDisplayed, 'The Settings-Sharing Page is NOT displayed' );
+				} );
+			} );
+		} );
+
+		test.xit( 'Like a post by a different user from master user - notifications and email', function() { } );
+		test.xit( 'Like a post by a different user from secondary user - notifications and email', function() { } );
+	} );
+
 	test.xdescribe( 'Email Subscriptions', function() {
 		test.it( 'Emails are sent', function() { } );
 		test.it( 'An email filter works as expected', function() { } );
@@ -836,12 +875,6 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 	test.xdescribe( 'Notifications', function() {
 		test.it( 'Comment on post by master user shows notification on WP.com', function() { } );
 		test.it( 'Comment on post by secondary user shows notification for that user on WP.com', function() { } );
-	} );
-
-	test.xdescribe( 'Likes', function() {
-		test.it( 'Enable likes', function() { } );
-		test.it( 'Like a post by a different user from master user - notifications and email', function() { } );
-		test.it( 'Like a post by a different user from secondary user - notifications and email', function() { } );
 	} );
 
 	test.xdescribe( 'CSS', function() {
