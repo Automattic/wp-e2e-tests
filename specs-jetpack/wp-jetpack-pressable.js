@@ -862,9 +862,40 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		test.xit( 'Like a post by a different user from secondary user - notifications and email', function() { } );
 	} );
 
-	test.xdescribe( 'Email Subscriptions', function() {
-		test.it( 'Emails are sent', function() { } );
-		test.it( 'An email filter works as expected', function() { } );
+	test.describe( 'Email Subscriptions', function() {
+		test.describe( 'Can see and activate Email Subscriptions functionality for Jetpack', function() {
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.before( 'Can open Jetpack Engagement Settings', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectJetpackSettings();
+				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+				return this.jetpackSettingsPage.chooseTabNamed( 'Engagement' );
+			} );
+
+			test.it( 'Can disable Subscriptions', function() {
+				return this.jetpackSettingsPage.disableFeatureNamed( 'Subscriptions' );
+			} );
+
+			test.it( 'Can enable Subscriptions', function() {
+				return this.jetpackSettingsPage.enableFeatureNamed( 'Subscriptions' );
+			} );
+
+			test.it( 'Can set Subscriptions options directly within the Jetpack dashboard - and see a link to email followers', function() {
+				const jetpackSite = config.get( 'jetpacksite' );
+				this.jetpackSettingsPage.expandFeatureNamed( 'Subscriptions' );
+				this.jetpackSettingsPage.showAFollowBlogOptionInComments();
+				this.jetpackSettingsPage.showAFollowCommentsOptionInComments();
+				this.jetpackSettingsPage.saveFeatureSettings( 'Subscriptions' );
+				return this.jetpackSettingsPage.linkToEmailsFollowersDisplayed( jetpackSite ).then( ( displayed ) => {
+					return assert( displayed, 'The link to email followers in Calypso is not displayed' );
+				} );
+			} );
+		} );
+		test.xit( 'Emails are sent', function() { } );
+		test.xit( 'An email filter works as expected', function() { } );
 	} );
 
 	test.xdescribe( 'Jetpack Comments', function() {
