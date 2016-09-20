@@ -1,5 +1,6 @@
 import test from 'selenium-webdriver/testing';
 import config from 'config';
+import assert from 'assert';
 
 import * as driverManager from '../lib/driver-manager.js';
 
@@ -48,8 +49,14 @@ test.describe( 'Plans: (' + screenSize + ')', function() {
 			return this.plansPage.waitForPage();
 		} );
 
+		test.it( 'Can click Plans tab', function() {
+			return this.plansPage.clickComparePlans();
+		} );
+
 		test.it( 'Can Verify Current Plan', function() {
-			//// An exercise left for the reader /////
+			return this.plansPage.confirmCurrentPlan( 'premium' ).then( function( present ) {
+				assert( present, 'Failed to detect correct plan' );
+			} );
 		} );
 	} );
 } );
