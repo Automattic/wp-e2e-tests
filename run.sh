@@ -1,5 +1,6 @@
 #!/bin/bash
 MOCHA=./node_modules/mocha/bin/mocha
+GRUNT=./node_modules/.bin/grunt
 REPORTER=""
 PARALLEL=0
 JOBS=0
@@ -84,7 +85,9 @@ while getopts ":Rpb:s:givwl:cm:fh" opt; do
     m)
       BROWSERS=$(echo $OPTARG | sed 's/,/ /g')
       if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
-        grunt $BROWSERS
+        CMD="$GRUNT $BROWSERS"
+
+	eval $CMD
       fi
       exit $?
       ;;
