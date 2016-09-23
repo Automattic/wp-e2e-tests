@@ -38,7 +38,7 @@ test.before( function() {
 	screenSize = driverManager.getSizeAsObject();
 } );
 
-test.describe( 'DevDocs Visual Diff (' + screenSizeName + ')', function() {
+test.describe( `DevDocs Visual Diff (${global.browserName} | ${screenSizeName})`, function() {
 	var devdocsPage;
 	this.timeout( mochaDevDocsTimeOut );
 
