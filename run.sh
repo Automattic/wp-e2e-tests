@@ -27,7 +27,7 @@ usage () {
 -w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
 -l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration
 -c		  - Exit with status code 0 regardless of test results
--d [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
+-m [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
 -f		  - Tell visdiffs to fail the tests rather than just send an alert
 -i		  - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
 -v		  - Execute the visdiff tests in specs-visdiff/
@@ -40,7 +40,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rpb:s:givwl:cd:fh" opt; do
+while getopts ":Rpb:s:givwl:cm:fh" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
@@ -81,7 +81,7 @@ while getopts ":Rpb:s:givwl:cd:fh" opt; do
     v)
       TARGET="specs-visdiff/"
       ;;
-    d)
+    m)
       BROWSERS=$(echo $OPTARG | sed 's/,/ /g')
       if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
         grunt $BROWSERS
