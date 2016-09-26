@@ -54,6 +54,26 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		this.wpAdminLogonPage.logonAsPressableAdmin();
 	} );
 
+	test.describe( 'Update to Latest Jetpack Version', function() {
+		test.before( 'Make sure wp-admin home page is displayed', function() {
+			this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+		} );
+
+		test.it( 'Can update to the latest Jetpack Version', function() {
+			this.wpAdminSidebar = new WPAdminSidebar( driver );
+			this.wpAdminSidebar.selectPlugins();
+			this.wpAdminPluginsPage = new WPAdminPluginsPage( driver );
+			this.wpAdminPluginsPage.JetpackVersionInstalled().then( ( jetpackVersion ) => {
+				slackNotifier.warn( `Jetpack version BEFORE updating: '${jetpackVersion}'` );
+			} );
+
+			this.wpAdminPluginsPage.updateJetpack();
+			this.wpAdminPluginsPage.JetpackVersionInstalled().then( ( jetpackVersion ) => {
+				slackNotifier.warn( `Jetpack version AFTER updating: '${jetpackVersion}'` );
+			} );
+		} );
+	} );
+
 	test.describe( 'WordPress.com Connect', function() {
 		test.before( 'Make sure wp-admin home page is displayed', function() {
 			this.wpAdminHomePage = new WPAdminHomePage( driver, true );
@@ -65,9 +85,6 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			this.wpAdminPluginsPage = new WPAdminPluginsPage( driver );
 			this.wpAdminPluginsPage.deactivateJetpack();
 			this.wpAdminPluginsPage.activateJetpack();
-			this.wpAdminPluginsPage.JetpackVersionInstalled().then( ( jetpackVersion ) => {
-				slackNotifier.warn( `Running Jetpack e2e tests against Jetpack version '${jetpackVersion}'` );
-			} );
 			this.wpAdminSidebar = new WPAdminSidebar( driver );
 			this.wpAdminSidebar.selectJetpack();
 			this.wpAdminJetpackPage = new WPAdminJetpackPage( driver );
