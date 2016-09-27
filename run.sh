@@ -1,5 +1,6 @@
 #!/bin/bash
 MOCHA=./node_modules/mocha/bin/mocha
+GRUNT=./node_modules/.bin/grunt
 REPORTER=""
 PARALLEL=0
 JOBS=0
@@ -7,7 +8,6 @@ AFTER="lib/after.js"
 OPTS=""
 SCREENSIZES="mobile,desktop,tablet"
 BRANCH=""
-VISDIFF=0
 RETURN=0
 CLEAN=0
 
@@ -28,10 +28,10 @@ usage () {
 -w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
 -l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration
 -c		  - Exit with status code 0 regardless of test results
--d		  - Execute the cross-browser visual-diff tests via grunt (overrides all other arguments)
+-m [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
 -f		  - Tell visdiffs to fail the tests rather than just send an alert
 -i		  - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
--v [all/critical] - Execute the visdiff tests in specs-visdiff[/critical].  Must specify either 'all' or 'critical'.  Only accessible in combination with -p flag
+-v		  - Execute the visdiff tests in specs-visdiff/
 -h		  - This help listing
 EOF
   exit 0
@@ -41,7 +41,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rpb:s:giv:wl:cdfh" opt; do
+while getopts ":Rpb:s:givwl:cm:fh" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
@@ -76,15 +76,18 @@ while getopts ":Rpb:s:giv:wl:cdfh" opt; do
       TARGET="specs/*wp-signup-spec.js" # wildcard needed to account for random filename ordering
       ;;
     l)
-      NODE_CONFIG_ARGS+=("\"sauce\":\"true\",\"sauceConfig\":\"$OPTARG\",\"crossBrowser\":\"true\"")
-      TARGET="specs-visdiff/critical/"
+      NODE_CONFIG_ARGS+=("\"sauce\":\"true\",\"sauceConfig\":\"$OPTARG\"")
+      continue
       ;;
     v)
-      VISDIFF=1
+      TARGET="specs-visdiff/"
       ;;
-    d)
+    m)
+      BROWSERS=$(echo $OPTARG | sed 's/,/ /g')
       if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
-        grunt
+        CMD="$GRUNT $BROWSERS"
+
+	eval $CMD
       fi
       exit $?
       ;;
@@ -120,9 +123,8 @@ if [ $PARALLEL == 1 ]; then
   MOBILE=$(expr 0 % $CIRCLE_NODE_TOTAL)
   DESKTOP=$(expr 1 % $CIRCLE_NODE_TOTAL)
   TABLET=$(expr 2 % $CIRCLE_NODE_TOTAL)
-  VISUAL=$(expr 3 % $CIRCLE_NODE_TOTAL)
   echo "Parallel execution details:"
-  echo "mobile=$MOBILE, desktop=$DESKTOP, tablet=$TABLET, visual=$VISUAL, node=$CIRCLE_NODE_INDEX, total=$CIRCLE_NODE_TOTAL"
+  echo "mobile=$MOBILE, desktop=$DESKTOP, tablet=$TABLET, node=$CIRCLE_NODE_INDEX, total=$CIRCLE_NODE_TOTAL"
 
   if [ $CIRCLE_NODE_INDEX == $MOBILE ]; then
       echo "Executing tests at mobile screen width"
@@ -146,21 +148,6 @@ if [ $PARALLEL == 1 ]; then
       CMD="env BROWSERSIZE=tablet $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
 
       eval $CMD
-      RETURN+=$?
-  fi
-  if [ $CIRCLE_NODE_INDEX == $VISUAL ] && [ $VISDIFF == 1 ]; then
-      echo "Executing visdiff tests at all screen widths"
-      NC="--NODE_CONFIG='{$VISDIFF_CONFIG}'"
-
-      CMD1="env BROWSERSIZE=mobile $MOCHA $NC $GREP $REPORTER specs-visdiff/critical/ $AFTER"
-      CMD2="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER specs-visdiff/critical/ $AFTER"
-      CMD3="env BROWSERSIZE=tablet $MOCHA $NC $GREP $REPORTER specs-visdiff/critical/ $AFTER"
-
-      eval $CMD1
-      RETURN+=$?
-      eval $CMD2
-      RETURN+=$?
-      eval $CMD3
       RETURN+=$?
   fi
 else # Not a parallel run, just queue up the tests in sequence

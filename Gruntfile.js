@@ -4,17 +4,45 @@ module.exports = function( grunt ) {
 		shell: {
 			runTests: {
 				command: function( browserSize, sauceConfig ) {
-					return './run.sh -R -c -f -l ' + sauceConfig + ' -s ' + browserSize
+					return './run.sh -R -c -f -v -l ' + sauceConfig + ' -s ' + browserSize
 				}
 			}
 		},
 
 		concurrent: {
-			target: {
-				tasks: [ 'run_mobile_osx-chrome', 'run_desktop_osx-chrome', 'run_tablet_osx-chrome',
-					'run_mobile_osx-firefox', 'run_desktop_osx-firefox', 'run_tablet_osx-firefox',
+			all: {
+				tasks: [ 'run_mobile_osx-firefox', 'run_desktop_osx-firefox', 'run_tablet_osx-firefox',
+					'run_mobile_osx-chrome', 'run_desktop_osx-chrome', 'run_tablet_osx-chrome',
 					'run_mobile_osx-safari', 'run_desktop_osx-safari', 'run_tablet_osx-safari',
 					'run_desktop_win-ie11' ],
+				options: {
+					limit: 3,
+					logConcurrentOutput: true
+				}
+			},
+			firefox: {
+				tasks: [ 'run_mobile_osx-firefox', 'run_desktop_osx-firefox', 'run_tablet_osx-firefox' ],
+				options: {
+					limit: 3,
+					logConcurrentOutput: true
+				}
+			},
+			chrome: {
+				tasks: [ 'run_mobile_osx-chrome', 'run_desktop_osx-chrome', 'run_tablet_osx-chrome' ],
+				options: {
+					limit: 3,
+					logConcurrentOutput: true
+				}
+			},
+			safari: {
+				tasks: [ 'run_mobile_osx-safari', 'run_desktop_osx-safari', 'run_tablet_osx-safari' ],
+				options: {
+					limit: 3,
+					logConcurrentOutput: true
+				}
+			},
+			ie11: {
+				tasks: [ 'run_desktop_win-ie11' ],
 				options: {
 					limit: 3,
 					logConcurrentOutput: true
@@ -28,7 +56,12 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-shell' );
 
 	// register tasks
-	grunt.registerTask( 'default', ['concurrent:target'] );
+	grunt.registerTask( 'default', ['concurrent:all'] );
+	grunt.registerTask( 'all', ['concurrent:all'] );
+	grunt.registerTask( 'firefox', ['concurrent:firefox'] );
+	grunt.registerTask( 'chrome', ['concurrent:chrome'] );
+	grunt.registerTask( 'safari', ['concurrent:safari'] );
+	grunt.registerTask( 'ie11', ['concurrent:ie11'] );
 
 	grunt.registerTask( 'run_mobile_osx-chrome', ['shell:runTests:mobile:osx-chrome'] );
 	grunt.registerTask( 'run_desktop_osx-chrome', ['shell:runTests:desktop:osx-chrome'] );
