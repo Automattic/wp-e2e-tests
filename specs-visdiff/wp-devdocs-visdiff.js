@@ -22,15 +22,6 @@ let Eyes = require( 'eyes.selenium' ).Eyes;
 let eyes = new Eyes();
 eyes.setApiKey( config.get( 'eyesKey' ) );
 eyes.setForceFullPageScreenshot( true );
-let batchName = '';
-
-if ( process.env.CIRCLE_BUILD_NUM ) {
-	batchName = `wp-e2e-tests [${global.browserName}] #${process.env.CIRCLE_BUILD_NUM}`
-}
-
-if ( batchName !== '' ) {
-	eyes.setBatch( batchName, `wp-e2e-tests-${global.browserName}-${process.env.CIRCLE_BUILD_NUM}` );
-}
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -44,6 +35,15 @@ test.describe( `DevDocs Visual Diff (${screenSizeName})`, function() {
 
 	test.before( function() {
 		let testName = `DevDocs [${global.browserName}] [${screenSizeName}]`;
+
+		let batchName = '';
+		if ( process.env.CIRCLE_BUILD_NUM ) {
+			batchName = `wp-e2e-tests [${global.browserName}] #${process.env.CIRCLE_BUILD_NUM}`
+		}
+
+		if ( batchName !== '' ) {
+			eyes.setBatch( batchName, `wp-e2e-tests-${global.browserName}-${process.env.CIRCLE_BUILD_NUM}` );
+		}
 
 		eyes.open( driver, 'WordPress.com', testName, screenSize );
 		let loginFlow = new LoginFlow( driver );
