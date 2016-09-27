@@ -257,7 +257,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 				return this.twitterFeedPage.checkTweetWithPhotoDisplayed( publicizeMessage );
 			} );
 
-			test.it( 'Can see the post on Facebook page with an image', function() {
+			test.xit( 'Can see the post on Facebook page with an image', function() {
 				this.facebookPage = new FacebookPage( driver, facebookPageName, true );
 				return this.facebookPage.checkPostWithPhotoDisplayed( publicizeMessage );
 			} );
@@ -309,7 +309,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 				} );
 			} );
 
-			test.it( 'Can see the post on Facebook page without an image', function() {
+			test.xit( 'Can see the post on Facebook page without an image', function() {
 				this.facebookPage = new FacebookPage( driver, facebookPageName, true );
 				return this.facebookPage.checkPostWithTextDisplayed( publicizeMessage );
 			} );
@@ -358,7 +358,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 				} );
 			} );
 
-			test.it( 'Can see the post on Facebook page without an image', function() {
+			test.xit( 'Can see the post on Facebook page without an image', function() {
 				this.facebookPage = new FacebookPage( driver, facebookPageName, true );
 				return this.facebookPage.checkPostWithTextDisplayed( publicizeMessage );
 			} );
