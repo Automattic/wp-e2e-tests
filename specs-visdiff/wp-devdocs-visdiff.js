@@ -38,11 +38,11 @@ test.describe( `DevDocs Visual Diff (${screenSizeName})`, function() {
 
 		let batchName = '';
 		if ( process.env.CIRCLE_BUILD_NUM ) {
-			batchName = `wp-e2e-tests [${global.browserName}] #${process.env.CIRCLE_BUILD_NUM}`
+			batchName = `wp-e2e-tests-visdiff [${global.browserName}] #${process.env.CIRCLE_BUILD_NUM}`
 		}
 
 		if ( batchName !== '' ) {
-			eyes.setBatch( batchName, `wp-e2e-tests-${global.browserName}-${process.env.CIRCLE_BUILD_NUM}` );
+			eyes.setBatch( batchName, `wp-e2e-tests-visdiff-${global.browserName}-${process.env.CIRCLE_BUILD_NUM}` );
 		}
 
 		eyes.open( driver, 'WordPress.com', testName, screenSize );
