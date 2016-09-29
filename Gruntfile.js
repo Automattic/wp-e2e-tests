@@ -67,6 +67,7 @@ module.exports = function( grunt ) {
 	// register tasks
 	grunt.registerTask( 'default', ['concurrent:all'] );
 	grunt.registerTask( 'all', ['concurrent:all'] );
+	grunt.registerTask( 'notChrome', ['concurrent:notChrome'] );
 	grunt.registerTask( 'firefox', ['concurrent:firefox'] );
 	grunt.registerTask( 'chrome', ['concurrent:chrome'] );
 	grunt.registerTask( 'safari', ['concurrent:safari'] );
