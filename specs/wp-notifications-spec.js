@@ -90,6 +90,8 @@ test.describe( 'Notifications: (' + screenSize + ')', function() {
 				
 					test.it( 'Can see the notification of the comment', function() {
 						const expectedContent = `${this.commentingUser} commented on ${this.commentedPostTitle}\n${this.comment}`;
+						this.navBarComponent = new NavbarComponent( driver );
+						this.navBarComponent.openNotifications();
 						this.notificationsComponent = new NotificationsComponent( driver );
 						this.notificationsComponent.selectComments();
 						this.notificationsComponent.allCommentsContent().then( ( content ) => {
