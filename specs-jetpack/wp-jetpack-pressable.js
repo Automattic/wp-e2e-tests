@@ -974,7 +974,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 
 			test.it( 'Can see existing Custom CSS in the editor', function() {
 				this.wPAdminCSSStylesheetEditorPage.customCSSDisplayed().then( ( shown ) => {
-					assert.equal( shown, '.site-content {\n\tbackground: purple;\n}', 'The test site does not have site content background purple CSS added - this needs to be added for this test' );
+					assert.equal( shown, '.site-content {\n\tbackground-color: purple;\n}', 'The test site does not have site content background purple CSS added - this needs to be added for this test' );
 				} );
 			} );
 
