@@ -1,4 +1,3 @@
-import assert from 'assert';
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 
