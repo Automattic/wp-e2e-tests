@@ -18,6 +18,7 @@ import WPAdminJetpackSettingsPage from '../lib/pages/wp-admin/wp-admin-jetpack-s
 import WPAdminTbDialogPage from '../lib/pages/wp-admin/wp-admin-tb-dialog';
 import WPAdminAddPostPage from '../lib/pages/wp-admin/wp-admin-add-post-page';
 import WPAdminSnippetsPage from '../lib/pages/wp-admin/wp-admin-snippets-page';
+import WPAdminCSSStylesheetEditorPage from '../lib/pages/wp-admin/wp-admin-css-stylesheet-editor-page';
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 import JetpackPlansPage from '../lib/pages/jetpack-plans-page';
 import TwitterAuthorizePage from '../lib/pages/external/twitter-authorize-page';
@@ -925,8 +926,67 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		test.it( 'Comment on post by secondary user shows notification for that user on WP.com', function() { } );
 	} );
 
-	test.xdescribe( 'CSS', function() {
-		test.it( 'Can add custom CSS to a site and preview/apply it', function() { } );
+	test.describe( 'CSS', function() {
+		test.describe( 'Can see and activate Custom CSS functionality for Jetpack', function() {
+
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.before( 'Can open Jetpack Appearance Settings', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectJetpackSettings();
+				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+				return this.jetpackSettingsPage.chooseTabNamed( 'Appearance' );
+			} );
+
+			test.it( 'Can disable Custom CSS', function() {
+				return this.jetpackSettingsPage.disableFeatureNamed( 'Custom CSS' );
+			} );
+
+			test.it( 'Can enable Custom CSS', function() {
+				return this.jetpackSettingsPage.enableFeatureNamed( 'Custom CSS' );
+			} );
+
+			test.it( 'Can link to custom css settings from Custom CSS module', function() {
+				this.jetpackSettingsPage.expandFeatureNamed( 'Custom CSS' );
+				this.jetpackSettingsPage.followSettingsLink( 'Custom CSS' );
+				this.wPAdminCSSStylesheetEditorPage = new WPAdminCSSStylesheetEditorPage( driver );
+				return this.wPAdminCSSStylesheetEditorPage.displayed().then( ( isDisplayed ) => {
+					return assert( isDisplayed, 'The CSS Stylesheet Editor Page is NOT displayed' );
+				} );
+			} );
+		} );
+
+		test.describe( 'Can add some Custom CSS and see it take effect', function() {
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.before( 'Can open Custom CSS Settings', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectAppearanceEditCSS();
+				this.wPAdminCSSStylesheetEditorPage = new WPAdminCSSStylesheetEditorPage( driver );
+				return this.wPAdminCSSStylesheetEditorPage.displayed().then( ( isDisplayed ) => {
+					return assert( isDisplayed, 'The CSS Stylesheet Editor Page is NOT displayed' );
+				} );
+			} );
+
+			test.it( 'Can see existing Custom CSS in the editor', function() {
+				this.wPAdminCSSStylesheetEditorPage.customCSSDisplayed().then( ( shown ) => {
+					assert.equal( shown, '.site-content {\n\tbackground: purple;\n}', 'The test site does not have site content background purple CSS added - this needs to be added for this test' );
+				} );
+			} );
+
+			test.it( 'Can see existing Custom CSS on our site', function() {
+				const siteUrl = `https://${config.get( 'jetpacksite' )}`;
+				const purple = 'rgba(128, 0, 128, 1)';
+				this.viewSitePage = new ViewSitePage( driver, true, siteUrl ); // visit site
+				this.viewSitePage.siteContentBackgroundColour().then( ( colour ) => {
+					assert.equal( colour, purple, 'The site content background colour was not set by custom CSS' );
+				} );
+			} );
+		} );
 	} );
 
 	test.xdescribe( 'Calypso', function() {
