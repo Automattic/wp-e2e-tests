@@ -71,6 +71,7 @@ test.describe( `DevDocs Visual Diff (${screenSizeName})`, function() {
 	} );
 
 	test.it( 'Verify Blocks Page', function() {
+		this.timeout( mochaDevDocsTimeOut * 2 );
 		devdocsPage.openAppComponents().then( function() {
 			devdocsPage.screenshotAllElements( eyes );
 		} );
