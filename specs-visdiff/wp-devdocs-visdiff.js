@@ -53,14 +53,14 @@ test.describe( `DevDocs Visual Diff (${screenSizeName})`, function() {
 		return devdocsPage.displayed();
 	} );
 
-	test.it( 'Verify UI Components', function() {
+	test.xit( 'Verify UI Components', function() {
 		this.timeout( mochaDevDocsTimeOut * 2 );
 		devdocsPage.openUIComponents().then( function() {
 			devdocsPage.screenshotAllElements( eyes );
 		} );
 	} );
 
-	test.it( 'Verify Typography', function() {
+	test.xit( 'Verify Typography', function() {
 		devdocsPage.openTypography().then( function() {
 			devdocsPage.hideMasterbar().then( function() {
 				devdocsPage.hideEnvironmentBadge().then( function() {
@@ -70,7 +70,7 @@ test.describe( `DevDocs Visual Diff (${screenSizeName})`, function() {
 		} );
 	} );
 
-	test.it.only( 'Verify Blocks Page', function() {
+	test.it( 'Verify Blocks Page', function() {
 		devdocsPage.openAppComponents().then( function() {
 			devdocsPage.screenshotAllElements( eyes );
 		} );
