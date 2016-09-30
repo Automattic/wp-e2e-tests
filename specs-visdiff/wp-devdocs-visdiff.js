@@ -70,7 +70,7 @@ test.describe( `DevDocs Visual Diff (${screenSizeName})`, function() {
 		} );
 	} );
 
-	test.it( 'Verify Blocks Page', function() {
+	test.it.only( 'Verify Blocks Page', function() {
 		devdocsPage.openAppComponents().then( function() {
 			devdocsPage.screenshotAllElements( eyes );
 		} );
