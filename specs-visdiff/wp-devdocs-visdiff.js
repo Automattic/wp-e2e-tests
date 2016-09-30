@@ -53,14 +53,14 @@ test.describe( `DevDocs Visual Diff (${screenSizeName})`, function() {
 		return devdocsPage.displayed();
 	} );
 
-	test.xit( 'Verify UI Components', function() {
+	test.it( 'Verify UI Components', function() {
 		this.timeout( mochaDevDocsTimeOut * 2 );
 		devdocsPage.openUIComponents().then( function() {
 			devdocsPage.screenshotAllElements( eyes );
 		} );
 	} );
 
-	test.xit( 'Verify Typography', function() {
+	test.it( 'Verify Typography', function() {
 		devdocsPage.openTypography().then( function() {
 			devdocsPage.hideMasterbar().then( function() {
 				devdocsPage.hideEnvironmentBadge().then( function() {
