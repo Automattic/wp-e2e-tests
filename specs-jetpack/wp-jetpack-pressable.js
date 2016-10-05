@@ -876,7 +876,36 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			} );
 		} );
 
-		test.xit( 'Like a post by a different user from master user - notifications and email', function() { } );
+		test.describe( 'Like a post by a different user from master user - notifications and email', function() {
+			let postUrl;
+
+			test.before( 'Publish a post so other user can like it', function() {
+				const blogPostTitle = dataHelper.randomPhrase();
+				const blogPostQuote = 'Most people carry that pain around inside them their whole lives, until they kill the pain by other means, or until it kills them. But you, my friends, you found another way: a way to use the pain. To burn it as fuel, for light and warmth. You have learned to break the world that has tried to break you.\nLev Grossman\n';
+
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				this.wpAdminTopbar = new WPAdminTopbar( driver );
+				this.wpAdminTopbar.createNewPost();
+				this.wpAdminAddPostPage = new WPAdminAddPostPage( driver );
+				this.wpAdminAddPostPage.enterTitle( blogPostTitle );
+				this.wpAdminAddPostPage.enterContent( blogPostQuote );
+				this.wpAdminAddPostPage.publish();
+				this.wpAdminAddPostPage.viewPostLink().then( ( viewPostLink ) => {
+					postUrl = viewPostLink;
+				} );
+			} );
+
+			test.it( 'As a signed in reader of the Jetpack blog I can like a new post', function() {
+				driverManager.clearCookiesAndDeleteLocalStorage( driver );
+
+				this.loginFlow = new LoginFlow( driver, 'jetpackLikeUser');
+				this.loginFlow.login();
+
+				driver.get( postUrl );
+				this.viewPostPage = new ViewPostPage( driver );
+				return this.viewPostPage.likePost();
+			} );
+		} );
 		test.xit( 'Like a post by a different user from secondary user - notifications and email', function() { } );
 	} );
 
