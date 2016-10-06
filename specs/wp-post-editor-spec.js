@@ -761,13 +761,11 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 					} );
 					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					this.postEditorSidebarComponent.ensureSaved();
-					this.postEditorSidebarComponent.publishPost();
-					return this.postEditorSidebarComponent.waitForSuccessViewPostNotice();
+					this.postEditorSidebarComponent.publishAndViewContent();
 				} );
 
 				test.describe( 'Can view the post with the new title', function() {
 					test.it( 'Can view the post', function() {
-						this.postEditorSidebarComponent.viewPublishedPostOrPage();
 						return this.viewPostPage = new ViewPostPage( driver );
 					} );
 
