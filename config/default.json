@@ -65,6 +65,6 @@
 	[ "signupStoreBenchmarking_20160927", "pressable" ],
 	[ "signupThemeUpload_20160928", "hideThemeUpload" ],
 	[ "signupSurveyStep_20161005", "surveyStepV1" ],
-	[ "siteTitleStep_20160928", "hideSiteTitleStep" ]
+	[ "siteTitleStep_20160928", "showSiteTitleStep" ]
   ]
 }
