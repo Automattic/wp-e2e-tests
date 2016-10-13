@@ -136,6 +136,8 @@ A full list of config values are:
 | Name | Description | Example | Required | Store in file? |
 | ---- | ----------- | ------- | -------- | ------------------- |
 | slackToken | This is a token for uploading files/screenshots to Slack (https://api.slack.com/tokens -- requires Slack login) | xxxx-##########-##########-###########-XXXXXXXXXX | No | **NO** |
+| EYESDEBUG | If this is set, no connection is opened to Applitools, only local screenshots are taken | 1 | No | **NO** |
+| SAUCEDEBUG | If this is set, on test failure a breakpoint will be set in SauceLabs, enabling you to continue interacting with the browser for troubleshooting | 1 | No | **NO** |
 
 #### CircleCI Environment Variables
 These environment variables are intended for use inside CircleCI, to control which tests are being run

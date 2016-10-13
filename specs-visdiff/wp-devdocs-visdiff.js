@@ -45,7 +45,10 @@ test.describe( `DevDocs Visual Diff (${screenSizeName})`, function() {
 			eyes.setBatch( batchName, `wp-e2e-tests-visdiff-${global.browserName}-${process.env.CIRCLE_BUILD_NUM}` );
 		}
 
-		eyes.open( driver, 'WordPress.com', testName, screenSize );
+		if ( ! process.env.EYESDEBUG ) {
+			eyes.open( driver, 'WordPress.com', testName, screenSize );
+		}
+
 		let loginFlow = new LoginFlow( driver );
 		loginFlow.login();
 
@@ -98,7 +101,9 @@ test.describe( `DevDocs Visual Diff (${screenSizeName})`, function() {
 				}
 			} );
 		} finally {
-			eyes.abortIfNotClosed();
+			if ( ! process.env.EYESDEBUG ) {
+				eyes.abortIfNotClosed();
+			}
 		}
 	} );
 } );
