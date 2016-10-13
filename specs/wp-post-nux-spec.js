@@ -25,21 +25,19 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 
 	test.describe( 'Sign in as a post NUX user and load the customizer', function() {
 		this.bailSuite( true );
+		this.retries( config.get( 'retries' ) );
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
 			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.it( 'Sign in as a post NUX user and choose customize theme', function() {
+		test.it( 'Sign in as a post NUX user and choose customize theme: can see the customizer', function() {
 			this.loginFlow = new LoginFlow( driver, 'postNUXUser' );
 			this.loginFlow.loginAndSelectMySite();
 			this.sidebarComponent = new SidebarComponent( driver );
-			return this.sidebarComponent.customizeTheme();
-		} );
-
-		test.it( 'Can see the customizer', function() {
-			const customizerPage = new CustomizerPage( driver );
-			customizerPage.displayed().then( ( displayed ) => {
+			this.sidebarComponent.customizeTheme();
+			this.customizerPage = new CustomizerPage( driver );
+			this.customizerPage.displayed().then( ( displayed ) => {
 				assert( displayed, 'The customizer page was not displayed' );
 			} );
 		} );
