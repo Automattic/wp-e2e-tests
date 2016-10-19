@@ -39,7 +39,7 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 
 		test.it( 'Can see the customizer', function() {
 			this.customizerPage = new CustomizerPage( driver );
-			this.customizerPage.displayed().then( ( displayed ) => {
+			return this.customizerPage.displayed().then( ( displayed ) => {
 				assert( displayed, 'The customizer page was not displayed' );
 			} );
 		} );
@@ -53,7 +53,7 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 				test.it( 'Can update and view site title', function() {
 					const newSiteTitle = dataHelper.randomPhrase();
 					this.customizerPage.setTitle( newSiteTitle );
-					this.customizerPage.previewTitle().then( ( titleShown ) => {
+					return this.customizerPage.previewTitle().then( ( titleShown ) => {
 						assert.equal( titleShown.toUpperCase(), newSiteTitle.toUpperCase(), 'The customizer preview title shown does not reflect the title input' );
 					} );
 				} );
@@ -65,14 +65,14 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 					}
 					const newTagline = dataHelper.randomPhrase();
 					this.customizerPage.setTagline( newTagline );
-					this.customizerPage.previewTagline().then( ( taglineShown ) => {
+					return this.customizerPage.previewTagline().then( ( taglineShown ) => {
 						assert.equal( taglineShown.toUpperCase(), newTagline.toUpperCase(), 'The customizer preview tagline shown does not reflect the tagline input' );
 					} );
 				} );
 
 				test.it( 'Direct Manipulation: clicking the icon on title jumps to site title field', function() {
 					this.customizerPage.clickSiteTitleIconInPreview();
-					assert( this.customizerPage.waitForTitleFieldDisplayed(), 'The title field is not displayed' );
+					return assert( this.customizerPage.waitForTitleFieldDisplayed(), 'The title field is not displayed' );
 				} );
 
 				test.it( 'Close site identity', function() {
@@ -82,7 +82,7 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 				test.it( 'Can update and see the site\'s colors', function() {
 					this.customizerPage.expandColorsAndBackgrounds();
 					this.customizerPage.chooseBackgroundColor();
-					this.customizerPage.previewShowsCustomBackgroundColor().then( ( displayed ) => {
+					return this.customizerPage.previewShowsCustomBackgroundColor().then( ( displayed ) => {
 						assert( displayed, 'The customizer preview is not showing the custom background color' );
 					} );
 				} );
@@ -95,7 +95,7 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 					let headingFontName = '';
 
 					test.it( 'Expand fonts', function() {
-						this.customizerPage.expandFonts();
+						return this.customizerPage.expandFonts();
 					} );
 
 					test.it( 'Can set the site\'s heading font', function() {
@@ -106,7 +106,7 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 
 					test.it( 'Can see the site\'s heading font in preview', function() {
 						assert( headingFontName !== '', 'The heading font was not retrieved from the customizer' );
-						this.customizerPage.previewUsesFont( headingFontName ).then( ( fontUsed ) => {
+						return this.customizerPage.previewUsesFont( headingFontName ).then( ( fontUsed ) => {
 							assert( fontUsed, `The font '${headingFontName}' does not appear to be used in the customizer preview` );
 						} );
 					} );
@@ -119,7 +119,7 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 						let baseFontName = '';
 
 						test.it( 'Expand fonts', function() {
-							this.customizerPage.expandFonts();
+							return this.customizerPage.expandFonts();
 						} );
 
 						test.it( 'Can set the site\'s base font', function() {
@@ -130,7 +130,7 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 
 						test.it( 'Can see the site\'s heading font in preview', function() {
 							assert( baseFontName !== '', 'The heading font was not retrieved from the customizer' );
-							this.customizerPage.previewUsesFont( baseFontName ).then( ( fontUsed ) => {
+							return this.customizerPage.previewUsesFont( baseFontName ).then( ( fontUsed ) => {
 								assert( fontUsed, `The font '${baseFontName}' does not appear to be used in the customizer preview` );
 							} );
 						} );
@@ -151,22 +151,22 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 								} );
 
 								test.it( 'Expand header image', function() {
-									this.customizerPage.expandHeaderImage();
+									return this.customizerPage.expandHeaderImage();
 								} );
 
 								test.it( 'Can set a custom header image', function() {
 									this.customizerPage.setHeaderImage( fileDetails );
-									this.customizerPage.waitForPreviewRefresh();
+									return this.customizerPage.waitForPreviewRefresh();
 								} );
 
 								test.it( 'Can see the custom header image in preview', function() {
-									this.customizerPage.previewShowsHeader( fileDetails ).then( ( showsHeader ) => {
+									return this.customizerPage.previewShowsHeader( fileDetails ).then( ( showsHeader ) => {
 										assert( showsHeader, 'The preview is not showing the recently uploaded header image' );
 									} );
 								} );
 
 								test.it( 'Close custom header', function() {
-									this.customizerPage.closeOpenSection();
+									return this.customizerPage.closeOpenSection();
 								} );
 
 								test.after( function() {
@@ -195,7 +195,7 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 							} );
 
 							test.it( 'Close menus', function() {
-								this.customizerPage.closeOpenPanel();
+								return this.customizerPage.closeOpenPanel();
 							} );
 
 
@@ -209,7 +209,7 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 
 								test.it( 'Can add a new sidebar widget as a text widget', function() {
 									this.customizerPage.addNewSidebarTextWidget( widgetTitle, widgetContent );
-									this.customizerPage.closeOpenSection();
+									return this.customizerPage.closeOpenSection();
 								} );
 
 								test.it( 'Can see the new widget in the preview pane', function() {
@@ -219,7 +219,7 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 								} );
 
 								test.it( 'Close widgets', function() {
-									this.customizerPage.closeOpenPanel();
+									return this.customizerPage.closeOpenPanel();
 								} );
 
 
@@ -237,12 +237,12 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 									} );
 
 									test.it( 'Close front page section', function() {
-										this.customizerPage.closeOpenSection();
+										return this.customizerPage.closeOpenSection();
 									} );
 
 
 									test.describe( 'Closing the customizer', function() {
-										test.it( 'Close the customizer', function() {
+										return test.it( 'Close the customizer', function() {
 											return this.customizerPage.close();
 										} );
 									} );
