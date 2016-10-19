@@ -876,7 +876,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			} );
 		} );
 
-		test.describe( 'Like a post by a different user from master user - notifications and email', function() {
+		test.xdescribe( 'Like a post by a different user from master user - notifications and email', function() {
 			let postUrl;
 
 			test.before( 'Publish a post so other user can like it', function() {
