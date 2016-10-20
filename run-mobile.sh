@@ -16,6 +16,7 @@ TARGETS+=("specs-ios/")
 usage () {
   cat <<EOF
 -R	- Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
+-d	- Device name to run the tests on (from lib/mobile-capabilities.js)
 -p	- Portrait orientation
 -l	- Landscape orientation
 -s	- Use SauceLabs
