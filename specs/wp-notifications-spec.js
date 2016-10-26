@@ -38,7 +38,7 @@ test.describe( 'Notifications: (' + screenSize + ')', function() {
 		test.it( 'Can log in as commenting user', function() {
 			this.commentingUser = 'e2eflowtestingcommenter';
 			this.loginFlow = new LoginFlow( driver, 'commentingUser' );
-			this.loginFlow.login();
+			return this.loginFlow.login();
 		} );
 
 		test.describe( 'Leave a comment on the test site for notifications', function() {
@@ -62,31 +62,35 @@ test.describe( 'Notifications: (' + screenSize + ')', function() {
 			} );
 
 			test.it( 'Can see the comment', function() {
-				this.viewPostPage.commentEventuallyShown( this.comment ).then( ( shown ) => {
-					if ( shown === false ) {
-						slackNotifier.warn( `Could not see newly added comment '${this.comment}' on blog page - refreshing now` );
-						driver.navigate().refresh();
-					}
-				} );
 				return this.viewPostPage.commentEventuallyShown( this.comment ).then( ( shown ) => {
-					return assert.equal( shown, true, `The comment: '${this.comment}' was not shown on the blog post page after submitting it and waiting for it` );
+					if ( shown === false ) {
+						slackNotifier.warn( `Could not see newly added comment '${this.comment}' on blog page - most likely a refresh issue` );
+					}
 				} );
 			} );
 
 			test.describe( 'Log in as notifications user', function() {
 				test.it( 'Can log in as notifications user', function() {
 					this.loginFlow = new LoginFlow( driver, 'notificationsUser' );
-					this.loginFlow.login();
+					return this.loginFlow.login();
 				} );
 
 				test.describe( 'See the notification', function() {
+					test.it( 'Can open notifications tab with keyboard shortcut', function() {
+						this.navBarComponent = new NavbarComponent( driver );
+						this.navBarComponent.openNotificationsShortcut();
+						return this.navBarComponent.confirmNotificationsOpen().then( function( present ) {
+							assert( present, 'Notifications tab is not open' );
+						} );
+					} );
+
 					test.it( 'Can see the notification of the comment', function() {
 						const expectedContent = `${this.commentingUser} commented on ${this.commentedPostTitle}\n${this.comment}`;
 						this.navBarComponent = new NavbarComponent( driver );
 						this.navBarComponent.openNotifications();
 						this.notificationsComponent = new NotificationsComponent( driver );
 						this.notificationsComponent.selectComments();
-						this.notificationsComponent.allCommentsContent().then( ( content ) => {
+						return this.notificationsComponent.allCommentsContent().then( ( content ) => {
 							assert.equal( content.includes( expectedContent ), true, `The actual notifications content '${content}' does not contain expected content '${expectedContent}'` );
 						} );
 					} );
@@ -94,7 +98,7 @@ test.describe( 'Notifications: (' + screenSize + ')', function() {
 					test.it( 'Can delete the comment', function() {
 						this.notificationsComponent.selectCommentByText( this.comment );
 						this.notificationsComponent.trashComment();
-						this.notificationsComponent.waitForUndoMessage();
+						return this.notificationsComponent.waitForUndoMessage();
 					} );
 				} );
 			} );

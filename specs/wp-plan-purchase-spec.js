@@ -8,7 +8,6 @@ import LoginFlow from '../lib/flows/login-flow.js';
 
 import PlansPage from '../lib/pages/plans-page.js';
 import StatsPage from '../lib/pages/stats-page.js';
-import WPHomePage from '../lib/pages/wp-home-page.js';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import ShoppingCartWidgetComponent from '../lib/components/shopping-cart-widget-component.js';
@@ -55,9 +54,15 @@ test.describe( 'Plans: (' + screenSize + ')', function() {
 
 			test.it( 'Can Compare Plans', function() {
 				this.plansPage = new PlansPage( driver );
-				this.plansPage.clickComparePlans();
+				this.plansPage.openPlansTab();
 				return this.plansPage.waitForComparison();
-//				return this.plansPage.returnFromComparison();
+			} );
+
+			test.it( 'Can Verify Current Plan', function() {
+				const planName = 'premium';
+				return this.plansPage.confirmCurrentPlan( planName ).then( function( present ) {
+					assert( present, `Failed to detect correct plan (${planName})` );
+				} );
 			} );
 		} );
 

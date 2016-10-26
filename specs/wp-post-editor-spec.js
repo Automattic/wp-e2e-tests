@@ -16,9 +16,10 @@ import NavbarComponent from '../lib/components/navbar-component.js';
 import PostPreviewComponent from '../lib/components/post-preview-component.js';
 import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
 
-import * as driverManager from '../lib/driver-manager.js';
-import * as mediaHelper from '../lib/media-helper.js';
-import * as dataHelper from '../lib/data-helper.js';
+import * as driverManager from '../lib/driver-manager';
+import * as mediaHelper from '../lib/media-helper';
+import * as dataHelper from '../lib/data-helper';
+import * as slackNotifier from '../lib/slack-notifier';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -731,6 +732,15 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 
 				test.it( 'Can see and edit our new post', function() {
 					this.postsPage.isPostDisplayed( originalBlogPostTitle ).then( ( displayed ) => {
+						if ( displayed === false ) {
+							slackNotifier.warn( 'Could not locate the post on posts page, retrying the posts menu option again' );
+							this.sidebarComponent = new SidebarComponent( driver );
+							this.sidebarComponent.selectPosts();
+							this.postsPage = new PostsPage( driver );
+							return this.postsPage.waitForPosts();
+						}
+					} );
+					this.postsPage.isPostDisplayed( originalBlogPostTitle ).then( ( displayed ) => {
 						assert.equal( displayed, true, `The blog post titled '${originalBlogPostTitle}' is not displayed in the list of posts` );
 					} );
 					this.postsPage.editPostWithTitle( originalBlogPostTitle );
@@ -751,13 +761,11 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 					} );
 					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					this.postEditorSidebarComponent.ensureSaved();
-					this.postEditorSidebarComponent.publishPost();
-					return this.postEditorSidebarComponent.waitForSuccessViewPostNotice();
+					this.postEditorSidebarComponent.publishAndViewContent();
 				} );
 
 				test.describe( 'Can view the post with the new title', function() {
 					test.it( 'Can view the post', function() {
-						this.postEditorSidebarComponent.viewPublishedPostOrPage();
 						return this.viewPostPage = new ViewPostPage( driver );
 					} );
 

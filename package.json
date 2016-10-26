@@ -1,11 +1,11 @@
 {
-  "name": "calypso-e2e-tests",
+  "name": "wp-e2e-tests",
   "version": "0.0.1",
   "description": "Automated end to end acceptance tests for the Calypso project",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/Automattic/calypso-e2e-tests.git"
+    "url": "https://github.com/Automattic/wp-e2e-tests.git"
   },
   "main": "greetings.js",
   "defaultTestArgs": "-g -s $BROWSERSIZE",

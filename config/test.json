@@ -2,8 +2,6 @@
   "calypsoBaseURL": "https://wordpress.com",
   "explicitWaitMS": 20000,
   "mochaTimeoutMS": 160000,
-  "mochaVisDiffTimeoutMS": 320000,
-  "mochaDevDocsTimeoutMS": 500000,
   "browser": "chrome",
   "saveAllScreenshots": false,
   "reportWarningsToSlack": true,

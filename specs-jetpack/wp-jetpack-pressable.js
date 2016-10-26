@@ -17,12 +17,17 @@ import WPAdminJetpackPage from '../lib/pages/wp-admin/wp-admin-jetpack-page';
 import WPAdminJetpackSettingsPage from '../lib/pages/wp-admin/wp-admin-jetpack-settings-page';
 import WPAdminTbDialogPage from '../lib/pages/wp-admin/wp-admin-tb-dialog';
 import WPAdminAddPostPage from '../lib/pages/wp-admin/wp-admin-add-post-page';
+import WPAdminSnippetsPage from '../lib/pages/wp-admin/wp-admin-snippets-page';
+import WPAdminCSSStylesheetEditorPage from '../lib/pages/wp-admin/wp-admin-css-stylesheet-editor-page';
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 import JetpackPlansPage from '../lib/pages/jetpack-plans-page';
 import TwitterAuthorizePage from '../lib/pages/external/twitter-authorize-page';
 import TumblrAuthorizePage from '../lib/pages/external/tumblr-authorize-page';
 import TwitterFeedPage from '../lib/pages/twitter-feed-page';
+import TwitterIntentPage from '../lib/pages/external/twitter-intent-page';
 import FacebookPage from '../lib/pages/external/facebook-page';
+import ViewSitePage from '../lib/pages/view-site-page';
+import ViewPostPage from '../lib/pages/view-post-page';
 
 import LoginFlow from '../lib/flows/login-flow';
 
@@ -50,6 +55,26 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		this.wpAdminLogonPage.logonAsPressableAdmin();
 	} );
 
+	test.describe( 'Update to Latest Jetpack Version', function() {
+		test.before( 'Make sure wp-admin home page is displayed', function() {
+			this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+		} );
+
+		test.it( 'Can update to the latest Jetpack Version', function() {
+			this.wpAdminSidebar = new WPAdminSidebar( driver );
+			this.wpAdminSidebar.selectPlugins();
+			this.wpAdminPluginsPage = new WPAdminPluginsPage( driver );
+			this.wpAdminPluginsPage.JetpackVersionInstalled().then( ( jetpackVersion ) => {
+				slackNotifier.warn( `Jetpack version BEFORE updating: '${jetpackVersion}'` );
+			} );
+
+			this.wpAdminPluginsPage.updateJetpack();
+			this.wpAdminPluginsPage.JetpackVersionInstalled().then( ( jetpackVersion ) => {
+				slackNotifier.warn( `Jetpack version AFTER updating: '${jetpackVersion}'` );
+			} );
+		} );
+	} );
+
 	test.describe( 'WordPress.com Connect', function() {
 		test.before( 'Make sure wp-admin home page is displayed', function() {
 			this.wpAdminHomePage = new WPAdminHomePage( driver, true );
@@ -61,9 +86,6 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			this.wpAdminPluginsPage = new WPAdminPluginsPage( driver );
 			this.wpAdminPluginsPage.deactivateJetpack();
 			this.wpAdminPluginsPage.activateJetpack();
-			this.wpAdminPluginsPage.JetpackVersionInstalled().then( ( jetpackVersion ) => {
-				slackNotifier.warn( `Running Jetpack e2e tests against Jetpack version '${jetpackVersion}'` );
-			} );
 			this.wpAdminSidebar = new WPAdminSidebar( driver );
 			this.wpAdminSidebar.selectJetpack();
 			this.wpAdminJetpackPage = new WPAdminJetpackPage( driver );
@@ -114,7 +136,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 
 			test.it( 'Can link to sharing settings from publicize', function() {
 				this.jetpackSettingsPage.expandFeatureNamed( 'Publicize' );
-				this.jetpackSettingsPage.followPublicizeSettingsLink();
+				this.jetpackSettingsPage.followSettingsLink( 'Publicize' );
 				this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
 				return this.wpAdminSettingsSharingPage.displayed().then( ( isDisplayed ) => {
 					return assert( isDisplayed, 'The Settings-Sharing Page is NOT displayed' );
@@ -350,19 +372,577 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		} );
 	} );
 
-	test.xdescribe( 'Sharing buttons', function() {
-		test.it( 'Add and see all the buttons', function() { } );
-		test.it( 'Buttons work', function() { } );
+	test.describe( 'Sharing buttons', function() {
+		test.describe( 'Can see and activate sharing buttons functionality for Jetpack', function() {
+
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.before( 'Can open Jetpack Engagement Settings', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectJetpackSettings();
+				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+				this.jetpackSettingsPage.chooseTabNamed( 'Engagement' );
+			} );
+
+			test.it( 'Can disable sharing', function() {
+				this.jetpackSettingsPage.disableFeatureNamed( 'Sharing' );
+			} );
+
+			test.it( 'Can enable sharing', function() {
+				this.jetpackSettingsPage.enableFeatureNamed( 'Sharing' );
+			} );
+
+			test.it( 'Can link to sharing settings from publicize', function() {
+				this.jetpackSettingsPage.expandFeatureNamed( 'Sharing' );
+				this.jetpackSettingsPage.followSettingsLink( 'Sharing' );
+				this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
+				return this.wpAdminSettingsSharingPage.displayed().then( ( isDisplayed ) => {
+					return assert( isDisplayed, 'The Settings-Sharing Page is NOT displayed' );
+				} );
+			} );
+		} );
+
+		test.describe( 'Add and see all the buttons', function() {
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.before( 'Can open sharing settings', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectSettingsSharing();
+				this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
+				return this.wpAdminSettingsSharingPage.displayed().then( ( isDisplayed ) => {
+					return assert( isDisplayed, 'The Settings-Sharing Page is NOT displayed' );
+				} );
+			} );
+
+			test.it( 'Can set sharing buttons to be icon + text ', function() {
+				return this.wpAdminSettingsSharingPage.setButtonStyleToIconAndText();
+			} );
+
+			test.it( 'Can see zero available buttons (all should be enabled)', function() {
+				this.wpAdminSettingsSharingPage.availableSharingButtons().then( ( buttons ) => {
+					assert.equal( buttons.length, 0, 'Available sharing buttons are shown when they all should already be enabled' );
+				} );
+			} );
+
+			test.describe( 'Can see all the individual buttons in both activated and preview', function() {
+
+				test.it( 'Can see Skype sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'skype' ).then( ( activated ) => {
+						return assert( activated, 'Skype sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Skype sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'skype' ).then( ( activated ) => {
+						return assert( activated, 'Skype sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Telegram sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'telegram' ).then( ( activated ) => {
+						return assert( activated, 'Telegram sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Telegram sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'telegram' ).then( ( activated ) => {
+						return assert( activated, 'Telegram sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Email sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'email' ).then( ( activated ) => {
+						return assert( activated, 'Email sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Email sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'email' ).then( ( activated ) => {
+						return assert( activated, 'Email sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see LinkedIn sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'linkedin' ).then( ( activated ) => {
+						return assert( activated, 'LinkedIn sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see LinkedIn sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'linkedin' ).then( ( activated ) => {
+						return assert( activated, 'LinkedIn sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Print sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'print' ).then( ( activated ) => {
+						return assert( activated, 'Print sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Print sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'print' ).then( ( activated ) => {
+						return assert( activated, 'Print sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Tumblr sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'tumblr' ).then( ( activated ) => {
+						return assert( activated, 'Tumblr sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Tumblr sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'tumblr' ).then( ( activated ) => {
+						return assert( activated, 'Tumblr sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Google+ sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'google-plus-1' ).then( ( activated ) => {
+						return assert( activated, 'Google+ sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Google+ sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'google-plus-1' ).then( ( activated ) => {
+						return assert( activated, 'Google+ sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Reddit sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'reddit' ).then( ( activated ) => {
+						return assert( activated, 'Reddit sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Reddit sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'reddit' ).then( ( activated ) => {
+						return assert( activated, 'Reddit sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Whatsapp sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'jetpack-whatsapp' ).then( ( activated ) => {
+						return assert( activated, 'Whatsapp sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Whatsapp sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'jetpack-whatsapp' ).then( ( activated ) => {
+						return assert( activated, 'Whatsapp sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Facebook sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'facebook' ).then( ( activated ) => {
+						return assert( activated, 'Facebook sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Facebook sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'facebook' ).then( ( activated ) => {
+						return assert( activated, 'Facebook sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Pinterest sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'pinterest' ).then( ( activated ) => {
+						return assert( activated, 'Pinterest sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Pinterest sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'pinterest' ).then( ( activated ) => {
+						return assert( activated, 'Pinterest sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Pocket sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'pocket' ).then( ( activated ) => {
+						return assert( activated, 'Pocket sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Pocket sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'pocket' ).then( ( activated ) => {
+						return assert( activated, 'Pocket sharing is not in the sharing preview' );
+					} );
+				} );
+
+				test.it( 'Can see Twitter sharing activated', function() {
+					return this.wpAdminSettingsSharingPage.sharingActivated( 'twitter' ).then( ( activated ) => {
+						return assert( activated, 'Twitter sharing is not activated' );
+					} );
+				} );
+
+				test.it( 'Can see Twitter sharing in the preview', function() {
+					return this.wpAdminSettingsSharingPage.sharingPreviewIncludes( 'twitter' ).then( ( activated ) => {
+						return assert( activated, 'Twitter sharing is not in the sharing preview' );
+					} );
+				} );
+			} );
+
+			test.it( 'Can make sure sharing buttons are shown everywhere', function() {
+				this.wpAdminSettingsSharingPage.showButtonsOnFrontPage();
+				this.wpAdminSettingsSharingPage.showButtonsOnPosts();
+				this.wpAdminSettingsSharingPage.showButtonsOnPages();
+				return this.wpAdminSettingsSharingPage.showButtonsOnMedia();
+			} );
+
+			test.it( 'Can save changes', function() {
+				return this.wpAdminSettingsSharingPage.saveChanges();
+			} );
+
+			test.describe( 'All the buttons work from the home page', function() {
+				test.before( 'Visit the home page', function() {
+					const siteUrl = `https://${config.get( 'jetpacksite' )}`;
+					this.viewSitePage = new ViewSitePage( driver, true, siteUrl );
+				} );
+
+				test.describe( 'Can see all the individual sharing buttons', function() {
+
+					test.it( 'Can see Skype sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'skype' ).then( ( shown ) => {
+							assert( shown, 'The skype sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'skype' ).then( ( link ) => {
+							assert( link.match( /\/\?share=skype&nb=1$/ ), 'The skype sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Telegram sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'telegram' ).then( ( shown ) => {
+							assert( shown, 'The telegram sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'telegram' ).then( ( link ) => {
+							assert( link.match( /\/\?share=telegram&nb=1$/ ), 'The telegram sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Email sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'email' ).then( ( shown ) => {
+							assert( shown, 'The email sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'email' ).then( ( link ) => {
+							assert( link.match( /\/\?share=email&nb=1$/ ), 'The email sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see LinkedIn sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'linkedin' ).then( ( shown ) => {
+							assert( shown, 'The linkedin sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'linkedin' ).then( ( link ) => {
+							assert( link.match( /\/\?share=linkedin&nb=1$/ ), 'The linkedin sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see the print sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'print' ).then( ( shown ) => {
+							assert( shown, 'The print sharing button was not shown' );
+						} );
+					} );
+
+					test.it( 'Can see Tumblr sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'tumblr' ).then( ( shown ) => {
+							assert( shown, 'The Tumblr sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'tumblr' ).then( ( link ) => {
+							assert( link.match( /\/\?share=tumblr&nb=1$/ ), 'The Tumblr sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Google+ sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'google-plus-1' ).then( ( shown ) => {
+							assert( shown, 'The Google+ sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'google-plus-1' ).then( ( link ) => {
+							assert( link.match( /\/\?share=google-plus-1&nb=1$/ ), 'The Google+ sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Reddit sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'reddit' ).then( ( shown ) => {
+							assert( shown, 'The Reddit sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'reddit' ).then( ( link ) => {
+							assert( link.match( /\/\?share=reddit&nb=1$/ ), 'The Reddit sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Whatsapp sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'jetpack-whatsapp' ).then( ( shown ) => {
+							assert( shown, 'The Whatsapp sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'jetpack-whatsapp' ).then( ( link ) => {
+							assert( link.match( /^whatsapp:\/\/send\?/ ), 'The Whatsapp sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Facebook sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'facebook' ).then( ( shown ) => {
+							assert( shown, 'The Facebook sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'facebook' ).then( ( link ) => {
+							assert( link.match( /\/\?share=facebook&nb=1$/ ), 'The Facebook sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Pinterest sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'pinterest' ).then( ( shown ) => {
+							assert( shown, 'The Pinterest sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'pinterest' ).then( ( link ) => {
+							assert( link.match( /\/\?share=pinterest&nb=1$/ ), 'The Pinterest sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Pocket sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'pocket' ).then( ( shown ) => {
+							assert( shown, 'The Pocket sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'pocket' ).then( ( link ) => {
+							assert( link.match( /\/\?share=pocket&nb=1$/ ), 'The Pocket sharing button does not have the correct URL' );
+						} );
+					} );
+
+					test.it( 'Can see Twitter sharing button with correct link', function() {
+						this.viewSitePage.sharingButtonShown( 'twitter' ).then( ( shown ) => {
+							assert( shown, 'The Twitter sharing button was not shown' );
+						} );
+
+						this.viewSitePage.sharingButtonLink( 'twitter' ).then( ( link ) => {
+							assert( link.match( /\/\?share=twitter&nb=1$/ ), 'The Twitter sharing button does not have the correct URL' );
+						} );
+					} );
+				} );
+
+				test.describe( 'Can share the content to twitter', function() {
+					let postTitle = '';
+					let postURL = '';
+
+					test.it( 'Can capture values for expected tweet text', function() {
+						this.viewSitePage.firstPostTitle().then( ( title ) => {
+							postTitle = title;
+						} );
+
+						this.viewSitePage.firstPostURL().then( ( url ) => {
+							postURL = url;
+						} );
+					} );
+
+					test.it( 'The share to twitter button works when clicked', function() {
+						const twitterAccountUsername = config.get( 'twitterAccount' );
+						const expectedTweetText = `${postTitle} ${postURL} via @${twitterAccountUsername}`;
+						this.viewSitePage.followShareToTwitter();
+						this.twitterIntentPage = new TwitterIntentPage( driver );
+						return this.twitterIntentPage.prefilledTweet().then( ( tweetText ) => {
+							assert.equal( tweetText, expectedTweetText, 'The actual tweet text is not expected' );
+						} );
+					} );
+				} );
+			} );
+		} );
 	} );
 
-	test.xdescribe( 'Email Subscriptions', function() {
-		test.it( 'Emails are sent', function() { } );
-		test.it( 'An email filter works as expected', function() { } );
+	test.describe( 'Related Posts', function() {
+		test.describe( 'Can see and activate related posts functionality for Jetpack', function() {
+
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.before( 'Can open Jetpack Engagement Settings', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectJetpackSettings();
+				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+				return this.jetpackSettingsPage.chooseTabNamed( 'Engagement' );
+			} );
+
+			test.it( 'Can disable related posts', function() {
+				return this.jetpackSettingsPage.disableFeatureNamed( 'Related Posts' );
+			} );
+
+			test.it( 'Can enable related posts', function() {
+				return this.jetpackSettingsPage.enableFeatureNamed( 'Related Posts' );
+			} );
+
+			test.it( 'Can set related posts options directly within the Jetpack dashboard', function() {
+				this.jetpackSettingsPage.expandFeatureNamed( 'Related Posts' );
+				this.jetpackSettingsPage.unsetRelatedPostsHeader();
+				this.jetpackSettingsPage.unsetRelatedPostsLarge();
+				this.jetpackSettingsPage.setRelatedPostsHeader();
+				this.jetpackSettingsPage.setRelatedPostsLarge();
+				return this.jetpackSettingsPage.saveFeatureSettings( 'Related Posts' );
+			} );
+		} );
+
+		test.describe( 'Related posts are shown as large and with header', function() {
+			test.before( 'Visit the home page and open the first post', function() {
+				const siteUrl = `https://${config.get( 'jetpacksite' )}`;
+				this.viewSitePage = new ViewSitePage( driver, true, siteUrl );
+				this.viewSitePage.viewFirstPost();
+				this.viewPostPage = new ViewPostPage( driver );
+			} );
+
+			test.it( 'Can see Large Related Posts', function() {
+				this.viewPostPage.relatedPostsLargeShown().then( ( shown ) => {
+					assert( shown, 'Large related posts aren\'t being shown on the posts page' );
+				} );
+			} );
+
+			test.it( 'Can see Related Posts Header', function() {
+				this.viewPostPage.relatedPostsHeaderShown().then( ( shown ) => {
+					assert( shown, 'The related posts header isn\'t being shown on the posts page' );
+				} );
+			} );
+		} );
+
+		test.describe( 'A related posts filter works as expected', function() {
+
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.it( 'Make sure the snippet to show four related posts is active', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectSnippets();
+				this.wpAdminSnippetsPage = new WPAdminSnippetsPage( driver );
+				this.wpAdminSnippetsPage.snippetIsActive( 'Related Posts Show Four' ).then( ( active ) => {
+					assert( active, 'The snippet to show four related posts does not exist or is not active' );
+				} );
+			} );
+
+			test.it( 'Make sure four related posts are shown on the posts page', function() {
+				const siteUrl = `https://${config.get( 'jetpacksite' )}`;
+				this.viewSitePage = new ViewSitePage( driver, true, siteUrl );
+				this.viewSitePage.viewFirstPost();
+				this.viewPostPage = new ViewPostPage( driver );
+				this.viewPostPage.relatedPostsShown().then( ( relatedPosts ) => {
+					assert( relatedPosts.length, 4, 'The number of related posts isn\'t correct' );
+				} );
+			} );
+		} );
 	} );
 
-	test.xdescribe( 'Related Posts', function() {
-		test.it( 'Related posts are shown when enabled', function() { } );
-		test.it( 'A related posts filter works as expected', function() { } );
+	test.describe( 'Likes', function() {
+		test.describe( 'Can see and activate likes functionality for Jetpack', function() {
+
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.before( 'Can open Jetpack Engagement Settings', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectJetpackSettings();
+				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+				return this.jetpackSettingsPage.chooseTabNamed( 'Engagement' );
+			} );
+
+			test.it( 'Can disable Likes', function() {
+				return this.jetpackSettingsPage.disableFeatureNamed( 'Likes' );
+			} );
+
+			test.it( 'Can enable Likes', function() {
+				return this.jetpackSettingsPage.enableFeatureNamed( 'Likes' );
+			} );
+
+			test.it( 'Can set Likes options directly within the Jetpack dashboard - and follow link to settings', function() {
+				this.jetpackSettingsPage.expandFeatureNamed( 'Likes' );
+				this.jetpackSettingsPage.chooseLikesPerPost();
+				this.jetpackSettingsPage.chooseLikesForAllPosts();
+				this.jetpackSettingsPage.saveFeatureSettings( 'Likes' );
+				this.jetpackSettingsPage.followLikeSettingsLink();
+				this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
+				return this.wpAdminSettingsSharingPage.displayed().then( ( isDisplayed ) => {
+					return assert( isDisplayed, 'The Settings-Sharing Page is NOT displayed' );
+				} );
+			} );
+		} );
+
+		test.xdescribe( 'Like a post by a different user from master user - notifications and email', function() {
+			let postUrl;
+
+			test.before( 'Publish a post so other user can like it', function() {
+				const blogPostTitle = dataHelper.randomPhrase();
+				const blogPostQuote = 'Most people carry that pain around inside them their whole lives, until they kill the pain by other means, or until it kills them. But you, my friends, you found another way: a way to use the pain. To burn it as fuel, for light and warmth. You have learned to break the world that has tried to break you.\nLev Grossman\n';
+
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				this.wpAdminTopbar = new WPAdminTopbar( driver );
+				this.wpAdminTopbar.createNewPost();
+				this.wpAdminAddPostPage = new WPAdminAddPostPage( driver );
+				this.wpAdminAddPostPage.enterTitle( blogPostTitle );
+				this.wpAdminAddPostPage.enterContent( blogPostQuote );
+				this.wpAdminAddPostPage.publish();
+				this.wpAdminAddPostPage.viewPostLink().then( ( viewPostLink ) => {
+					postUrl = viewPostLink;
+				} );
+			} );
+
+			test.it( 'As a signed in reader of the Jetpack blog I can like a new post', function() {
+				driverManager.clearCookiesAndDeleteLocalStorage( driver );
+
+				this.loginFlow = new LoginFlow( driver, 'jetpackLikeUser');
+				this.loginFlow.login();
+
+				driver.get( postUrl );
+				this.viewPostPage = new ViewPostPage( driver );
+				return this.viewPostPage.likePost();
+			} );
+		} );
+		test.xit( 'Like a post by a different user from secondary user - notifications and email', function() { } );
+	} );
+
+	test.describe( 'Email Subscriptions', function() {
+		test.describe( 'Can see and activate Email Subscriptions functionality for Jetpack', function() {
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.before( 'Can open Jetpack Engagement Settings', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectJetpackSettings();
+				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+				return this.jetpackSettingsPage.chooseTabNamed( 'Engagement' );
+			} );
+
+			test.it( 'Can disable Subscriptions', function() {
+				return this.jetpackSettingsPage.disableFeatureNamed( 'Subscriptions' );
+			} );
+
+			test.it( 'Can enable Subscriptions', function() {
+				return this.jetpackSettingsPage.enableFeatureNamed( 'Subscriptions' );
+			} );
+
+			test.it( 'Can set Subscriptions options directly within the Jetpack dashboard - and see a link to email followers', function() {
+				const jetpackSite = config.get( 'jetpacksite' );
+				this.jetpackSettingsPage.expandFeatureNamed( 'Subscriptions' );
+				this.jetpackSettingsPage.showAFollowBlogOptionInComments();
+				this.jetpackSettingsPage.showAFollowCommentsOptionInComments();
+				this.jetpackSettingsPage.saveFeatureSettings( 'Subscriptions' );
+				return this.jetpackSettingsPage.linkToEmailsFollowersDisplayed( jetpackSite ).then( ( displayed ) => {
+					return assert( displayed, 'The link to email followers in Calypso is not displayed' );
+				} );
+			} );
+		} );
+		test.xit( 'Emails are sent', function() { } );
+		test.xit( 'An email filter works as expected', function() { } );
 	} );
 
 	test.xdescribe( 'Jetpack Comments', function() {
@@ -375,14 +955,67 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		test.it( 'Comment on post by secondary user shows notification for that user on WP.com', function() { } );
 	} );
 
-	test.xdescribe( 'Likes', function() {
-		test.it( 'Enable likes', function() { } );
-		test.it( 'Like a post by a different user from master user - notifications and email', function() { } );
-		test.it( 'Like a post by a different user from secondary user - notifications and email', function() { } );
-	} );
+	test.describe( 'CSS', function() {
+		test.describe( 'Can see and activate Custom CSS functionality for Jetpack', function() {
 
-	test.xdescribe( 'CSS', function() {
-		test.it( 'Can add custom CSS to a site and preview/apply it', function() { } );
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.before( 'Can open Jetpack Appearance Settings', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectJetpackSettings();
+				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+				return this.jetpackSettingsPage.chooseTabNamed( 'Appearance' );
+			} );
+
+			test.it( 'Can disable Custom CSS', function() {
+				return this.jetpackSettingsPage.disableFeatureNamed( 'Custom CSS' );
+			} );
+
+			test.it( 'Can enable Custom CSS', function() {
+				return this.jetpackSettingsPage.enableFeatureNamed( 'Custom CSS' );
+			} );
+
+			test.it( 'Can link to custom css settings from Custom CSS module', function() {
+				this.jetpackSettingsPage.expandFeatureNamed( 'Custom CSS' );
+				this.jetpackSettingsPage.followSettingsLink( 'Custom CSS' );
+				this.wPAdminCSSStylesheetEditorPage = new WPAdminCSSStylesheetEditorPage( driver );
+				return this.wPAdminCSSStylesheetEditorPage.displayed().then( ( isDisplayed ) => {
+					return assert( isDisplayed, 'The CSS Stylesheet Editor Page is NOT displayed' );
+				} );
+			} );
+		} );
+
+		test.describe( 'Can add some Custom CSS and see it take effect', function() {
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.before( 'Can open Custom CSS Settings', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectAppearanceEditCSS();
+				this.wPAdminCSSStylesheetEditorPage = new WPAdminCSSStylesheetEditorPage( driver );
+				return this.wPAdminCSSStylesheetEditorPage.displayed().then( ( isDisplayed ) => {
+					return assert( isDisplayed, 'The CSS Stylesheet Editor Page is NOT displayed' );
+				} );
+			} );
+
+			test.it( 'Can see existing Custom CSS in the editor', function() {
+				this.wPAdminCSSStylesheetEditorPage.customCSSDisplayed().then( ( shown ) => {
+					assert.equal( shown, '.site-content {\n\tbackground-color: purple;\n}', 'The test site does not have site content background purple CSS added - this needs to be added for this test' );
+				} );
+			} );
+
+			test.it( 'Can see existing Custom CSS on our site', function() {
+				const siteUrl = `https://${config.get( 'jetpacksite' )}`;
+				const purple = 'rgba(128, 0, 128, 1)';
+				this.viewSitePage = new ViewSitePage( driver, true, siteUrl ); // visit site
+				this.viewSitePage.siteContentBackgroundColour().then( ( colour ) => {
+					assert.equal( colour, purple, 'The site content background colour was not set by custom CSS' );
+				} );
+			} );
+		} );
 	} );
 
 	test.xdescribe( 'Calypso', function() {
