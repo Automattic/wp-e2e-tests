@@ -6,7 +6,7 @@ PARALLEL=0
 JOBS=0
 AFTER="lib/after.js"
 OPTS=""
-SCREENSIZES="mobile,desktop,tablet"
+SCREENSIZES="mobile,desktop"
 BRANCH=""
 RETURN=0
 CLEAN=0
@@ -21,9 +21,9 @@ declare -a TARGETS
 usage () {
   cat <<EOF
 -R		  - Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
--p 		  - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop,tablet)
+-p 		  - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop)
 -b [branch]	  - Run tests on given branch via https://calypso.live
--s		  - Screensizes in a comma-separated list (defaults to mobile,desktop,tablet)
+-s		  - Screensizes in a comma-separated list (defaults to mobile,desktop)
 -g		  - Execute general tests in the specs/ directory
 -w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
 -l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration
@@ -122,9 +122,8 @@ if [ $PARALLEL == 1 ]; then
   # Assign an index to each test segment to run in parallel
   MOBILE=$(expr 0 % $CIRCLE_NODE_TOTAL)
   DESKTOP=$(expr 1 % $CIRCLE_NODE_TOTAL)
-  TABLET=$(expr 2 % $CIRCLE_NODE_TOTAL)
   echo "Parallel execution details:"
-  echo "mobile=$MOBILE, desktop=$DESKTOP, tablet=$TABLET, node=$CIRCLE_NODE_INDEX, total=$CIRCLE_NODE_TOTAL"
+  echo "mobile=$MOBILE, desktop=$DESKTOP, node=$CIRCLE_NODE_INDEX, total=$CIRCLE_NODE_TOTAL"
 
   if [ $CIRCLE_NODE_INDEX == $MOBILE ]; then
       echo "Executing tests at mobile screen width"
@@ -138,14 +137,6 @@ if [ $PARALLEL == 1 ]; then
       echo "Executing tests at desktop screen width"
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
       CMD="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
-
-      eval $CMD
-      RETURN+=$?
-  fi
-  if [ $CIRCLE_NODE_INDEX == $TABLET ] && [ "$CIRCLE_BRANCH" == "master" ]; then # only run tablet screensize on master branch
-      echo "Executing tests at tablet screen width"
-      NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
-      CMD="env BROWSERSIZE=tablet $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
 
       eval $CMD
       RETURN+=$?
