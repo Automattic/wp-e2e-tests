@@ -56,7 +56,7 @@
         "version": "11.103"
     }
   },
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupStore", "signupStoreBenchmarking",  "coldStartReader", "browserNotifications", "domainSuggestionPopover", "paidNuxStreamlined", "plansDescriptions", "domainSuggestionClickableRow", "verticalScreenshots", "signupThemeUpload", "signupSurveyStep", "siteTitleStep" ],
+  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupStore", "signupStoreBenchmarking",  "coldStartReader", "browserNotifications", "domainSuggestionPopover", "paidNuxStreamlined", "plansDescriptions", "domainSuggestionClickableRow", "verticalScreenshots", "signupThemeUpload", "signupSurveyStep", "siteTitleStep", "gSuiteOnSignup" ],
   "overrideABTests": [
 	[ "signupStore_20160927", "designTypeWithStore" ],
 	[ "browserNotifications_20160628", "disabled" ],
@@ -65,6 +65,7 @@
 	[ "signupStoreBenchmarking_20160927", "pressable" ],
 	[ "signupThemeUpload_20160928", "hideThemeUpload" ],
 	[ "signupSurveyStep_20161005", "surveyStepV1" ],
-	[ "siteTitleStep_20160928", "hideSiteTitleStep" ]
+	[ "siteTitleStep_20160928", "hideSiteTitleStep" ],
+	[ "gSuiteOnSignup_20161025", "original" ]
   ]
 }
