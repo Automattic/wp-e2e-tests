@@ -28,6 +28,7 @@ import TwitterIntentPage from '../lib/pages/external/twitter-intent-page';
 import FacebookPage from '../lib/pages/external/facebook-page';
 import ViewSitePage from '../lib/pages/view-site-page';
 import ViewPostPage from '../lib/pages/view-post-page';
+import JetpackComDebugPage from '../lib/pages/jetpack-com-debug-page';
 
 import LoginFlow from '../lib/flows/login-flow';
 
@@ -1094,9 +1095,16 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		} );
 	} );
 
-	test.xdescribe( 'Debug page', function() {
-		test.it( 'Load site in debug page - JSON API', function() { } );
-		test.it( 'Use footer debug link to load debug page', function() { } );
+	test.describe( 'Jetpack.com Debug page', function() {
+		const jetpackSite = config.get( 'jetpacksite' );
+
+		test.it( 'Load site in debug page - JSON API', function() {
+			this.jetpackComDebugPage = new JetpackComDebugPage( driver, { visit: true, jetpackSiteUrl: jetpackSite } );
+			this.jetpackComDebugPage.status().then( ( status ) => {
+				assert.equal( status, 'Everything looks great!' );
+			} );
+		} );
+		test.xit( 'Use footer debug link to load debug page', function() { } );
 	} );
 
 	test.xdescribe( 'Single Sign On', function() {
