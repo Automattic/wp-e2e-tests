@@ -1029,9 +1029,69 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		test.it( 'Update site settings', function() { } );
 	} );
 
-	test.xdescribe( 'Photon', function() {
-		test.it( 'Photos appear with photon links', function() { } );
-		test.it( 'Galleries work with photon', function() { } );
+	test.describe( 'Photon', function() {
+		test.describe( 'Can see and activate Photon functionality for Jetpack', function() {
+			let postUrl;
+			let fileDetails;
+
+			test.before( 'Create image file for upload', function() {
+				return mediaHelper.createFile().then( function( details ) {
+					fileDetails = details;
+				} );
+			} );
+
+			test.before( 'Publish a post with an image', function() {
+				const blogPostTitle = dataHelper.randomPhrase();
+				const blogPostQuote = 'It is characteristic of a great soul to scorn great things and prefer what is ordinary\nSeneca\n';
+
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				this.wpAdminTopbar = new WPAdminTopbar( driver );
+				this.wpAdminTopbar.createNewPost();
+				this.wpAdminAddPostPage = new WPAdminAddPostPage( driver );
+				this.wpAdminAddPostPage.enterTitle( blogPostTitle );
+				this.wpAdminAddPostPage.enterContent( blogPostQuote );
+				this.wpAdminAddPostPage.enterPostImage( fileDetails );
+				this.wpAdminAddPostPage.waitUntilImageInserted( fileDetails );
+				this.wpAdminAddPostPage.publish();
+				this.wpAdminAddPostPage.viewPostLink().then( ( viewPostLink ) => {
+					postUrl = viewPostLink;
+				} );
+			} );
+
+			test.it( 'Can open Jetpack Appearance Settings and disable Photon', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectJetpackSettings();
+				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+				this.jetpackSettingsPage.chooseTabNamed( 'Appearance' );
+				return this.jetpackSettingsPage.disableFeatureNamed( 'Photon' );
+			} );
+
+			test.it( 'Can verify that images are NOT using photon links', function() {
+				driver.get( postUrl );
+				this.viewPostPage = new ViewPostPage( driver );
+				return this.viewPostPage.postImageUsingPhoton().then( ( usingPhoton ) => {
+					assert.equal( usingPhoton, false, 'The images are using Photon when they should not be' );
+				} );
+			} );
+
+			test.it( 'Can open Jetpack Appearance Settings and enable Photon', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectJetpackSettings();
+				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+				this.jetpackSettingsPage.chooseTabNamed( 'Appearance' );
+				return this.jetpackSettingsPage.enableFeatureNamed( 'Photon' );
+			} );
+
+			test.it( 'Can verify that images are using photon links', function() {
+				driver.get( postUrl );
+				this.viewPostPage = new ViewPostPage( driver );
+				return this.viewPostPage.postImageUsingPhoton().then( ( usingPhoton ) => {
+					assert.equal( usingPhoton, true, 'The images are not using Photon when they should be' );
+				} );
+			} );
+		} );
 	} );
 
 	test.xdescribe( 'Debug page', function() {
