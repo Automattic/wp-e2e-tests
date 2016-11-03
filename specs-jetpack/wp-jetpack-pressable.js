@@ -19,6 +19,7 @@ import WPAdminTbDialogPage from '../lib/pages/wp-admin/wp-admin-tb-dialog';
 import WPAdminAddPostPage from '../lib/pages/wp-admin/wp-admin-add-post-page';
 import WPAdminSnippetsPage from '../lib/pages/wp-admin/wp-admin-snippets-page';
 import WPAdminCSSStylesheetEditorPage from '../lib/pages/wp-admin/wp-admin-css-stylesheet-editor-page';
+import WPAdminOmnisearchPage from '../lib/pages/wp-admin/wp-admin-omnisearch-page';
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 import JetpackPlansPage from '../lib/pages/jetpack-plans-page';
 import TwitterAuthorizePage from '../lib/pages/external/twitter-authorize-page';
@@ -1133,20 +1134,39 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		test.it( 'Can see the post in Calypso', function() { } );
 	} );
 
-	test.xdescribe( 'Other Features', function() {
-		test.it( 'Omnisearch', function() { } );
-		test.it( 'Mobile Theme', function() { } );
-		test.it( 'Markdown', function() { } );
-		test.it( 'Infinite Scroll', function() { } );
-		test.it( 'Gravatar Hovercards', function() { } );
-		test.it( 'Custom Content Types', function() { } );
-		test.it( 'Beautiful Math', function() { } );
-		test.it( 'Shortcode Embeds', function() { } );
-		test.it( 'Site Verification', function() { } );
-		test.it( 'Sitemaps', function() { } );
-		test.it( 'WP.me shortlinks', function() { } );
-		test.it( 'VideoPress', function() { } );
-		test.it( 'Spelling & Grammar', function() { } );
+	test.describe( 'Other Features', function() {
+		test.describe( 'Omnisearch', function() {
+			test.it( 'Can open Jetpack Settings and search for and enable Omnisearch', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectJetpackSettings();
+				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+				this.jetpackSettingsPage.searchFor( 'Omnisearch' );
+				this.jetpackSettingsPage.disableFeatureNamed( 'Omnisearch' );
+				return this.jetpackSettingsPage.enableFeatureNamed( 'Omnisearch' );
+			} );
+
+			test.it( 'Can link to Omnisearch page from Omnisearch settings', function() {
+				this.jetpackSettingsPage.expandFeatureNamed( 'Omnisearch' );
+				this.jetpackSettingsPage.followSettingsLink( 'Omnisearch' );
+				this.wPAdminOmnisearchPage = new WPAdminOmnisearchPage( driver );
+				return this.wPAdminOmnisearchPage.displayed().then( ( isDisplayed ) => {
+					return assert( isDisplayed, 'The Omnisearch Page is NOT displayed' );
+				} );
+			} );
+		} );
+		test.xdescribe( 'Mobile Theme', function() { } );
+		test.xdescribe( 'Markdown', function() { } );
+		test.xdescribe( 'Infinite Scroll', function() { } );
+		test.xdescribe( 'Gravatar Hovercards', function() { } );
+		test.xdescribe( 'Custom Content Types', function() { } );
+		test.xdescribe( 'Beautiful Math', function() { } );
+		test.xdescribe( 'Shortcode Embeds', function() { } );
+		test.xdescribe( 'Site Verification', function() { } );
+		test.xdescribe( 'Sitemaps', function() { } );
+		test.xdescribe( 'WP.me shortlinks', function() { } );
+		test.xdescribe( 'VideoPress', function() { } );
+		test.xdescribe( 'Spelling & Grammar', function() { } );
 	} );
 
 	test.xdescribe( 'Widgets', function() {
