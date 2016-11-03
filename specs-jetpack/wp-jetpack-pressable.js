@@ -1155,9 +1155,30 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 				} );
 			} );
 		} );
-		test.xdescribe( 'Mobile Theme', function() { } );
+		test.describe( 'Mobile Theme', function() {
+			test.it( 'Can open Jetpack Settings and disable/enable the mobile theme', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectJetpackSettings();
+				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+				this.jetpackSettingsPage.chooseTabNamed( 'Appearance' );
+				this.jetpackSettingsPage.enableFeatureNamed( 'Mobile Theme' );
+				return this.jetpackSettingsPage.disableFeatureNamed( 'Mobile Theme' );
+			} );
+		} );
+		test.describe( 'Infinite Scroll', function() {
+			test.it( 'Can open Jetpack Settings and disable/enable infinite scroll', function() {
+				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectJetpackSettings();
+				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
+				this.jetpackSettingsPage.chooseTabNamed( 'Appearance' );
+				this.jetpackSettingsPage.enableFeatureNamed( 'Infinite Scroll' );
+				return this.jetpackSettingsPage.disableFeatureNamed( 'Infinite Scroll' );
+			} );
+		} );
 		test.xdescribe( 'Markdown', function() { } );
-		test.xdescribe( 'Infinite Scroll', function() { } );
+
 		test.xdescribe( 'Gravatar Hovercards', function() { } );
 		test.xdescribe( 'Custom Content Types', function() { } );
 		test.xdescribe( 'Beautiful Math', function() { } );
