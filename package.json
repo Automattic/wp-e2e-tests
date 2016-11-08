@@ -41,7 +41,7 @@
     "grunt-shell": "^1.1.2",
     "grunt-concurrent": "^2.3.0",
     "grunt-cli": "^0.1.13",
-    "appium": "1.5.3",
+    "appium": "1.6.0",
     "wd": "^0.4.0",
     "wd-bridge": "^0.0.2",
     "xml2json-command": "^0.0.3",
