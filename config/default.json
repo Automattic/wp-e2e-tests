@@ -56,12 +56,11 @@
         "version": "11.103"
     }
   },
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupStore", "signupStoreBenchmarking",  "coldStartReader", "browserNotifications", "domainSuggestionPopover", "paidNuxStreamlined", "plansDescriptions", "domainSuggestionClickableRow", "verticalScreenshots", "signupThemeUpload", "signupSurveyStep", "siteTitleStep", "gSuiteOnSignup", "paidNuxThankYouPage", "jetpackConnectPlansFirst", "domainDotBlogSubdomain" ],
+  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupStore", "signupStoreBenchmarking",  "coldStartReader", "browserNotifications", "domainSuggestionPopover", "paidNuxStreamlined", "plansDescriptions", "verticalScreenshots", "signupThemeUpload", "signupSurveyStep", "siteTitleStep", "gSuiteOnSignup", "paidNuxThankYouPage", "jetpackConnectPlansFirst", "domainDotBlogSubdomain" ],
   "overrideABTests": [
 	[ "signupStore_20160927", "designTypeWithStore" ],
 	[ "browserNotifications_20160628", "disabled" ],
 	[ "domainSuggestionPopover_20160809", "hidePopover" ],
-	[ "domainSuggestionClickableRow_20160802", "clickableButton"],
 	[ "signupStoreBenchmarking_20160927", "pressable" ],
 	[ "signupThemeUpload_20160928", "hideThemeUpload" ],
 	[ "signupSurveyStep_20161005", "surveyStepV1" ],
