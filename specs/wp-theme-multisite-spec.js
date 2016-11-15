@@ -81,8 +81,11 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 					test.describe( 'Workaround for wp-calypso/9298', function() {
 						let themesPage;
 
-						test.it( 'Go back and select all sites', function() {
+						test.it( 'Go back', function() {
 							this.driver.navigate().back();
+						} );
+
+						test.it( 'and select all sites', function() {
 							const sideBarComponent = new SidebarComponent( this.driver );
 							sideBarComponent.selectSiteSwitcher();
 							return sideBarComponent.selectAllSites();							
