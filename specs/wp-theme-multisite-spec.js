@@ -78,6 +78,44 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 						this.siteSelector.ok();
 					} );
 
+					test.describe( 'Workaround for wp-calypso/9298', function() {
+						let themesPage;
+
+						test.it( 'Go back and select all sites', function() {
+							this.driver.navigate().back();
+							const sideBarComponent = new SidebarComponent( this.driver );
+							sideBarComponent.selectSiteSwitcher();
+							return sideBarComponent.selectAllSites();							
+						} );
+						
+						test.it( 'can search for free themes', function() {
+							themesPage = new ThemesPage( this.driver );
+							themesPage.showOnlyFreeThemes();
+							themesPage.searchFor( this.themeSearchName );
+
+							themesPage.waitForThemeStartingWith( this.expectedTheme );
+						} );
+
+						test.it( 'click theme more button', function() {
+							themesPage.clickNewThemeMoreButton();
+						} );
+
+						test.it( 'should show a menu', function() {
+							themesPage.popOverMenuDisplayed().then( ( displayed ) => assert( displayed, true, 'Popover menu not displayed' ) );
+						} );
+
+						test.it( 'click try and customize popover', function() {
+							themesPage.clickPopoverItem( 'Try & Customize' );
+						} );
+					} );
+				} );
+
+				test.describe( 'when a site is selected, and Customize is clicked', function() {
+					test.it( 'select first site', function() {
+						this.siteSelector.selectFirstSite();
+						this.siteSelector.ok();
+					} );
+
 					test.it( 'should open the customizer with the selected site and theme', function( done ) {
 						this.customizerPage = new CustomizerPage( this.driver );
 						this.driver.getCurrentUrl().then( ( url ) => {
