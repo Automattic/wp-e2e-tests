@@ -4,6 +4,9 @@ import { assert } from 'chai';
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 
+import webdriver from 'selenium-webdriver';
+const By = webdriver.By;
+
 import ThemesPage from '../lib/pages/themes-page.js';
 import CustomizerPage from '../lib/pages/customizer-page.js';
 import ThemePreviewPage from '../lib/pages/theme-preview-page.js';
@@ -83,6 +86,14 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 
 						test.it( 'Go back', function() {
 							this.driver.navigate().back();
+						} );
+
+						test.it( 'Open mobile menu', function() {
+							if ( process.env.BROWSERSIZE === 'mobile' ) {
+								this.driver.findElement( By.css( '.current-section a' ) ).then( ( el ) => {
+									el.click();
+								} );
+							}
 						} );
 
 						test.it( 'and select all sites', function() {
