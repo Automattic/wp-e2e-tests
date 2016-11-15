@@ -4,6 +4,9 @@ import { assert } from 'chai';
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 
+import webdriver from 'selenium-webdriver';
+const By = webdriver.By;
+
 import ThemesPage from '../lib/pages/themes-page.js';
 import CustomizerPage from '../lib/pages/customizer-page.js';
 import ThemePreviewPage from '../lib/pages/theme-preview-page.js';
@@ -69,6 +72,55 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 				test.it( 'should show the site selector', function() {
 					return this.siteSelector.displayed().then( function( siteSelectorShown ) {
 						return assert.equal( siteSelectorShown, true, 'The site selector was not shown' );
+					} );
+				} );
+
+				test.describe( 'when a site is selected, and Customize is clicked', function() {
+					test.it( 'select first site', function() {
+						this.siteSelector.selectFirstSite();
+						this.siteSelector.ok();
+					} );
+
+					test.describe( 'Workaround for wp-calypso/9298', function() {
+						let themesPage;
+
+						test.it( 'Go back', function() {
+							this.driver.navigate().back();
+						} );
+
+						test.it( 'Open mobile menu', function() {
+							if ( process.env.BROWSERSIZE === 'mobile' ) {
+								this.driver.findElement( By.css( '.current-section a' ) ).then( ( el ) => {
+									el.click();
+								} );
+							}
+						} );
+
+						test.it( 'and select all sites', function() {
+							const sideBarComponent = new SidebarComponent( this.driver );
+							sideBarComponent.selectSiteSwitcher();
+							return sideBarComponent.selectAllSites();							
+						} );
+						
+						test.it( 'can search for free themes', function() {
+							themesPage = new ThemesPage( this.driver );
+							themesPage.showOnlyFreeThemes();
+							themesPage.searchFor( this.themeSearchName );
+
+							themesPage.waitForThemeStartingWith( this.expectedTheme );
+						} );
+
+						test.it( 'click theme more button', function() {
+							themesPage.clickNewThemeMoreButton();
+						} );
+
+						test.it( 'should show a menu', function() {
+							themesPage.popOverMenuDisplayed().then( ( displayed ) => assert( displayed, true, 'Popover menu not displayed' ) );
+						} );
+
+						test.it( 'click try and customize popover', function() {
+							themesPage.clickPopoverItem( 'Try & Customize' );
+						} );
 					} );
 				} );
 
