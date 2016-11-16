@@ -316,7 +316,6 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 						} );
 					} );
 
-
 					test.describe( 'As a non-logged in user ', function() {
 						test.it( 'Delete cookies (log out)', function() {
 							driverManager.clearCookiesAndDeleteLocalStorage( driver );
