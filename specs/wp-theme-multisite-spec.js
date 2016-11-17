@@ -22,6 +22,8 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 
+import * as slackNotifier from './slack-notifier';
+
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	this.driver = driverManager.startBrowser();
@@ -85,6 +87,7 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 						let themesPage;
 
 						test.it( 'Go back', function() {
+							slackNotifier.warn( 'Executing workaround for wp-calypso/9298' );
 							this.driver.navigate().back();
 						} );
 
