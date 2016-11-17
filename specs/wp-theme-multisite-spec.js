@@ -22,7 +22,7 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 
-import * as slackNotifier from './slack-notifier';
+import * as slackNotifier from '../lib/slack-notifier';
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
