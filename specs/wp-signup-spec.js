@@ -73,7 +73,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 			} );
 
 			test.it( 'Can select the first survey option', function() {
-				this.surveyPage.selectFirstSurveyOptions();
+				this.surveyPage.selectOtherSurveyOption( 'e2e Automated Testing' );
 			} );
 
 			test.describe( 'Step Two: Design Type Choice', function() {
@@ -238,7 +238,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 			} );
 
 			test.it( 'Can select the first survey option', function() {
-				this.surveyPage.selectFirstSurveyOptions();
+				this.surveyPage.selectOtherSurveyOption( 'e2e Automated Testing' );
 			} );
 
 			test.describe( 'Step Two: Design Type Choice', function() {
@@ -382,7 +382,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 			} );
 
 			test.it( 'Can select the first survey option', function() {
-				this.surveyPage.selectFirstSurveyOptions();
+				this.surveyPage.selectOtherSurveyOption( 'e2e Automated Testing' );
 			} );
 
 			test.describe( 'Step Two: Design Type Choice', function() {
@@ -529,7 +529,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 			} );
 
 			test.it( 'Can select the first survey option', function() {
-				this.surveyPage.selectFirstSurveyOptions();
+				this.surveyPage.selectOtherSurveyOption( 'e2e Automated Testing' );
 			} );
 
 			test.describe( 'Step Two: Design Type Choice', function() {
