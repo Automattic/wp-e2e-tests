@@ -304,15 +304,9 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 								} );
 
 								test.describe( 'Step Seven: Processing', function() {
-									test.it( 'Can then see the sign up processing page', function() {
+									test.it( 'Can then see the sign up processing page which will automatically move along', function() {
 										this.signupProcessingPage = new SignupProcessingPage( driver );
-										return this.signupProcessingPage.displayed().then( ( displayed ) => {
-											return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
-										} );
-									} );
-
-									test.it( 'The sign up processing page will finish automatically move along', function() {
-										this.signupProcessingPage.waitToDisappear();
+										return this.signupProcessingPage.waitToDisappear();
 									} );
 
 									test.describe( 'Step Eight: Secure Payment Page', function() {
@@ -580,15 +574,9 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 							} );
 
 							test.describe( 'Step Six: Processing', function() {
-								test.it( 'Can then see the sign up processing page', function() {
+								test.it( 'Can then see the sign up processing page which will finish automatically move along', function() {
 									this.signupProcessingPage = new SignupProcessingPage( driver );
-									return this.signupProcessingPage.displayed().then( ( displayed ) => {
-										return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
-									} );
-								} );
-
-								test.it( 'The sign up processing page will finish automatically move along', function() {
-									this.signupProcessingPage.waitToDisappear();
+									return this.signupProcessingPage.waitToDisappear();
 								} );
 
 								test.describe( 'Step Seven: Secure Payment Page', function() {
