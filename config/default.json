@@ -67,6 +67,7 @@
 	[ "signupSurveyStep_20161005", "surveyStepV1" ],
 	[ "siteTitleStep_20160928", "hideSiteTitleStep" ],
 	[ "gSuiteOnSignup_20161025", "original" ],
-	[ "jetpackConnectPlansFirst_20161024", "showPlansAfterAuth" ]
+	[ "jetpackConnectPlansFirst_20161024", "showPlansAfterAuth" ],
+	[ "noSurveyStep_20161202", "showSurveyStep" ]
   ]
 }
