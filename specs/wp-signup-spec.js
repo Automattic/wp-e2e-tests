@@ -560,8 +560,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 
 						test.it( 'Can search for a blog name, can see and select a paid .com address in results', function() {
 							this.findADomainComponent.searchForBlogNameAndWaitForResults( siteName );
-							this.findADomainComponent.selectDotComAddress( expectedDomainName );
-							return this.findADomainComponent.declineGoogleApps();
+							return this.findADomainComponent.selectDotComAddress( expectedDomainName );
 						} );
 
 						test.describe( 'Step Five: Account', function() {
