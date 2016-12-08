@@ -92,8 +92,8 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			this.wpAdminSidebar.selectJetpack();
 			this.wpAdminJetpackPage = new WPAdminJetpackPage( driver );
 			this.wpAdminJetpackPage.connectWordPressCom();
-			this.jetpackAuthorizePage = new JetpackAuthorizePage( driver );
-			this.jetpackAuthorizePage.chooseSignIn();
+			// this.jetpackAuthorizePage = new JetpackAuthorizePage( driver );
+			// this.jetpackAuthorizePage.chooseSignIn();
 			this.loginFlow = new LoginFlow( driver, 'jetpackConnectAdminUser' );
 			this.loginFlow.loginUsingExistingForm();
 			this.jetpackAuthorizePage = new JetpackAuthorizePage( driver );
@@ -148,7 +148,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 
 		test.describe( 'Connecting Twitter', function() {
 			test.before( 'Make sure wp-admin home page is displayed', function() {
-				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				return this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 			} );
 
 			test.it( 'Can add a connection to a Twitter test account for Publicize', function() {
@@ -174,8 +174,8 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 
 		test.describe( 'Connecting Tumblr', function() {
 			test.before( 'Make sure wp-admin home page is displayed', function() {
-				driver.sleep( 1000 ).then( ( ) => { // no idea why this is necessary just here
-					this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				return driver.sleep( 3000 ).then( ( ) => { // no idea why this is necessary just here
+					return this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 				} );
 			} );
 
@@ -204,7 +204,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 
 		test.describe( 'Connecting Facebook', function() {
 			test.before( 'Make sure wp-admin home page is displayed', function() {
-				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				return this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 			} );
 
 			test.it( 'Can see an existing connection to a Facebook Page for Publicize', function() {
@@ -955,69 +955,6 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 	test.xdescribe( 'Notifications', function() {
 		test.it( 'Comment on post by master user shows notification on WP.com', function() { } );
 		test.it( 'Comment on post by secondary user shows notification for that user on WP.com', function() { } );
-	} );
-
-	test.describe( 'CSS', function() {
-		test.describe( 'Can see and activate Custom CSS functionality for Jetpack', function() {
-
-			test.before( 'Make sure wp-admin home page is displayed', function() {
-				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
-			} );
-
-			test.before( 'Can open Jetpack Appearance Settings', function() {
-				this.wpAdminSidebar = new WPAdminSidebar( driver );
-				this.wpAdminSidebar.selectJetpackSettings();
-				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
-				return this.jetpackSettingsPage.chooseTabNamed( 'Appearance' );
-			} );
-
-			test.it( 'Can disable Custom CSS', function() {
-				return this.jetpackSettingsPage.disableFeatureNamed( 'Custom CSS' );
-			} );
-
-			test.it( 'Can enable Custom CSS', function() {
-				return this.jetpackSettingsPage.enableFeatureNamed( 'Custom CSS' );
-			} );
-
-			test.it( 'Can link to custom css settings from Custom CSS module', function() {
-				this.jetpackSettingsPage.expandFeatureNamed( 'Custom CSS' );
-				this.jetpackSettingsPage.followSettingsLink( 'Custom CSS' );
-				this.wPAdminCSSStylesheetEditorPage = new WPAdminCSSStylesheetEditorPage( driver );
-				return this.wPAdminCSSStylesheetEditorPage.displayed().then( ( isDisplayed ) => {
-					return assert( isDisplayed, 'The CSS Stylesheet Editor Page is NOT displayed' );
-				} );
-			} );
-		} );
-
-		test.describe( 'Can add some Custom CSS and see it take effect', function() {
-			test.before( 'Make sure wp-admin home page is displayed', function() {
-				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
-			} );
-
-			test.before( 'Can open Custom CSS Settings', function() {
-				this.wpAdminSidebar = new WPAdminSidebar( driver );
-				this.wpAdminSidebar.selectAppearanceEditCSS();
-				this.wPAdminCSSStylesheetEditorPage = new WPAdminCSSStylesheetEditorPage( driver );
-				return this.wPAdminCSSStylesheetEditorPage.displayed().then( ( isDisplayed ) => {
-					return assert( isDisplayed, 'The CSS Stylesheet Editor Page is NOT displayed' );
-				} );
-			} );
-
-			test.it( 'Can see existing Custom CSS in the editor', function() {
-				this.wPAdminCSSStylesheetEditorPage.customCSSDisplayed().then( ( shown ) => {
-					assert.equal( shown, '.site-content {\n\tbackground-color: purple;\n}', 'The test site does not have site content background purple CSS added - this needs to be added for this test' );
-				} );
-			} );
-
-			test.it( 'Can see existing Custom CSS on our site', function() {
-				const siteUrl = `https://${config.get( 'jetpacksite' )}`;
-				const purple = 'rgba(128, 0, 128, 1)';
-				this.viewSitePage = new ViewSitePage( driver, true, siteUrl ); // visit site
-				this.viewSitePage.siteContentBackgroundColour().then( ( colour ) => {
-					assert.equal( colour, purple, 'The site content background colour was not set by custom CSS' );
-				} );
-			} );
-		} );
 	} );
 
 	test.xdescribe( 'Calypso', function() {
