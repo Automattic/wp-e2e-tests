@@ -24,6 +24,8 @@ test.before( 'Start App', function() {
 	} );
 } );
 
+//TODO - Add tests for landscape orientation, handle it in here rather than in the wrapper via envvar
+
 test.describe( 'Authentication (' + process.env.ORIENTATION + '):', function() {
 	this.timeout( mochaTimeOut );
 	test.describe( 'Logging In and Out (.com):', function() {

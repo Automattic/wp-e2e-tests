@@ -23,45 +23,55 @@ test.before( 'Start App', function() {
 
 test.describe( 'Signup (' + process.env.ORIENTATION + '):', function() {
 	this.timeout( mochaTimeOut );
-	test.describe( 'Test error conditions:', function() {
+	test.describe.only( 'Test error conditions:', function() {
+		const signupInboxId = config.get( 'signupInboxId' );
+		const username = 'e2e' + new Date().getTime().toString();
+		const emailAddress = dataHelper.getEmailAddress( username, signupInboxId );
+		const password = config.get( 'passwordForNewTestSignUps' );
+
 		let signupPage, loginPage;
 		test.before( 'Restart app', function() {
-			return driverManager.resetApp();
-		} );
-
-		test.it( 'Open signup page', function() {
-			loginPage = new LoginPage( driver );
-			loginPage.clickCreateASite();
-			signupPage = new SignupPage( driver );
+			return driverManager.resetApp().then( () => {
+				loginPage = new LoginPage( driver );
+				return loginPage.clickCreateASite().then( () => {
+					signupPage = new SignupPage( driver );
+				} );
+			} );
 		} );
 
 		test.it( 'Site name too short', function() {
-			signupPage.enterAccountDetailsAndSubmit( 'a', 'b', 'c' );
-			signupPage.verifyErrorPresent( 'Site address must be at least 4 characters.' );
+			return signupPage.enterAccountDetailsAndSubmit( emailAddress, username, password, 'a' ).then( () => {
+				return signupPage.verifyErrorPresent( 'Site address must be at least 4 characters.' );
+			} );
 		} );
 
 		test.it( 'Username too short', function() {
-			signupPage.enterAccountDetailsAndSubmit( 'a', 'b', 'c', 'e2e' + ( new Date() ).getTime() );
-			signupPage.verifyErrorPresent( 'Username must be fat least 4 characters.' );
+			signupPage.enterAccountDetailsAndSubmit( emailAddress, 'a', password, username );
+			signupPage.verifyErrorPresent( 'Username must be at least 4 characters.' );
 		} );
 
 		test.it( 'Invalid e-mail', function() {
-			const newUsername = 'e2e' + new Date().getTime().toString();
-			signupPage.enterAccountDetailsAndSubmit( 'a', newUsername, 'c' );
-			signupPage.verifyErrorPresent( 'Invalid email input' );
+			signupPage.enterAccountDetailsAndSubmit( 'a', username, password, username );
+			signupPage.verifyErrorPresent( 'Please enter a valid email address' );
 		} );
 
 		test.it( 'Insecure password', function() {
-			const signupInboxId = config.get( 'signupInboxId' );
-			const newUsername = 'e2e' + new Date().getTime().toString();
-			const newSignupEmailAddress = dataHelper.getEmailAddress( newUsername, signupInboxId );
-
-			signupPage.enterAccountDetailsAndSubmit( newSignupEmailAddress, newUsername, 'c' );
+			signupPage.enterAccountDetailsAndSubmit( emailAddress, username, 'c', username );
 			signupPage.verifyErrorPresent( 'Sorry, that password does not meet our security guidelines. Please choose a password with a mix of uppercase letters, lowercase letters, numbers and symbols.' );
 		} );
 
-		test.it( 'Site name already exists', function() {
-			signupPage.enterAccountDetailsAndSubmit( 'a', 'hd83', 'c' );
+		test.it( 'E-mail already in use', function() {
+			signupPage.enterAccountDetailsAndSubmit( 'a@b.com', username, password, username );
+			signupPage.verifyErrorPresent( 'Sorry, that email address is already being used!' );
+		} );
+
+		test.it( 'Username already exists', function() {
+			signupPage.enterAccountDetailsAndSubmit( emailAddress, 'matt', password, username );
+			signupPage.verifyErrorPresent( 'Sorry, that username already exists!' );
+		} );
+
+		test.it( 'Site already exists', function() {
+			signupPage.enterAccountDetailsAndSubmit( emailAddress, username, password, 'matt' );
 			signupPage.verifyErrorPresent( 'Sorry, that site already exists!' );
 		} );
 	} );
