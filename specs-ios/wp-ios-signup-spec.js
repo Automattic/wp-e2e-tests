@@ -23,12 +23,13 @@ test.before( 'Start App', function() {
 
 test.describe( 'Signup (' + process.env.ORIENTATION + '):', function() {
 	this.timeout( mochaTimeOut );
-	test.describe.only( 'Test error conditions:', function() {
-		const signupInboxId = config.get( 'signupInboxId' );
-		const username = 'e2e' + new Date().getTime().toString();
-		const emailAddress = dataHelper.getEmailAddress( username, signupInboxId );
-		const password = config.get( 'passwordForNewTestSignUps' );
 
+	const signupInboxId = config.get( 'signupInboxId' );
+	const username = 'e2e' + new Date().getTime().toString();
+	const emailAddress = dataHelper.getEmailAddress( username, signupInboxId );
+	const password = config.get( 'passwordForNewTestSignUps' );
+
+	test.describe( 'Test error conditions:', function() {
 		let signupPage, loginPage;
 		test.before( 'Restart app', function() {
 			return driverManager.resetApp().then( () => {
@@ -79,22 +80,16 @@ test.describe( 'Signup (' + process.env.ORIENTATION + '):', function() {
 	test.describe( 'Sign up for a free site (.com):', function() {
 		let signupPage
 		test.before( 'Restart app', function() {
-			return driverManager.resetApp();
-		} );
-
-		test.it( 'Open signup page', function() {
-			let loginPage = new LoginPage( driver );
-			loginPage.clickCreateASite();
-			signupPage = new SignupPage( driver );
+			return driverManager.resetApp().then( () => {
+				let loginPage = new LoginPage( driver );
+				return loginPage.clickCreateASite().then( () => {
+					signupPage = new SignupPage( driver );
+				} );
+			} );
 		} );
 
 		test.it( 'Fill in account details', function() {
-			const signupInboxId = config.get( 'signupInboxId' );
-			const newUsername = dataHelper.getNewBlogName();
-			const newSignupEmailAddress = dataHelper.getEmailAddress( newUsername, signupInboxId );
-			const newPassword = config.get( 'passwordForNewTestSignUps' );
-
-			signupPage.enterAccountDetailsAndSubmit( newSignupEmailAddress, newUsername, newPassword );
+			signupPage.enterAccountDetailsAndSubmit( emailAddress, username, password );
 		} );
 
 		test.it( 'Can see logged in view after logging in', function() {
