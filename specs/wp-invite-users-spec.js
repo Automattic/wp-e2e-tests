@@ -664,6 +664,7 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 
 							test.it( 'New user can create a new post', function() {
 								this.navbarComponent = new NavbarComponent( driver );
+								this.navbarComponent.dismissGuidedTours();
 								this.navbarComponent.clickCreateNewPost();
 								this.editorPage = new EditorPage( driver );
 								this.editorPage.enterTitle( reviewPostTitle );
