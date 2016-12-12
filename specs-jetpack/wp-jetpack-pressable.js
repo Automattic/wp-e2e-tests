@@ -785,13 +785,12 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 				return this.jetpackSettingsPage.enableFeatureNamed( 'Related Posts' );
 			} );
 
-			test.it( 'Can set related posts options directly within the Jetpack dashboard', function() {
+			test.it( 'Can link to customize the related posts options within the Jetpack dashboard', function() {
 				this.jetpackSettingsPage.expandFeatureNamed( 'Related Posts' );
-				this.jetpackSettingsPage.unsetRelatedPostsHeader();
-				this.jetpackSettingsPage.unsetRelatedPostsLarge();
-				this.jetpackSettingsPage.setRelatedPostsHeader();
-				this.jetpackSettingsPage.setRelatedPostsLarge();
-				return this.jetpackSettingsPage.saveFeatureSettings( 'Related Posts' );
+				return this.jetpackSettingsPage.followSettingsLink( 'Related Posts' );
+			} );
+
+			test.xit( 'Can use customizer to change related posts options', function() {
 			} );
 		} );
 
