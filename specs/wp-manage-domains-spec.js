@@ -44,7 +44,7 @@ test.describe( 'Managing Domains: (' + screenSize + ')', function() {
 		const expectedDomainName = blogName + '.com';
 		const firstName = 'End to End';
 		const lastName = 'Testing';
-		const phoneNumber = '+0422888888';
+		const phoneNumber = '+04.22888888';
 		const countryCode = 'AU';
 		const address = '888 Queen Street';
 		const city = 'Brisbane';
