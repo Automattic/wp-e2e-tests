@@ -18,12 +18,10 @@ import WPAdminJetpackSettingsPage from '../lib/pages/wp-admin/wp-admin-jetpack-s
 import WPAdminTbDialogPage from '../lib/pages/wp-admin/wp-admin-tb-dialog';
 import WPAdminAddPostPage from '../lib/pages/wp-admin/wp-admin-add-post-page';
 import WPAdminSnippetsPage from '../lib/pages/wp-admin/wp-admin-snippets-page';
-import WPAdminCSSStylesheetEditorPage from '../lib/pages/wp-admin/wp-admin-css-stylesheet-editor-page';
 import WPAdminOmnisearchPage from '../lib/pages/wp-admin/wp-admin-omnisearch-page';
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 import JetpackPlansPage from '../lib/pages/jetpack-plans-page';
 import TwitterAuthorizePage from '../lib/pages/external/twitter-authorize-page';
-import TumblrAuthorizePage from '../lib/pages/external/tumblr-authorize-page';
 import TwitterFeedPage from '../lib/pages/twitter-feed-page';
 import TwitterIntentPage from '../lib/pages/external/twitter-intent-page';
 import FacebookPage from '../lib/pages/external/facebook-page';
@@ -123,7 +121,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 
 		test.describe( 'Can see, activate and connect publicize functionality for Jetpack', function() {
 			test.before( 'Make sure wp-admin home page is displayed', function() {
-				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				return this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 			} );
 
 			test.before( 'Can open Jetpack Engagement Settings', function() {
@@ -153,7 +151,9 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 
 		test.describe( 'Connecting Twitter', function() {
 			test.before( 'Make sure wp-admin home page is displayed', function() {
-				return this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				return driver.sleep( 3000 ).then( () => {
+					return this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				} );
 			} );
 
 			test.it( 'Can add a connection to a Twitter test account for Publicize', function() {
@@ -177,39 +177,11 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			} );
 		} );
 
-		test.describe( 'Connecting Tumblr', function() {
-			test.before( 'Make sure wp-admin home page is displayed', function() {
-				return driver.sleep( 3000 ).then( ( ) => { // no idea why this is necessary just here
-					return this.wpAdminHomePage = new WPAdminHomePage( driver, true );
-				} );
-			} );
-
-			test.it( 'Can add a connection to a Tumblr test account for Publicize', function() {
-				const tumblrAccountEmail = config.get( 'tumblrAccountEmail' );
-				const tumblrBlogName = config.get( 'tumblrBlogName' );
-				const tumblrAccountPassword = config.get( 'tumblrPassword' );
-				this.wpAdminSidebar = new WPAdminSidebar( driver );
-				this.wpAdminSidebar.selectSettingsSharing();
-				this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
-				this.wpAdminSettingsSharingPage.removeTumblrIfExists();
-				this.wpAdminSettingsSharingPage.addTumblrConnection();
-
-				this.tumblrAuthorizePage = new TumblrAuthorizePage( driver );
-				this.tumblrAuthorizePage.signInAndAllow( tumblrAccountEmail, tumblrAccountPassword );
-				this.wPAdminTbDialogPage = new WPAdminTbDialogPage( driver );
-				this.wPAdminTbDialogPage.updatedMessageShown().then( ( shown ) => {
-					assert( shown, 'The tumblr connected dialog was not displayed in wp-admin' );
-				} );
-				this.wPAdminTbDialogPage.clickOK();
-				return this.wpAdminSettingsSharingPage.tumblrBlogShown( tumblrBlogName ).then( ( shown ) => {
-					return assert( shown, 'The tumblr blog just added is not appearing on the publicize wp-admin page' );
-				} );
-			} );
-		} );
-
 		test.describe( 'Connecting Facebook', function() {
 			test.before( 'Make sure wp-admin home page is displayed', function() {
-				return this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				return driver.sleep( 3000 ).then( () => {
+					return this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				} );
 			} );
 
 			test.it( 'Can see an existing connection to a Facebook Page for Publicize', function() {
@@ -225,10 +197,12 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 
 		test.describe( 'Make sure no unwanted dialogs display on sharing settings page', function() {
 			test.before( 'Make sure wp-admin home page is displayed', function() {
-				return this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				return driver.sleep( 3000 ).then( () => {
+					return this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+				} );
 			} );
 
-			test.it( 'Can add a connection to a Tumblr test account for Publicize', function() {
+			test.it( 'Can close the dialog if it appears', function() {
 				this.wpAdminSidebar = new WPAdminSidebar( driver );
 				this.wpAdminSidebar.selectSettingsSharing();
 				this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
@@ -241,7 +215,6 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			const blogPostQuote = 'You can never get a cup of tea large enough or a book long enough to suit me.\nC.S. Lewis\n';
 			const facebookPageName = config.get( 'facebookPageName' );
 			const twitterAccountUsername = config.get( 'twitterAccount' );
-			const tumblrBlogTitle = config.get( 'tumblrBlogTitle' );
 			let publicizeMessage = '';
 
 			test.before( 'Make sure wp-admin home page is displayed', function() {
@@ -256,7 +229,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 
 			test.it( 'Can see the correct publicize defaults', function() {
 				return this.wpAdminAddPostPage.publicizeDefaults().then( ( defaultPublicizeText ) => {
-					const expectedPublicizeText = `Facebook: ${facebookPageName}, Twitter: @${twitterAccountUsername}, Tumblr: ${tumblrBlogTitle}`;
+					const expectedPublicizeText = `Facebook: ${facebookPageName}, Twitter: @${twitterAccountUsername}`;
 					assert.equal( defaultPublicizeText, expectedPublicizeText );
 				} );
 			} );
@@ -289,7 +262,6 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			const blogPostQuote = 'The mind is not a vessel that needs filling, but wood that needs igniting.\nPlutarch\n';
 			const facebookPageName = config.get( 'facebookPageName' );
 			const twitterAccountUsername = config.get( 'twitterAccount' );
-			const tumblrBlogTitle = config.get( 'tumblrBlogTitle' );
 			const publicizeMessage = dataHelper.randomPhrase();
 
 			test.before( 'Make sure wp-admin home page is displayed', function() {
@@ -304,7 +276,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 
 			test.it( 'Can see the correct publicize defaults', function() {
 				return this.wpAdminAddPostPage.publicizeDefaults().then( ( defaultPublicizeText ) => {
-					const expectedPublicizeText = `Facebook: ${facebookPageName}, Twitter: @${twitterAccountUsername}, Tumblr: ${tumblrBlogTitle}`;
+					const expectedPublicizeText = `Facebook: ${facebookPageName}, Twitter: @${twitterAccountUsername}`;
 					assert.equal( defaultPublicizeText, expectedPublicizeText );
 				} );
 			} );
@@ -341,7 +313,6 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			const blogPostQuote = 'You can never get a cup of tea large enough or a book long enough to suit me.\nC.S. Lewis\n';
 			const facebookPageName = config.get( 'facebookPageName' );
 			const twitterAccountUsername = config.get( 'twitterAccount' );
-			const tumblrBlogTitle = config.get( 'tumblrBlogTitle' );
 			let publicizeMessage = '';
 
 			test.before( 'Make sure wp-admin home page is displayed', function() {
@@ -356,7 +327,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 
 			test.it( 'Can see the correct publicize defaults', function() {
 				return this.wpAdminAddPostPage.publicizeDefaults().then( ( defaultPublicizeText ) => {
-					const expectedPublicizeText = `Facebook: ${facebookPageName}, Twitter: @${twitterAccountUsername}, Tumblr: ${tumblrBlogTitle}`;
+					const expectedPublicizeText = `Facebook: ${facebookPageName}, Twitter: @${twitterAccountUsername}`;
 					return assert.equal( defaultPublicizeText, expectedPublicizeText );
 				} );
 			} );
