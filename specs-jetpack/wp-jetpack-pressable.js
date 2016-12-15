@@ -223,6 +223,19 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			} );
 		} );
 
+		test.describe( 'Make sure no unwanted dialogs display on sharing settings page', function() {
+			test.before( 'Make sure wp-admin home page is displayed', function() {
+				return this.wpAdminHomePage = new WPAdminHomePage( driver, true );
+			} );
+
+			test.it( 'Can add a connection to a Tumblr test account for Publicize', function() {
+				this.wpAdminSidebar = new WPAdminSidebar( driver );
+				this.wpAdminSidebar.selectSettingsSharing();
+				this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
+				return this.wpAdminSettingsSharingPage.closeDialogIfAppears();
+			} );
+		} );
+
 		test.describe( 'Can publish a post with an image and see it on all the connected sites', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = 'You can never get a cup of tea large enough or a book long enough to suit me.\nC.S. Lewis\n';
