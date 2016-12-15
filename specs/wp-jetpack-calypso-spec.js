@@ -76,7 +76,7 @@ test.describe( `Jetpack Sites on Calypso: '${ screenSize }'`, function() {
 			this.sidebarComponent.selectAddPlugin();
 			this.pluginsBrowserPage = new PluginsBrowserPage( driver );
 			this.pluginsBrowserPage.searchForPlugin( pluginVendor );
-			this.pluginsBrowserPage.pluginTitledShown( pluginTitle ).then( ( pluginDisplayed ) => {
+			this.pluginsBrowserPage.pluginTitledShown( pluginTitle, pluginVendor ).then( ( pluginDisplayed ) => {
 				assert( pluginDisplayed, `The plugin titled ${pluginTitle} was not displayed` );
 			} );
 		} );
