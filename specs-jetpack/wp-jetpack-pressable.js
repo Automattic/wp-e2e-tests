@@ -73,13 +73,6 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 				slackNotifier.warn( `Jetpack version AFTER updating: '${jetpackVersion}'` );
 			} );
 		} );
-
-		test.it( 'Make sure Jetpack is activated', function() {
-			this.wpAdminSidebar = new WPAdminSidebar( driver );
-			this.wpAdminSidebar.selectPlugins();
-			this.wpAdminPluginsPage = new WPAdminPluginsPage( driver );
-			return this.wpAdminPluginsPage.activateJetpack();
-		} );
 	} );
 
 	test.describe( 'WordPress.com Connect', function() {
