@@ -47,24 +47,24 @@ test.describe( 'Editor: Posts (' + process.env.ORIENTATION + '):', function() {
 				return this.editorPage.enterContent( blogPostQuote );
 			} );
 
-			test.it( 'Can open options screen', function() {
+			test.xit( 'Can open options screen', function() {
 				return this.editorPage.openOptions();
 			} );
 
-			test.it( 'Can add tag', function() {
+			test.xit( 'Can add tag', function() {
 				this.editorOptions = new EditorOptionsPage( driver );
 				return this.editorOptions.addTag( blogTag );
 			} );
 
-			test.it( 'Can return to Editor', function() {
+			test.xit( 'Can return to Editor', function() {
 				return this.editorOptions.goBack();
 			} );
 
-			test.it( 'Can Post', function() {
+			test.xit( 'Can Post', function() {
 				return this.editorPage.clickPost();
 			} );
 
-			test.it( 'Post exists', function() {
+			test.xit( 'Post exists', function() {
 				this.postsList = new PostsListPage( driver );
 				return this.postsList.findPost( blogPostTitle, blogTag );
 			} );

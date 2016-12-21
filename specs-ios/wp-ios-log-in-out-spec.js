@@ -36,12 +36,12 @@ test.describe( 'Authentication (' + process.env.ORIENTATION + '):', function() {
 		test.describe( 'Can Log In', function() {
 			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
-				loginFlow.login();
+				return loginFlow.login();
 			} );
 
 			test.it( 'Can see logged in view after logging in', function() {
 				let mainPage = new MainPage( driver );
-				mainPage.displayed().then( function( displayed ) {
+				return mainPage.displayed().then( function( displayed ) {
 					assert.equal( displayed, true, 'The main page is not displayed after log in' );
 				} );
 			} );
@@ -56,6 +56,7 @@ test.describe( 'Authentication (' + process.env.ORIENTATION + '):', function() {
 				profilePage = new ProfilePage( driver );
 			} );
 
+			//TODO: This is marking as successful even if it can't find the button to log out
 			test.it( 'Can logout from profile page', function() {
 				profilePage.disconnectFromWPCom();
 			} );
@@ -79,9 +80,7 @@ test.describe( 'Authentication (' + process.env.ORIENTATION + '):', function() {
 				const selfHostedURL = config.get( 'selfHostedURL' );
 
 				let loginFlow = new LoginFlow( driver, 'selfHostedUser', { selfHostedURL: selfHostedURL } );
-				loginFlow.login().then( function() {
-					assert.equal( 1, 1, 'yes' );
-				} );
+				return loginFlow.login();
 			} );
 
 			test.it( 'Can see logged in view after logging in', function() {
