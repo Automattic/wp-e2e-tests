@@ -14,7 +14,7 @@
   "checkForConsoleErrors": false,
   "reportWarningsToSlack": false,
   "neverSaveScreenshots": false,
-  "useNewMobileEditor": false,
+  "useNewMobileEditor": true,
   "useNewMailosaur": true,
   "sauceConfigurations": {
     "osx-chrome": {
