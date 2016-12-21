@@ -41,43 +41,91 @@ test.describe( 'Signup (' + process.env.ORIENTATION + '):', function() {
 		} );
 
 		test.it( 'Site name too short', function() {
+			const expectedError = 'Site address must be at least 4 characters.';
+
 			return signupPage.enterAccountDetailsAndSubmit( emailAddress, username, password, 'a' ).then( () => {
-				return signupPage.verifyErrorPresent( 'Site address must be at least 4 characters.' );
+				return signupPage.getErrorMessage().then( ( displayedError ) => {
+					assert.equal( displayedError, expectedError );
+				} );
+			} ).finally( () => {
+				return signupPage.acknowledgeError();
 			} );
 		} );
 
 		test.it( 'Username too short', function() {
-			signupPage.enterAccountDetailsAndSubmit( emailAddress, 'a', password, username );
-			signupPage.verifyErrorPresent( 'Username must be at least 4 characters.' );
+			const expectedError = 'Username must be at least 4 characters.';
+
+			signupPage.enterAccountDetailsAndSubmit( emailAddress, 'a', password, username ).then( () => {
+				return signupPage.getErrorMessage().then( ( displayedError ) => {
+					assert.equal( displayedError, expectedError );
+				} );
+			} ).finally( () => {
+				return signupPage.acknowledgeError();
+			} );
 		} );
 
 		test.it( 'Invalid e-mail', function() {
-			signupPage.enterAccountDetailsAndSubmit( 'a', username, password, username );
-			signupPage.verifyErrorPresent( 'Please enter a valid email address' );
+			const expectedError = 'Please enter a valid email address';
+
+			signupPage.enterAccountDetailsAndSubmit( 'a', username, password, username ).then( () => {
+				return signupPage.getErrorMessage().then( ( displayedError ) => {
+					assert.equal( displayedError, expectedError );
+				} );
+			} ).finally( () => {
+				return signupPage.acknowledgeError();
+			} );
 		} );
 
 		test.it( 'Insecure password', function() {
-			signupPage.enterAccountDetailsAndSubmit( emailAddress, username, 'c', username );
-			signupPage.verifyErrorPresent( 'Sorry, that password does not meet our security guidelines. Please choose a password with a mix of uppercase letters, lowercase letters, numbers and symbols.' );
+			const expectedError = 'Sorry, that password does not meet our security guidelines. Please choose a password with a minimum length of six characters, mixing uppercase letters, lowercase letters, numbers and symbols.';
+
+			signupPage.enterAccountDetailsAndSubmit( emailAddress, username, 'c', username ).then( () => {
+				return signupPage.getErrorMessage().then( ( displayedError ) => {
+					assert.equal( displayedError, expectedError );
+				} );
+			} ).finally( () => {
+				return signupPage.acknowledgeError();
+			} );
 		} );
 
 		test.it( 'E-mail already in use', function() {
-			signupPage.enterAccountDetailsAndSubmit( 'a@b.com', username, password, username );
-			signupPage.verifyErrorPresent( 'Sorry, that email address is already being used!' );
+			const expectedError = 'Sorry, that email address is already being used!';
+
+			signupPage.enterAccountDetailsAndSubmit( 'a@b.com', username, password, username ).then( () => {
+				return signupPage.getErrorMessage().then( ( displayedError ) => {
+					assert.equal( displayedError, expectedError );
+				} );
+			} ).finally( () => {
+				return signupPage.acknowledgeError();
+			} );
 		} );
 
 		test.it( 'Username already exists', function() {
-			signupPage.enterAccountDetailsAndSubmit( emailAddress, 'matt', password, username );
-			signupPage.verifyErrorPresent( 'Sorry, that username already exists!' );
+			const expectedError = 'Sorry, that username already exists!';
+
+			signupPage.enterAccountDetailsAndSubmit( emailAddress, 'matt', password, username ).then( () => {
+				return signupPage.getErrorMessage().then( ( displayedError ) => {
+					assert.equal( displayedError, expectedError );
+				} );
+			} ).finally( () => {
+				return signupPage.acknowledgeError();
+			} );
 		} );
 
 		test.it( 'Site already exists', function() {
-			signupPage.enterAccountDetailsAndSubmit( emailAddress, username, password, 'matt' );
-			signupPage.verifyErrorPresent( 'Sorry, that site already exists!' );
+			const expectedError = 'Sorry, that site already exists!';
+
+			signupPage.enterAccountDetailsAndSubmit( emailAddress, username, password, 'matt' ).then( () => {
+				return signupPage.getErrorMessage().then( ( displayedError ) => {
+					assert.equal( displayedError, expectedError );
+				} );
+			} ).finally( () => {
+				return signupPage.acknowledgeError();
+			} );
 		} );
 	} );
 
-	test.describe( 'Sign up for a free site (.com):', function() {
+	test.describe.only( 'Sign up for a free site (.com):', function() {
 		let signupPage
 		test.before( 'Restart app', function() {
 			return driverManager.resetApp().then( () => {
