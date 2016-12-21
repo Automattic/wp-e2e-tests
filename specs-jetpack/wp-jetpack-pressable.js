@@ -28,6 +28,7 @@ import FacebookPage from '../lib/pages/external/facebook-page';
 import ViewSitePage from '../lib/pages/view-site-page';
 import ViewPostPage from '../lib/pages/view-post-page';
 import JetpackComDebugPage from '../lib/pages/jetpack-com-debug-page';
+import WpAdminCustomizerPage from '../lib/pages/wp-admin/wp-admin-customizer-page';
 
 import LoginFlow from '../lib/flows/login-flow';
 
@@ -769,7 +770,11 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 
 			test.it( 'Can link to customize the related posts options within the Jetpack dashboard', function() {
 				this.jetpackSettingsPage.expandFeatureNamed( 'Related Posts' );
-				return this.jetpackSettingsPage.followSettingsLink( 'Related Posts' );
+				this.jetpackSettingsPage.followSettingsLink( 'Related Posts' );
+				this.wpAdminCustomizerPage = new WpAdminCustomizerPage( driver );
+				return this.wpAdminCustomizerPage.relatedPostsSectionShown().then( ( displayed ) => {
+					return assert( displayed, 'The related posts section is not shown in the Customizer' );
+				} );
 			} );
 
 			test.xit( 'Can use customizer to change related posts options', function() {
