@@ -15,7 +15,6 @@
   "reportWarningsToSlack": false,
   "neverSaveScreenshots": false,
   "useNewMobileEditor": true,
-  "useNewMailosaur": true,
   "sauceConfigurations": {
     "osx-chrome": {
         "browserName": "chrome",
