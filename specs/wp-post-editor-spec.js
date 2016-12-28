@@ -36,7 +36,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 
-	test.describe.only( 'Public Posts:', function() {
+	test.describe( 'Public Posts:', function() {
 		let fileDetails;
 
 		test.before( 'Delete Cookies and Local Storage', function() {
