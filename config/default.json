@@ -56,18 +56,14 @@
         "version": "11.103"
     }
   },
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupStore", "signupStoreBenchmarking",  "coldStartReader", "browserNotifications", "domainSuggestionPopover", "paidNuxStreamlined", "plansDescriptions", "verticalScreenshots", "signupThemeUpload", "signupSurveyStep", "siteTitleStep", "gSuiteOnSignup", "paidNuxThankYouPage", "jetpackConnectPlansFirst", "domainDotBlogSubdomain", "noSurveyStep", "presaleChatButton" ],
+  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupStore", "signupStoreBenchmarking", "browserNotifications", "domainSuggestionPopover", "signupThemeUpload", "siteTitleStep", "jetpackConnectPlansFirst" ],
   "overrideABTests": [
 	[ "signupStore_20160927", "designTypeWithStore" ],
 	[ "browserNotifications_20160628", "disabled" ],
 	[ "domainSuggestionPopover_20160809", "hidePopover" ],
 	[ "signupStoreBenchmarking_20160927", "pressable" ],
 	[ "signupThemeUpload_20160928", "hideThemeUpload" ],
-	[ "signupSurveyStep_20161005", "surveyStepV1" ],
 	[ "siteTitleStep_20160928", "hideSiteTitleStep" ],
-	[ "gSuiteOnSignup_20161025", "original" ],
-	[ "jetpackConnectPlansFirst_20161024", "showPlansAfterAuth" ],
-	[ "noSurveyStep_20161202", "showSurveyStep" ],
-	[ "presaleChatButton_20161129", "original" ]
+	[ "jetpackConnectPlansFirst_20161024", "showPlansAfterAuth" ]
   ]
 }
