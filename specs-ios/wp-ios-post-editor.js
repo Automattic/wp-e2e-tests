@@ -43,7 +43,7 @@ test.describe( 'Editor: Posts (' + process.env.ORIENTATION + '):', function() {
 				return this.editorPage.enterTitle( blogPostTitle );
 			} );
 
-			test.xit( 'Can fill out body', function() { // Temporarily not adding a body to the post pending further troubleshooting
+			test.it( 'Can fill out body', function() { // Temporarily not adding a body to the post pending further troubleshooting
 				return this.editorPage.enterContent( blogPostQuote );
 			} );
 
@@ -60,7 +60,7 @@ test.describe( 'Editor: Posts (' + process.env.ORIENTATION + '):', function() {
 				return this.editorOptions.goBack();
 			} );
 
-			test.xit( 'Can Post', function() {
+			test.it( 'Can Post', function() {
 				return this.editorPage.clickPost();
 			} );
 
