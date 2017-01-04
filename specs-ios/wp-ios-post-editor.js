@@ -6,9 +6,10 @@ import * as dataHelper from '../lib/data-helper.js';
 
 import LoginFlow from '../lib/flows/login-flow-mobile.js';
 import EditorPage from '../lib/pages/ios/editor-page-ios.js';
-import MainPage from '../lib/pages/ios/main-page-ios.js';
+import SiteDetailsPage from '../lib/pages/ios/site-details-page-ios.js';
 import EditorOptionsPage from '../lib/pages/ios/editor-options-page-ios.js';
 import PostPublishedPage from '../lib/pages/ios/post-published-ios.js';
+import PostsListPage from '../lib/pages/ios/posts-list-ios.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startAppTimeoutMS = config.get( 'startAppTimeoutMS' );
@@ -78,9 +79,18 @@ test.describe( 'Editor: Posts (' + process.env.ORIENTATION + '):', function() {
 				return this.publishConfirmation.clickDone();
 			} );
 
-			test.it( 'Returned to main screen', function() {
-				let mainPage = new MainPage( driver );
-				return mainPage.displayed();
+			test.it( 'Returned to site details', function() {
+				this.siteDetailsPage = new SiteDetailsPage( driver );
+				return this.siteDetailsPage.displayed();
+			} );
+
+			test.it( 'Open posts list', function() {
+				return this.siteDetailsPage.clickMenuItem( 'Blog Posts' );
+			} );
+
+			test.it( 'Search for post', function() {
+				this.postsListPage = new PostsListPage( driver );
+				return this.postsListPage.findPost( blogPostTitle );
 			} );
 		} );
 	} );
