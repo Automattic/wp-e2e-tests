@@ -125,7 +125,7 @@ test.describe( 'Signup (' + process.env.ORIENTATION + '):', function() {
 		} );
 	} );
 
-	test.describe.only( 'Sign up for a free site (.com):', function() {
+	test.describe( 'Sign up for a free site (.com):', function() {
 		let signupPage
 		test.before( 'Restart app', function() {
 			return driverManager.resetApp().then( () => {
