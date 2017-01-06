@@ -30,8 +30,14 @@ test.before( function() {
 } );
 
 test.describe( 'Themes: All sites (' + screenSize + ')', function() {
+	test.describe( 'Workaround for wp-calypso/10435', function() {
+		test.it( 'Notify Slack about Workaround', function() {
+			slackNotifier.warn( 'Executing workaround for wp-calypso/10435, which made the workaround for 9298 impossible.  Skipping the multi-site Try & Customize test.' );
+		} );
+	} );
 
-	test.describe( 'Preview a theme', function() {
+
+	test.xdescribe( 'Preview a theme', function() {
 		this.bailSuite( true );
 		this.timeout( mochaTimeOut );
 
