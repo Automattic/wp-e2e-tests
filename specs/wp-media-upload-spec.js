@@ -31,7 +31,6 @@ test.describe( 'Editor: Media Upload (' + screenSize + ')', function() {
 		} );
 
 		test.describe( 'Can upload many media types', () => {
-
 			test.it( 'Can log in and navigate to Editor page', () => {
 				const loginFlow = new LoginFlow( driver );
 				loginFlow.loginAndStartNewPage();
@@ -92,7 +91,7 @@ test.describe( 'Editor: Media Upload (' + screenSize + ')', function() {
 				let fileDetails;
 
 				test.it( 'Create mp3 for upload', function() {
-					mediaHelper.createFileWithFilename( 'fake.mp3' ).then( function( details ) {
+					mediaHelper.getMP3FileWithFilename( 'new.mp3' ).then( function( details ) {
 						fileDetails = details;
 					} );
 				} );
