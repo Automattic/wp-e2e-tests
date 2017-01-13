@@ -566,7 +566,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 	} );
 
 
-	test.describe( 'Sign up for a free site with Survey step', function() {
+	test.describe( 'Sign up for a Survey Step free site', function() {
 		this.bailSuite( true );
 
 		const blogName = dataHelper.getNewBlogName();
