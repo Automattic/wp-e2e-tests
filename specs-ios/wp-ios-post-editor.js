@@ -6,7 +6,9 @@ import * as dataHelper from '../lib/data-helper.js';
 
 import LoginFlow from '../lib/flows/login-flow-mobile.js';
 import EditorPage from '../lib/pages/ios/editor-page-ios.js';
+import SiteDetailsPage from '../lib/pages/ios/site-details-page-ios.js';
 import EditorOptionsPage from '../lib/pages/ios/editor-options-page-ios.js';
+import PostPublishedPage from '../lib/pages/ios/post-published-ios.js';
 import PostsListPage from '../lib/pages/ios/posts-list-ios.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
@@ -43,12 +45,16 @@ test.describe( 'Editor: Posts (' + process.env.ORIENTATION + '):', function() {
 				return this.editorPage.enterTitle( blogPostTitle );
 			} );
 
-			test.xit( 'Can fill out body', function() { // Temporarily not adding a body to the post pending further troubleshooting
+			test.it( 'Can fill out body', function() {
 				return this.editorPage.enterContent( blogPostQuote );
 			} );
 
-			test.it( 'Can open options screen', function() {
-				return this.editorPage.openOptions();
+			test.it( 'Can open "more" menu', function() {
+				return this.editorPage.openMenu();
+			} );
+
+			test.it( 'Can open options page', function() {
+				return this.editorPage.selectOption( 'Options' );
 			} );
 
 			test.it( 'Can add tag', function() {
@@ -64,9 +70,27 @@ test.describe( 'Editor: Posts (' + process.env.ORIENTATION + '):', function() {
 				return this.editorPage.clickPost();
 			} );
 
-			test.it( 'Post exists', function() {
-				this.postsList = new PostsListPage( driver );
-				return this.postsList.findPost( blogPostTitle, blogTag );
+			test.it( 'Post published', function() {
+				this.publishConfirmation = new PostPublishedPage( driver );
+				return this.publishConfirmation.displayed();
+			} );
+
+			test.it( 'Click Done', function() {
+				return this.publishConfirmation.clickDone();
+			} );
+
+			test.it( 'Returned to site details', function() {
+				this.siteDetailsPage = new SiteDetailsPage( driver );
+				return this.siteDetailsPage.displayed();
+			} );
+
+			test.it( 'Open posts list', function() {
+				return this.siteDetailsPage.clickMenuItem( 'Blog Posts' );
+			} );
+
+			test.it( 'Search for post', function() {
+				this.postsListPage = new PostsListPage( driver );
+				return this.postsListPage.findPost( blogPostTitle );
 			} );
 		} );
 	} );

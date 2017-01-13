@@ -23,68 +23,121 @@ test.before( 'Start App', function() {
 
 test.describe( 'Signup (' + process.env.ORIENTATION + '):', function() {
 	this.timeout( mochaTimeOut );
+
+	const signupInboxId = config.get( 'signupInboxId' );
+	const username = 'e2e' + new Date().getTime().toString();
+	const emailAddress = dataHelper.getEmailAddress( username, signupInboxId );
+	const password = config.get( 'passwordForNewTestSignUps' );
+
 	test.describe( 'Test error conditions:', function() {
 		let signupPage, loginPage;
 		test.before( 'Restart app', function() {
-			return driverManager.resetApp();
-		} );
-
-		test.it( 'Open signup page', function() {
-			loginPage = new LoginPage( driver );
-			loginPage.clickCreateASite();
-			signupPage = new SignupPage( driver );
+			return driverManager.resetApp().then( () => {
+				loginPage = new LoginPage( driver );
+				return loginPage.clickCreateASite().then( () => {
+					signupPage = new SignupPage( driver );
+				} );
+			} );
 		} );
 
 		test.it( 'Site name too short', function() {
-			signupPage.enterAccountDetailsAndSubmit( 'a', 'b', 'c' );
-			signupPage.verifyErrorPresent( 'Site address must be at least 4 characters.' );
+			const expectedError = 'Site address must be at least 4 characters.';
+
+			return signupPage.enterAccountDetailsAndSubmit( emailAddress, username, password, 'a' ).then( () => {
+				return signupPage.getErrorMessage().then( ( displayedError ) => {
+					assert.equal( displayedError, expectedError );
+				} );
+			} ).finally( () => {
+				return signupPage.acknowledgeError();
+			} );
 		} );
 
 		test.it( 'Username too short', function() {
-			signupPage.enterAccountDetailsAndSubmit( 'a', 'b', 'c', 'e2e' + ( new Date() ).getTime() );
-			signupPage.verifyErrorPresent( 'Username must be fat least 4 characters.' );
+			const expectedError = 'Username must be at least 4 characters.';
+
+			signupPage.enterAccountDetailsAndSubmit( emailAddress, 'a', password, username ).then( () => {
+				return signupPage.getErrorMessage().then( ( displayedError ) => {
+					assert.equal( displayedError, expectedError );
+				} );
+			} ).finally( () => {
+				return signupPage.acknowledgeError();
+			} );
 		} );
 
 		test.it( 'Invalid e-mail', function() {
-			const newUsername = 'e2e' + new Date().getTime().toString();
-			signupPage.enterAccountDetailsAndSubmit( 'a', newUsername, 'c' );
-			signupPage.verifyErrorPresent( 'Invalid email input' );
+			const expectedError = 'Please enter a valid email address';
+
+			signupPage.enterAccountDetailsAndSubmit( 'a', username, password, username ).then( () => {
+				return signupPage.getErrorMessage().then( ( displayedError ) => {
+					assert.equal( displayedError, expectedError );
+				} );
+			} ).finally( () => {
+				return signupPage.acknowledgeError();
+			} );
 		} );
 
 		test.it( 'Insecure password', function() {
-			const signupInboxId = config.get( 'signupInboxId' );
-			const newUsername = 'e2e' + new Date().getTime().toString();
-			const newSignupEmailAddress = dataHelper.getEmailAddress( newUsername, signupInboxId );
+			const expectedError = 'Sorry, that password does not meet our security guidelines. Please choose a password with a minimum length of six characters, mixing uppercase letters, lowercase letters, numbers and symbols.';
 
-			signupPage.enterAccountDetailsAndSubmit( newSignupEmailAddress, newUsername, 'c' );
-			signupPage.verifyErrorPresent( 'Sorry, that password does not meet our security guidelines. Please choose a password with a mix of uppercase letters, lowercase letters, numbers and symbols.' );
+			signupPage.enterAccountDetailsAndSubmit( emailAddress, username, 'c', username ).then( () => {
+				return signupPage.getErrorMessage().then( ( displayedError ) => {
+					assert.equal( displayedError, expectedError );
+				} );
+			} ).finally( () => {
+				return signupPage.acknowledgeError();
+			} );
 		} );
 
-		test.it( 'Site name already exists', function() {
-			signupPage.enterAccountDetailsAndSubmit( 'a', 'hd83', 'c' );
-			signupPage.verifyErrorPresent( 'Sorry, that site already exists!' );
+		test.it( 'E-mail already in use', function() {
+			const expectedError = 'Sorry, that email address is already being used!';
+
+			signupPage.enterAccountDetailsAndSubmit( 'a@b.com', username, password, username ).then( () => {
+				return signupPage.getErrorMessage().then( ( displayedError ) => {
+					assert.equal( displayedError, expectedError );
+				} );
+			} ).finally( () => {
+				return signupPage.acknowledgeError();
+			} );
+		} );
+
+		test.it( 'Username already exists', function() {
+			const expectedError = 'Sorry, that username already exists!';
+
+			signupPage.enterAccountDetailsAndSubmit( emailAddress, 'matt', password, username ).then( () => {
+				return signupPage.getErrorMessage().then( ( displayedError ) => {
+					assert.equal( displayedError, expectedError );
+				} );
+			} ).finally( () => {
+				return signupPage.acknowledgeError();
+			} );
+		} );
+
+		test.it( 'Site already exists', function() {
+			const expectedError = 'Sorry, that site already exists!';
+
+			signupPage.enterAccountDetailsAndSubmit( emailAddress, username, password, 'matt' ).then( () => {
+				return signupPage.getErrorMessage().then( ( displayedError ) => {
+					assert.equal( displayedError, expectedError );
+				} );
+			} ).finally( () => {
+				return signupPage.acknowledgeError();
+			} );
 		} );
 	} );
 
 	test.describe( 'Sign up for a free site (.com):', function() {
 		let signupPage
 		test.before( 'Restart app', function() {
-			return driverManager.resetApp();
-		} );
-
-		test.it( 'Open signup page', function() {
-			let loginPage = new LoginPage( driver );
-			loginPage.clickCreateASite();
-			signupPage = new SignupPage( driver );
+			return driverManager.resetApp().then( () => {
+				let loginPage = new LoginPage( driver );
+				return loginPage.clickCreateASite().then( () => {
+					signupPage = new SignupPage( driver );
+				} );
+			} );
 		} );
 
 		test.it( 'Fill in account details', function() {
-			const signupInboxId = config.get( 'signupInboxId' );
-			const newUsername = dataHelper.getNewBlogName();
-			const newSignupEmailAddress = dataHelper.getEmailAddress( newUsername, signupInboxId );
-			const newPassword = config.get( 'passwordForNewTestSignUps' );
-
-			signupPage.enterAccountDetailsAndSubmit( newSignupEmailAddress, newUsername, newPassword );
+			signupPage.enterAccountDetailsAndSubmit( emailAddress, username, password );
 		} );
 
 		test.it( 'Can see logged in view after logging in', function() {

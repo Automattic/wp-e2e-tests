@@ -84,7 +84,7 @@ for orientation in "${ORIENTATIONS[@]}"; do
   for target in "${TARGETS[@]}"; do
     CMD="env ORIENTATION=$orientation DEVICE=$DEVICE $MOCHA $NC $REPORTER $target $AFTER"
 
-    eval $CMD
+    echo $CMD
     RETURN+=$?
   done
 done
