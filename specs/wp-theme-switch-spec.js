@@ -38,6 +38,7 @@ test.describe( 'Themes: (' + screenSize + ')', function() {
 				this.themesPage = new ThemesPage( driver );
 				this.themesPage.showOnlyFreeThemes();
 				this.themesPage.searchFor( 'Twenty F' );
+				this.themesPage.waitUntilThemesLoaded();
 				this.themesPage.waitForThemeStartingWith( 'Twenty F' );
 				return this.themesPage.selectNewThemeStartingWith( 'Twenty F' );
 			} );
