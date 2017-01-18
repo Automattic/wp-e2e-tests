@@ -108,14 +108,14 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 						test.it( 'and select all sites', function() {
 							const sideBarComponent = new SidebarComponent( this.driver );
 							sideBarComponent.selectSiteSwitcher();
-							return sideBarComponent.selectAllSites();							
+							return sideBarComponent.selectAllSites();
 						} );
-						
+
 						test.it( 'can search for free themes', function() {
 							themesPage = new ThemesPage( this.driver );
 							themesPage.showOnlyFreeThemes();
 							themesPage.searchFor( this.themeSearchName );
-
+							themesPage.waitUntilThemesLoaded();
 							themesPage.waitForThemeStartingWith( this.expectedTheme );
 						} );
 
@@ -178,6 +178,7 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 			this.themesPage.showOnlyFreeThemes();
 			this.themesPage.searchFor( this.themeSearchName );
 
+			this.themesPage.waitUntilThemesLoaded();
 			this.themesPage.waitForThemeStartingWith( this.expectedTheme );
 
 			this.themesPage.getFirstThemeName().then( ( name ) => {
