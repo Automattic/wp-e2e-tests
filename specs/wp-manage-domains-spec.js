@@ -39,8 +39,7 @@ test.describe( 'Managing Domains: (' + screenSize + ')', function() {
 
 		//TODO: work out about sandbox payments and automatically cancelling domains
 		const blogName = dataHelper.getNewBlogName();
-		const emailName = new Date().getTime().toString();
-		const domainEmailAddress = dataHelper.getEmailAddress( emailName, domainsInboxId );
+		const domainEmailAddress = dataHelper.getEmailAddress( blogName, domainsInboxId );
 		const expectedDomainName = blogName + '.com';
 		const firstName = 'End to End';
 		const lastName = 'Testing';

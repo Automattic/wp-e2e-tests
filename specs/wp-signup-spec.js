@@ -53,8 +53,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 		const blogName = dataHelper.getNewBlogName();
 		let newBlogAddress = '';
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
-		const emailName = new Date().getTime().toString();
-		const emailAddress = dataHelper.getEmailAddress( emailName, signupInboxId );
+		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
@@ -193,8 +192,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
-		const emailName = new Date().getTime().toString();
-		const emailAddress = dataHelper.getEmailAddress( emailName, signupInboxId );
+		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCardHolder = 'End To End Testing';
@@ -318,8 +316,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
-		const emailName = new Date().getTime().toString();
-		const emailAddress = dataHelper.getEmailAddress( emailName, signupInboxId );
+		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCardHolder = 'End To End Testing';
@@ -444,9 +441,8 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 		this.bailSuite( true );
 
 		const siteName = dataHelper.getNewBlogName();
-		const emailName = new Date().getTime().toString();
 		const expectedDomainName = `${siteName}.com`;
-		const emailAddress = dataHelper.getEmailAddress( emailName, signupInboxId );
+		const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCardHolder = 'End To End Testing';
@@ -565,15 +561,13 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 		} );
 	} );
 
-
 	test.describe( 'Sign up for a Survey Step free site', function() {
 		this.bailSuite( true );
 
 		const blogName = dataHelper.getNewBlogName();
 		let newBlogAddress = '';
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
-		const emailName = new Date().getTime().toString();
-		const emailAddress = dataHelper.getEmailAddress( emailName, signupInboxId );
+		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
