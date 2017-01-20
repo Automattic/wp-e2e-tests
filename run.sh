@@ -113,7 +113,10 @@ while getopts ":Rpb:s:givwl:cm:fh" opt; do
 done
 
 # Skip any tests in the given variable
-GREP="-i -g '$SKIP_TEST_REGEX'"
+GREP=""
+if [ "$SKIP_TEST_REGEX" != "" ]; then
+	GREP="-i -g '$SKIP_TEST_REGEX'"
+fi
 
 # Combine any NODE_CONFIG entries into a single object
 NODE_CONFIG_ARG="$(joinStr , ${NODE_CONFIG_ARGS[*]})"
