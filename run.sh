@@ -41,7 +41,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rpb:s:givwl:cm:fh" opt; do
+while getopts ":Rpb:s:givwl:cm:fhj" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
@@ -91,6 +91,11 @@ while getopts ":Rpb:s:givwl:cm:fh" opt; do
       fi
       exit $?
       ;;
+    j)
+      MOCHA+=" --compilers js:babel-register"
+      SCREENSIZES="desktop,mobile"
+      TARGET="specs-jetpack-calypso/"
+      ;;
     f)
       NODE_CONFIG_ARGS+=("\"failVisdiffs\":\"true\"")
       ;;
@@ -113,7 +118,10 @@ while getopts ":Rpb:s:givwl:cm:fh" opt; do
 done
 
 # Skip any tests in the given variable
-GREP="-i -g '$SKIP_TEST_REGEX'"
+GREP=""
+if [ "$SKIP_TEST_REGEX" != "" ]; then
+	GREP="-i -g '$SKIP_TEST_REGEX'"
+fi
 
 # Combine any NODE_CONFIG entries into a single object
 NODE_CONFIG_ARG="$(joinStr , ${NODE_CONFIG_ARGS[*]})"

@@ -7,9 +7,6 @@ if [ "$CIRCLE_NODE_INDEX" == "0" ]; then
   if [ "$SKIP_TEST_REGEX" != "" ]; then
     babel-node --presets es2015 lib/slack-ping-cli.js "Attention! Tests are being skipped with pattern [$SKIP_TEST_REGEX]"
   fi
-  if [ "$RUN_VISDIFF" != "true" ]; then
-    babel-node --presets es2015 lib/slack-ping-cli.js "Attention! Visual Diff tests are currently disabled!"
-  fi
 fi
 
 if [ "$NODE_ENV_OVERRIDE" != "" ]; then
@@ -20,6 +17,8 @@ export TESTARGS="-R -p"
 
 if [ "$RUN_SPECIFIED" == "true" ]; then
   TESTARGS=$RUN_ARGS
+elif [[ "$CIRCLE_BRANCH" =~ .*[Jj]etpack.*|.*[Jj][Pp].* ]]; then
+  TESTARGS="-R -j" # Execute Jetpack tests
 elif [ "$CIRCLE_BRANCH" == "master" ]; then
   TESTARGS="-R -p" # Parallel execution, implies -g -s mobile,desktop
 fi
