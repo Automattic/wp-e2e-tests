@@ -27,8 +27,6 @@ test.describe( `Jetpack Sites on Calypso: '${ screenSize }'`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
-	const jetpackSiteId = config.get( 'jetpackSiteId' );
-
 	test.before( 'Delete cookies and local storage, and log in', function() {
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
@@ -38,26 +36,26 @@ test.describe( `Jetpack Sites on Calypso: '${ screenSize }'`, function() {
 		loginFlow.loginAndSelectPlugins(); //assuming that it lands on our JP site
 	} );
 
-	test.describe( 'Can activate Akismet', function() {
-		test.it( 'Ensure Akismet is deactivated', function() {
+	test.describe( 'Can activate Hello Dolly', function() {
+		test.it( 'Ensure Hello Dolly is deactivated', function() {
 			this.pluginsPage = new PluginsPage( driver );
-			this.pluginsPage.viewPlugin( 'akismet' );
+			this.pluginsPage.viewPlugin( 'hello-dolly' );
 			this.pluginDetailsPage = new PluginDetailsPage( driver );
-			this.pluginDetailsPage.waitForPlugin( 'akismet', jetpackSiteId );
-			this.pluginDetailsPage.ensureDeactivated( 'akismet', jetpackSiteId );
+			this.pluginDetailsPage.waitForPlugin();
+			this.pluginDetailsPage.ensureDeactivated();
 			return this.pluginDetailsPage.goBack();
 		} );
 
-		test.it( 'Can view the plugin details to activate Akismet', function() {
+		test.it( 'Can view the plugin details to activate Hello Dolly', function() {
 			this.pluginsPage = new PluginsPage( driver );
-			this.pluginsPage.viewPlugin( 'akismet' );
+			this.pluginsPage.viewPlugin( 'hello-dolly' );
 			this.pluginDetailsPage = new PluginDetailsPage( driver );
-			this.pluginDetailsPage.waitForPlugin( 'akismet', jetpackSiteId );
-			return this.pluginDetailsPage.clickActivateToggleForPlugin( 'akismet', jetpackSiteId );
+			this.pluginDetailsPage.waitForPlugin();
+			return this.pluginDetailsPage.clickActivateToggleForPlugin();
 		} );
 
-		test.it( 'Scuccess message contains Akismet', function() {
-			const expectedPartialText = 'Successfully activated Akismet';
+		test.it( 'Success message contains Hello Dolly', function() {
+			const expectedPartialText = 'Successfully activated Hello Dolly';
 			this.pluginDetailsPage = new PluginDetailsPage( driver );
 			this.pluginDetailsPage.waitForSuccessNotice();
 			return this.pluginDetailsPage.getSuccessNoticeText().then( function( successMessageText ) {
