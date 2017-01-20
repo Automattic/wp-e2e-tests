@@ -8,7 +8,6 @@ general:
     - "logs"
   branches:
     ignore:
-      - /.*[j,J]etpack.*/ # ignore branches with jetpack in their name for Circle - these are run in a separate build
       - /.*[v,V]isdiff.*/ # ignore branches with visdiff in their name for Circle - these are run in a separate build
       - /.*i[o,O][s,S].*/ # ignore branches with iOS in their name for Circle - these are run in a separate build
 

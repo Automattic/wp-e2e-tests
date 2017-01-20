@@ -41,7 +41,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rpb:s:givwl:cm:fh" opt; do
+while getopts ":Rpb:s:givwl:cm:fhj" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
@@ -90,6 +90,11 @@ while getopts ":Rpb:s:givwl:cm:fh" opt; do
 	eval $CMD
       fi
       exit $?
+      ;;
+    j)
+      MOCHA+=" --compilers js:babel-register"
+      SCREENSIZES="desktop,mobile"
+      TARGET="specs-jetpack-calypso/"
       ;;
     f)
       NODE_CONFIG_ARGS+=("\"failVisdiffs\":\"true\"")
