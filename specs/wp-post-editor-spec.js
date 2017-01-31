@@ -778,4 +778,49 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			} );
 		} );
 	} );
+
+	test.describe( 'Insert a contact form:', function() {
+		this.bailSuite( true );
+
+		test.it( 'Delete Cookies and Local Storage', function() {
+			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.describe( 'Publish a New Post', function() {
+			const originalBlogPostTitle = 'Contact Us: ' + dataHelper.randomPhrase();
+
+			test.it( 'Can log in', function() {
+				this.loginFlow = new LoginFlow( driver );
+				return this.loginFlow.loginAndStartNewPost();
+			} );
+
+			test.it( 'Can insert the contact form', function() {
+				this.editorPage = new EditorPage( driver );
+				this.editorPage.enterTitle( originalBlogPostTitle );
+				this.editorPage.insertContactForm( );
+
+				return this.editorPage.errorDisplayed().then( ( errorShown ) => {
+					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+				} );
+			} );
+
+			test.it( 'Can see the contact form inserted into the visual editor', function() {
+				this.editorPage = new EditorPage( driver );
+				return this.editorPage.ensureContactFormDisplayedInPost();
+			} );
+
+			test.it( 'Can publish and view content', function() {
+				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				postEditorSidebarComponent.ensureSaved();
+				postEditorSidebarComponent.publishAndViewContent();
+				this.viewPostPage = new ViewPostPage( driver );
+			} );
+
+			test.it( 'Can see the contact form in our published post', function() {
+				this.viewPostPage.contactFormDisplayed().then( function( displayed ) {
+					assert.equal( displayed, true, 'The published post does not contain the contact form' );
+				} );
+			} );
+		} );
+	} );
 } );
