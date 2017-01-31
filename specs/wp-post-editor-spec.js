@@ -807,7 +807,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			test.it( 'Can see the contact form inserted into the visual editor', function() {
 				this.editorPage = new EditorPage( driver );
 				return this.editorPage.ensureContactFormDisplayedInPost();
-;			} );
+			} );
 
 			test.it( 'Can publish and view content', function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
