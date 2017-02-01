@@ -25,6 +25,7 @@ import * as slackNotifier from '../lib/slack-notifier';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
+const host = dataHelper.getJetpackHost();
 
 var driver;
 
@@ -33,7 +34,7 @@ test.before( 'Start Browser', function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Jetpack Site: Editor: Posts (' + screenSize + ')', function() {
+test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 
@@ -59,7 +60,7 @@ test.describe( 'Jetpack Site: Editor: Posts (' + screenSize + ')', function() {
 			const publicizeTwitterAccount = config.has( 'publicizeTwitterAccount' ) ? config.get( 'publicizeTwitterAccount' ) : '';
 
 			test.it( 'Can log in as a Jetpack user', function() {
-				let loginFlow = new LoginFlow( driver, 'jetpackUser' );
+				let loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
 				return loginFlow.loginAndStartNewPost();
 			} );
 
