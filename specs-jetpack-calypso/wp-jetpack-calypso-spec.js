@@ -3,6 +3,7 @@ import test from 'selenium-webdriver/testing';
 
 import config from 'config';
 import * as driverManager from '../lib/driver-manager';
+import * as dataHelper from '../lib/data-helper';
 
 import PluginsPage from '../lib/pages/plugins-page';
 import PluginsBrowserPage from '../lib/pages/plugins-browser-page';
@@ -15,6 +16,7 @@ import LoginFlow from '../lib/flows/login-flow';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
+const host = dataHelper.getJetpackHost();
 
 var driver;
 
@@ -23,7 +25,7 @@ test.before( 'Start Browser', function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `Jetpack Sites on Calypso: '${ screenSize }'`, function() {
+test.describe( `${host} Jetpack Sites on Calypso: '${ screenSize }'`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -32,8 +34,8 @@ test.describe( `Jetpack Sites on Calypso: '${ screenSize }'`, function() {
 	} );
 
 	test.before( 'Can log in and go to the Plugins page', function() {
-		let loginFlow = new LoginFlow( driver, 'jetpackUser' );
-		loginFlow.loginAndSelectPlugins(); //assuming that it lands on our JP site
+		let loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
+		loginFlow.loginAndSelectPlugins();
 	} );
 
 	test.describe( 'Can activate Hello Dolly', function() {
