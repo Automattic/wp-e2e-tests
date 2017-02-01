@@ -25,7 +25,7 @@ test.before( 'Start Browser', function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe.only( `${host} Jetpack Sites on Calypso: '${ screenSize }'`, function() {
+test.describe( `${host} Jetpack Sites on Calypso: '${ screenSize }'`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
