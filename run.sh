@@ -25,6 +25,8 @@ usage () {
 -b [branch]	  - Run tests on given branch via https://calypso.live
 -s		  - Screensizes in a comma-separated list (defaults to mobile,desktop)
 -g		  - Execute general tests in the specs/ directory
+-j 		  - Execute Jetpack tests in the specs-jetpack-calypso/ directory
+-H [host]	  - Specify an alternate host for Jetpack tests
 -w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
 -l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration
 -c		  - Exit with status code 0 regardless of test results
@@ -41,7 +43,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rpb:s:givwl:cm:fhj" opt; do
+while getopts ":Rpb:s:givwl:cm:fhjH:" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
@@ -95,6 +97,9 @@ while getopts ":Rpb:s:givwl:cm:fhj" opt; do
       MOCHA+=" --compilers js:babel-register"
       SCREENSIZES="desktop,mobile"
       TARGET="specs-jetpack-calypso/"
+      ;;
+    H)
+      JETPACKHOST=$OPTARG
       ;;
     f)
       NODE_CONFIG_ARGS+=("\"failVisdiffs\":\"true\"")
