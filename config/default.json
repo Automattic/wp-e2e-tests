@@ -64,6 +64,6 @@
 	[ "siteTitleStep_20160928", "hideSiteTitleStep" ],
 	[ "jetpackConnectPlansFirst_20161024", "showPlansAfterAuth" ],
 	[ "userFirstSignup_20161223", "userLast" ],
-	[ "domainContactNewPhoneInput_20170123", "disabled" ]
+	[ "domainContactNewPhoneInput_20170123", "enabled" ]
   ]
 }
