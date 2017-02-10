@@ -99,7 +99,7 @@ while getopts ":Rpb:s:givwl:cm:fhjH:" opt; do
       TARGET="specs-jetpack-calypso/"
       ;;
     H)
-      JETPACKHOST=$OPTARG
+      export JETPACKHOST=$OPTARG
       ;;
     f)
       NODE_CONFIG_ARGS+=("\"failVisdiffs\":\"true\"")
@@ -120,6 +120,7 @@ while getopts ":Rpb:s:givwl:cm:fhjH:" opt; do
   esac
 
   TARGETS+=("$TARGET")
+  unset TARGET
 done
 
 # Skip any tests in the given variable
