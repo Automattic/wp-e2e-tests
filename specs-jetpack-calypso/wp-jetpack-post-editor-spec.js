@@ -235,7 +235,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 		} );
 	} );
 
-	test.xdescribe( 'Private Posts:', function() {
+	test.describe( 'Private Posts:', function() {
 		test.before( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
@@ -334,7 +334,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 		} );
 	} );
 
-	test.xdescribe( 'Password Protected Posts:', function() {
+	test.describe( 'Password Protected Posts:', function() {
 		this.bailSuite( true );
 
 		test.before( 'Delete Cookies and Local Storage', function() {
@@ -638,7 +638,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 		} );
 	} );
 
-	test.xdescribe( 'Trash Post:', function() {
+	test.describe( 'Trash Post:', function() {
 		this.bailSuite( true );
 
 		test.before( 'Delete Cookies and Local Storage', function() {
@@ -686,7 +686,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 		} );
 	} );
 
-	test.xdescribe( 'Edit a Post:', function() {
+	test.describe( 'Edit a Post:', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
