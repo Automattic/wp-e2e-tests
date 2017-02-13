@@ -1,6 +1,9 @@
 machine:
   node:
     version: 6.9.4
+  hosts:
+    linkedin.com: 127.0.0.1
+    snap.licdn.com: 127.0.0.1
 
 general:
   artifacts:
