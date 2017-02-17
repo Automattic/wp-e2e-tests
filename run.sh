@@ -43,7 +43,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rpb:s:givwl:cm:fhjH:" opt; do
+while getopts ":Rpb:s:gjH:wl:cm:fivh" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
