@@ -14,11 +14,11 @@
 	* Remove this comment :)
 */
 {
-	"calypsoBaseURL": "https://wpcalypso.wordpress.com",
 	"highlightElements": true,
 	"testSiteForInvites": "example.wordpress.com",
+	"testSiteForNotifications": "example.wordpress.com",
 	"privateSiteForInvites": "example.wordpress.com",
-	"passwordForNewTestSignUps": "password",
+	"passwordForNewTestSignUps":: "",
 	"storeSandboxCookieValue": "",
 	"publicizeTwitterAccount": "",
 	"slackHook": "",
@@ -27,14 +27,9 @@
 	"signupInboxId": "",
 	"domainsInboxId": "",
 	"eyesKey": "",
-	"testSiteForNotifications": "example.wordpress.com",
 	"sauceUsername": "",
 	"sauceAccessKey": "",
-	"sauceUsernameIOS": "",
-	"sauceAccessKeyIOS": "",
-        "selfHostedURL": "",
-	"iOSLocalApp": "",
-	"reportWarningsToSlack": true,
+	"emailPrefix": "",
 	"testAccounts": {
 		"defaultUser": [
 			"username",
@@ -48,6 +43,18 @@
 			"username",
 			"password"
 		],
+		"jetpackUserPRESSABLE": [
+			"username",
+			"password"
+		],
+		"jetpackUserBLUEHOST": [
+			"username",
+			"password"
+		],
+		"jetpackUserGODADDY": [
+			"username",
+			"password"
+		],
 		"visualUser": [
 			"username",
 			"password"
@@ -57,42 +64,38 @@
 			"password"
 		],
 		"commentingUser": [
-		  "username",
-		  "password"
-		],
-		"notificationsUser": [
-		  "username",
-		  "password"
-		],
-		"eurAccountUser": [
-		  "username",
-		  "password"
-		],
-		"audAccountUser": [
-		  "username",
-		  "password"
-		],
-		"cadAccountUser": [
-		  "username",
-		  "password"
-		],
-		"gbpAccountUser": [
-		  "username",
-		  "password"
-		],
-		"jpyAccountUser": [
-		  "username",
-		  "password"
-		],
-		"usdAccountUser": [
-		  "username",
-		  "password"
-		],
-		"postNUXUser": [
 			"username",
 			"password"
-		]
-		"selfHostedUser": [
+		],
+		"notificationsUser": [
+			"username",
+			"password"
+		],
+		"eurAccountUser": [
+			"username",
+			"password"
+		],
+		"audAccountUser": [
+			"username",
+			"password"
+		],
+		"cadAccountUser": [
+			"username",
+			"password"
+		],
+		"gbpAccountUser": [
+			"username",
+			"password"
+		],
+		"jpyAccountUser": [
+			"username",
+			"password"
+		],
+		"usdAccountUser": [
+			"username",
+			"password"
+		],
+		"postNUXUser": [
 			"username",
 			"password"
 		]

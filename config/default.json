@@ -11,9 +11,9 @@
   "browser": "chrome",
   "proxy": "direct",
   "saveAllScreenshots": false,
+  "neverSaveScreenshots": false,
   "checkForConsoleErrors": false,
   "reportWarningsToSlack": false,
-  "neverSaveScreenshots": false,
   "sauceConfigurations": {
     "osx-chrome": {
         "browserName": "chrome",
