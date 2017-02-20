@@ -86,11 +86,11 @@ test.describe( `DevDocs Visual Diff (${screenSizeName})`, function() {
 				let message = '';
 
 				if ( testResults.mismatches ) {
-					message = `<!here> Visual diff failed with ${testResults.mismatches} mismatches - ${testResults.appUrls.session}`;
+					message = `<!flow-patrol-squad-team> Visual diff failed with ${testResults.mismatches} mismatches - ${testResults.appUrls.session}`;
 				} else if ( testResults.missing ) {
-					message = `<!here> Visual diff failed with ${testResults.missing} missing steps out of ${testResults.steps} - ${testResults.appUrls.session}`;
+					message = `<!flow-patrol-squad-team> Visual diff failed with ${testResults.missing} missing steps out of ${testResults.steps} - ${testResults.appUrls.session}`;
 				} else if ( testResults.isNew ) {
-					message = `<!here> Visual diff marked as failed because it is a new baseline - ${testResults.appUrls.session}`;
+					message = `<!flow-patrol-squad-team> Visual diff marked as failed because it is a new baseline - ${testResults.appUrls.session}`;
 				}
 
 				if ( message !== '' ) {
