@@ -182,7 +182,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 							test.describe( 'Publish and View', function() {
 								test.it( 'Can publish and view content', function() {
 									let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-									postEditorSidebarComponent.publishAndViewContent();
+									postEditorSidebarComponent.publishAndViewContent( { reloadPageTwice: true } );
 									this.viewPostPage = new ViewPostPage( driver );
 								} );
 
@@ -299,7 +299,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 						editorPage.setVisibilityToPrivate();
 					}
 					const editorPage = new EditorPage( driver );
-					editorPage.viewPublishedPostOrPage();
+					editorPage.viewPublishedPostOrPage( { reloadPageTwice: true } );
 				} );
 
 				test.describe( 'As a logged in user ', function() {
@@ -413,7 +413,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			test.describe( 'Publish and View', function() {
 				test.before( 'Can publish and view content', function() {
 					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.publishAndViewContent();
+					postEditorSidebarComponent.publishAndViewContent( { reloadPageTwice: true } );
 				} );
 
 				test.describe( 'As a logged in user', function() {
@@ -790,7 +790,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 					} );
 					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					this.postEditorSidebarComponent.ensureSaved();
-					this.postEditorSidebarComponent.publishAndViewContent();
+					this.postEditorSidebarComponent.publishAndViewContent( { reloadPageTwice: true } );
 				} );
 
 				test.describe( 'Can view the post with the new title', function() {
@@ -841,7 +841,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			test.it( 'Can publish and view content', function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 				postEditorSidebarComponent.ensureSaved();
-				postEditorSidebarComponent.publishAndViewContent();
+				postEditorSidebarComponent.publishAndViewContent( { reloadPageTwice: true } );
 				this.viewPostPage = new ViewPostPage( driver );
 			} );
 
