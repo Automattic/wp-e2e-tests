@@ -256,7 +256,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 				this.navbarComponent.clickMySites();
 				this.sidebarComponent = new SidebarComponent( driver );
 				return this.sidebarComponent.getCurrentSiteDomain().then( ( domain ) => {
-					this.wpAdminLogonPage = new WPAdminLogonPage( driver, `http://${domain}/wp-admin/wp-login.php`, { visit: true, forceStandardLogon: false } );
+					this.wpAdminLogonPage = new WPAdminLogonPage( driver, `http://${domain}/wp-login.php`, { visit: true, forceStandardLogon: false } );
 					return this.wpAdminLogonPage.logonUsingSSO();
 				} );
 			} );
@@ -372,7 +372,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 				this.navbarComponent.clickMySites();
 				this.sidebarComponent = new SidebarComponent( driver );
 				return this.sidebarComponent.getCurrentSiteDomain().then( ( domain ) => {
-					this.wpAdminLogonPage = new WPAdminLogonPage( driver, `http://${domain}/wp-admin/wp-login.php`, { visit: true, forceStandardLogon: false } );
+					this.wpAdminLogonPage = new WPAdminLogonPage( driver, `http://${domain}/wp-login.php`, { visit: true, forceStandardLogon: false } );
 					return this.wpAdminLogonPage.logonUsingSSO();
 				} );
 			} );
