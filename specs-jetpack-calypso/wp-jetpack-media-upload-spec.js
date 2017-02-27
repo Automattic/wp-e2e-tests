@@ -36,7 +36,7 @@ test.describe( host + ' Jetpack Editor: Media Upload (' + screenSize + ')', func
 			test.it( 'Can log in and navigate to Editor page', () => {
 				const loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
 				loginFlow.loginAndStartNewPage();
-				editorPage = new EditorPage( driver );
+				return editorPage = new EditorPage( driver );
 			} );
 
 			test.describe( 'Can upload a normal image', function() {
@@ -49,17 +49,17 @@ test.describe( host + ' Jetpack Editor: Media Upload (' + screenSize + ')', func
 				} );
 
 				test.it( 'Can upload an image', function() {
-					editorPage.uploadMedia( fileDetails );
+					return editorPage.uploadMedia( fileDetails );
 				} );
 
 				test.it( 'Can delete image', function() {
-					editorPage.deleteMedia();
+					return editorPage.deleteMedia();
 				} );
 
 				test.after( function() {
 					editorPage.dismissMediaModal();
 					if ( fileDetails ) {
-						mediaHelper.deleteFile( fileDetails ).then( function() {} );
+						return mediaHelper.deleteFile( fileDetails ).then( function() {} );
 					}
 				} );
 			} );
@@ -68,23 +68,23 @@ test.describe( host + ' Jetpack Editor: Media Upload (' + screenSize + ')', func
 				let fileDetails;
 
 				test.it( 'Create image file for upload', function() {
-					mediaHelper.createFileWithFilename( 'filewith#?#?reservedurlchars.jpg', true ).then( function( details ) {
+					return mediaHelper.createFileWithFilename( 'filewith#?#?reservedurlchars.jpg', true ).then( function( details ) {
 						fileDetails = details;
 					} );
 				} );
 
 				test.it( 'Can upload an image', function() {
-					editorPage.uploadMedia( fileDetails );
+					return editorPage.uploadMedia( fileDetails );
 				} );
 
 				test.it( 'Can delete image', function() {
-					editorPage.deleteMedia();
+					return editorPage.deleteMedia();
 				} );
 
 				test.after( function() {
 					editorPage.dismissMediaModal();
 					if ( fileDetails ) {
-						mediaHelper.deleteFile( fileDetails ).then( function() {} );
+						return mediaHelper.deleteFile( fileDetails ).then( function() {} );
 					}
 				} );
 			} );
@@ -95,23 +95,23 @@ test.describe( host + ' Jetpack Editor: Media Upload (' + screenSize + ')', func
 				let fileDetails;
 
 				test.it( 'Create mp3 for upload', function() {
-					mediaHelper.getMP3FileWithFilename( 'new.mp3' ).then( function( details ) {
+					return mediaHelper.getMP3FileWithFilename( 'new.mp3' ).then( function( details ) {
 						fileDetails = details;
 					} );
 				} );
 
 				test.it( 'Can upload an mp3', function() {
-					editorPage.uploadMedia( fileDetails );
+					return editorPage.uploadMedia( fileDetails );
 				} );
 
 				test.it( 'Can delete mp3', function() {
-					editorPage.deleteMedia();
+					return editorPage.deleteMedia();
 				} );
 
 				test.after( function() {
 					editorPage.dismissMediaModal();
 					if ( fileDetails ) {
-						mediaHelper.deleteFile( fileDetails ).then( function() {} );
+						return mediaHelper.deleteFile( fileDetails ).then( function() {} );
 					}
 				} );
 			} );
