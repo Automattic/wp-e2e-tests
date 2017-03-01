@@ -4,12 +4,8 @@ import { assert } from 'chai';
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 
-import webdriver from 'selenium-webdriver';
-const By = webdriver.By;
-
 import ThemesPage from '../lib/pages/themes-page.js';
 import CustomizerPage from '../lib/pages/customizer-page.js';
-import ThemePreviewPage from '../lib/pages/theme-preview-page.js';
 
 import SidebarComponent from '../lib/components/sidebar-component';
 import SiteSelectorComponent from '../lib/components/site-selector-component';
@@ -22,21 +18,12 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 
-import * as slackNotifier from '../lib/slack-notifier';
-
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	this.driver = driverManager.startBrowser();
 } );
 
 test.describe( 'Themes: All sites (' + screenSize + ')', function() {
-	test.describe( 'Workaround for wp-calypso/10435', function() {
-		test.it( 'Notify Slack about Workaround', function() {
-			slackNotifier.warn( 'Executing workaround for wp-calypso/10435, which made the workaround for 9298 impossible.  Skipping the multi-site Try & Customize test and executing it from a single site instead' );
-		} );
-	} );
-
-
 	test.describe( 'Preview a theme', function() {
 		this.bailSuite( true );
 		this.timeout( mochaTimeOut );
@@ -48,10 +35,10 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( this.driver );
 
 			this.loginFlow = new LoginFlow( this.driver, 'multiSiteUser' );
-			this.loginFlow.loginAndSelectThemes();
+			this.loginFlow.loginAndSelectAllSites();
 
-//			this.sidebarComponent = new SidebarComponent( this.driver );
-//			this.sidebarComponent.selectThemes();
+			this.sidebarComponent = new SidebarComponent( this.driver );
+			this.sidebarComponent.selectThemes();
 		} );
 
 		test.it( 'can search for free themes', function() {
@@ -74,66 +61,17 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 			test.describe( 'when "Try & Customize" is clicked', function() {
 				test.it( 'click try and customize popover', function() {
 					this.themesPage.clickPopoverItem( 'Try & Customize' );
-//					this.siteSelector = new SiteSelectorComponent( this.driver );
+					this.siteSelector = new SiteSelectorComponent( this.driver );
 				} );
 
-				test.xit( 'should show the site selector', function() {
+				test.it( 'should show the site selector', function() {
 					return this.siteSelector.displayed().then( function( siteSelectorShown ) {
 						return assert.equal( siteSelectorShown, true, 'The site selector was not shown' );
 					} );
 				} );
 
 				test.describe( 'when a site is selected, and Customize is clicked', function() {
-					test.xit( 'select first site', function() {
-						this.siteSelector.selectFirstSite();
-						this.siteSelector.ok();
-					} );
-
-					test.xdescribe( 'Workaround for wp-calypso/9298', function() {
-						let themesPage;
-
-						test.it( 'Go back', function() {
-							slackNotifier.warn( 'Executing workaround for wp-calypso/9298' );
-							this.driver.navigate().back();
-						} );
-
-						test.it( 'Open mobile menu', function() {
-							if ( process.env.BROWSERSIZE === 'mobile' ) {
-								this.driver.findElement( By.css( '.current-section a' ) ).then( ( el ) => {
-									el.click();
-								} );
-							}
-						} );
-
-						test.it( 'and select all sites', function() {
-							const sideBarComponent = new SidebarComponent( this.driver );
-							sideBarComponent.selectSiteSwitcher();
-							return sideBarComponent.selectAllSites();
-						} );
-
-						test.it( 'can search for free themes', function() {
-							themesPage = new ThemesPage( this.driver );
-							themesPage.showOnlyFreeThemes();
-							themesPage.searchFor( this.themeSearchName );
-							themesPage.waitForThemeStartingWith( this.expectedTheme );
-						} );
-
-						test.it( 'click theme more button', function() {
-							themesPage.clickNewThemeMoreButton();
-						} );
-
-						test.it( 'should show a menu', function() {
-							themesPage.popOverMenuDisplayed().then( ( displayed ) => assert( displayed, true, 'Popover menu not displayed' ) );
-						} );
-
-						test.it( 'click try and customize popover', function() {
-							themesPage.clickPopoverItem( 'Try & Customize' );
-						} );
-					} );
-				} );
-
-				test.describe( 'when a site is selected, and Customize is clicked', function() {
-					test.xit( 'select first site', function() {
+					test.it( 'select first site', function() {
 						this.siteSelector.selectFirstSite();
 						this.siteSelector.ok();
 					} );
@@ -141,7 +79,7 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 					test.it( 'should open the customizer with the selected site and theme', function( done ) {
 						this.customizerPage = new CustomizerPage( this.driver );
 						this.driver.getCurrentUrl().then( ( url ) => {
-//							assert.include( url, this.siteSelector.selectedSiteDomain, 'Wrong site domain' );
+							assert.include( url, this.siteSelector.selectedSiteDomain, 'Wrong site domain' );
 							assert.include( url, this.themeSearchName, 'Wrong theme' );
 							done();
 						} );
