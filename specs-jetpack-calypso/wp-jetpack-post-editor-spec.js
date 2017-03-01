@@ -10,6 +10,7 @@ import ViewPostPage from '../lib/pages/view-post-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
 import ReaderPage from '../lib/pages/reader-page.js';
 import PostsPage from '../lib/pages/posts-page.js';
+import WPAdminLogonPage from '../lib/pages/wp-admin/wp-admin-logon-page';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
@@ -181,7 +182,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 							test.describe( 'Publish and View', function() {
 								test.it( 'Can publish and view content', function() {
 									let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-									postEditorSidebarComponent.publishAndViewContent();
+									postEditorSidebarComponent.publishAndViewContent( { reloadPageTwice: true } );
 									this.viewPostPage = new ViewPostPage( driver );
 								} );
 
@@ -235,7 +236,8 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 		} );
 	} );
 
-	test.xdescribe( 'Private Posts:', function() {
+	// This requires that we are logged into the wp-admin site
+	test.describe( 'Private Posts:', function() {
 		test.before( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
@@ -244,15 +246,29 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = 'If you’re not prepared to be wrong; you’ll never come up with anything original.\n— Sir Ken Robinson\n';
 
-			test.it( 'Can log in', function() {
-				let loginFlow = new LoginFlow( driver );
-				loginFlow.loginAndStartNewPost();
+			test.it( 'Can log in as Jetpack User', function() {
+				this.loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
+				this.loginFlow.login();
 			} );
 
-			test.it( 'Can enter post title and content', function() {
-				let editorPage = new EditorPage( driver );
-				editorPage.enterTitle( blogPostTitle );
-				editorPage.enterContent( blogPostQuote );
+			test.it( 'Can log into wp-admin of the Jetpack site using SSO', function() {
+				this.navbarComponent = new NavbarComponent( driver );
+				this.navbarComponent.clickMySites();
+				this.sidebarComponent = new SidebarComponent( driver );
+				return this.sidebarComponent.getCurrentSiteDomain().then( ( domain ) => {
+					this.wpAdminLogonPage = new WPAdminLogonPage( driver, `http://${domain}/wp-login.php`, { visit: true, forceStandardLogon: false } );
+					return this.wpAdminLogonPage.logonUsingSSO( host );
+				} );
+			} );
+
+			test.it( 'Can start a new post and enter post title and content', function() {
+				this.readerPage = new ReaderPage( driver, true );
+				this.readerPage.waitForPage();
+				this.navbarComponent = new NavbarComponent( driver );
+				this.navbarComponent.clickCreateNewPost();
+				this.editorPage = new EditorPage( driver );
+				this.editorPage.enterTitle( blogPostTitle );
+				this.editorPage.enterContent( blogPostQuote );
 			} );
 
 			test.it( 'Can disable sharing buttons', function() {
@@ -283,7 +299,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 						editorPage.setVisibilityToPrivate();
 					}
 					const editorPage = new EditorPage( driver );
-					editorPage.viewPublishedPostOrPage();
+					editorPage.viewPublishedPostOrPage( { reloadPageTwice: true } );
 				} );
 
 				test.describe( 'As a logged in user ', function() {
@@ -315,7 +331,6 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 						} );
 					} );
 
-
 					test.describe( 'As a non-logged in user ', function() {
 						test.it( 'Delete cookies (log out)', function() {
 							driverManager.clearCookiesAndDeleteLocalStorage( driver );
@@ -334,7 +349,8 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 		} );
 	} );
 
-	test.xdescribe( 'Password Protected Posts:', function() {
+	// The logged in user part n
+	test.describe( 'Password Protected Posts:', function() {
 		this.bailSuite( true );
 
 		test.before( 'Delete Cookies and Local Storage', function() {
@@ -346,12 +362,26 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			var blogPostQuote = 'The best thing about the future is that it comes only one day at a time.\n— Abraham Lincoln\n';
 			var postPassword = 'e2e' + new Date().getTime().toString();
 
-			test.it( 'Can log in', function() {
-				let loginFlow = new LoginFlow( driver );
-				loginFlow.loginAndStartNewPost();
+			test.it( 'Can log in as Jetpack User', function() {
+				this.loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
+				this.loginFlow.login();
 			} );
 
-			test.it( 'Can enter post title and content and set to password protected', function() {
+			test.it( 'Can log into wp-admin of the Jetpack site using SSO', function() {
+				this.navbarComponent = new NavbarComponent( driver );
+				this.navbarComponent.clickMySites();
+				this.sidebarComponent = new SidebarComponent( driver );
+				return this.sidebarComponent.getCurrentSiteDomain().then( ( domain ) => {
+					this.wpAdminLogonPage = new WPAdminLogonPage( driver, `http://${domain}/wp-login.php`, { visit: true, forceStandardLogon: false } );
+					return this.wpAdminLogonPage.logonUsingSSO( host );
+				} );
+			} );
+
+			test.it( 'Can start a new post and enter post title and content - set to password protected', function() {
+				this.readerPage = new ReaderPage( driver, true );
+				this.readerPage.waitForPage();
+				this.navbarComponent = new NavbarComponent( driver );
+				this.navbarComponent.clickCreateNewPost();
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterTitle( blogPostTitle );
 				if ( screenSize === 'mobile' ) {
@@ -383,7 +413,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			test.describe( 'Publish and View', function() {
 				test.before( 'Can publish and view content', function() {
 					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.publishAndViewContent();
+					postEditorSidebarComponent.publishAndViewContent( { reloadPageTwice: true } );
 				} );
 
 				test.describe( 'As a logged in user', function() {
@@ -638,7 +668,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 		} );
 	} );
 
-	test.xdescribe( 'Trash Post:', function() {
+	test.describe( 'Trash Post:', function() {
 		this.bailSuite( true );
 
 		test.before( 'Delete Cookies and Local Storage', function() {
@@ -649,9 +679,9 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = 'The only victory that counts is the victory over yourself.\n— Jesse Owens\n';
 
-			test.it( 'Can log in', function() {
-				const loginFlow = new LoginFlow( driver );
-				loginFlow.loginAndStartNewPost();
+			test.it( 'Can log in as Jetpack User and start a new post', function() {
+				this.loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
+				this.loginFlow.loginAndStartNewPost();
 			} );
 
 			test.it( 'Can enter post title and content', function() {
@@ -686,7 +716,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 		} );
 	} );
 
-	test.xdescribe( 'Edit a Post:', function() {
+	test.describe( 'Edit a Post:', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
@@ -698,9 +728,9 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			const updatedBlogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = 'Science is organised knowledge. Wisdom is organised life..\n~ Immanuel Kant\n';
 
-			test.it( 'Can log in', function() {
-				this.loginFlow = new LoginFlow( driver );
-				return this.loginFlow.loginAndStartNewPost();
+			test.it( 'Can log in as Jetpack User and start a new post', function() {
+				this.loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
+				this.loginFlow.loginAndStartNewPost();
 			} );
 
 			test.it( 'Can enter post title and content', function() {
@@ -760,7 +790,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 					} );
 					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					this.postEditorSidebarComponent.ensureSaved();
-					this.postEditorSidebarComponent.publishAndViewContent();
+					this.postEditorSidebarComponent.publishAndViewContent( { reloadPageTwice: true } );
 				} );
 
 				test.describe( 'Can view the post with the new title', function() {
@@ -811,7 +841,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			test.it( 'Can publish and view content', function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 				postEditorSidebarComponent.ensureSaved();
-				postEditorSidebarComponent.publishAndViewContent();
+				postEditorSidebarComponent.publishAndViewContent( { reloadPageTwice: true } );
 				this.viewPostPage = new ViewPostPage( driver );
 			} );
 
