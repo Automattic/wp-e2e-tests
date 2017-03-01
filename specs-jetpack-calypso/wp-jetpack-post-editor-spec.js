@@ -257,7 +257,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 				this.sidebarComponent = new SidebarComponent( driver );
 				return this.sidebarComponent.getCurrentSiteDomain().then( ( domain ) => {
 					this.wpAdminLogonPage = new WPAdminLogonPage( driver, `http://${domain}/wp-login.php`, { visit: true, forceStandardLogon: false } );
-					return this.wpAdminLogonPage.logonUsingSSO();
+					return this.wpAdminLogonPage.logonUsingSSO( host );
 				} );
 			} );
 
@@ -373,7 +373,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 				this.sidebarComponent = new SidebarComponent( driver );
 				return this.sidebarComponent.getCurrentSiteDomain().then( ( domain ) => {
 					this.wpAdminLogonPage = new WPAdminLogonPage( driver, `http://${domain}/wp-login.php`, { visit: true, forceStandardLogon: false } );
-					return this.wpAdminLogonPage.logonUsingSSO();
+					return this.wpAdminLogonPage.logonUsingSSO( host );
 				} );
 			} );
 
