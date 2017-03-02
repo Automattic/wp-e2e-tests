@@ -236,7 +236,6 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 		} );
 	} );
 
-	// This requires that we are logged into the wp-admin site
 	test.describe( 'Private Posts:', function() {
 		test.before( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
@@ -248,24 +247,10 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 
 			test.it( 'Can log in as Jetpack User', function() {
 				this.loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
-				this.loginFlow.login();
-			} );
-
-			test.it( 'Can log into wp-admin of the Jetpack site using SSO', function() {
-				this.navbarComponent = new NavbarComponent( driver );
-				this.navbarComponent.clickMySites();
-				this.sidebarComponent = new SidebarComponent( driver );
-				return this.sidebarComponent.getCurrentSiteDomain().then( ( domain ) => {
-					this.wpAdminLogonPage = new WPAdminLogonPage( driver, `http://${domain}/wp-login.php`, { visit: true, forceStandardLogon: false } );
-					return this.wpAdminLogonPage.logonUsingSSO( host );
-				} );
+				this.loginFlow.loginAndStartNewPost();
 			} );
 
 			test.it( 'Can start a new post and enter post title and content', function() {
-				this.readerPage = new ReaderPage( driver, true );
-				this.readerPage.waitForPage();
-				this.navbarComponent = new NavbarComponent( driver );
-				this.navbarComponent.clickCreateNewPost();
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterTitle( blogPostTitle );
 				this.editorPage.enterContent( blogPostQuote );
@@ -299,49 +284,19 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 						editorPage.setVisibilityToPrivate();
 					}
 					const editorPage = new EditorPage( driver );
-					editorPage.viewPublishedPostOrPage( { reloadPageTwice: true } );
+					editorPage.viewPublishedPostOrPage();
 				} );
 
-				test.describe( 'As a logged in user ', function() {
-					test.it( 'Can see correct post title', function() {
-						let viewPostPage = new ViewPostPage( driver );
-						viewPostPage.postTitle().then( function( postTitle ) {
-							assert.equal( postTitle.toLowerCase(), 'private: ' + blogPostTitle.toLowerCase(), 'The published blog post title is not correct' );
-						} );
+				test.describe( 'As a non-logged in user ', function() {
+					test.it( 'Delete cookies (log out)', function() {
+						driverManager.clearCookiesAndDeleteLocalStorage( driver );
+						driver.navigate().refresh();
 					} );
 
-					test.it( 'Can see correct post content', function() {
-						let viewPostPage = new ViewPostPage( driver );
-						viewPostPage.postContent().then( function( content ) {
-							assert.equal( content.indexOf( blogPostQuote ) > -1, true, 'The post content (' + content + ') does not include the expected content (' + blogPostQuote + ')' );
-						} );
-					} );
-
-					test.it( 'Can see comments enabled', function() {
-						let viewPostPage = new ViewPostPage( driver );
-						viewPostPage.commentsVisible().then( function( visible ) {
-							assert.equal( visible, true, 'Comments are not shown even though they were enabled when creating the post.' );
-						} );
-					} );
-
-					test.it( 'Can\'t see sharing buttons', function() {
-						let viewPostPage = new ViewPostPage( driver );
-						viewPostPage.sharingButtonsVisible().then( function( visible ) {
-							assert.equal( visible, false, 'Sharing buttons are shown even though they were disabled when creating the post.' );
-						} );
-					} );
-
-					test.describe( 'As a non-logged in user ', function() {
-						test.it( 'Delete cookies (log out)', function() {
-							driverManager.clearCookiesAndDeleteLocalStorage( driver );
-							driver.navigate().refresh();
-						} );
-
-						test.it( 'Can\'t see post at all', function() {
-							let notFoundPage = new NotFoundPage( driver );
-							notFoundPage.displayed().then( function( displayed ) {
-								assert.equal( displayed, true, 'Could not see the not found (404) page. Check that it is displayed' );
-							} );
+					test.it( 'Can\'t see post at all', function() {
+						let notFoundPage = new NotFoundPage( driver );
+						notFoundPage.displayed().then( function( displayed ) {
+							assert.equal( displayed, true, 'Could not see the not found (404) page. Check that it is displayed' );
 						} );
 					} );
 				} );
@@ -349,7 +304,6 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 		} );
 	} );
 
-	// The logged in user part n
 	test.describe( 'Password Protected Posts:', function() {
 		this.bailSuite( true );
 
@@ -364,24 +318,10 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 
 			test.it( 'Can log in as Jetpack User', function() {
 				this.loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
-				this.loginFlow.login();
-			} );
-
-			test.it( 'Can log into wp-admin of the Jetpack site using SSO', function() {
-				this.navbarComponent = new NavbarComponent( driver );
-				this.navbarComponent.clickMySites();
-				this.sidebarComponent = new SidebarComponent( driver );
-				return this.sidebarComponent.getCurrentSiteDomain().then( ( domain ) => {
-					this.wpAdminLogonPage = new WPAdminLogonPage( driver, `http://${domain}/wp-login.php`, { visit: true, forceStandardLogon: false } );
-					return this.wpAdminLogonPage.logonUsingSSO( host );
-				} );
+				this.loginFlow.loginAndStartNewPost();
 			} );
 
 			test.it( 'Can start a new post and enter post title and content - set to password protected', function() {
-				this.readerPage = new ReaderPage( driver, true );
-				this.readerPage.waitForPage();
-				this.navbarComponent = new NavbarComponent( driver );
-				this.navbarComponent.clickCreateNewPost();
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterTitle( blogPostTitle );
 				if ( screenSize === 'mobile' ) {
@@ -413,131 +353,10 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			test.describe( 'Publish and View', function() {
 				test.before( 'Can publish and view content', function() {
 					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.publishAndViewContent( { reloadPageTwice: true } );
+					postEditorSidebarComponent.publishAndViewContent();
+					this.viewPostPage = new ViewPostPage( driver );
 				} );
 
-				test.describe( 'As a logged in user', function() {
-					test.describe( 'With no password entered', function() {
-						test.it( 'Can view post title', function() {
-							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postTitle().then( function( postTitle ) {
-								assert.equal( postTitle.toLowerCase(), ( 'Protected: ' + blogPostTitle ).toLowerCase() );
-							} );
-						} );
-
-						test.it( 'Can see password field', function() {
-							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.isPasswordProtected().then( function( isPasswordProtected ) {
-								assert.equal( isPasswordProtected, true, 'The blog post does not appear to be password protected' );
-							} );
-						} );
-
-						test.it( 'Can\'t see content when no password is entered', function() {
-							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postContent().then( function( content ) {
-								assert.equal( content.indexOf( blogPostQuote ) === -1, true, 'The post content (' + content + ') displays the expected content (' + blogPostQuote + ') when it should be password protected.' );
-							} );
-						} );
-
-						test.it( 'Can\'t see comments', function() {
-							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.commentsVisible().then( function( visible ) {
-								assert.equal( visible, false, 'Comments are shown even though they were disabled when creating the post.' );
-							} );
-						} );
-
-						test.it( 'Can see sharing buttons', function() {
-							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.sharingButtonsVisible().then( function( visible ) {
-								assert.equal( visible, true, 'Sharing buttons are not shown even though they were enabled when creating the post.' );
-							} );
-						} );
-					} );
-
-					test.describe( 'With incorrect password entered', function() {
-						test.before( 'Enter incorrect password', function() {
-							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.enterPassword( 'password' );
-						} );
-
-						test.it( 'Can view post title', function() {
-							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postTitle().then( function( postTitle ) {
-								assert.equal( postTitle.toLowerCase(), ( 'Protected: ' + blogPostTitle ).toLowerCase() );
-							} );
-						} );
-
-						test.it( 'Can see password field', function() {
-							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.isPasswordProtected().then( function( isPasswordProtected ) {
-								assert.equal( isPasswordProtected, true, 'The blog post does not appear to be password protected' );
-							} );
-						} );
-
-						test.it( 'Can\'t see content when incorrect password is entered', function() {
-							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postContent().then( function( content ) {
-								assert.equal( content.indexOf( blogPostQuote ) === -1, true, 'The post content (' + content + ') displays the expected content (' + blogPostQuote + ') when it should be password protected.' );
-							} );
-						} );
-
-						test.it( 'Can\'t see comments', function() {
-							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.commentsVisible().then( function( visible ) {
-								assert.equal( visible, false, 'Comments are shown even though they were disabled when creating the post.' );
-							} );
-						} );
-
-						test.it( 'Can see sharing buttons', function() {
-							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.sharingButtonsVisible().then( function( visible ) {
-								assert.equal( visible, true, 'Sharing buttons are not shown even though they were enabled when creating the post.' );
-							} );
-						} );
-					} );
-
-					test.describe( 'With correct password entered', function() {
-						test.before( 'Enter correct password', function() {
-							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.enterPassword( postPassword );
-						} );
-
-						test.it( 'Can view post title', function() {
-							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postTitle().then( function( postTitle ) {
-								assert.equal( postTitle.toLowerCase(), ( 'Protected: ' + blogPostTitle ).toLowerCase() );
-							} );
-						} );
-
-						test.it( 'Can\'t see password field', function() {
-							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.isPasswordProtected().then( function( isPasswordProtected ) {
-								assert.equal( isPasswordProtected, false, 'The blog post still appears to be password protected' );
-							} );
-						} );
-
-						test.it( 'Can see page content', function() {
-							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postContent().then( function( content ) {
-								assert.equal( content.indexOf( blogPostQuote ) > -1, true, 'The post content (' + content + ') does not include the expected content (' + blogPostQuote + ')' );
-							} );
-						} );
-
-						test.it( 'Can\'t see comments', function() {
-							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.commentsVisible().then( function( visible ) {
-								assert.equal( visible, false, 'Comments are shown even though they were disabled when creating the post.' );
-							} );
-						} );
-
-						test.it( 'Can see sharing buttons', function() {
-							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.sharingButtonsVisible().then( function( visible ) {
-								assert.equal( visible, true, 'Sharing buttons are not shown even though they were enabled when creating the post.' );
-							} );
-						} );
-					} );
-				} );
 				test.describe( 'As a non-logged in user', function() {
 					test.before( 'Clear cookies (log out)', function() {
 						driverManager.clearCookiesAndDeleteLocalStorage( driver );
