@@ -49,7 +49,7 @@ test.describe( `DevDocs Visual Diff (${screenSizeName})`, function() {
 			eyes.open( driver, 'WordPress.com', testName, screenSize );
 		}
 
-		let loginFlow = new LoginFlow( driver );
+		let loginFlow = new LoginFlow( driver, 'visualUser' );
 		loginFlow.login();
 
 		devdocsPage = new DevdocsPage( driver, true );
