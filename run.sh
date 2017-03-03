@@ -10,12 +10,14 @@ SCREENSIZES="mobile,desktop"
 BRANCH=""
 RETURN=0
 CLEAN=0
+GREP=""
 
 # Function to join arrays into a string
 function joinStr { local IFS="$1"; shift; echo "$*"; }
 
 I18N_CONFIG="\"browser\":\"firefox\",\"proxy\":\"system\",\"neverSaveScreenshots\":\"true\""
 IE11_CONFIG="\"sauce\":\"true\",\"sauceConfig\":\"win-ie11\""
+
 declare -a TARGETS
 
 usage () {
@@ -26,6 +28,7 @@ usage () {
 -s		  - Screensizes in a comma-separated list (defaults to mobile,desktop)
 -g		  - Execute general tests in the specs/ directory
 -j 		  - Execute Jetpack tests in the specs-jetpack-calypso/ directory
+-C		  - Execute tests tagged with @canary
 -H [host]	  - Specify an alternate host for Jetpack tests
 -w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
 -l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration
@@ -43,7 +46,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rpb:s:gjH:wl:cm:fivh" opt; do
+while getopts ":Rpb:s:gjCH:wl:cm:fivh" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
@@ -98,6 +101,12 @@ while getopts ":Rpb:s:gjH:wl:cm:fivh" opt; do
       SCREENSIZES="desktop,mobile"
       TARGET="specs-jetpack-calypso/"
       ;;
+    C)
+	  GREP="-g '@canary'"
+	  MOCHA+=" --compilers js:babel-register"
+      SCREENSIZES="mobile"
+      TARGET="specs/"
+      ;;
     H)
       export JETPACKHOST=$OPTARG
       ;;
@@ -124,7 +133,6 @@ while getopts ":Rpb:s:gjH:wl:cm:fivh" opt; do
 done
 
 # Skip any tests in the given variable
-GREP=""
 if [ "$SKIP_TEST_REGEX" != "" ]; then
 	GREP="-i -g '$SKIP_TEST_REGEX'"
 fi

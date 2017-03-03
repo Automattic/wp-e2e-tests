@@ -236,6 +236,47 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
+	test.describe( 'Basic Public Post @canary', function() {
+		this.bailSuite( true );
+
+		test.it( 'Delete Cookies and Local Storage', function() {
+			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.describe( 'Publish a New Post', function() {
+			const blogPostTitle = dataHelper.randomPhrase();
+			const blogPostQuote = '“Whenever you find yourself on the side of the majority, it is time to pause and reflect.”\n- Mark Twain';
+
+			test.it( 'Can log in', function() {
+				this.loginFlow = new LoginFlow( driver );
+				return this.loginFlow.loginAndStartNewPost();
+			} );
+
+			test.it( 'Can enter post title and content', function() {
+				this.editorPage = new EditorPage( driver );
+				this.editorPage.enterTitle( blogPostTitle );
+				this.editorPage.enterContent( blogPostQuote + '\n' );
+
+				return this.editorPage.errorDisplayed().then( ( errorShown ) => {
+					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+				} );
+			} );
+
+			test.it( 'Can publish and view content', function() {
+				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				postEditorSidebarComponent.ensureSaved();
+				postEditorSidebarComponent.publishAndViewContent();
+			} );
+
+			test.it( 'Can see correct post title', function() {
+				this.viewPostPage = new ViewPostPage( driver );
+				this.viewPostPage.postTitle().then( function( postTitle ) {
+					assert.equal( postTitle.toLowerCase(), blogPostTitle.toLowerCase(), 'The published blog post title is not correct' );
+				} );
+			} );
+		} );
+	} );
+
 	test.describe( 'Private Posts:', function() {
 		test.before( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
