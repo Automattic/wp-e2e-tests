@@ -236,7 +236,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Basic Public Post #canary', function() {
+	test.describe( 'Basic Public Post @canary', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
