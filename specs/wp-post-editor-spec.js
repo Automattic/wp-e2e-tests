@@ -317,7 +317,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 				} );
 
 				test.it( 'Can set visibility to private which immediately publishes it', function() {
-					if ( screenSize === 'mobile' ) {
+					if ( screenSize === 'mobile' || process.env.USE_NEW_EDITOR === 'true' ) {
 						const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 						postEditorSidebarComponent.setVisibilityToPrivate();
 					} else {
@@ -396,7 +396,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			test.it( 'Can enter post title and content and set to password protected', function() {
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterTitle( blogPostTitle );
-				if ( screenSize === 'mobile' ) {
+				if ( screenSize === 'mobile' || process.env.USE_NEW_EDITOR === 'true' ) {
 					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				} else {
@@ -710,7 +710,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			} );
 
 			test.it( 'Can trash the new post', function() {
-				if ( screenSize === 'mobile' ) {
+				if ( screenSize === 'mobile' || process.env.USE_NEW_EDITOR === 'true' ) {
 					const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					postEditorSidebarComponent.trashPost();
 				} else {
