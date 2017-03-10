@@ -13,7 +13,7 @@ if [ "$NODE_ENV_OVERRIDE" != "" ]; then
   NODE_ENV=$NODE_ENV_OVERRIDE
 fi
 
-export TESTARGS="-R -p"
+export TESTARGS="-R -p -I"
 
 if [ "$RUN_SPECIFIED" == "true" ]; then
   TESTARGS=$RUN_ARGS
