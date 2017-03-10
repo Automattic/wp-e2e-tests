@@ -3,6 +3,7 @@ MOCHA=./node_modules/mocha/bin/mocha
 GRUNT=./node_modules/.bin/grunt
 REPORTER=""
 PARALLEL=0
+USE_FOR=0
 JOBS=0
 AFTER="lib/after.js"
 OPTS=""
@@ -24,6 +25,7 @@ usage () {
   cat <<EOF
 -R		  - Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
 -p 		  - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop)
+-I		  - Execute the spec files individually in fresh browser windows
 -b [branch]	  - Run tests on given branch via https://calypso.live
 -s		  - Screensizes in a comma-separated list (defaults to mobile,desktop)
 -g		  - Execute general tests in the specs/ directory
@@ -46,7 +48,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rpb:s:gjCH:wl:cm:fivh" opt; do
+while getopts ":RpIb:s:gjCH:wl:cm:fivh" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
@@ -54,6 +56,10 @@ while getopts ":Rpb:s:gjCH:wl:cm:fivh" opt; do
       ;;
     p)
       PARALLEL=1
+      continue
+      ;;
+    I)
+      USE_FOR=1
       continue
       ;;
     c)
@@ -152,6 +158,10 @@ if [ $PARALLEL == 1 ]; then
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
       CMD="env BROWSERSIZE=mobile $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
 
+      if [ $USE_FOR == 1 ]; then
+        CMD="for file in $(ls specs/*.js); do env BROWSERSIZE=mobile $MOCHA $NC $GREP $REPORTER \$file $AFTER; RETURN+=\$?; done"
+      fi
+
       eval $CMD
       RETURN+=$?
   fi
@@ -159,6 +169,10 @@ if [ $PARALLEL == 1 ]; then
       echo "Executing tests at desktop screen width"
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
       CMD="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
+
+      if [ $USE_FOR == 1 ]; then
+        CMD="for file in $(ls specs/*.js); do env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER \$file $AFTER; RETURN+=\$?; done"
+      fi
 
       eval $CMD
       RETURN+=$?
@@ -172,6 +186,10 @@ else # Not a parallel run, just queue up the tests in sequence
       for target in "${TARGETS[@]}"; do
         if [ "$target" != "" ]; then
           CMD="env BROWSERSIZE=$size $MOCHA $NC $GREP $REPORTER $target $AFTER"
+
+          if [ $USE_FOR == 1 ]; then
+            CMD="for file in $(ls ${target}*.js); do env BROWSERSIZE=\$size $MOCHA $NC $GREP $REPORTER \$file $AFTER; RETURN+=\$?; done"
+          fi
 
           eval $CMD
           RETURN+=$?
