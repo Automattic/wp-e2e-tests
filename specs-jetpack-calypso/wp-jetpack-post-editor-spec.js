@@ -276,7 +276,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 				} );
 
 				test.it( 'Can set visibility to private which immediately publishes it', function() {
-					if ( screenSize === 'mobile' ) {
+					if ( screenSize === 'mobile' || process.env.USE_NEW_EDITOR  ) {
 						const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 						postEditorSidebarComponent.setVisibilityToPrivate();
 					} else {
@@ -324,7 +324,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			test.it( 'Can start a new post and enter post title and content - set to password protected', function() {
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterTitle( blogPostTitle );
-				if ( screenSize === 'mobile' ) {
+				if ( screenSize === 'mobile' || process.env.USE_NEW_EDITOR  ) {
 					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				} else {
@@ -517,7 +517,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			} );
 
 			test.it( 'Can trash the new post', function() {
-				if ( screenSize === 'mobile' ) {
+				if ( screenSize === 'mobile' || process.env.USE_NEW_EDITOR ) {
 					const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					postEditorSidebarComponent.trashPost();
 				} else {
