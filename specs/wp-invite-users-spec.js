@@ -676,9 +676,8 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 								this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 								this.postEditorToolbarComponent.ensureSaved();
 								this.postEditorToolbarComponent.submitForReview();
-								this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-								this.postEditorSidebarComponent.waitForIsPendingStatus();
-								this.postEditorSidebarComponent.statusIsPending().then( ( isPending ) => {
+								this.postEditorToolbarComponent.waitForIsPendingStatus();
+								this.postEditorToolbarComponent.statusIsPending().then( ( isPending ) => {
 									assert.equal( isPending, true, 'The post is not showing as pending' );
 								} )
 							} );
