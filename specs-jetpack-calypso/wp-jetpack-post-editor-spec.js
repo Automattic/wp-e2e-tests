@@ -276,13 +276,8 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 				} );
 
 				test.it( 'Can set visibility to private which immediately publishes it', function() {
-					if ( screenSize === 'mobile' || process.env.USE_NEW_EDITOR  ) {
-						const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.setVisibilityToPrivate();
-					} else {
-						const editorPage = new EditorPage( driver );
-						editorPage.setVisibilityToPrivate();
-					}
+					const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+					postEditorSidebarComponent.setVisibilityToPrivate();
 					const editorPage = new EditorPage( driver );
 					editorPage.viewPublishedPostOrPage();
 				} );
@@ -324,12 +319,8 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			test.it( 'Can start a new post and enter post title and content - set to password protected', function() {
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterTitle( blogPostTitle );
-				if ( screenSize === 'mobile' || process.env.USE_NEW_EDITOR  ) {
-					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
-				} else {
-					this.editorPage.setVisibilityToPasswordProtected( postPassword );
-				}
+				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterContent( blogPostQuote );
 				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
@@ -517,13 +508,8 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			} );
 
 			test.it( 'Can trash the new post', function() {
-				if ( screenSize === 'mobile' || process.env.USE_NEW_EDITOR ) {
-					const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.trashPost();
-				} else {
-					let editorPage = new EditorPage( driver );
-					editorPage.trashPost();
-				}
+				const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				postEditorSidebarComponent.trashPost();
 			} );
 
 			test.it( 'Can then see the Reader page', function() {
