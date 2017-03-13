@@ -70,8 +70,8 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 
 			test.describe( 'Preview', function() {
 				test.it( 'Can launch page preview', function() {
-					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.launchPreview();
+					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					postEditorToolbarComponent.launchPreview();
 					this.pagePreviewComponent = new PagePreviewComponent( driver );
 				} );
 

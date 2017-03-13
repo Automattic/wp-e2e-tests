@@ -144,8 +144,8 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 
 						test.describe( 'Preview (Ignored for now since it opens a new tab)', function() {
 							test.xit( 'Can launch post preview which opens a new tab', function() {
-								this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-								this.postEditorSidebarComponent.launchPreview();
+								this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+								this.postEditorToolbarComponent.launchPreview();
 							} );
 
 							test.xit( 'Can see correct post title in preview', function() {

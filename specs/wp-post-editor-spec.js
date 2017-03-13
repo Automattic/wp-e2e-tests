@@ -141,10 +141,8 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 
 						test.describe( 'Preview', function() {
 							test.it( 'Can launch post preview', function() {
-								this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-// wp-calypso issue#6612					this.postEditorSidebarComponent.ensureSaved();
-
-								this.postEditorSidebarComponent.launchPreview();
+								this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+								this.postEditorToolbarComponent.launchPreview();
 								this.postPreviewComponent = new PostPreviewComponent( driver );
 							} );
 
