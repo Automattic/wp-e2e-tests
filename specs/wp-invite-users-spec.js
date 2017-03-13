@@ -22,6 +22,7 @@ import NoticesComponent from '../lib/components/notices-component.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
 import NoSitesComponent from '../lib/components/no-sites-component.js';
 import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
+import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
 
 import * as dataHelper from '../lib/data-helper.js';
 
@@ -672,11 +673,11 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 							} );
 
 							test.it( 'New user can submit the new post for review as pending status', function() {
-								this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-								this.postEditorSidebarComponent.ensureSaved();
-								this.postEditorSidebarComponent.submitForReview();
-								this.postEditorSidebarComponent.waitForIsPendingStatus();
-								this.postEditorSidebarComponent.statusIsPending().then( ( isPending ) => {
+								this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+								this.postEditorToolbarComponent.ensureSaved();
+								this.postEditorToolbarComponent.submitForReview();
+								this.postEditorToolbarComponent.waitForIsPendingStatus();
+								this.postEditorToolbarComponent.statusIsPending().then( ( isPending ) => {
 									assert.equal( isPending, true, 'The post is not showing as pending' );
 								} )
 							} );
@@ -730,9 +731,9 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 										} );
 
 										test.it( 'New user can publish the post as an author', function() {
-											this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-											this.postEditorSidebarComponent.ensureSaved();
-											return this.postEditorSidebarComponent.publishAndViewContent();
+											this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+											this.postEditorToolbarComponent.ensureSaved();
+											return this.postEditorToolbarComponent.publishAndViewContent();
 										} );
 									} );
 								} );
