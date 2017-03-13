@@ -675,8 +675,8 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 							test.it( 'New user can submit the new post for review as pending status', function() {
 								this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 								this.postEditorToolbarComponent.ensureSaved();
+								this.postEditorToolbarComponent.submitForReview();
 								this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-								this.postEditorSidebarComponent.submitForReview();
 								this.postEditorSidebarComponent.waitForIsPendingStatus();
 								this.postEditorSidebarComponent.statusIsPending().then( ( isPending ) => {
 									assert.equal( isPending, true, 'The post is not showing as pending' );
