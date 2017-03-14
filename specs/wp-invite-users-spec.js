@@ -161,12 +161,6 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 								} );
 							} );
 
-							test.it( 'Capture browser logs', function() {
-								driver.manage().logs().get( 'browser' ).then( function( logs ) {
-									mediaHelper.writeTextLogFile( JSON.stringify( logs ), 'editor' );
-								} );
-							} );
-
 							test.describe( 'As the original user, can see new user added to site', function() {
 								test.before( 'Log in as original user', function() {
 									driverManager.ensureNotLoggedIn( driver );
@@ -328,12 +322,6 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 								this.readerPage = new ReaderPage( driver );
 							} );
 
-							test.it( 'Capture browser logs', function() {
-								driver.manage().logs().get( 'browser' ).then( function( logs ) {
-									mediaHelper.writeTextLogFile( JSON.stringify( logs ), 'follower' );
-								} );
-							} );
-
 							test.describe( 'As the original user, can see new user added to site', function() {
 								test.before( 'Log in as original user', function() {
 									driverManager.ensureNotLoggedIn( driver );
@@ -488,12 +476,6 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 
 							test.it( 'Can see the reader stream', function() {
 								this.readerPage = new ReaderPage( driver );
-							} );
-
-							test.it( 'Capture browser logs', function() {
-								driver.manage().logs().get( 'browser' ).then( function( logs ) {
-									mediaHelper.writeTextLogFile( JSON.stringify( logs ), 'viewer-private' );
-								} );
 							} );
 
 							test.it( 'Can visit and see the site', function() {
@@ -654,12 +636,6 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 								this.noticesComponent = new NoticesComponent( driver );
 								this.noticesComponent.inviteMessageTitle().then( ( invitesMessageTitleDisplayed ) => {
 									assert.equal( true, invitesMessageTitleDisplayed.includes( 'Contributor' ), `The invite message '${invitesMessageTitleDisplayed}' does not include 'Contributor'` );
-								} );
-							} );
-
-							test.it( 'Capture browser logs', function() {
-								driver.manage().logs().get( 'browser' ).then( function( logs ) {
-									mediaHelper.writeTextLogFile( JSON.stringify( logs ), 'contributor' );
 								} );
 							} );
 
