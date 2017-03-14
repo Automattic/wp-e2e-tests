@@ -686,31 +686,24 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 
 			test.it( 'Can log in', function() {
 				const loginFlow = new LoginFlow( driver );
-				loginFlow.loginAndStartNewPost();
+				return loginFlow.loginAndStartNewPost();
 			} );
 
 			test.it( 'Can enter post title and content', function() {
 				const editorPage = new EditorPage( driver );
 				editorPage.enterTitle( blogPostTitle );
-				editorPage.enterContent( blogPostQuote );
-			} );
-
-				// Shouldn't need to publish first, but putting in temporarily to workaround Trac bug #7753
-			test.it( 'Can publish post', function() {
-				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-				postEditorToolbarComponent.publishPost();
-				postEditorToolbarComponent.waitForSuccessViewPostNotice();
+				return editorPage.enterContent( blogPostQuote );
 			} );
 
 			test.it( 'Can trash the new post', function() {
 				const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				postEditorSidebarComponent.trashPost();
+				return postEditorSidebarComponent.trashPost();
 			} );
 
 			test.it( 'Can then see the Reader page', function() {
 				const readerPage = new ReaderPage( driver );
-				readerPage.displayed().then( ( displayed ) => {
-					assert.equal( displayed, true, 'The reader page is not displayed' );
+				return readerPage.displayed().then( ( displayed ) => {
+					return assert.equal( displayed, true, 'The reader page is not displayed' );
 				} );
 			} );
 		} );
