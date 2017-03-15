@@ -1,7 +1,6 @@
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 import assert from 'assert';
-import * as ccGenerator from 'creditcard-generator';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper.js';
@@ -32,7 +31,7 @@ const signupInboxId = config.get( 'signupInboxId' );
 
 var driver;
 
-test.before( 'Start Browser', function() {
+test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -334,7 +333,6 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 			this.WPHomePage = new WPHomePage( driver, { visit: true } );
 			this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 		} );
-
 
 		test.describe( 'Step One: Design Type Choice', function() {
 			test.it( 'Can see the design type choice page', function() {

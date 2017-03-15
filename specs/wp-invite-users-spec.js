@@ -21,7 +21,6 @@ import EditorPage from '../lib/pages/editor-page.js';
 import NoticesComponent from '../lib/components/notices-component.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
 import NoSitesComponent from '../lib/components/no-sites-component.js';
-import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
 
 import * as dataHelper from '../lib/data-helper.js';
@@ -37,7 +36,7 @@ const calypsoBaseUrl = config.get( 'calypsoBaseURL' );
 
 var driver;
 
-test.before( 'Start Browser', function() {
+test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -60,12 +59,13 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 		const password = config.get( 'passwordForNewTestSignUps' );
 		let acceptInviteURL = '';
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		test.describe( 'Can Invite a New User as an Editor, then see and remove that user', function() {
-			test.before( 'Can log in and select People', function() {
+			// Can log in and select People
+			test.before( function() {
 				this.loginFlow = new LoginFlow( driver );
 				this.loginFlow.loginAndSelectPeople();
 				this.peoplePage = new PeoplePage( driver );
@@ -121,7 +121,7 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 				} );
 
 				test.describe( 'Can open the invite page as a new user', function() {
-					test.before( 'Ensure we are not logged in as anyone', function() {
+					test.before( function() {
 						driverManager.ensureNotLoggedIn( driver );
 					} );
 
@@ -168,7 +168,8 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 							} );
 
 							test.describe( 'As the original user, can see new user added to site', function() {
-								test.before( 'Log in as original user', function() {
+								// Log in as original user
+								test.before( function() {
 									driverManager.ensureNotLoggedIn( driver );
 									this.loginFlow = new LoginFlow( driver );
 									this.loginFlow.loginAndSelectPeople();
@@ -184,7 +185,7 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 								} );
 
 								test.describe( 'As the original user, I can remove the new user added to site', function() {
-									test.before( 'Select the displayed user', function() {
+									test.before( function() {
 										this.peoplePage.selectOnlyPersonDisplayed();
 									} );
 
@@ -201,7 +202,8 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 									} );
 
 									test.describe( 'As the invited user, I am no longer an editor on the site', function() {
-										test.before( 'Login as the invited user', function() {
+										// Login as the invited user
+										test.before( function() {
 											driverManager.ensureNotLoggedIn( driver );
 											this.loginPage = new LoginPage( driver, true );
 											this.loginPage.login( newUserName, password );
@@ -234,12 +236,13 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 		const password = config.get( 'passwordForNewTestSignUps' );
 		let acceptInviteURL = '';
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		test.describe( 'Can Invite a New User as a Follower, then see and remove that user', function() {
-			test.before( 'Can log in and select \'Add\' from the People sidebar menu which shows the Invite People page', function() {
+			// Can log in and select 'Add' from the People sidebar menu which shows the Invite People page
+			test.before( function() {
 				this.loginFlow = new LoginFlow( driver );
 				this.loginFlow.loginAndSelectPeople();
 				this.peoplePage = new PeoplePage( driver );
@@ -288,7 +291,7 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 				} );
 
 				test.describe( 'Can open the invite page as a new user', function() {
-					test.before( 'Ensure we are not logged in as anyone', function() {
+					test.before( function() {
 						driverManager.ensureNotLoggedIn( driver );
 					} );
 
@@ -335,7 +338,8 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 							} );
 
 							test.describe( 'As the original user, can see new user added to site', function() {
-								test.before( 'Log in as original user', function() {
+								// Log in as original user
+								test.before( function() {
 									driverManager.ensureNotLoggedIn( driver );
 									this.loginFlow = new LoginFlow( driver );
 									this.loginFlow.loginAndSelectPeople();
@@ -387,7 +391,7 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 		const siteUrl = `https://${siteName}/`;
 		let acceptInviteURL = '';
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -401,7 +405,8 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 		} );
 
 		test.describe( 'Can Invite a New User as a Viewer of a Private Site, then see and remove that user', function() {
-			test.before( 'Can log in as private site owner and select \'Add\' from the People sidebar menu which shows the Invite People page', function() {
+			// Can log in as private site owner and select 'Add' from the People sidebar menu which shows the Invite People page
+			test.before( function() {
 				this.loginFlow = new LoginFlow( driver, 'privateSiteUser' );
 				this.loginFlow.loginAndSelectPeople();
 				this.peoplePage = new PeoplePage( driver );
@@ -450,7 +455,7 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 				} );
 
 				test.describe( 'Can open the invite page as a new user', function() {
-					test.before( 'Ensure we are not logged in as anyone', function() {
+					test.before( function() {
 						driverManager.ensureNotLoggedIn( driver );
 					} );
 
@@ -504,7 +509,8 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 							} );
 
 							test.describe( 'As the original user, can see new user added to site', function() {
-								test.before( 'Log in as original user', function() {
+								// Log in as original user
+								test.before( function() {
 									driverManager.ensureNotLoggedIn( driver );
 									this.loginFlow = new LoginFlow( driver, 'privateSiteUser' );
 									this.loginFlow.loginAndSelectPeople();
@@ -528,7 +534,8 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 									} );
 
 									test.describe( 'As the invited user, I am no longer a viewer on the site', function() {
-										test.before( 'Login as the invited user', function() {
+										// Login as the invited user
+										test.before( function() {
 											driverManager.ensureNotLoggedIn( driver );
 											this.loginPage = new LoginPage( driver, true );
 											this.loginPage.login( newUserName, password );
@@ -563,12 +570,13 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 		const postQuote = 'We are all in the gutter, but some of us are looking at the stars.\n— Oscar Wilde, Lady Windermere’s Fan';
 		let acceptInviteURL = '';
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		test.describe( 'Can Invite a New User as an Contributor, then see and remove that user', function() {
-			test.before( 'Can log in and select \'Add\' from the People sidebar menu which shows the Invite People page', function() {
+			// Can log in and select 'Add' from the People sidebar menu which shows the Invite People page
+			test.before( function() {
 				this.loginFlow = new LoginFlow( driver );
 				this.loginFlow.loginAndSelectPeople();
 				this.peoplePage = new PeoplePage( driver );
@@ -617,7 +625,7 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 				} );
 
 				test.describe( 'Can open the invite page as a new user', function() {
-					test.before( 'Ensure we are not logged in as anyone', function() {
+					test.before( function() {
 						driverManager.ensureNotLoggedIn( driver );
 					} );
 
@@ -683,7 +691,8 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 							} );
 
 							test.describe( 'As the original user, can see new user added to site', function() {
-								test.before( 'Log in as original user', function() {
+								// Log in as original user
+								test.before( function() {
 									driverManager.ensureNotLoggedIn( driver );
 									this.loginFlow = new LoginFlow( driver );
 									this.loginFlow.loginAndSelectPeople();
@@ -699,7 +708,7 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 								} );
 
 								test.describe( 'As the original user, I can change the contributor user to an author user', function() {
-									test.before( 'Select the displayed user', function() {
+									test.before( function() {
 										this.peoplePage.selectOnlyPersonDisplayed();
 									} );
 
@@ -715,7 +724,8 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 									} );
 
 									test.describe( 'As the invited user, I can now publish a post', function() {
-										test.before( 'Login as the invited user', function() {
+										// Login as the invited user
+										test.before( function() {
 											driverManager.ensureNotLoggedIn( driver );
 											this.loginPage = new LoginPage( driver, true );
 											this.loginPage.login( newUserName, password );

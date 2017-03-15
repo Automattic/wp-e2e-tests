@@ -10,7 +10,6 @@ import PlansPage from '../lib/pages/plans-page.js';
 import StatsPage from '../lib/pages/stats-page.js';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
-import ShoppingCartWidgetComponent from '../lib/components/shopping-cart-widget-component.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -18,7 +17,7 @@ const screenSize = driverManager.currentScreenSize();
 
 var driver;
 
-test.before( 'Start Browser', function() {
+test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -29,7 +28,7 @@ test.describe( 'Plans: (' + screenSize + ')', function() {
 	test.describe( 'Comparing Plans:', function() {
 		this.bailSuite( true );
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -39,7 +38,6 @@ test.describe( 'Plans: (' + screenSize + ')', function() {
 		} );
 
 		test.describe( 'Can compare plans', function() {
-
 			test.it( 'Can Select Plans', function() {
 				this.statsPage = new StatsPage( driver );
 				this.statsPage.waitForPage();

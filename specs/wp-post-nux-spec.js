@@ -15,7 +15,7 @@ const screenSize = driverManager.currentScreenSize();
 
 var driver;
 
-test.before( 'Start Browser', function() {
+test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -139,12 +139,12 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 							return this.customizerPage.closeOpenSection();
 						} );
 
-
 						if ( screenSize !== 'mobile' ) { // header images broken on mobile https://github.com/Automattic/wp-calypso/issues/2380
 							test.describe( 'Custom Header Image', function() {
 								let fileDetails = null;
 
-								test.before( 'Create header image file for upload', function() {
+								// Create header image file for upload
+								test.before( function() {
 									return mediaHelper.createFile().then( function( details ) {
 										fileDetails = details;
 									} );
@@ -198,7 +198,6 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 								return this.customizerPage.closeOpenPanel();
 							} );
 
-
 							test.describe( 'Add a new widget', function() {
 								const widgetTitle = dataHelper.getWidgetTitle();
 								const widgetContent = dataHelper.getWidgetContent();
@@ -222,7 +221,6 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 									return this.customizerPage.closeOpenPanel();
 								} );
 
-
 								test.describe( 'Setting static front page', function() {
 									test.it( 'Expand static front page', function() {
 										return this.customizerPage.expandStaticFrontPage();
@@ -239,7 +237,6 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 									test.it( 'Close front page section', function() {
 										return this.customizerPage.closeOpenSection();
 									} );
-
 
 									test.describe( 'Closing the customizer', function() {
 										return test.it( 'Close the customizer', function() {

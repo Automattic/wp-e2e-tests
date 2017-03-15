@@ -22,7 +22,7 @@ const screenSize = driverManager.currentScreenSize();
 
 var driver;
 
-test.before( 'Start Browser', function() {
+test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -34,11 +34,12 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 		this.bailSuite( true );
 		let fileDetails;
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.before( 'Create image file for upload', function() {
+		// Create image file for upload
+		test.before( function() {
 			return mediaHelper.createFile().then( function( details ) {
 				fileDetails = details;
 			} );
@@ -93,7 +94,8 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 					} );
 				} );
 
-				test.after( 'Can close page preview', function() {
+				// Can close page preview
+				test.after( function() {
 					this.pagePreviewComponent.close();
 				} );
 			} );
@@ -140,7 +142,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 
 	test.describe( 'Private Pages:', function() {
 		this.bailSuite( true );
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -203,7 +205,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 
 	test.describe( 'Password Protected Pages:', function() {
 		this.bailSuite( true );
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
