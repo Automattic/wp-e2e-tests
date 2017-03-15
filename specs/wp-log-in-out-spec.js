@@ -18,7 +18,7 @@ const screenSize = driverManager.currentScreenSize();
 
 var driver;
 
-test.before( 'Start Browser', function() {
+before( 'Start Browser', function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -28,7 +28,7 @@ test.describe( 'Authentication: (' + screenSize + ')', function() {
 	this.bailSuite( true );
 
 	test.describe( 'Logging In and Out:', function() {
-		test.before( 'Delete Cookies and Local Storage', function() {
+		before( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -73,7 +73,7 @@ test.describe( 'User Agent: (' + screenSize + ')', function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
-	test.before( 'Delete Cookies and Local Storage', function() {
+	before( 'Delete Cookies and Local Storage', function() {
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 

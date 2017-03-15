@@ -14,7 +14,7 @@ const screenSize = driverManager.currentScreenSize();
 
 var driver;
 
-test.before( 'Start Browser', function() {
+before( 'Start Browser', function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -26,7 +26,7 @@ test.describe( 'Editor: Media Upload (' + screenSize + ')', function() {
 		this.bailSuite( true );
 		let editorPage;
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		before( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 

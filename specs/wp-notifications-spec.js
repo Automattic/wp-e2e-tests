@@ -21,7 +21,7 @@ const screenSize = driverManager.currentScreenSize();
 
 var driver;
 
-test.before( 'Start Browser', function() {
+before( 'Start Browser', function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -30,7 +30,7 @@ test.describe( 'Notifications: (' + screenSize + ')', function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
-	test.before( 'Delete Cookies and Local Storage', function() {
+	before( 'Delete Cookies and Local Storage', function() {
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 

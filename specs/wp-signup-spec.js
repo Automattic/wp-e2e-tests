@@ -1,7 +1,6 @@
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 import assert from 'assert';
-import * as ccGenerator from 'creditcard-generator';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper.js';
@@ -32,7 +31,7 @@ const signupInboxId = config.get( 'signupInboxId' );
 
 var driver;
 
-test.before( 'Start Browser', function() {
+before( 'Start Browser', function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -168,7 +167,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 									} );
 
 									test.describe( 'Step Eight: Can activate my account from an email', function() {
-										test.before( function() {
+										before( function() {
 											return this.emailClient = new EmailClient( signupInboxId );
 										} );
 
@@ -334,7 +333,6 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 			this.WPHomePage = new WPHomePage( driver, { visit: true } );
 			this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 		} );
-
 
 		test.describe( 'Step One: Design Type Choice', function() {
 			test.it( 'Can see the design type choice page', function() {
@@ -694,7 +692,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 										} );
 
 										test.describe( 'Step Nine: Can activate my account from an email', function() {
-											test.before( function() {
+											before( function() {
 												return this.emailClient = new EmailClient( signupInboxId );
 											} );
 

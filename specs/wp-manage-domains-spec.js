@@ -25,7 +25,7 @@ const domainsInboxId = config.get( 'domainsInboxId' );
 
 var driver;
 
-test.before( 'Start Browser', function() {
+before( 'Start Browser', function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -50,7 +50,7 @@ test.describe( 'Managing Domains: (' + screenSize + ')', function() {
 		const stateCode = 'QLD';
 		const postalCode = '4000';
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		before( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
