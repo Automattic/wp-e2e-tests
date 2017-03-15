@@ -18,7 +18,7 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 
-before( function() {
+test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	this.driver = driverManager.startBrowser();
 } );

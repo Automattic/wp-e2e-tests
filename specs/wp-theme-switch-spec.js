@@ -17,7 +17,7 @@ const screenSize = driverManager.currentScreenSize();
 
 var driver;
 
-before( 'Start Browser', function() {
+test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );

@@ -28,7 +28,7 @@ const screenSize = driverManager.currentScreenSize();
 
 var driver;
 
-before( 'Start Browser', function() {
+test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -40,11 +40,12 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 	test.describe( 'Public Posts:', function() {
 		let fileDetails;
 
-		before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		before( 'Create image file for upload', function() {
+		// Create image file for upload
+		test.before( function() {
 			return mediaHelper.createFile().then( function( details ) {
 				fileDetails = details;
 			} );
@@ -279,7 +280,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 	} );
 
 	test.describe( 'Private Posts:', function() {
-		before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -375,7 +376,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 	test.describe( 'Password Protected Posts:', function() {
 		this.bailSuite( true );
 
-		before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -415,7 +416,8 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			} );
 
 			test.describe( 'Publish and View', function() {
-				before( 'Can publish and view content', function() {
+				// Can publish and view content
+				test.before( function() {
 					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 					postEditorToolbarComponent.publishAndViewContent();
 				} );
@@ -459,7 +461,8 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 					} );
 
 					test.describe( 'With incorrect password entered', function() {
-						before( 'Enter incorrect password', function() {
+						// Enter incorrect password
+						test.before( function() {
 							let viewPostPage = new ViewPostPage( driver );
 							viewPostPage.enterPassword( 'password' );
 						} );
@@ -501,7 +504,8 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 					} );
 
 					test.describe( 'With correct password entered', function() {
-						before( 'Enter correct password', function() {
+						// Enter correct password
+						test.before( function() {
 							let viewPostPage = new ViewPostPage( driver );
 							viewPostPage.enterPassword( postPassword );
 						} );
@@ -543,7 +547,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 					} );
 				} );
 				test.describe( 'As a non-logged in user', function() {
-					before( 'Clear cookies (log out)', function() {
+					test.before( function() {
 						driverManager.clearCookiesAndDeleteLocalStorage( driver );
 						driver.navigate().refresh();
 					} );
@@ -585,7 +589,8 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 					} );
 
 					test.describe( 'With incorrect password entered', function() {
-						before( 'Enter incorrect password', function() {
+						// Enter incorrect password
+						test.before( function() {
 							let viewPostPage = new ViewPostPage( driver );
 							viewPostPage.enterPassword( 'password' );
 						} );
@@ -627,7 +632,8 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 					} );
 
 					test.describe( 'With correct password entered', function() {
-						before( 'Enter correct password', function() {
+						// Enter correct password
+						test.before( function() {
 							let viewPostPage = new ViewPostPage( driver );
 							viewPostPage.enterPassword( postPassword );
 						} );
@@ -675,7 +681,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 	test.describe( 'Trash Post:', function() {
 		this.bailSuite( true );
 
-		before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 

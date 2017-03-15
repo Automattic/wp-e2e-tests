@@ -23,7 +23,7 @@ let eyes = new Eyes();
 eyes.setApiKey( config.get( 'eyesKey' ) );
 eyes.setForceFullPageScreenshot( true );
 
-before( function() {
+test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser( { useCustomUA: false } );
 	screenSize = driverManager.getSizeAsObject();
@@ -33,7 +33,7 @@ test.describe( `DevDocs Visual Diff (${screenSizeName})`, function() {
 	var devdocsPage;
 	this.timeout( mochaDevDocsTimeOut );
 
-	before( function() {
+	test.before( function() {
 		let testName = `DevDocs [${global.browserName}] [${screenSizeName}]`;
 
 		let batchName = '';

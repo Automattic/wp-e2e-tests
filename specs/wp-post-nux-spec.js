@@ -15,7 +15,7 @@ const screenSize = driverManager.currentScreenSize();
 
 var driver;
 
-before( 'Start Browser', function() {
+test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -143,7 +143,8 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 							test.describe( 'Custom Header Image', function() {
 								let fileDetails = null;
 
-								before( 'Create header image file for upload', function() {
+								// Create header image file for upload
+								test.before( function() {
 									return mediaHelper.createFile().then( function( details ) {
 										fileDetails = details;
 									} );

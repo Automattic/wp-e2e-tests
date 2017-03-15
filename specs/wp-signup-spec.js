@@ -31,7 +31,7 @@ const signupInboxId = config.get( 'signupInboxId' );
 
 var driver;
 
-before( 'Start Browser', function() {
+test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -167,7 +167,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 									} );
 
 									test.describe( 'Step Eight: Can activate my account from an email', function() {
-										before( function() {
+										test.before( function() {
 											return this.emailClient = new EmailClient( signupInboxId );
 										} );
 
@@ -692,7 +692,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 										} );
 
 										test.describe( 'Step Nine: Can activate my account from an email', function() {
-											before( function() {
+											test.before( function() {
 												return this.emailClient = new EmailClient( signupInboxId );
 											} );
 
