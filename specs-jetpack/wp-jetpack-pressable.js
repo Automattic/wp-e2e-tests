@@ -350,7 +350,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			} );
 		} );
 
-		after( function() {
+		test.after( function() {
 			if ( fileDetails ) {
 				mediaHelper.deleteFile( fileDetails ).then( function() {} );
 			}

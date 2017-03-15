@@ -80,7 +80,7 @@ test.describe( `DevDocs Visual Diff (${screenSizeName})`, function() {
 		} );
 	} );
 
-	after( function() {
+	test.after( function() {
 		try {
 			eyes.close( false ).then( function( testResults ) {
 				let message = '';
@@ -108,6 +108,6 @@ test.describe( `DevDocs Visual Diff (${screenSizeName})`, function() {
 	} );
 } );
 
-after( function() {
+test.after( function() {
 	eyes.abortIfNotClosed();
 } );

@@ -232,7 +232,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			} );
 		} );
 
-		after( function() {
+		test.after( function() {
 			if ( fileDetails ) {
 				mediaHelper.deleteFile( fileDetails ).then( function() {} );
 			}

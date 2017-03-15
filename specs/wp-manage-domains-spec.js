@@ -108,7 +108,8 @@ test.describe( 'Managing Domains: (' + screenSize + ')', function() {
 					} );
 				} );
 
-				after( 'Remove all items from basket for clean up', () => {
+				// Remove all items from basket for clean up
+				test.after( () => {
 					this.readerPage = new ReaderPage( driver, true );
 
 					this.navbarComponent = new NavbarComponent( driver );

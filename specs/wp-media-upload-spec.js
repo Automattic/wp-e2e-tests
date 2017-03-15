@@ -54,7 +54,7 @@ test.describe( 'Editor: Media Upload (' + screenSize + ')', function() {
 					editorPage.deleteMedia();
 				} );
 
-				after( function() {
+				test.after( function() {
 					editorPage.dismissMediaModal();
 					if ( fileDetails ) {
 						mediaHelper.deleteFile( fileDetails ).then( function() {} );
@@ -79,7 +79,7 @@ test.describe( 'Editor: Media Upload (' + screenSize + ')', function() {
 					editorPage.deleteMedia();
 				} );
 
-				after( function() {
+				test.after( function() {
 					editorPage.dismissMediaModal();
 					if ( fileDetails ) {
 						mediaHelper.deleteFile( fileDetails ).then( function() {} );
@@ -104,7 +104,7 @@ test.describe( 'Editor: Media Upload (' + screenSize + ')', function() {
 					editorPage.deleteMedia();
 				} );
 
-				after( function() {
+				test.after( function() {
 					editorPage.dismissMediaModal();
 					if ( fileDetails ) {
 						mediaHelper.deleteFile( fileDetails ).then( function() {} );

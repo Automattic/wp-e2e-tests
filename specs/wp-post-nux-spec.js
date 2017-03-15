@@ -168,7 +168,7 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 									return this.customizerPage.closeOpenSection();
 								} );
 
-								after( function() {
+								test.after( function() {
 									if ( fileDetails ) {
 										mediaHelper.deleteFile( fileDetails ).then( function() {} );
 									}
