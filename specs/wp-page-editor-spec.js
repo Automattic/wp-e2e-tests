@@ -93,7 +93,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 					} );
 				} );
 
-				test.after( 'Can close page preview', function() {
+				after( 'Can close page preview', function() {
 					this.pagePreviewComponent.close();
 				} );
 			} );
@@ -131,7 +131,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 			} );
 		} );
 
-		test.after( function() {
+		after( function() {
 			if ( fileDetails ) {
 				mediaHelper.deleteFile( fileDetails ).then( function() {} );
 			}

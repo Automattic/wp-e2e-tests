@@ -230,7 +230,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			} );
 		} );
 
-		test.after( function() {
+		after( function() {
 			if ( fileDetails ) {
 				mediaHelper.deleteFile( fileDetails ).then( function() {} );
 			}

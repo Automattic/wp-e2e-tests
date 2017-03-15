@@ -19,7 +19,7 @@ const host = dataHelper.getJetpackHost();
 
 var driver;
 
-test.before( 'Start Browser', function() {
+before( 'Start Browser', function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -30,7 +30,7 @@ test.describe( host + ' Jetpack Plans: (' + screenSize + ')', function() {
 	test.describe( 'Comparing Plans:', function() {
 		this.bailSuite( true );
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		before( 'Delete Cookies and Local Storage', function() {
 			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 

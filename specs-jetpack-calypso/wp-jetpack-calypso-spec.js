@@ -20,7 +20,7 @@ const host = dataHelper.getJetpackHost();
 
 var driver;
 
-test.before( 'Start Browser', function() {
+before( 'Start Browser', function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -29,11 +29,11 @@ test.describe( `${host} Jetpack Sites on Calypso: '${ screenSize }'`, function()
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
-	test.before( 'Delete cookies and local storage, and log in', function() {
+	before( 'Delete cookies and local storage, and log in', function() {
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
-	test.before( 'Can log in and go to the Plugins page', function() {
+	before( 'Can log in and go to the Plugins page', function() {
 		let loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
 		loginFlow.loginAndSelectPlugins();
 	} );

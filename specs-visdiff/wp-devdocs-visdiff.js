@@ -23,7 +23,7 @@ let eyes = new Eyes();
 eyes.setApiKey( config.get( 'eyesKey' ) );
 eyes.setForceFullPageScreenshot( true );
 
-test.before( function() {
+before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser( { useCustomUA: false } );
 	screenSize = driverManager.getSizeAsObject();
@@ -33,7 +33,7 @@ test.describe( `DevDocs Visual Diff (${screenSizeName})`, function() {
 	var devdocsPage;
 	this.timeout( mochaDevDocsTimeOut );
 
-	test.before( function() {
+	before( function() {
 		let testName = `DevDocs [${global.browserName}] [${screenSizeName}]`;
 
 		let batchName = '';
@@ -80,7 +80,7 @@ test.describe( `DevDocs Visual Diff (${screenSizeName})`, function() {
 		} );
 	} );
 
-	test.after( function() {
+	after( function() {
 		try {
 			eyes.close( false ).then( function( testResults ) {
 				let message = '';
@@ -108,6 +108,6 @@ test.describe( `DevDocs Visual Diff (${screenSizeName})`, function() {
 	} );
 } );
 
-test.after( function() {
+after( function() {
 	eyes.abortIfNotClosed();
 } );

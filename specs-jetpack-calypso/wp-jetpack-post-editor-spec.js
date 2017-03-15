@@ -31,7 +31,7 @@ const host = dataHelper.getJetpackHost();
 
 var driver;
 
-test.before( 'Start Browser', function() {
+before( 'Start Browser', function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -43,11 +43,11 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 	test.describe( 'Public Posts:', function() {
 		let fileDetails;
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		before( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.before( 'Create image file for upload', function() {
+		before( 'Create image file for upload', function() {
 			return mediaHelper.createFile().then( function( details ) {
 				fileDetails = details;
 			} );
@@ -232,7 +232,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			} );
 		} );
 
-		test.after( function() {
+		after( function() {
 			if ( fileDetails ) {
 				mediaHelper.deleteFile( fileDetails ).then( function() {} );
 			}
@@ -240,7 +240,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 	} );
 
 	test.describe( 'Private Posts:', function() {
-		test.before( 'Delete Cookies and Local Storage', function() {
+		before( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -306,7 +306,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 	test.describe( 'Password Protected Posts:', function() {
 		this.bailSuite( true );
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		before( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -346,14 +346,14 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			} );
 
 			test.describe( 'Publish and View', function() {
-				test.before( 'Can publish and view content', function() {
+				before( 'Can publish and view content', function() {
 					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 					postEditorToolbarComponent.publishAndViewContent();
 					this.viewPostPage = new ViewPostPage( driver );
 				} );
 
 				test.describe( 'As a non-logged in user', function() {
-					test.before( 'Clear cookies (log out)', function() {
+					before( 'Clear cookies (log out)', function() {
 						driverManager.clearCookiesAndDeleteLocalStorage( driver );
 						driver.navigate().refresh();
 					} );
@@ -395,7 +395,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 					} );
 
 					test.describe( 'With incorrect password entered', function() {
-						test.before( 'Enter incorrect password', function() {
+						before( 'Enter incorrect password', function() {
 							let viewPostPage = new ViewPostPage( driver );
 							viewPostPage.enterPassword( 'password' );
 						} );
@@ -437,7 +437,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 					} );
 
 					test.describe( 'With correct password entered', function() {
-						test.before( 'Enter correct password', function() {
+						before( 'Enter correct password', function() {
 							let viewPostPage = new ViewPostPage( driver );
 							viewPostPage.enterPassword( postPassword );
 						} );
@@ -485,7 +485,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 	test.describe( 'Trash Post:', function() {
 		this.bailSuite( true );
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		before( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
