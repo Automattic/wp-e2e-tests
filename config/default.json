@@ -54,7 +54,7 @@
         "version": "11.103"
     }
   },
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupStore", "signupStoreBenchmarking", "browserNotifications", "domainSuggestionPopover", "signupThemeUpload", "siteTitleStep", "jetpackConnectPlansFirst", "userFirstSignup", "premiumSquaredPlansWording", "domainContactNewPhoneInput", "boostedPostSurvey", "readerSearchOnFollowing", "siteTitleTour", "jetpackPlansNoMonthly", "signupStepOneCopyChanges", "signupDomainsHeadline" ],
+  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupStore", "signupStoreBenchmarking", "browserNotifications", "domainSuggestionPopover", "signupThemeUpload", "siteTitleStep", "jetpackConnectPlansFirst", "userFirstSignup", "premiumSquaredPlansWording", "domainContactNewPhoneInput", "boostedPostSurvey", "readerSearchOnFollowing", "siteTitleTour", "jetpackPlansNoMonthly", "signupStepOneCopyChanges", "signupDomainsHeadline", "readerPostCardTagCount" ],
   "overrideABTests": [
 	[ "signupStore_20160927", "designTypeWithStore" ],
 	[ "browserNotifications_20160628", "disabled" ],
