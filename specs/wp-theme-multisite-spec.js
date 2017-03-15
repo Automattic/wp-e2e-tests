@@ -85,7 +85,7 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 						} );
 					} );
 
-					after( function() {
+					test.after( function() {
 						this.customizerPage.close();
 					} );
 				} );
