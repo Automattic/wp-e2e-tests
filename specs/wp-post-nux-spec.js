@@ -46,6 +46,11 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 
 		test.describe( 'Customize and Preview site', function() {
 			test.describe( 'Can customize the site identity ', function() {
+				// Wait for animation
+				test.afterEach( () => {
+					return driver.sleep( 500 );
+				} );
+
 				test.it( 'Can expand site identity', function() {
 					return this.customizerPage.expandSiteIdentity();
 				} );
