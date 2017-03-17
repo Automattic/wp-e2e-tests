@@ -135,6 +135,7 @@ A full list of config values are:
 | storeSandboxCookieValue | This is a secret cookie value used for testing payments |  | No | **NO** |
 | slackHook | This is a Slack incoming webhook where notifications are sent for test status (https://my.slack.com/services/new/incoming-webhook -- requires Slack login) | https://hooks.slack.com/services/XXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX | No | **NO** |
 | slackTokenForScreenshots | This is a Slack token used for uploading screenshots (https://api.slack.com/custom-integrations/legacy-tokens -- requires Slack login) | XXXX-XXXXXXXXXX-XXXXXXXXXX-XXXXXXXXXXX-XXXXXXXXXX | No | **NO** |
+| slackChannelForScreenshots | String name (including the `#`) of the channel to receive screenshots | #e2eflowtesting-notif | No | Yes |
 | emailPrefix | A string to stick on the beginning of the e-mail addresses used for invites and signups | username | No | **NO** |
 | testAccounts | A JSON object with username/password pairs assigned to keynames for easy retrieval.  The necessary accounts can be found in the config/local.example.json file.  | {"defaultUser": ["username1","password1"], "multiSiteUser": ["username2","password2"] } | No | **NO** |
 | highlightElements | Boolean to indicate whether to visually highlight elements being interacted with on the page | true | No | Yes |
