@@ -11,6 +11,7 @@
   "browser": "chrome",
   "proxy": "direct",
   "saveAllScreenshots": false,
+  "slackChannelForScreenshots": "#e2eflowtesting-notif",
   "neverSaveScreenshots": false,
   "checkForConsoleErrors": false,
   "reportWarningsToSlack": false,
