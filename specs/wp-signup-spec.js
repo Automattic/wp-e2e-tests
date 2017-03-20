@@ -186,7 +186,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Sign up for a site on a premium paid plan through main flow @canary', function() {
+	test.describe.only( 'Sign up for a site on a premium paid plan through main flow @canary', function() {
 		this.bailSuite( true );
 
 		const blogName = dataHelper.getNewBlogName();
@@ -277,6 +277,17 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 								test.it( 'Can then see the sign up processing page which will automatically move along', function() {
 									this.signupProcessingPage = new SignupProcessingPage( driver );
 									return this.signupProcessingPage.waitToDisappear();
+								} );
+
+								test.it( 'Verify login screen not present', () => {
+									return driver.getCurrentUrl( ( url ) => {
+										if ( url.match( /wp-login.php/ ) ) {
+											let newUrl = url.replace( /^.*redirect_to=/, '' );
+											return driver.get( decodeURIComponent( newUrl ) );
+										}
+
+										return true;
+									} );
 								} );
 
 								test.describe( 'Step Seven: Secure Payment Page', function() {
