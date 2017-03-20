@@ -135,11 +135,11 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 								} );
 
 								test.it( 'The sign up processing page will finish and show a \'Continue\' button', function() {
-									this.signupProcessingPage.waitForContinueButtonToBeEnabled();
+									return this.signupProcessingPage.waitForContinueButtonToBeEnabled();
 								} );
 
 								test.it( 'Clicking the \'Continue\' button continues the process', function() {
-									this.signupProcessingPage.continueAlong();
+									return this.signupProcessingPage.continueAlong();
 								} );
 
 								test.describe( 'Step Seven: View Site/Trampoline', function() {
@@ -207,7 +207,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 
 		test.it( 'We can set the sandbox cookie for payments', function() {
 			this.WPHomePage = new WPHomePage( driver, { visit: true } );
-			this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+			return this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 		} );
 
 		test.describe( 'Step One: Design Type Choice', function() {
@@ -220,7 +220,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 			} );
 
 			test.it( 'Can select the first design type', function() {
-				this.designTypeChoicePage.selectFirstDesignType();
+				return this.designTypeChoicePage.selectFirstDesignType();
 			} );
 
 			test.describe( 'Step Two: Themes', function() {
@@ -331,7 +331,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 
 		test.it( 'We can set the sandbox cookie for payments', function() {
 			this.WPHomePage = new WPHomePage( driver, { visit: true } );
-			this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+			return this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 		} );
 
 		test.describe( 'Step One: Design Type Choice', function() {
@@ -344,7 +344,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 			} );
 
 			test.it( 'Can select the first design type', function() {
-				this.designTypeChoicePage.selectFirstDesignType();
+				return this.designTypeChoicePage.selectFirstDesignType();
 			} );
 
 			test.describe( 'Step Two: Themes', function() {
@@ -393,16 +393,12 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 								} );
 							} );
 
-							// test.it( 'The sign up processing page will finish automatically move along', function() {
-							// 	this.signupProcessingPage.waitToDisappear();
-							// } );
-
 							test.it( 'The sign up processing page will finish and show a \'Continue\' button', function() {
-								this.signupProcessingPage.waitForContinueButtonToBeEnabled();
+								return this.signupProcessingPage.waitForContinueButtonToBeEnabled();
 							} );
 
 							test.it( 'Clicking the \'Continue\' button continues the process', function() {
-								this.signupProcessingPage.continueAlong();
+								return this.signupProcessingPage.continueAlong();
 							} );
 
 							test.describe( 'Step Six: Secure Payment Page', function() {
@@ -582,7 +578,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 			} );
 
 			test.it( 'Can select the first survey option', function() {
-				this.surveyPage.selectOtherSurveyOption( 'e2e Automated Testing' );
+				return this.surveyPage.selectOtherSurveyOption( 'e2e Automated Testing' );
 			} );
 
 			test.describe( 'Step Two: Design Type Choice', function() {
@@ -594,7 +590,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 				} );
 
 				test.it( 'Can select the first design type', function() {
-					this.designTypeChoicePage.selectFirstDesignType();
+					return this.designTypeChoicePage.selectFirstDesignType();
 				} );
 
 				test.describe( 'Step Three: Themes', function() {
@@ -606,7 +602,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 					} );
 
 					test.it( 'Can select the first theme', function() {
-						this.chooseAThemePage.selectFirstTheme();
+						return this.chooseAThemePage.selectFirstTheme();
 					} );
 
 					test.describe( 'Step Four: Domains', function() {
@@ -660,11 +656,11 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 									} );
 
 									test.it( 'The sign up processing page will finish and show a \'Continue\' button', function() {
-										this.signupProcessingPage.waitForContinueButtonToBeEnabled();
+										return this.signupProcessingPage.waitForContinueButtonToBeEnabled();
 									} );
 
 									test.it( 'Clicking the \'Continue\' button continues the process', function() {
-										this.signupProcessingPage.continueAlong();
+										return this.signupProcessingPage.continueAlong();
 									} );
 
 									test.describe( 'Step Eight: View Site/Trampoline', function() {
