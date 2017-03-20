@@ -1265,3 +1265,5 @@ watchcartoononline.io##script:inject(fuckadblock.js-3.2.0)
 
 ! Manually added for wp-e2e-tests
 getrockerbox.com
+linkedin.com
+snap.licdn.com

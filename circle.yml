@@ -1,10 +1,6 @@
 machine:
   node:
     version: 6.10.0
-  hosts:
-    linkedin.com: 127.0.0.1
-    snap.licdn.com: 127.0.0.1
-    getrockerbox.com: 127.0.0.1
 
 general:
   artifacts:
