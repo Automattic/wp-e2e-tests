@@ -186,7 +186,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe.only( 'Sign up for a site on a premium paid plan through main flow @canary', function() {
+	test.describe( 'Sign up for a site on a premium paid plan through main flow @canary', function() {
 		this.bailSuite( true );
 
 		const blogName = dataHelper.getNewBlogName();
