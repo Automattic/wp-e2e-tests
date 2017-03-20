@@ -280,7 +280,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 								} );
 
 								test.it( 'Verify login screen not present', () => {
-									return driver.getCurrentUrl( ( url ) => {
+									return driver.getCurrentUrl().then( ( url ) => {
 										if ( url.match( /wp-login.php/ ) ) {
 											let newUrl = url.replace( /^.*redirect_to=/, '' );
 											return driver.get( decodeURIComponent( newUrl ) );
