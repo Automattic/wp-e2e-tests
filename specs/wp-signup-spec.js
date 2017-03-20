@@ -279,6 +279,18 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 									return this.signupProcessingPage.waitToDisappear();
 								} );
 
+								test.it( 'Verify login screen not present', () => {
+									return driver.getCurrentUrl().then( ( url ) => {
+										if ( url.match( /wp-login.php/ ) ) {
+											SlackNotifier.warn( 'WARNING: Signup process sent me to the login screen!' );
+											let newUrl = url.replace( /^.*redirect_to=/, '' );
+											return driver.get( decodeURIComponent( newUrl ) );
+										}
+
+										return true;
+									} );
+								} );
+
 								test.describe( 'Step Seven: Secure Payment Page', function() {
 									test.it( 'Can then see the secure payment page', function() {
 										this.securePaymentComponent = new SecurePaymentComponent( driver );
@@ -515,6 +527,18 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 							test.it( 'Can then see the sign up processing page which will finish automatically move along', function() {
 								this.signupProcessingPage = new SignupProcessingPage( driver );
 								return this.signupProcessingPage.waitToDisappear();
+							} );
+
+							test.it( 'Verify login screen not present', () => {
+								return driver.getCurrentUrl().then( ( url ) => {
+									if ( url.match( /wp-login.php/ ) ) {
+										SlackNotifier.warn( 'WARNING: Signup process sent me to the login screen!' );
+										let newUrl = url.replace( /^.*redirect_to=/, '' );
+										return driver.get( decodeURIComponent( newUrl ) );
+									}
+
+									return true;
+								} );
 							} );
 
 							test.describe( 'Step Seven: Secure Payment Page', function() {
