@@ -16,6 +16,7 @@ import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
 import PostPreviewComponent from '../lib/components/post-preview-component.js';
 import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
+import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
 
 import * as driverManager from '../lib/driver-manager';
 import * as driverHelper from '../lib/driver-helper';
@@ -30,7 +31,7 @@ const host = dataHelper.getJetpackHost();
 
 var driver;
 
-test.before( 'Start Browser', function() {
+test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -42,11 +43,11 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 	test.describe( 'Public Posts:', function() {
 		let fileDetails;
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.before( 'Create image file for upload', function() {
+		test.before( function() {
 			return mediaHelper.createFile().then( function( details ) {
 				fileDetails = details;
 			} );
@@ -85,11 +86,12 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 
 					test.it( 'Can add a new category', function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						postEditorSidebarComponent.addNewCategory( newCategoryName );
 						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
 							assert( ! subtitle.match( /Uncategorized/ ), 'Post still marked Uncategorized after adding new category BEFORE SAVE' );
 						} );
-						postEditorSidebarComponent.ensureSaved();
+						postEditorToolbarComponent.ensureSaved();
 						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
 							assert( ! subtitle.match( /Uncategorized/ ), 'Post still marked Uncategorized after adding new category AFTER SAVE' );
 						} );
@@ -97,8 +99,9 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 
 					test.it( 'Can add a new tag', function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						postEditorSidebarComponent.addNewTag( newTagName );
-						postEditorSidebarComponent.ensureSaved();
+						postEditorToolbarComponent.ensureSaved();
 						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
 							assert( subtitle.match( `#${newTagName}` ), `New tag #${newTagName} not applied` );
 						} );
@@ -141,8 +144,8 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 
 						test.describe( 'Preview (Ignored for now since it opens a new tab)', function() {
 							test.xit( 'Can launch post preview which opens a new tab', function() {
-								this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-								this.postEditorSidebarComponent.launchPreview();
+								this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+								this.postEditorToolbarComponent.launchPreview();
 							} );
 
 							test.xit( 'Can see correct post title in preview', function() {
@@ -181,8 +184,8 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 
 							test.describe( 'Publish and View', function() {
 								test.it( 'Can publish and view content', function() {
-									let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-									postEditorSidebarComponent.publishAndViewContent( { reloadPageTwice: true } );
+									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+									postEditorToolbarComponent.publishAndViewContent( { reloadPageTwice: true } );
 									this.viewPostPage = new ViewPostPage( driver );
 								} );
 
@@ -237,7 +240,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 	} );
 
 	test.describe( 'Private Posts:', function() {
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -271,32 +274,28 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 
 			test.describe( 'Set to private which publishes it', function() {
 				test.it( 'Ensure the post is saved', function() {
-					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.ensureSaved();
+					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					return postEditorToolbarComponent.ensureSaved();
 				} );
 
 				test.it( 'Can set visibility to private which immediately publishes it', function() {
-					if ( screenSize === 'mobile' ) {
-						const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.setVisibilityToPrivate();
-					} else {
-						const editorPage = new EditorPage( driver );
-						editorPage.setVisibilityToPrivate();
-					}
-					const editorPage = new EditorPage( driver );
-					editorPage.viewPublishedPostOrPage();
+					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+					this.postEditorSidebarComponent.setVisibilityToPrivate();
+					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
+					return this.postEditorToolbarComponent.viewPublishedPostOrPage();
 				} );
 
 				test.describe( 'As a non-logged in user ', function() {
 					test.it( 'Delete cookies (log out)', function() {
 						driverManager.clearCookiesAndDeleteLocalStorage( driver );
-						driver.navigate().refresh();
+						return driver.navigate().refresh();
 					} );
 
 					test.it( 'Can\'t see post at all', function() {
 						let notFoundPage = new NotFoundPage( driver );
-						notFoundPage.displayed().then( function( displayed ) {
-							assert.equal( displayed, true, 'Could not see the not found (404) page. Check that it is displayed' );
+						return notFoundPage.displayed().then( function( displayed ) {
+							return assert.equal( displayed, true, 'Could not see the not found (404) page. Check that it is displayed' );
 						} );
 					} );
 				} );
@@ -307,7 +306,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 	test.describe( 'Password Protected Posts:', function() {
 		this.bailSuite( true );
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -324,16 +323,12 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			test.it( 'Can start a new post and enter post title and content - set to password protected', function() {
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterTitle( blogPostTitle );
-				if ( screenSize === 'mobile' ) {
-					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
-				} else {
-					this.editorPage.setVisibilityToPasswordProtected( postPassword );
-				}
+				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterContent( blogPostQuote );
-				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				this.postEditorSidebarComponent.ensureSaved();
+				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				this.postEditorToolbarComponent.ensureSaved();
 			} );
 
 			test.it( 'Can enable sharing buttons', function() {
@@ -351,14 +346,14 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			} );
 
 			test.describe( 'Publish and View', function() {
-				test.before( 'Can publish and view content', function() {
-					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.publishAndViewContent();
+				test.before( function() {
+					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					postEditorToolbarComponent.publishAndViewContent();
 					this.viewPostPage = new ViewPostPage( driver );
 				} );
 
 				test.describe( 'As a non-logged in user', function() {
-					test.before( 'Clear cookies (log out)', function() {
+					test.before( function() {
 						driverManager.clearCookiesAndDeleteLocalStorage( driver );
 						driver.navigate().refresh();
 					} );
@@ -400,7 +395,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 					} );
 
 					test.describe( 'With incorrect password entered', function() {
-						test.before( 'Enter incorrect password', function() {
+						test.before( function() {
 							let viewPostPage = new ViewPostPage( driver );
 							viewPostPage.enterPassword( 'password' );
 						} );
@@ -442,7 +437,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 					} );
 
 					test.describe( 'With correct password entered', function() {
-						test.before( 'Enter correct password', function() {
+						test.before( function() {
 							let viewPostPage = new ViewPostPage( driver );
 							viewPostPage.enterPassword( postPassword );
 						} );
@@ -490,7 +485,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 	test.describe( 'Trash Post:', function() {
 		this.bailSuite( true );
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -511,19 +506,14 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 
 			// Shouldn't need to publish first, but putting in temporarily to workaround Trac bug #7753
 			test.it( 'Can publish post', function() {
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				postEditorSidebarComponent.publishPost();
-				postEditorSidebarComponent.waitForSuccessViewPostNotice();
+				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				postEditorToolbarComponent.publishPost();
+				postEditorToolbarComponent.waitForSuccessViewPostNotice();
 			} );
 
 			test.it( 'Can trash the new post', function() {
-				if ( screenSize === 'mobile' ) {
-					const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.trashPost();
-				} else {
-					let editorPage = new EditorPage( driver );
-					editorPage.trashPost();
-				}
+				const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				postEditorSidebarComponent.trashPost();
 			} );
 
 			test.it( 'Can then see the Reader page', function() {
@@ -562,10 +552,10 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			} );
 
 			test.it( 'Can publish the post', function() {
-				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				this.postEditorSidebarComponent.ensureSaved();
-				this.postEditorSidebarComponent.publishPost();
-				return this.postEditorSidebarComponent.waitForSuccessViewPostNotice();
+				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				this.postEditorToolbarComponent.ensureSaved();
+				this.postEditorToolbarComponent.publishPost();
+				return this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 			} );
 
 			test.describe( 'Edit the post via posts', function() {
@@ -607,9 +597,9 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 					this.editorPage.errorDisplayed().then( ( errorShown ) => {
 						assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 					} );
-					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					this.postEditorSidebarComponent.ensureSaved();
-					this.postEditorSidebarComponent.publishAndViewContent( { reloadPageTwice: true } );
+					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					this.postEditorToolbarComponent.ensureSaved();
+					this.postEditorToolbarComponent.publishAndViewContent( { reloadPageTwice: true } );
 				} );
 
 				test.describe( 'Can view the post with the new title', function() {
@@ -658,9 +648,9 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 			} );
 
 			test.it( 'Can publish and view content', function() {
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				postEditorSidebarComponent.ensureSaved();
-				postEditorSidebarComponent.publishAndViewContent( { reloadPageTwice: true } );
+				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				postEditorToolbarComponent.ensureSaved();
+				postEditorToolbarComponent.publishAndViewContent( { reloadPageTwice: true } );
 				this.viewPostPage = new ViewPostPage( driver );
 			} );
 

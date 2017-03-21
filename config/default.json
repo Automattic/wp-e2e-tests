@@ -11,6 +11,7 @@
   "browser": "chrome",
   "proxy": "direct",
   "saveAllScreenshots": false,
+  "slackChannelForScreenshots": "#e2eflowtesting-notif",
   "neverSaveScreenshots": false,
   "checkForConsoleErrors": false,
   "reportWarningsToSlack": false,
@@ -54,7 +55,7 @@
         "version": "11.103"
     }
   },
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupStore", "signupStoreBenchmarking", "browserNotifications", "domainSuggestionPopover", "signupThemeUpload", "siteTitleStep", "jetpackConnectPlansFirst", "userFirstSignup", "premiumSquaredPlansWording", "domainContactNewPhoneInput", "boostedPostSurvey", "readerSearchOnFollowing", "siteTitleTour" ],
+  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupStore", "signupStoreBenchmarking", "browserNotifications", "domainSuggestionPopover", "signupThemeUpload", "siteTitleStep", "jetpackConnectPlansFirst", "userFirstSignup", "premiumSquaredPlansWording", "domainContactNewPhoneInput", "boostedPostSurvey", "readerSearchOnFollowing", "siteTitleTour", "jetpackPlansNoMonthly", "signupStepOneCopyChanges", "signupDomainsHeadline", "readerPostCardTagCount" ],
   "overrideABTests": [
 	[ "signupStore_20160927", "designTypeWithStore" ],
 	[ "browserNotifications_20160628", "disabled" ],
@@ -65,6 +66,8 @@
 	[ "jetpackConnectPlansFirst_20161024", "showPlansAfterAuth" ],
 	[ "userFirstSignup_20161223", "userLast" ],
 	[ "domainContactNewPhoneInput_20170123", "enabled" ],
-	[ "boostedPostSurvey_20170127", "disabled" ]
+	[ "boostedPostSurvey_20170127", "disabled" ],
+	[ "jetpackPlansNoMonthly_20170302", "showMonthly" ],
+	[ "signupStepOneCopyChanges_20170307", "original" ]
   ]
 }

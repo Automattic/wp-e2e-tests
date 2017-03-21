@@ -15,6 +15,7 @@ import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
 import PostPreviewComponent from '../lib/components/post-preview-component.js';
 import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
+import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component';
 
 import * as driverManager from '../lib/driver-manager';
 import * as mediaHelper from '../lib/media-helper';
@@ -27,7 +28,7 @@ const screenSize = driverManager.currentScreenSize();
 
 var driver;
 
-test.before( 'Start Browser', function() {
+test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -39,11 +40,12 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 	test.describe( 'Public Posts:', function() {
 		let fileDetails;
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.before( 'Create image file for upload', function() {
+		// Create image file for upload
+		test.before( function() {
 			return mediaHelper.createFile().then( function( details ) {
 				fileDetails = details;
 			} );
@@ -82,11 +84,12 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 
 					test.it( 'Can add a new category', function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						postEditorSidebarComponent.addNewCategory( newCategoryName );
 						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
 							assert( ! subtitle.match( /Uncategorized/ ), 'Post still marked Uncategorized after adding new category BEFORE SAVE' );
 						} );
-						postEditorSidebarComponent.ensureSaved();
+						postEditorToolbarComponent.ensureSaved();
 						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
 							assert( ! subtitle.match( /Uncategorized/ ), 'Post still marked Uncategorized after adding new category AFTER SAVE' );
 						} );
@@ -94,8 +97,9 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 
 					test.it( 'Can add a new tag', function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						postEditorSidebarComponent.addNewTag( newTagName );
-						postEditorSidebarComponent.ensureSaved();
+						postEditorToolbarComponent.ensureSaved();
 						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
 							assert( subtitle.match( `#${newTagName}` ), `New tag #${newTagName} not applied` );
 						} );
@@ -138,10 +142,8 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 
 						test.describe( 'Preview', function() {
 							test.it( 'Can launch post preview', function() {
-								this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-// wp-calypso issue#6612					this.postEditorSidebarComponent.ensureSaved();
-
-								this.postEditorSidebarComponent.launchPreview();
+								this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+								this.postEditorToolbarComponent.launchPreview();
 								this.postPreviewComponent = new PostPreviewComponent( driver );
 							} );
 
@@ -181,8 +183,8 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 
 							test.describe( 'Publish and View', function() {
 								test.it( 'Can publish and view content', function() {
-									let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-									postEditorSidebarComponent.publishAndViewContent();
+									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+									postEditorToolbarComponent.publishAndViewContent();
 									this.viewPostPage = new ViewPostPage( driver );
 								} );
 
@@ -236,8 +238,49 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
+	test.describe( 'Basic Public Post @canary', function() {
+		this.bailSuite( true );
+
+		test.it( 'Delete Cookies and Local Storage', function() {
+			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.describe( 'Publish a New Post', function() {
+			const blogPostTitle = dataHelper.randomPhrase();
+			const blogPostQuote = '“Whenever you find yourself on the side of the majority, it is time to pause and reflect.”\n- Mark Twain';
+
+			test.it( 'Can log in', function() {
+				this.loginFlow = new LoginFlow( driver );
+				return this.loginFlow.loginAndStartNewPost();
+			} );
+
+			test.it( 'Can enter post title and content', function() {
+				this.editorPage = new EditorPage( driver );
+				this.editorPage.enterTitle( blogPostTitle );
+				this.editorPage.enterContent( blogPostQuote + '\n' );
+
+				return this.editorPage.errorDisplayed().then( ( errorShown ) => {
+					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+				} );
+			} );
+
+			test.it( 'Can publish and view content', function() {
+				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				postEditorToolbarComponent.ensureSaved();
+				postEditorToolbarComponent.publishAndViewContent();
+			} );
+
+			test.it( 'Can see correct post title', function() {
+				this.viewPostPage = new ViewPostPage( driver );
+				this.viewPostPage.postTitle().then( function( postTitle ) {
+					assert.equal( postTitle.toLowerCase(), blogPostTitle.toLowerCase(), 'The published blog post title is not correct' );
+				} );
+			} );
+		} );
+	} );
+
 	test.describe( 'Private Posts:', function() {
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -271,20 +314,16 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 
 			test.describe( 'Set to private which publishes it', function() {
 				test.it( 'Ensure the post is saved', function() {
-					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.ensureSaved();
+					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					postEditorToolbarComponent.ensureSaved();
 				} );
 
 				test.it( 'Can set visibility to private which immediately publishes it', function() {
-					if ( screenSize === 'mobile' ) {
-						const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.setVisibilityToPrivate();
-					} else {
-						const editorPage = new EditorPage( driver );
-						editorPage.setVisibilityToPrivate();
-					}
-					const editorPage = new EditorPage( driver );
-					editorPage.viewPublishedPostOrPage();
+					const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+					postEditorSidebarComponent.setVisibilityToPrivate();
+					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
+					this.postEditorToolbarComponent.viewPublishedPostOrPage();
 				} );
 
 				test.describe( 'As a logged in user ', function() {
@@ -316,7 +355,6 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 						} );
 					} );
 
-
 					test.describe( 'As a non-logged in user ', function() {
 						test.it( 'Delete cookies (log out)', function() {
 							driverManager.clearCookiesAndDeleteLocalStorage( driver );
@@ -338,7 +376,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 	test.describe( 'Password Protected Posts:', function() {
 		this.bailSuite( true );
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -355,16 +393,12 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			test.it( 'Can enter post title and content and set to password protected', function() {
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterTitle( blogPostTitle );
-				if ( screenSize === 'mobile' ) {
-					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
-				} else {
-					this.editorPage.setVisibilityToPasswordProtected( postPassword );
-				}
+				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterContent( blogPostQuote );
-				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				this.postEditorSidebarComponent.ensureSaved();
+				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				this.postEditorToolbarComponent.ensureSaved();
 			} );
 
 			test.it( 'Can enable sharing buttons', function() {
@@ -382,9 +416,10 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			} );
 
 			test.describe( 'Publish and View', function() {
-				test.before( 'Can publish and view content', function() {
-					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.publishAndViewContent();
+				// Can publish and view content
+				test.before( function() {
+					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					postEditorToolbarComponent.publishAndViewContent();
 				} );
 
 				test.describe( 'As a logged in user', function() {
@@ -426,7 +461,8 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 					} );
 
 					test.describe( 'With incorrect password entered', function() {
-						test.before( 'Enter incorrect password', function() {
+						// Enter incorrect password
+						test.before( function() {
 							let viewPostPage = new ViewPostPage( driver );
 							viewPostPage.enterPassword( 'password' );
 						} );
@@ -468,7 +504,8 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 					} );
 
 					test.describe( 'With correct password entered', function() {
-						test.before( 'Enter correct password', function() {
+						// Enter correct password
+						test.before( function() {
 							let viewPostPage = new ViewPostPage( driver );
 							viewPostPage.enterPassword( postPassword );
 						} );
@@ -510,7 +547,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 					} );
 				} );
 				test.describe( 'As a non-logged in user', function() {
-					test.before( 'Clear cookies (log out)', function() {
+					test.before( function() {
 						driverManager.clearCookiesAndDeleteLocalStorage( driver );
 						driver.navigate().refresh();
 					} );
@@ -552,7 +589,8 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 					} );
 
 					test.describe( 'With incorrect password entered', function() {
-						test.before( 'Enter incorrect password', function() {
+						// Enter incorrect password
+						test.before( function() {
 							let viewPostPage = new ViewPostPage( driver );
 							viewPostPage.enterPassword( 'password' );
 						} );
@@ -594,7 +632,8 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 					} );
 
 					test.describe( 'With correct password entered', function() {
-						test.before( 'Enter correct password', function() {
+						// Enter correct password
+						test.before( function() {
 							let viewPostPage = new ViewPostPage( driver );
 							viewPostPage.enterPassword( postPassword );
 						} );
@@ -642,7 +681,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 	test.describe( 'Trash Post:', function() {
 		this.bailSuite( true );
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -652,36 +691,24 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 
 			test.it( 'Can log in', function() {
 				const loginFlow = new LoginFlow( driver );
-				loginFlow.loginAndStartNewPost();
+				return loginFlow.loginAndStartNewPost();
 			} );
 
 			test.it( 'Can enter post title and content', function() {
 				const editorPage = new EditorPage( driver );
 				editorPage.enterTitle( blogPostTitle );
-				editorPage.enterContent( blogPostQuote );
-			} );
-
-			// Shouldn't need to publish first, but putting in temporarily to workaround Trac bug #7753
-			test.it( 'Can publish post', function() {
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				postEditorSidebarComponent.publishPost();
-				postEditorSidebarComponent.waitForSuccessViewPostNotice();
+				return editorPage.enterContent( blogPostQuote );
 			} );
 
 			test.it( 'Can trash the new post', function() {
-				if ( screenSize === 'mobile' ) {
-					const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.trashPost();
-				} else {
-					let editorPage = new EditorPage( driver );
-					editorPage.trashPost();
-				}
+				const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				return postEditorSidebarComponent.trashPost();
 			} );
 
 			test.it( 'Can then see the Reader page', function() {
 				const readerPage = new ReaderPage( driver );
-				readerPage.displayed().then( ( displayed ) => {
-					assert.equal( displayed, true, 'The reader page is not displayed' );
+				return readerPage.displayed().then( ( displayed ) => {
+					return assert.equal( displayed, true, 'The reader page is not displayed' );
 				} );
 			} );
 		} );
@@ -714,10 +741,10 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			} );
 
 			test.it( 'Can publish the post', function() {
-				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				this.postEditorSidebarComponent.ensureSaved();
-				this.postEditorSidebarComponent.publishPost();
-				return this.postEditorSidebarComponent.waitForSuccessViewPostNotice();
+				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				this.postEditorToolbarComponent.ensureSaved();
+				this.postEditorToolbarComponent.publishPost();
+				return this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 			} );
 
 			test.describe( 'Edit the post via posts', function() {
@@ -759,9 +786,9 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 					this.editorPage.errorDisplayed().then( ( errorShown ) => {
 						assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 					} );
-					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					this.postEditorSidebarComponent.ensureSaved();
-					this.postEditorSidebarComponent.publishAndViewContent();
+					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					this.postEditorToolbarComponent.ensureSaved();
+					this.postEditorToolbarComponent.publishAndViewContent();
 				} );
 
 				test.describe( 'Can view the post with the new title', function() {
@@ -810,9 +837,9 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			} );
 
 			test.it( 'Can publish and view content', function() {
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				postEditorSidebarComponent.ensureSaved();
-				postEditorSidebarComponent.publishAndViewContent();
+				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				postEditorToolbarComponent.ensureSaved();
+				postEditorToolbarComponent.publishAndViewContent();
 				this.viewPostPage = new ViewPostPage( driver );
 			} );
 

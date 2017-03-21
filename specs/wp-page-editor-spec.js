@@ -10,6 +10,7 @@ import NotFoundPage from '../lib/pages/not-found-page.js';
 
 import PagePreviewComponent from '../lib/components/page-preview-component.js';
 import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
+import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as mediaHelper from '../lib/media-helper.js';
@@ -21,7 +22,7 @@ const screenSize = driverManager.currentScreenSize();
 
 var driver;
 
-test.before( 'Start Browser', function() {
+test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -33,11 +34,12 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 		this.bailSuite( true );
 		let fileDetails;
 
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.before( 'Create image file for upload', function() {
+		// Create image file for upload
+		test.before( function() {
 			return mediaHelper.createFile().then( function( details ) {
 				fileDetails = details;
 			} );
@@ -69,9 +71,8 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 
 			test.describe( 'Preview', function() {
 				test.it( 'Can launch page preview', function() {
-					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-// wp-calypso issue#6612		postEditorSidebarComponent.ensureSaved();
-					postEditorSidebarComponent.launchPreview();
+					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					postEditorToolbarComponent.launchPreview();
 					this.pagePreviewComponent = new PagePreviewComponent( driver );
 				} );
 
@@ -93,15 +94,16 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 					} );
 				} );
 
-				test.after( 'Can close page preview', function() {
+				// Can close page preview
+				test.after( function() {
 					this.pagePreviewComponent.close();
 				} );
 			} );
 
 			test.describe( 'Publish and View', function() {
 				test.it( 'Can publish and view content', function() {
-					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					this.postEditorSidebarComponent.publishAndViewContent();
+					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					this.postEditorToolbarComponent.publishAndViewContent();
 					this.viewPagePage = new ViewPagePage( driver );
 				} );
 
@@ -140,7 +142,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 
 	test.describe( 'Private Pages:', function() {
 		this.bailSuite( true );
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -157,24 +159,21 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 				let editorPage = new EditorPage( driver );
 				editorPage.enterTitle( pageTitle );
 				editorPage.enterContent( pageQuote );
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				postEditorSidebarComponent.ensureSaved();
+				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				return postEditorToolbarComponent.ensureSaved();
 			} );
 
 			test.it( 'Can set visibility to private', function() {
-				if ( screenSize === 'mobile' ) {
-					const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.setVisibilityToPrivate();
-				} else {
-					const editorPage = new EditorPage( driver );
-					editorPage.setVisibilityToPrivate();
-				}
+				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				this.postEditorSidebarComponent.setVisibilityToPrivate();
+				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				return this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 			} );
 
 			test.describe( 'Publish and View', function() {
 				test.it( 'Can publish and view content', function() {
-					let editorPage = new EditorPage( driver );
-					editorPage.viewPublishedPostOrPage();
+					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					postEditorToolbarComponent.viewPublishedPostOrPage();
 				} );
 
 				test.it( 'Can view page title as logged in user', function() {
@@ -206,7 +205,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 
 	test.describe( 'Password Protected Pages:', function() {
 		this.bailSuite( true );
-		test.before( 'Delete Cookies and Local Storage', function() {
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -223,23 +222,18 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 			test.it( 'Can enter page title and content and set to password protected', function() {
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterTitle( pageTitle );
-				if ( screenSize === 'mobile' ) {
-					this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
-				} else {
-					this.editorPage = new EditorPage( driver );
-					this.editorPage.setVisibilityToPasswordProtected( postPassword );
-				}
+				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterContent( pageQuote );
-				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				this.postEditorSidebarComponent.ensureSaved();
+				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				this.postEditorToolbarComponent.ensureSaved();
 			} );
 
 			test.describe( 'Publish and View', function() {
 				test.it( 'Can publish and view content', function() {
-					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.publishAndViewContent();
+					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					postEditorToolbarComponent.publishAndViewContent();
 				} );
 
 				test.describe( 'As a logged in user', function() {

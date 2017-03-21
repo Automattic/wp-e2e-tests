@@ -22,6 +22,8 @@
 	"storeSandboxCookieValue": "",
 	"publicizeTwitterAccount": "",
 	"slackHook": "",
+	"slackTokenForScreenshots": "",	
+	"slackChannelForScreenshots": "",
 	"mailosaurAPIKey": "",
 	"inviteInboxId": "",
 	"signupInboxId": "",

@@ -38,7 +38,7 @@ const screenSize = driverManager.currentScreenSize();
 
 var driver;
 
-test.before( 'Start Browser', function() {
+test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -47,17 +47,19 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
-	test.before( 'Delete cookies and local storage', function() {
+	test.before( function() {
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
-	test.before( 'Log on to our Pressable Jetpack site', function() {
+	// Log on to our Pressable Jetpack site
+	test.before( function() {
 		this.wpAdminLogonPage = new WPAdminLogonPage( driver, true );
 		this.wpAdminLogonPage.logonAsPressableAdmin();
 	} );
 
 	test.describe( 'Update to Latest Jetpack Version', function() {
-		test.before( 'Make sure wp-admin home page is displayed', function() {
+		// Make sure wp-admin home page is displayed
+		test.before( function() {
 			this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 		} );
 
@@ -77,7 +79,8 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 	} );
 
 	test.describe( 'WordPress.com Connect', function() {
-		test.before( 'Make sure wp-admin home page is displayed', function() {
+		// Make sure wp-admin home page is displayed
+		test.before( function() {
 			this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 		} );
 
@@ -107,18 +110,21 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 	test.describe( 'Publicize', function() {
 		let fileDetails;
 
-		test.before( 'Create image file for upload', function() {
+		// Create image file for upload
+		test.before( function() {
 			return mediaHelper.createFile().then( function( details ) {
 				fileDetails = details;
 			} );
 		} );
 
 		test.describe( 'Can see, activate and connect publicize functionality for Jetpack', function() {
-			test.before( 'Make sure wp-admin home page is displayed', function() {
+			// Make sure wp-admin home page is displayed
+			test.before( function() {
 				return this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 			} );
 
-			test.before( 'Can open Jetpack Engagement Settings', function() {
+			// Can open Jetpack Engagement Settings
+			test.before( function() {
 				this.wpAdminSidebar = new WPAdminSidebar( driver );
 				this.wpAdminSidebar.selectJetpackSettings();
 				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
@@ -144,7 +150,8 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		} );
 
 		test.describe( 'Connecting Twitter', function() {
-			test.before( 'Make sure wp-admin home page is displayed', function() {
+			// Make sure wp-admin home page is displayed
+			test.before( function() {
 				return driver.sleep( 3000 ).then( () => {
 					return this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 				} );
@@ -172,7 +179,8 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		} );
 
 		test.describe( 'Connecting Facebook', function() {
-			test.before( 'Make sure wp-admin home page is displayed', function() {
+			// Make sure wp-admin home page is displayed
+			test.before( function() {
 				return driver.sleep( 3000 ).then( () => {
 					return this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 				} );
@@ -190,7 +198,8 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		} );
 
 		test.describe( 'Make sure no unwanted dialogs display on sharing settings page', function() {
-			test.before( 'Make sure wp-admin home page is displayed', function() {
+			// Make sure wp-admin home page is displayed
+			test.before( function() {
 				return driver.sleep( 3000 ).then( () => {
 					return this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 				} );
@@ -211,7 +220,8 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			const twitterAccountUsername = config.get( 'twitterAccount' );
 			let publicizeMessage = '';
 
-			test.before( 'Make sure wp-admin home page is displayed', function() {
+			// Make sure wp-admin home page is displayed
+			test.before( function() {
 				return this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 			} );
 
@@ -258,7 +268,8 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			const twitterAccountUsername = config.get( 'twitterAccount' );
 			const publicizeMessage = dataHelper.randomPhrase();
 
-			test.before( 'Make sure wp-admin home page is displayed', function() {
+			// Make sure wp-admin home page is displayed
+			test.before( function() {
 				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 			} );
 
@@ -309,7 +320,8 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			const twitterAccountUsername = config.get( 'twitterAccount' );
 			let publicizeMessage = '';
 
-			test.before( 'Make sure wp-admin home page is displayed', function() {
+			// Make sure wp-admin home page is displayed
+			test.before( function() {
 				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 			} );
 
@@ -360,11 +372,12 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 	test.describe( 'Sharing buttons', function() {
 		test.describe( 'Can see and activate sharing buttons functionality for Jetpack', function() {
 
-			test.before( 'Make sure wp-admin home page is displayed', function() {
+			// Make sure wp-admin home page is displayed
+			test.before( function() {
 				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 			} );
 
-			test.before( 'Can open Jetpack Engagement Settings', function() {
+			test.before( function() {
 				this.wpAdminSidebar = new WPAdminSidebar( driver );
 				this.wpAdminSidebar.selectJetpackSettings();
 				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
@@ -390,11 +403,12 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		} );
 
 		test.describe( 'Add and see all the buttons', function() {
-			test.before( 'Make sure wp-admin home page is displayed', function() {
+			// Make sure wp-admin home page is displayed
+			test.before( function() {
 				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 			} );
 
-			test.before( 'Can open sharing settings', function() {
+			test.before( function() {
 				this.wpAdminSidebar = new WPAdminSidebar( driver );
 				this.wpAdminSidebar.selectSettingsSharing();
 				this.wpAdminSettingsSharingPage = new WPAdminSettingsSharingPage( driver );
@@ -584,7 +598,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			} );
 
 			test.describe( 'All the buttons work from the home page', function() {
-				test.before( 'Visit the home page', function() {
+				test.before( function() {
 					const siteUrl = `https://${config.get( 'jetpacksite' )}`;
 					this.viewSitePage = new ViewSitePage( driver, true, siteUrl );
 				} );
@@ -749,11 +763,12 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 	test.describe( 'Related Posts', function() {
 		test.describe( 'Can see and activate related posts functionality for Jetpack', function() {
 
-			test.before( 'Make sure wp-admin home page is displayed', function() {
+			// Make sure wp-admin home page is displayed
+			test.before( function() {
 				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 			} );
 
-			test.before( 'Can open Jetpack Engagement Settings', function() {
+			test.before( function() {
 				this.wpAdminSidebar = new WPAdminSidebar( driver );
 				this.wpAdminSidebar.selectJetpackSettings();
 				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
@@ -782,7 +797,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		} );
 
 		test.describe( 'Related posts are shown as large and with header', function() {
-			test.before( 'Visit the home page and open the first post', function() {
+			test.before( function() {
 				const siteUrl = `https://${config.get( 'jetpacksite' )}`;
 				this.viewSitePage = new ViewSitePage( driver, true, siteUrl );
 				this.viewSitePage.viewFirstPost();
@@ -803,8 +818,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		} );
 
 		test.describe( 'A related posts filter works as expected', function() {
-
-			test.before( 'Make sure wp-admin home page is displayed', function() {
+			test.before( function() {
 				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 			} );
 
@@ -832,11 +846,11 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 	test.describe( 'Likes', function() {
 		test.describe( 'Can see and activate likes functionality for Jetpack', function() {
 
-			test.before( 'Make sure wp-admin home page is displayed', function() {
+			test.before( function() {
 				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 			} );
 
-			test.before( 'Can open Jetpack Engagement Settings', function() {
+			test.before( function() {
 				this.wpAdminSidebar = new WPAdminSidebar( driver );
 				this.wpAdminSidebar.selectJetpackSettings();
 				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
@@ -867,7 +881,7 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 		test.xdescribe( 'Like a post by a different user from master user - notifications and email', function() {
 			let postUrl;
 
-			test.before( 'Publish a post so other user can like it', function() {
+			test.before( function() {
 				const blogPostTitle = dataHelper.randomPhrase();
 				const blogPostQuote = 'Most people carry that pain around inside them their whole lives, until they kill the pain by other means, or until it kills them. But you, my friends, you found another way: a way to use the pain. To burn it as fuel, for light and warmth. You have learned to break the world that has tried to break you.\nLev Grossman\n';
 
@@ -899,11 +913,11 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 
 	test.describe( 'Email Subscriptions', function() {
 		test.describe( 'Can see and activate Email Subscriptions functionality for Jetpack', function() {
-			test.before( 'Make sure wp-admin home page is displayed', function() {
+			test.before( function() {
 				this.wpAdminHomePage = new WPAdminHomePage( driver, true );
 			} );
 
-			test.before( 'Can open Jetpack Engagement Settings', function() {
+			test.before( function() {
 				this.wpAdminSidebar = new WPAdminSidebar( driver );
 				this.wpAdminSidebar.selectJetpackSettings();
 				this.jetpackSettingsPage = new WPAdminJetpackSettingsPage( driver );
@@ -959,13 +973,13 @@ test.describe( `Jetpack on Pressable: '${ screenSize }'`, function() {
 			let postUrl;
 			let fileDetails;
 
-			test.before( 'Create image file for upload', function() {
+			test.before( function() {
 				return mediaHelper.createFile().then( function( details ) {
 					fileDetails = details;
 				} );
 			} );
 
-			test.before( 'Publish a post with an image', function() {
+			test.before( function() {
 				const blogPostTitle = dataHelper.randomPhrase();
 				const blogPostQuote = 'It is characteristic of a great soul to scorn great things and prefer what is ordinary\nSeneca\n';
 
