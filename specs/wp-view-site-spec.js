@@ -4,8 +4,8 @@ import test from 'selenium-webdriver/testing';
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 
-import MySitePage from '../lib/pages/mysite-page';
 import SidebarComponent from '../lib/components/sidebar-component.js';
+import SiteViewComponent from '../lib/components/site-view-component.js';
 import LoginFlow from '../lib/flows/login-flow.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
@@ -30,35 +30,35 @@ test.describe( 'View site from sidebar: (' + screenSize + ')', function() {
 
 		test.it( 'Can Log In and go to My Sites', function() {
 			const loginFlow = new LoginFlow( driver );
-			loginFlow.loginAndSelectMySite();
+			return loginFlow.loginAndSelectMySite();
 		} );
 
 		test.it( 'Can view the default site from sidebar', function() {
 			this.sidebarComponent = new SidebarComponent( driver );
-			this.sidebarComponent.selectViewThisSite();
+			return this.sidebarComponent.selectViewThisSite();
 		} );
 
 		test.it( 'Can see the web preview button', function() {
-			this.mySitePage = new MySitePage( driver );
-			return this.mySitePage.isWebPreviewPresent().then( ( present ) => {
+			this.siteViewComponent = new SiteViewComponent( driver );
+			return this.siteViewComponent.isWebPreviewPresent().then( ( present ) => {
 				assert.equal( present, true, 'The web preview button was not displayed' );
 			} );
 		} );
 
 		test.it( 'Can see the web preview SEO label', function() {
-			return this.mySitePage.isSeoPresent().then( ( present ) => {
+			return this.siteViewComponent.isSeoPresent().then( ( present ) => {
 				assert.equal( present, true, 'The web preview SEO label was not displayed' );
 			} );
 		} );
 
 		test.it( 'Can see the site preview', function() {
-			return this.mySitePage.isSitePresent().then( ( present ) => {
+			return this.siteViewComponent.isSitePresent().then( ( present ) => {
 				assert.equal( present, true, 'The web site preview was not displayed' );
 			} );
 		} );
 
 		test.it( 'Can close site view', function() {
-			this.mySitePage.closeSite( driver );
+			return this.siteViewComponent.close( driver );
 		} );
 
 		test.it( 'Can see sidebar again', function() {
