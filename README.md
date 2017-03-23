@@ -16,8 +16,6 @@ brew install node chromedriver
 #### Install dependencies
 ```
 npm install
-npm pack lib/reporter
-npm install ./spec-xunit-slack-reporter-0.0.1.tgz
 ```
 Note - One of the dependencies for mobile app testing is [Appium](http://appium.io/), which in turn requires Java.  If you don't plan on running any mobile tests and don't have Java installed you can safely ignore the warnings given by `npm install`
 

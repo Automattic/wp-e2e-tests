@@ -10,6 +10,7 @@
   "main": "greetings.js",
   "defaultTestArgs": "-g -s $BROWSERSIZE",
   "scripts": {
+    "postinstall": "npm pack lib/reporter && npm install ./spec-xunit-slack-reporter-0.0.1.tgz",
     "test": "./run.sh ${TESTARGS:-$npm_package_defaultTestArgs}"
   },
   "dependencies": {
