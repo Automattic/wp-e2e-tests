@@ -55,7 +55,7 @@
         "version": "11.103"
     }
   },
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupStore", "signupStoreBenchmarking", "browserNotifications", "domainSuggestionPopover", "signupThemeUpload", "siteTitleStep", "jetpackConnectPlansFirst", "userFirstSignup", "premiumSquaredPlansWording", "domainContactNewPhoneInput", "boostedPostSurvey", "readerSearchOnFollowing", "siteTitleTour", "jetpackPlansNoMonthly", "signupStepOneCopyChanges", "signupDomainsHeadline", "readerPostCardTagCount", "domainSuggestionNudgeLabels", "jetpackNewDescriptions" ],
+  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupStore", "signupStoreBenchmarking", "browserNotifications", "domainSuggestionPopover", "signupThemeUpload", "siteTitleStep", "jetpackConnectPlansFirst", "userFirstSignup", "premiumSquaredPlansWording", "domainContactNewPhoneInput", "boostedPostSurvey", "readerSearchOnFollowing", "siteTitleTour", "jetpackPlansNoMonthly", "signupStepOneCopyChanges", "signupDomainsHeadline", "readerPostCardTagCount", "domainSuggestionNudgeLabels", "jetpackNewDescriptions", "signupStepOneMobileOptimize" ],
   "overrideABTests": [
 	[ "signupStore_20160927", "designTypeWithStore" ],
 	[ "browserNotifications_20160628", "disabled" ],
@@ -68,6 +68,7 @@
 	[ "domainContactNewPhoneInput_20170123", "enabled" ],
 	[ "boostedPostSurvey_20170127", "disabled" ],
 	[ "jetpackPlansNoMonthly_20170302", "showMonthly" ],
-	[ "signupStepOneCopyChanges_20170307", "original" ]
+	[ "signupStepOneCopyChanges_20170307", "modified" ],
+	[ "signupStepOneMobileOptimize_20170322", "original" ]
   ]
 }
