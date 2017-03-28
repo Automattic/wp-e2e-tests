@@ -40,22 +40,22 @@ RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-ke
     apt-get -yqq update && \
     apt-get -yqq install google-chrome-stable
 
-COPY     . /wp-e2e-tests
-# Sometimes "npm install" fails the first time when the cache is empty, so we retry once if it failed
-RUN     npm install || npm install
-
-# Secret secrets
+# Shared directories
 VOLUME	/secrets
-ENV	NODE_ENV docker
-RUN	["sh", "-c", "ln -sf /secrets/local-${NODE_ENV}.json ./config/local-${NODE_ENV}.json"]
-
-# Output directories
 VOLUME /screenshots
 RUN	ln -sf /screenshots ./screenshots
+
+COPY     . /wp-e2e-tests
 
 # Configure non-root account
 RUN	useradd -m e2e-tester
 RUN	chown -R e2e-tester /wp-e2e-tests
 USER    e2e-tester
+
+# Sometimes "npm install" fails the first time when the cache is empty, so we retry once if it failed
+RUN     npm install || npm install
+
+ENV	NODE_ENV docker
+RUN	["sh", "-c", "ln -sf /secrets/local-${NODE_ENV}.json ./config/local-${NODE_ENV}.json"]
 
 CMD ./run.sh -R -g -x
