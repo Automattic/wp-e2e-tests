@@ -593,11 +593,5 @@
 		"lang": "vi",
 		"contentURL": "https://www.fanboy.co.nz/fanboy-vietnam.txt",
 		"supportURL": "https://forums.lanik.us/"
-	},
-	"e2e-whitelist": {
-		"content": "whitelist",
-		"contentURL": [
-			"assets/ublock/whitelist.txt"
-		]
 	}
 }
