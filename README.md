@@ -4,6 +4,23 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
 
 [![Circle CI](https://circleci.com/gh/Automattic/wp-e2e-tests/tree/master.svg?style=svg)](https://circleci.com/gh/Automattic/wp-e2e-tests/tree/master)
 
+## Table of contents
+
+- [Pre-requisites](#pre-requisites)
+  - [Install NodeJS and ChromeDriver](#install-nodejs-and-chromedriver)
+  - [Install dependencies](#install-dependencies)
+  - [Config / Environment Variables](#config--environment-variables)
+- [Run tests](#run-tests)
+  - [To run all the specs](#to-run-the-specs-in-default-browser-sizes---mobile-and-desktop)
+  - [To run an individual spec](#to-run-an-individual-spec)
+  - [To run with different modes](#to-run-with-different-modes)
+  - [To run a specific suite of specs](#to-run-a-specific-suite-of-specs)
+  - [Config Values](#config-values)
+  - [Standalone Environment Variables](#standalone-environment-variables)
+  - [CircleCI Environment Variables](#circleci-environment-variables)
+- [Ad Blocker](#ad-blocker)
+
+
 ## Pre-requisites
 
 
@@ -13,13 +30,12 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
 brew install node chromedriver
 ```
 
-#### Install dependencies
+### Install dependencies
 ```
 npm install
 ```
-Note - One of the dependencies for mobile app testing is [Appium](http://appium.io/), which in turn requires Java.  If you don't plan on running any mobile tests and don't have Java installed you can safely ignore the warnings given by `npm install`
 
-#### Config / Environment Variables
+### Config / Environment Variables
 
 The tests use the node [config](https://www.npmjs.com/package/config) library to specify config values for the tests.
 
@@ -43,11 +59,15 @@ The local configurations are excluded from the repository, in order to prevent a
 
 **Please don't commit usernames and passwords in these (non local- )files!**
 
-#### To run the specs (in default browser sizes - mobile and desktop)
+
+## Run tests
+
+
+### To run all the specs (in default browser sizes - mobile and desktop)
 
 `./run.sh -g`
 
-#### To run an individual spec
+### To run an individual spec
 
 `./node_modules/mocha/bin/mocha specs/wp-log-in-out-spec.js lib/after.js`
 
@@ -57,43 +77,44 @@ eg.
 
 `test.describe.only( 'Logging In and Out:', function() {`
 
-#### To run a specific suite of specs
-
-The `run.sh` script takes the following parameters, which can be combined to execute a variety of suites
-```
--R		  - Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
--p 		  - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop)
--b [branch]	  - Run tests on given branch via https://calypso.live
--s		  - Screensizes in a comma-separated list (defaults to mobile,desktop)
--g		  - Execute general tests in the specs/ directory
--j 		  - Execute Jetpack tests in the specs-jetpack-calypso/ directory
--H [host]	  - Specify an alternate host for Jetpack tests
--w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
--l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration
--c		  - Exit with status code 0 regardless of test results
--m [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
--f		  - Tell visdiffs to fail the tests rather than just send an alert
--i		  - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
--v		  - Execute the visdiff tests in specs-visdiff/
--h		  - This help listing
-```
-
-#### To run
-
+## To run with different modes
 All tests should be written to work in three modes: desktop (1440 wide), tablet (1024 wide) and mobile (375 wide).
 
 You can run tests in different modes by setting an environment variable `BROWSERSIZE` to either `desktop`, `tablet` or `mobile`.
 
 Eg:
 
-`env BROWSERSIZE=tablet ./node_modules/mocha/bin/mocha --compilers js:babel-register specs lib/after.js`
+`env BROWSERSIZE=tablet ./node_modules/mocha/bin/mocha specs lib/after.js`
 
 Or you can use the -s option on the run.sh script:
 
 `./run.sh -g -s mobile`
 `./run.sh -g -s desktop,tablet`
 
-#### Config Values
+
+### To run a specific suite of specs
+
+The `run.sh` script takes the following parameters, which can be combined to execute a variety of suites
+```
+-R      - Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
+-p      - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop)
+-b [branch]   - Run tests on given branch via https://calypso.live
+-s      - Screensizes in a comma-separated list (defaults to mobile,desktop)
+-g      - Execute general tests in the specs/ directory
+-j      - Execute Jetpack tests in the specs-jetpack-calypso/ directory
+-H [host]   - Specify an alternate host for Jetpack tests
+-w      - Only execute signup tests on Windows/IE11, not compatible with -g flag
+-l [config]   - Execute the critical visdiff tests via Sauce Labs with the given configuration
+-c      - Exit with status code 0 regardless of test results
+-m [browsers]   - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
+-f      - Tell visdiffs to fail the tests rather than just send an alert
+-i      - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
+-v      - Execute the visdiff tests in specs-visdiff/
+-h      - This help listing
+```
+
+
+### Config Values
 
 A full list of config values are:
 
@@ -138,7 +159,7 @@ A full list of config values are:
 | testAccounts | A JSON object with username/password pairs assigned to keynames for easy retrieval.  The necessary accounts can be found in the config/local.example.json file.  | {"defaultUser": ["username1","password1"], "multiSiteUser": ["username2","password2"] } | No | **NO** |
 | highlightElements | Boolean to indicate whether to visually highlight elements being interacted with on the page | true | No | Yes |
 
-#### Standalone Environment Variables
+### Standalone Environment Variables
 
 
 | Name | Description | Example | Required | Store in file? |
@@ -146,7 +167,7 @@ A full list of config values are:
 | EYESDEBUG | If this is set, no connection is opened to Applitools, only local screenshots are taken | 1 | No | **NO** |
 | SAUCEDEBUG | If this is set, on test failure a breakpoint will be set in SauceLabs, enabling you to continue interacting with the browser for troubleshooting | 1 | No | **NO** |
 
-#### CircleCI Environment Variables
+### CircleCI Environment Variables
 These environment variables are intended for use inside CircleCI, to control which tests are being run
 
 | Name | Description | Default | Required |
@@ -154,5 +175,6 @@ These environment variables are intended for use inside CircleCI, to control whi
 | DISABLE_EMAIL | Setting this to `true` will cause the Invite and Signup tests to be skipped | false | No |
 | SKIP_TEST_REGEX | The value of this variable will be used in the `-i -g *****` parameter, to skip any tests that match the given RegEx.  List multiple keywords separated by a `|` (i.e. `Invite|Domain|Theme`) | `Empty String` | No |
 
-#### Ad Blocker
+## Ad Blocker
 To combat timeout issues with ads (both those from WordPress.com and any that may appear on any user sites that may load), we've included the uBlock Chrome extension.  Source code for that can be found [here](https://github.com/gorhill/uBlock/).  We're currently using release 1.11.5b1.  To manually add sites to be blocked, append them the [filters.txt](/ublock/assets/ublock/filters.txt) file
+
