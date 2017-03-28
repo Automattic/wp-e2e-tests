@@ -4,6 +4,11 @@ MAINTAINER Automattic
 
 WORKDIR /wp-e2e-tests
 
+# Version Numbers
+ENV NODE_VERSION 6.10.0
+ENV CHROMEDRIVER_VERSION 2.28
+ENV CHROME_VERSION 56.0.2924.87
+
 # Install dependencies
 RUN     apt-get -y update && apt-get -y install \
           wget \
@@ -17,7 +22,6 @@ RUN     apt-get -y update && apt-get -y install \
 	  xvfb tinywm
 
 # Install NodeJS
-ENV NODE_VERSION 6.10.0
 RUN     wget https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz && \
           tar -zxf node-v$NODE_VERSION-linux-x64.tar.gz -C /usr/local && \
           ln -sf /usr/local/node-v$NODE_VERSION-linux-x64 /usr/local/node && \
@@ -26,8 +30,7 @@ RUN     wget https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x6
           rm node-v$NODE_VERSION-linux-x64.tar.gz
 
 # Install Chrome WebDriver
-RUN CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE` && \
-    mkdir -p /opt/chromedriver-$CHROMEDRIVER_VERSION && \
+RUN mkdir -p /opt/chromedriver-$CHROMEDRIVER_VERSION && \
     curl -sS -o /tmp/chromedriver_linux64.zip http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip && \
     unzip -qq /tmp/chromedriver_linux64.zip -d /opt/chromedriver-$CHROMEDRIVER_VERSION && \
     rm /tmp/chromedriver_linux64.zip && \
@@ -35,16 +38,16 @@ RUN CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RE
     ln -fs /opt/chromedriver-$CHROMEDRIVER_VERSION/chromedriver /usr/local/bin/chromedriver
 
 # Install Google Chrome
-RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
-    apt-get -yqq update && \
-    apt-get -yqq install google-chrome-stable
+RUN wget http://www.slimjetbrowser.com/chrome/lnx/chrome64_$CHROME_VERSION.deb && \
+	dpkg -i chrome64_$CHROME_VERSION.deb || \
+	apt-get -fy install
 
 # Shared directories
 VOLUME	/secrets
 VOLUME /screenshots
 RUN	ln -sf /screenshots ./screenshots
 
+# Load the code
 COPY     . /wp-e2e-tests
 
 # Configure non-root account
@@ -55,7 +58,9 @@ USER    e2e-tester
 # Sometimes "npm install" fails the first time when the cache is empty, so we retry once if it failed
 RUN     npm install || npm install
 
+# Point to the secrets config file
 ENV	NODE_ENV docker
 RUN	["sh", "-c", "ln -sf /secrets/local-${NODE_ENV}.json ./config/local-${NODE_ENV}.json"]
 
+# Run the tests
 CMD ./run.sh -R -g -x
