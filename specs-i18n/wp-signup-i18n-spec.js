@@ -8,6 +8,8 @@ import SignUpFlow from '../lib/flows/signup-flow.js';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 
+const testLocale = process.env.LOCALE_TEST || 'en';
+
 var driver;
 
 test.before( function() {
@@ -23,18 +25,18 @@ test.describe( 'WordPress.com Sign Up', function() {
 		driverManager.deleteLocalStorage( driver );
 	} );
 
-	test.it( 'Can Create A Free Blog (tr) Desktop', function() {
+	test.it( `Can Create A Free Blog Desktop (${ testLocale })`, function() {
 		const signupFlow = new SignUpFlow( driver, 'desktop' );
-		signupFlow.createFreeBlogWithScreenshots( 'tr' );
+		signupFlow.createFreeBlogWithScreenshots( testLocale );
 	} );
 
-	test.it( 'Can Create A Free Blog (tr) Tablet', function() {
+	test.it( `Can Create A Free Blog Tablet (${ testLocale })`, function() {
 		const signupFlow = new SignUpFlow( driver, 'tablet' );
-		signupFlow.createFreeBlogWithScreenshots( 'tr' );
+		signupFlow.createFreeBlogWithScreenshots( testLocale );
 	} );
 
-	test.it( 'Can Create A Free Blog (tr) Mobile', function() {
+	test.it( `Can Create A Free Blog Mobile (${ testLocale })`, function() {
 		const signupFlow = new SignUpFlow( driver, 'mobile' );
-		signupFlow.createFreeBlogWithScreenshots( 'tr' );
+		signupFlow.createFreeBlogWithScreenshots( testLocale );
 	} );
 } );
