@@ -55,4 +55,4 @@ while getopts ":bc:ils:h" opt; do
   esac
 done
 
-echo docker run -it --shm-size=128m -v $CONFIGDIR:/secrets -v $SCREENSHOTDIR:/screenshots $LOCAL wp-e2e-tests $CMD
+eval docker run -it --shm-size=128m -v $CONFIGDIR:/secrets -v $SCREENSHOTDIR:/screenshots $LOCAL wp-e2e-tests $CMD
