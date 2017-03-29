@@ -8,7 +8,7 @@ import GoogleFlow from '../lib/flows/google-flow.js';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 
-const culture = process.env.CULTURE || 'en';
+const language = process.env.LANGUAGE || 'en';
 const location = process.env.LOCATION || 'New York City';
 
 var driver;
@@ -28,6 +28,6 @@ test.describe( 'Search for WordPress on Google', function() {
 
 	test.it( `Can load Google`, function() {
 		const googleFlow = new GoogleFlow( driver, 'desktop' );
-		googleFlow.search( 'wordpress', { location, culture, googleDomain: 'com' }  );
+		googleFlow.search( 'wordpress', { location, language, googleDomain: 'com' }  );
 	} );
 } );
