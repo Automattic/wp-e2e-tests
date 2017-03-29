@@ -19,7 +19,7 @@ RUN     apt-get -y update && apt-get -y install \
 	  curl \
 	  unzip \
 	  fonts-ipafont-gothic xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic \
-	  xvfb tinywm
+	  xvfb
 
 # Install NodeJS
 RUN     wget https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz && \
