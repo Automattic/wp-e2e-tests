@@ -3,14 +3,14 @@ import config from 'config';
 
 import * as driverManager from '../lib/driver-manager.js';
 
+import localization_data from '../../localization_data.json';
 import GoogleFlow from '../lib/flows/google-flow.js';
 import LandingPage from '../lib/pages/landing-page.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 
-const language = process.env.LANGUAGE || 'en';
-const location = process.env.LOCATION || 'New York City';
+const locale_test = process.env.LOCALE_TEST || 'en-wordpress';
 
 var driver;
 
@@ -21,6 +21,7 @@ test.before( function() {
 
 test.describe( 'Search for WordPress on Google', function() {
 	this.timeout( mochaTimeOut );
+	var test_data = localization_data[ locale_test ];
 
 	test.beforeEach( function() {
 		driver.manage().deleteAllCookies();
@@ -29,8 +30,8 @@ test.describe( 'Search for WordPress on Google', function() {
 
 	test.it( `Google search contains our ad`, function() {
 		const googleFlow = new GoogleFlow( driver, 'desktop' );
-		var that = this;
-		googleFlow.search( 'wordpress', { location, language, googleDomain: 'com', wpcom_base_url: 'wordpress.com' } ).then( searchPage => {
+		const that = this;
+		return googleFlow.search( test_data.search_keyword, test_data ).then( searchPage => {
 			that.searchPage = searchPage;
 		} )
 	} );
