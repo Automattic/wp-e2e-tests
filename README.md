@@ -11,7 +11,7 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
   - [Install dependencies](#install-dependencies)
   - [Config / Environment Variables](#config--environment-variables)
 - [Run tests](#run-tests)
-  - [To run all the specs](#to-run-the-specs-in-default-browser-sizes---mobile-and-desktop)
+  - [To run all the specs](#to-run-all-the-specs-in-default-browser-sizes---mobile-and-desktop)
   - [To run an individual spec](#to-run-an-individual-spec)
   - [To run with different modes](#to-run-with-different-modes)
   - [To run a specific suite of specs](#to-run-a-specific-suite-of-specs)
@@ -96,21 +96,21 @@ Or you can use the -s option on the run.sh script:
 
 The `run.sh` script takes the following parameters, which can be combined to execute a variety of suites
 ```
--R      - Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
--p      - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop)
--b [branch]   - Run tests on given branch via https://calypso.live
--s      - Screensizes in a comma-separated list (defaults to mobile,desktop)
--g      - Execute general tests in the specs/ directory
--j      - Execute Jetpack tests in the specs-jetpack-calypso/ directory
--H [host]   - Specify an alternate host for Jetpack tests
--w      - Only execute signup tests on Windows/IE11, not compatible with -g flag
--l [config]   - Execute the critical visdiff tests via Sauce Labs with the given configuration
--c      - Exit with status code 0 regardless of test results
--m [browsers]   - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
--f      - Tell visdiffs to fail the tests rather than just send an alert
--i      - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
--v      - Execute the visdiff tests in specs-visdiff/
--h      - This help listing
+-R		  - Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
+-p 		  - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop)
+-b [branch]	  - Run tests on given branch via https://calypso.live
+-s		  - Screensizes in a comma-separated list (defaults to mobile,desktop)
+-g		  - Execute general tests in the specs/ directory
+-j 		  - Execute Jetpack tests in the specs-jetpack-calypso/ directory
+-H [host]	  - Specify an alternate host for Jetpack tests
+-w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
+-l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration
+-c		  - Exit with status code 0 regardless of test results
+-m [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
+-f		  - Tell visdiffs to fail the tests rather than just send an alert
+-i		  - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
+-v		  - Execute the visdiff tests in specs-visdiff/
+-h		  - This help listing
 ```
 
 
