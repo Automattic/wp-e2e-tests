@@ -121,7 +121,7 @@ By running the tests in the context of a Docker container we're able to execute 
 The `run-docker.sh` script handles all of the interaction with the container, with the options listed below.  But first, here are the steps to get up and running quickly:
 
 1. If you haven't already, [install Docker](https://docs.docker.com/engine/installation/)
-1. Execute `./run-docker.sh -b` to build the image
+1. Execute `./run-docker.sh -b` to build the image (this will take several minutes the first time)
 1. The tests inside the container have NODE_ENV set to `docker`, so create/link a config file named `local-docker.json`
 1. Execute `./run-docker.sh` and it will run the default test suite at mobile/desktop width
 
