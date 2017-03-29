@@ -40,6 +40,9 @@ function doGoogleAdSearch( search_params ) {
 		} );
 
 		test.it( `Our landing page exists`, function() {
+			if( ! this.searchPage ) {
+				this.skip( 'Depends on previous test passing' );
+			}
 			this.searchPage.getAdUrl().then( function( url ) {
 				var landingPage = new LandingPage( driver, url );
 
