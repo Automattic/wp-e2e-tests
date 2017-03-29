@@ -10,7 +10,8 @@ import LandingPage from '../lib/pages/landing-page.js';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 
-const locale_test = process.env.LOCALE_TEST || 'en-wordpress';
+const locale_test = process.env.LOCALE_TEST || 'en';
+const test_data = localization_data[ locale_test ];
 
 var driver;
 
@@ -19,27 +20,35 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Search for WordPress on Google', function() {
-	this.timeout( mochaTimeOut );
-	var test_data = localization_data[ locale_test ];
+function doGoogleAdSearch( search_params ) {
+	var description = 'Search for "' + search_params.query + '" on Google from ' + search_params.originating_location;
 
-	test.beforeEach( function() {
-		driver.manage().deleteAllCookies();
-		driverManager.deleteLocalStorage( driver );
-	} );
+	test.describe( description, function() {
+		this.timeout( mochaTimeOut );
 
-	test.it( `Google search contains our ad`, function() {
-		const googleFlow = new GoogleFlow( driver, 'desktop' );
-		const that = this;
-		return googleFlow.search( test_data.search_keyword, test_data ).then( searchPage => {
-			that.searchPage = searchPage;
-		} )
-	} );
+		test.beforeEach( function() {
+			driver.manage().deleteAllCookies();
+			driverManager.deleteLocalStorage( driver );
+		} );
 
-	test.it( `Our landing page exists`, function() {
-		this.searchPage.getAdUrl().then( function( url ) {
-			var landingPage = new LandingPage( driver, url );
+		test.it( `Google search contains our ad`, function() {
+			const googleFlow = new GoogleFlow( driver, 'desktop' );
+			const that = this;
+			return googleFlow.search( search_params, test_data ).then( searchPage => {
+				that.searchPage = searchPage;
+			} )
+		} );
 
+		test.it( `Our landing page exists`, function() {
+			this.searchPage.getAdUrl().then( function( url ) {
+				var landingPage = new LandingPage( driver, url );
+
+			} );
 		} );
 	} );
+}
+
+test_data.google_searches.forEach( function( search_params ) {
+	doGoogleAdSearch( search_params );
 } );
+
