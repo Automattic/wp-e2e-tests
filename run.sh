@@ -19,7 +19,7 @@ I18N_CONFIG="\"browser\":\"firefox\",\"proxy\":\"system\",\"neverSaveScreenshots
 IE11_CONFIG="\"sauce\":\"true\",\"sauceConfig\":\"win-ie11\""
 
 declare -a TARGETS
-declare -a LOCALE_TESTS=( en )
+declare -a LOCALE_TESTS=( en-wordpress )
 
 usage () {
   cat <<EOF
@@ -78,7 +78,25 @@ while getopts ":Rpb:s:gjCH:wl:cm:fiIvh" opt; do
       TARGET="specs-i18n/"
       ;;
     I)
-      LOCALE_TESTS=( en es pt-br de fr he ja it nl ru tr id zh-cn zh-tw ko ar sv )
+      LOCALE_TESTS=(
+        en-wordpress
+        es-wordpress
+        pt-br-wordpress
+        de-wordpress
+        fr-wordpress
+        he-wordpress
+        ja-wordpress
+        it-wordpress
+        nl-wordpress
+        ru-wordpress
+        tr-wordpress
+        id-wordpress
+        zh-cn-wordpress
+        zh-tw-wordpress
+        ko-wordpress
+        ar-wordpress
+        sv-wordpress
+      )
       ;;
     w)
       NODE_CONFIG_ARGS+=$IE11_CONFIG
