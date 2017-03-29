@@ -19,7 +19,9 @@ I18N_CONFIG="\"browser\":\"firefox\",\"proxy\":\"system\",\"neverSaveScreenshots
 IE11_CONFIG="\"sauce\":\"true\",\"sauceConfig\":\"win-ie11\""
 
 declare -a TARGETS
-declare -a LOCALE_TESTS=( en-wordpress )
+if [ -z "${LOCALE_TESTS}" ]; then
+  declare -a LOCALE_TESTS=( en-wordpress )
+fi
 
 usage () {
   cat <<EOF
