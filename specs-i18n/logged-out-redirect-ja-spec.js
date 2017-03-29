@@ -20,14 +20,14 @@ test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 } );
 
-test.describe( 'https://get.blog Sign Up', function() {
+test.describe( 'wordpress.com is redirected to the correct url for ja', function() {
 	this.timeout( mochaTimeOut );
 
-	test.it( 'wordpress.com is redirected to the correct url', function() {
-		const locale = 'it';
-		driver = driverManager.startBrowser( { acceptLanguage: locale } );
+	test.it( 'should redirect to the correct url for ja.wordpress.com', function() {
+		driver = driverManager.startBrowser( { acceptLanguage: 'ja' } );
+
 		// No culture here implies 'en'
 		this.wpHomePage = new WPHomePage( driver, { visit: true } );
-		this.wpHomePage.checkURL( locale );
+		this.wpHomePage.checkURL( 'ja' );
 	} );
 } );
