@@ -15,6 +15,7 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
   - [To run an individual spec](#to-run-an-individual-spec)
   - [To run with different modes](#to-run-with-different-modes)
   - [To run a specific suite of specs](#to-run-a-specific-suite-of-specs)
+  - [To run inside a Docker container](#to-run-inside-a-docker-container)
   - [Config Values](#config-values)
   - [Standalone Environment Variables](#standalone-environment-variables)
   - [CircleCI Environment Variables](#circleci-environment-variables)
@@ -110,9 +111,35 @@ The `run.sh` script takes the following parameters, which can be combined to exe
 -f		  - Tell visdiffs to fail the tests rather than just send an alert
 -i		  - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
 -v		  - Execute the visdiff tests in specs-visdiff/
+-x		  - Execute the tests from the context of xvfb-run
 -h		  - This help listing
 ```
 
+### To run inside a Docker container
+By running the tests in the context of a Docker container we're able to execute them "headlessly", with no visible browser window interrupting any other work you're doing on your machine while the tests run.  This also forces a particular version of Chrome/driver to reduce compatibility issues.
+
+The `run-docker.sh` script handles all of the interaction with the container, with the options listed below.  But first, here are the steps to get up and running quickly:
+
+1. If you haven't already, [install Docker](https://docs.docker.com/engine/installation/)
+1. Execute `./run-docker.sh -b` to build the image
+1. The tests inside the container have NODE_ENV set to `docker`, so create/link a config file named `local-docker.json`
+1. Execute `./run-docker.sh` and it will run the default test suite at mobile/desktop width
+
+To further customize the run, use these command line options:
+```
+Unless the -b option is given, this command runs the Docker image named wp-e2e-tests
+-b		  - Build the Docker container (overrides all other options)
+-c		  - Directory holding local-docker.json file (fully qualified)
+-i		  - Launch an interactive shell instead of directly running the tests
+-l		  - Mount the current directory inside the container for modification/testing
+-s		  - Output directory for screenshots (fully qualified)
+-h		  - This help listing
+```
+When the image is built, it copies the entire current directory (assuming the root of the repo) into the image.  It then creates a link in the config directory to the `local-docker.json` file stored in the `secrets` directory (inside the container), which is passed in on the command line to `docker run` as a mapped volume.  By default it assumes you're going to use `./config`, but if you have the json file stored elsewhere you can override it with the `-c` option.
+
+By copying the contents of the `wp-e2e-tests` directory into the image, that leaves us with a snapshot at the time the image was built.  To pick up new changes you need to re-build the image, or use the `-l` option to share your current directory inside the container for live updates.  That option is particularly useful if you pair it with `-i`, which gives you an interactive shell to run the tests manually rather than kick them off immediately.
+
+Note that if you run interactively, you need to either use the `-x` option with `run.sh` or preface your mocha commands with `xvfb-run` to have them use the virtual display.
 
 ### Config Values
 
