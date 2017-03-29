@@ -19,6 +19,7 @@ I18N_CONFIG="\"browser\":\"firefox\",\"proxy\":\"system\",\"neverSaveScreenshots
 IE11_CONFIG="\"sauce\":\"true\",\"sauceConfig\":\"win-ie11\""
 
 declare -a TARGETS
+declare -a LOCALE_TESTS=( en )
 
 usage () {
   cat <<EOF
@@ -37,6 +38,7 @@ usage () {
 -m [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
 -f		  - Tell visdiffs to fail the tests rather than just send an alert
 -i		  - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
+-I		  - Execute each test repeatedly with many different LOCALE_TEST environment values. Use with care.
 -v		  - Execute the visdiff tests in specs-visdiff/
 -x		  - Execute the tests from the context of xvfb-run
 -h		  - This help listing
@@ -48,7 +50,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rpb:s:gjWCH:wl:cm:fivxh" opt; do
+while getopts ":Rpb:s:gjWCH:wl:cm:fiIvxh" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
@@ -76,6 +78,9 @@ while getopts ":Rpb:s:gjWCH:wl:cm:fivxh" opt; do
     i)
       NODE_CONFIG_ARGS+=$I18N_CONFIG
       TARGET="specs-i18n/"
+      ;;
+    I)
+      LOCALE_TESTS=( en es pt-br de fr he ja it nl ru tr id zh-cn zh-tw ko ar sv )
       ;;
     w)
       NODE_CONFIG_ARGS+=$IE11_CONFIG
@@ -165,7 +170,9 @@ if [ $PARALLEL == 1 ]; then
   if [ $CIRCLE_NODE_INDEX == $MOBILE ]; then
       echo "Executing tests at mobile screen width"
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
-      CMD="env BROWSERSIZE=mobile $MOCHA $NC $GREP $REPORTER specs/"
+      for LOCALE_TEST in "${LOCALE_TESTS[@]}"; do
+        CMD="env BROWSERSIZE=mobile LOCALE_TEST=$LOCALE_TEST $MOCHA $NC $GREP $REPORTER specs/"
+      done
 
       eval $CMD
       RETURN+=$?
@@ -173,8 +180,9 @@ if [ $PARALLEL == 1 ]; then
   if [ $CIRCLE_NODE_INDEX == $DESKTOP ]; then
       echo "Executing tests at desktop screen width"
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
-      CMD="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER specs/"
-
+      for LOCALE_TEST in "${LOCALE_TESTS[@]}"; do
+        CMD="env BROWSERSIZE=desktop LOCALE_TEST=$LOCALE_TEST $MOCHA $NC $GREP $REPORTER specs"
+      done;
       eval $CMD
       RETURN+=$?
   fi
@@ -184,13 +192,15 @@ else # Not a parallel run, just queue up the tests in sequence
   if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ] || [ $CANARY_PARALLEL == 1 ]; then
     IFS=, read -r -a SCREENSIZE_ARRAY <<< "$SCREENSIZES"
     for size in ${SCREENSIZE_ARRAY[@]}; do
-      for target in "${TARGETS[@]}"; do
-        if [ "$target" != "" ]; then
-          CMD="env BROWSERSIZE=$size $MOCHA $NC $GREP $REPORTER $target"
+      for LOCALE_TEST in "${LOCALE_TESTS[@]}"; do
+        for target in "${TARGETS[@]}"; do
+          if [ "$target" != "" ]; then
+            CMD="env BROWSERSIZE=$size LOCALE_TEST=$LOCALE_TEST $MOCHA $NC $GREP $REPORTER $target"
 
-          eval $CMD
-          RETURN+=$?
-        fi
+            eval $CMD
+            RETURN+=$?
+          fi
+        done
       done
     done
   fi
