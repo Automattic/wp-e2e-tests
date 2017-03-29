@@ -27,7 +27,7 @@ test.describe( `logged out homepage redirect test (${ testLocale })`, function()
 	this.timeout( mochaTimeOut );
 
 	test.it( `should redirect to the correct url for wordpress.com (${ testLocale })`, function() {
-		driver = driverManager.startBrowser( { acceptLanguage: testLocale } );
+		driver = driverManager.startBrowser();
 
 		// No culture here implies 'en'
 		this.wpHomePage = new WPHomePage( driver, { visit: true } );
