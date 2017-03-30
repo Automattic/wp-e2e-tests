@@ -3,6 +3,7 @@ import config from 'config';
 import assert from 'assert';
 
 import * as driverManager from '../lib/driver-manager';
+import * as slackNotifier from '../lib/slack-notifier';
 import * as dataHelper from '../lib/data-helper';
 import * as mediaHelper from '../lib/media-helper';
 import LoginFlow from '../lib/flows/login-flow';
@@ -194,8 +195,15 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 							} );
 
 							test.it( 'Can see the new menu listed as primary', function() {
+								this.customizerPage.menuDisplayedAsPrimary( newMenuName ).then( ( displayed ) => {
+									if ( displayed === false ) {
+										slackNotifier.warn( 'Could not see the new menu set in the customizer - trying again now' );
+										this.customizerPage.addNewMenuAndSetAsPrimary( newMenuName )
+									}
+								} );
+
 								return this.customizerPage.menuDisplayedAsPrimary( newMenuName ).then( ( displayed ) => {
-									return assert( displayed, `The menu '${newMenuName}' was not displayed as the primary menu` );
+									return assert( displayed, `The menu '${ newMenuName }' was not displayed as the primary menu` );
 								} );
 							} );
 
