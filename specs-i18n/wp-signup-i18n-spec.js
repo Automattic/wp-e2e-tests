@@ -17,7 +17,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'WordPress.com Sign Up', function() {
+test.xdescribe( 'WordPress.com Sign Up', function() {
 	this.timeout( mochaTimeOut );
 
 	test.beforeEach( function() {
