@@ -11,7 +11,7 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
   - [Install dependencies](#install-dependencies)
   - [Config / Environment Variables](#config--environment-variables)
 - [Run tests](#run-tests)
-  - [To run all the specs](#to-run-the-specs-in-default-browser-sizes---mobile-and-desktop)
+  - [To run all the specs](#to-run-all-the-specs-in-default-browser-sizes---mobile-and-desktop)
   - [To run an individual spec](#to-run-an-individual-spec)
   - [To run with different modes](#to-run-with-different-modes)
   - [To run a specific suite of specs](#to-run-a-specific-suite-of-specs)
@@ -69,7 +69,7 @@ The local configurations are excluded from the repository, in order to prevent a
 
 ### To run an individual spec
 
-`./node_modules/mocha/bin/mocha specs/wp-log-in-out-spec.js lib/after.js`
+`./node_modules/.bin/mocha specs/wp-log-in-out-spec.js`
 
 Note: you can also change the spec _temporarily_ the use the <code>.only</code> syntax so it is the only spec that runs (making sure this isn't committed)
 
@@ -84,7 +84,7 @@ You can run tests in different modes by setting an environment variable `BROWSER
 
 Eg:
 
-`env BROWSERSIZE=tablet ./node_modules/mocha/bin/mocha specs lib/after.js`
+`env BROWSERSIZE=tablet ./node_modules/.bin/mocha specs`
 
 Or you can use the -s option on the run.sh script:
 
@@ -96,21 +96,21 @@ Or you can use the -s option on the run.sh script:
 
 The `run.sh` script takes the following parameters, which can be combined to execute a variety of suites
 ```
--R      - Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
--p      - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop)
--b [branch]   - Run tests on given branch via https://calypso.live
--s      - Screensizes in a comma-separated list (defaults to mobile,desktop)
--g      - Execute general tests in the specs/ directory
--j      - Execute Jetpack tests in the specs-jetpack-calypso/ directory
--H [host]   - Specify an alternate host for Jetpack tests
--w      - Only execute signup tests on Windows/IE11, not compatible with -g flag
--l [config]   - Execute the critical visdiff tests via Sauce Labs with the given configuration
--c      - Exit with status code 0 regardless of test results
--m [browsers]   - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
--f      - Tell visdiffs to fail the tests rather than just send an alert
--i      - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
--v      - Execute the visdiff tests in specs-visdiff/
--h      - This help listing
+-R		  - Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
+-p 		  - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop)
+-b [branch]	  - Run tests on given branch via https://calypso.live
+-s		  - Screensizes in a comma-separated list (defaults to mobile,desktop)
+-g		  - Execute general tests in the specs/ directory
+-j 		  - Execute Jetpack tests in the specs-jetpack-calypso/ directory
+-H [host]	  - Specify an alternate host for Jetpack tests
+-w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
+-l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration
+-c		  - Exit with status code 0 regardless of test results
+-m [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
+-f		  - Tell visdiffs to fail the tests rather than just send an alert
+-i		  - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
+-v		  - Execute the visdiff tests in specs-visdiff/
+-h		  - This help listing
 ```
 
 
@@ -177,4 +177,3 @@ These environment variables are intended for use inside CircleCI, to control whi
 
 ## Ad Blocker
 To combat timeout issues with ads (both those from WordPress.com and any that may appear on any user sites that may load), we've included the uBlock Chrome extension.  Source code for that can be found [here](https://github.com/gorhill/uBlock/).  We're currently using release 1.11.5b1.  To manually add sites to be blocked, append them the [filters.txt](/ublock/assets/ublock/filters.txt) file
-
