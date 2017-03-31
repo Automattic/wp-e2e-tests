@@ -17,7 +17,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.xdescribe.skip( 'https://get.blog Sign Up', function() {
+test.xdescribe( 'https://get.blog Sign Up', function() {
 	this.timeout( mochaTimeOut );
 
 	test.beforeEach( function() {
