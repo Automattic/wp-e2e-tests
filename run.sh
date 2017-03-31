@@ -83,6 +83,8 @@ while getopts ":Rpb:s:gjWCH:wl:cm:fiIvxh" opt; do
       ;;
     I)
       LOCALE_TESTS=( en es pt-br de fr he ja it nl ru tr id zh-cn zh-tw ko ar sv )
+      # Just a subset to start with:
+      LOCALE_TESTS=( fr )
       ;;
     w)
       NODE_CONFIG_ARGS+=$IE11_CONFIG
