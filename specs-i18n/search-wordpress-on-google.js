@@ -40,14 +40,23 @@ function doGoogleAdSearch( search_params ) {
 		} );
 
 		test.it( `Our landing page exists`, function() {
+			const that = this;
 			if( ! this.searchPage ) {
 				this.skip( 'Depends on previous test passing' );
 			}
 			this.searchPage.getAdUrl().then( function( url ) {
-				var landingPage = new LandingPage( driver, url );
+				that.landingPage = new LandingPage( driver, url );
 
 			} );
 		} );
+
+		test.it( `Localized string found on landing page`, function() {
+			if( ! this.landingPage ) {
+				this.skip( 'Depends on previous test passing' );
+			}
+			this.landingPage.checkLocalizedString( test_data.wpcom_landing_page_string );
+		} );
+
 	} );
 }
 
