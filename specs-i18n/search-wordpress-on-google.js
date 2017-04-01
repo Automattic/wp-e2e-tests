@@ -21,7 +21,11 @@ test.before( function() {
 } );
 
 function doGoogleAdSearch( search_params ) {
-	var description = 'Search for "' + search_params.query + '" on Google from ' + search_params.originating_location;
+	var description = 'Search for "' + search_params.query + '" on Google from '
+		+ search_params.originating_location
+		+ ( search_params.originating_location_english
+			? ' (' + search_params.originating_location_english + ')'
+			: '' );
 
 	test.describe( description, function() {
 		this.timeout( mochaTimeOut );
