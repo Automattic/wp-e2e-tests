@@ -19,9 +19,6 @@ I18N_CONFIG="\"proxy\":\"system\",\"neverSaveScreenshots\":\"true\""
 IE11_CONFIG="\"sauce\":\"true\",\"sauceConfig\":\"win-ie11\""
 
 declare -a TARGETS
-if [ -z "${LOCALE_TESTS}" ]; then
-  declare -a LOCALE_TESTS=( en )
-fi
 
 usage () {
   cat <<EOF
@@ -82,9 +79,9 @@ while getopts ":Rpb:s:gjWCH:wl:cm:fiIvxh" opt; do
       TARGET="specs-i18n/"
       ;;
     I)
-      LOCALE_TESTS=( en es pt-br de fr he ja it nl ru tr id zh-cn zh-tw ko ar sv )
-      # Just a subset to start with:
-      LOCALE_TESTS=( fr )
+      if [ -z "$LOCALE_TESTS" ]; then
+        LOCALE_TESTS="en es pt-br de fr he ja it nl ru tr id zh-cn zh-tw ko ar sv"
+      fi
       ;;
     w)
       NODE_CONFIG_ARGS+=$IE11_CONFIG
@@ -161,6 +158,11 @@ if [ "$SKIP_TEST_REGEX" != "" ]; then
 	GREP="-i -g '$SKIP_TEST_REGEX'"
 fi
 
+# default to testing in English
+if [ -z "$LOCALE_TESTS" ]; then
+  LOCALE_TESTS=en
+fi
+
 # Combine any NODE_CONFIG entries into a single object
 NODE_CONFIG_ARG="$(joinStr , ${NODE_CONFIG_ARGS[*]})"
 
@@ -174,7 +176,7 @@ if [ $PARALLEL == 1 ]; then
   if [ $CIRCLE_NODE_INDEX == $MOBILE ]; then
       echo "Executing tests at mobile screen width"
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
-      for LOCALE_TEST in "${LOCALE_TESTS[@]}"; do
+      for LOCALE_TEST in $LOCALE_TESTS; do
         CMD="env BROWSERSIZE=mobile LOCALE_TEST=$LOCALE_TEST $MOCHA $NC $GREP $REPORTER specs/"
       done
 
@@ -184,7 +186,8 @@ if [ $PARALLEL == 1 ]; then
   if [ $CIRCLE_NODE_INDEX == $DESKTOP ]; then
       echo "Executing tests at desktop screen width"
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
-      for LOCALE_TEST in "${LOCALE_TESTS[@]}"; do
+
+      for LOCALE_TEST in $LOCALE_TESTS; do
         CMD="env BROWSERSIZE=desktop LOCALE_TEST=$LOCALE_TEST $MOCHA $NC $GREP $REPORTER specs"
       done;
       eval $CMD
@@ -196,7 +199,7 @@ else # Not a parallel run, just queue up the tests in sequence
   if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ] || [ $CANARY_PARALLEL == 1 ]; then
     IFS=, read -r -a SCREENSIZE_ARRAY <<< "$SCREENSIZES"
     for size in ${SCREENSIZE_ARRAY[@]}; do
-      for LOCALE_TEST in "${LOCALE_TESTS[@]}"; do
+      for LOCALE_TEST in $LOCALE_TESTS; do
         for target in "${TARGETS[@]}"; do
           if [ "$target" != "" ]; then
             CMD="env BROWSERSIZE=$size LOCALE_TEST=$LOCALE_TEST $MOCHA $NC $GREP $REPORTER $target"
