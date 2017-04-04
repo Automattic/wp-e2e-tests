@@ -103,7 +103,7 @@ while getopts ":Rpb:s:gjCH:wl:cm:fivh" opt; do
       TARGET="specs-jetpack-calypso/"
       ;;
     C)
-      if [ "$CI" != "true" ]; then
+      if [ "$CI" == "true" ]; then
         GREP="-g '@canary$CIRCLE_NODE_INDEX'"
         CANARY_PARALLEL=1
       else
