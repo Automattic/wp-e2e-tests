@@ -3,6 +3,7 @@ MOCHA=./node_modules/mocha/bin/mocha
 GRUNT=./node_modules/.bin/grunt
 REPORTER=""
 PARALLEL=0
+CANARY_PARALLEL=0
 JOBS=0
 AFTER="lib/after.js"
 OPTS=""
@@ -102,8 +103,13 @@ while getopts ":Rpb:s:gjCH:wl:cm:fivh" opt; do
       TARGET="specs-jetpack-calypso/"
       ;;
     C)
-	  GREP="-g '@canary'"
-	  MOCHA+=" --compilers js:babel-register"
+      if [ "$CI" != "true" ]; then
+        GREP="-g '@canary$CIRCLE_NODE_INDEX'"
+        CANARY_PARALLEL=1
+      else
+        GREP="-g '@canary'"
+      fi
+
       SCREENSIZES="mobile"
       TARGET="specs/"
       ;;
@@ -166,7 +172,7 @@ if [ $PARALLEL == 1 ]; then
 else # Not a parallel run, just queue up the tests in sequence
   NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
 
-  if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
+  if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ] || [ $CANARY_PARALLEL == 1 ]; then
     IFS=, read -r -a SCREENSIZE_ARRAY <<< "$SCREENSIZES"
     for size in ${SCREENSIZE_ARRAY[@]}; do
       for target in "${TARGETS[@]}"; do
