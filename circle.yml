@@ -12,11 +12,11 @@ general:
 
 dependencies:
   pre:
-    - ./randomize.sh specs
+    - ./scripts/randomize.sh specs
 
 test:
   override:
-    - ./run-wrapper.sh:
+    - ./scripts/run-wrapper.sh:
         parallel: true
   post:
     - node_modules/.bin/junit-viewer --results=$CIRCLE_TEST_REPORTS --save=$CIRCLE_TEST_REPORTS/consolidated_results.html
