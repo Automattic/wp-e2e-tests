@@ -181,10 +181,52 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 								this.postPreviewComponent.close();
 							} );
 
-							test.describe( 'Publish and View', function() {
+							test.describe( 'Publish and Preview Published Content', function() {
 								test.it( 'Can publish and view content', function() {
 									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-									postEditorToolbarComponent.publishAndViewContent();
+									postEditorToolbarComponent.publishAndPreviewPublished();
+									this.postPreviewComponent = new PostPreviewComponent( driver );
+								} );
+
+								test.it( 'Can see correct post title in preview', function() {
+									this.postPreviewComponent.postTitle().then( function( postTitle ) {
+										assert.equal( postTitle.toLowerCase(), blogPostTitle.toLowerCase(), 'The blog post preview title is not correct' );
+									} );
+								} );
+
+								test.it( 'Can see correct post content in preview', function() {
+									this.postPreviewComponent.postContent().then( function( content ) {
+										assert.equal( content.indexOf( blogPostQuote ) > -1, true, 'The post preview content (' + content + ') does not include the expected content (' + blogPostQuote + ')' );
+									} );
+								} );
+
+								test.it( 'Can see the post category in preview', function() {
+									this.postPreviewComponent.categoryDisplayed().then( function( categoryDisplayed ) {
+										assert.equal( categoryDisplayed.toUpperCase(), newCategoryName.toUpperCase(), 'The category: ' + newCategoryName + ' is not being displayed on the post' );
+									} );
+								} );
+
+								test.it( 'Can see the post tag in preview', function() {
+									this.postPreviewComponent.tagDisplayed().then( function( tagDisplayed ) {
+										assert.equal( tagDisplayed.toUpperCase(), newTagName.toUpperCase(), 'The tag: ' + newTagName + ' is not being displayed on the post' );
+									} );
+								} );
+
+								test.it( 'Can see the image in preview', function() {
+									this.postPreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
+										assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
+									} );
+								} );
+
+								test.it( 'Can close post preview', function() {
+									this.postPreviewComponent.close();
+								} );
+							} );
+
+							test.describe( 'View Published Content', function() {
+								test.it( 'Can publish and view content', function() {
+									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+									postEditorToolbarComponent.viewPublishedPostOrPage();
 									this.viewPostPage = new ViewPostPage( driver );
 								} );
 
