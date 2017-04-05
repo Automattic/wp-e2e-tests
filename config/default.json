@@ -15,6 +15,7 @@
   "neverSaveScreenshots": false,
   "checkForConsoleErrors": false,
   "reportWarningsToSlack": false,
+  "closeBrowserOnComplete": true,
   "sauceConfigurations": {
     "osx-chrome": {
         "browserName": "chrome",

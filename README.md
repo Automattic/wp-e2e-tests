@@ -122,17 +122,17 @@ By default the tests start their own Selenium server in the background, which in
 
 1. If you haven't already, [install Docker](https://docs.docker.com/engine/installation/)
 1. `docker pull selenium/standalone-chrome-debug`
-1. `docker run -d --rm -v $(pwd):$(pwd):ro -p 4444:4444 -p 5902:5900 selenium/standalone-chrome-debug`*
+1. `docker run -d --rm -v /dev/shm:/dev/shm -v $(pwd):$(pwd):ro -p 4444:4444 -p 5902:5900 --name=selenium selenium/standalone-chrome-debug`*
 1. `export SELENIUM_REMOTE_URL=http://localhost:4444/wd/hub`
 1. Execute your tests as normal, and no browser will appear
 
-*Note that this command needs to be run from the root of the wp-e2e-tests repo, as the `-v $(pwd):$(pwd):ro` flag needs that to share the uBlock extension location inside the container.  The `-p 5902:5900` flag opens VNC for access at `localhost:5902`, with password "secret".  The `-d` flag runs in the background, replace with `-it` if you want to view the Selenium server output on the screen
+*Note that this command needs to be run from the root of the wp-e2e-tests repo, as the `-v $(pwd):$(pwd):ro` flag needs to be in that location to share the uBlock extension location inside the container.  The `-p 5902:5900` flag opens VNC for access at `localhost:5902`, with password "secret".  The `-d` flag runs in the background, replace with `-it` if you want to view the Selenium server output on the screen.  If running in the background you can stop it with the `docker kill selenium` command.  The `-v /dev/shm:/dev/shm` flag is necessary to provide sufficient shared memory for Chrome.
 
 A few additional steps are necessary if you want to connect that Selenium server to a locally running branch of Calypso.  It requires that you also run wp-calypso from a Docker container, but all of the networking/hosts file updates are handled by the Docker daemon.  These steps assume you've already configured Calypso for Docker.
 
 1. `docker network create e2e` (This is a one-time setup step)
 1. (From wp-calypso) `docker run --name=wpcalypso.wordpress.com --network=e2e -it --rm -e PORT=80 -e NODE_ENV='production' -e CALYPSO_ENV='wpcalypso' wp-calypso`
-1. (From wp-e2e-tests) `docker run -d --rm -v (pwd):(pwd):ro -p 4444:4444 -p 5902:5900 --network=e2e selenium/standalone-chrome-debug`
+1. (From wp-e2e-tests) `docker run -d --rm  -v /dev/shm:/dev/shm -v $(pwd):$(pwd):ro -p 4444:4444 -p 5902:5900 --network=e2e selenium/standalone-chrome-debug`
 1. Set your `calypsoBaseUrl` config variable to `http://wpcalypso.wordpress.com` (note the http, not https)
 
 ### To run inside a Docker container
