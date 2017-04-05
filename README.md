@@ -15,6 +15,7 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
   - [To run an individual spec](#to-run-an-individual-spec)
   - [To run with different modes](#to-run-with-different-modes)
   - [To run a specific suite of specs](#to-run-a-specific-suite-of-specs)
+  - [To run headlessly](#to-run-headlessly)
   - [To run inside a Docker container](#to-run-inside-a-docker-container)
   - [Config Values](#config-values)
   - [Standalone Environment Variables](#standalone-environment-variables)
@@ -115,10 +116,29 @@ The `run.sh` script takes the following parameters, which can be combined to exe
 -h		  - This help listing
 ```
 
-### To run inside a Docker container
-By running the tests in the context of a Docker container we're able to execute them "headlessly", with no visible browser window interrupting any other work you're doing on your machine while the tests run.  This also forces a particular version of Chrome/driver to reduce compatibility issues.
+### To run headlessly
 
-The `run-docker.sh` script handles all of the interaction with the container, with the options listed below.  But first, here are the steps to get up and running quickly:
+By default the tests start their own Selenium server in the background, which in turn launches a Chrome browser on your desktop where you can watch the tests execute.  This can be a bit of a headache if you're trying to do other work while the tests are running, as the browser may occasionally steal focus back (although that's mostly been resolved).  The easiest way to run "headlessly" without a visible window is to run a separate Selenium server via Docker.  There are lots of options for this on Docker Hub, but I recommend [this one](https://hub.docker.com/r/selenium/standalone-chrome-debug/), as it also allows you to VNC into the container if you do want to view the results.  Just drop the "-debug" from these steps if you don't need that feature.
+
+1. If you haven't already, [install Docker](https://docs.docker.com/engine/installation/)
+1. `docker pull selenium/standalone-chrome-debug`
+1. `docker run -d --rm -v $(pwd):$(pwd):ro -p 4444:4444 -p 5902:5900 selenium/standalone-chrome-debug`*
+1. `export SELENIUM_REMOTE_URL=http://localhost:4444/wd/hub`
+1. Execute your tests as normal, and no browser will appear
+
+*Note that this command needs to be run from the root of the wp-e2e-tests repo, as the `-v $(pwd):$(pwd):ro` flag needs that to share the uBlock extension location inside the container.  The `-p 5902:5900` flag opens VNC for access at `localhost:5902`, with password "secret".  The `-d` flag runs in the background, replace with `-it` if you want to view the Selenium server output on the screen
+
+A few additional steps are necessary if you want to connect that Selenium server to a locally running branch of Calypso.  It requires that you also run wp-calypso from a Docker container, but all of the networking/hosts file updates are handled by the Docker daemon.  These steps assume you've already configured Calypso for Docker.
+
+1. `docker network create e2e` (This is a one-time setup step)
+1. (From wp-calypso) `docker run --name=wpcalypso.wordpress.com --network=e2e -it --rm -e PORT=80 -e NODE_ENV='production' -e CALYPSO_ENV='wpcalypso' wp-calypso`
+1. (From wp-e2e-tests) `docker run -d --rm -v (pwd):(pwd):ro -p 4444:4444 -p 5902:5900 --network=e2e selenium/standalone-chrome-debug`
+1. Set your `calypsoBaseUrl` config variable to `http://wpcalypso.wordpress.com` (note the http, not https)
+
+### To run inside a Docker container
+We can also run the entire test suite (including Selenium) from within the context of a Docker container, which allows us to force a particular version of Chrome/driver to reduce compatibility issues.  This would mostly be useful from a CI server.
+
+The `run-docker.sh` script handles all of the interaction with this container, with the options listed below.  But first, here are the steps to get up and running quickly:
 
 1. If you haven't already, [install Docker](https://docs.docker.com/engine/installation/)
 1. Execute `./run-docker.sh -b` to build the image (this will take several minutes the first time)
