@@ -38,6 +38,7 @@ usage () {
 -f		  - Tell visdiffs to fail the tests rather than just send an alert
 -i		  - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
 -v		  - Execute the visdiff tests in specs-visdiff/
+-x		  - Execute the tests from the context of xvfb-run
 -h		  - This help listing
 EOF
   exit 0
@@ -47,7 +48,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rpb:s:gjCH:wl:cm:fivh" opt; do
+while getopts ":Rpb:s:gjCH:wl:cm:fivxh" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
@@ -118,6 +119,9 @@ while getopts ":Rpb:s:gjCH:wl:cm:fivh" opt; do
       ;;
     f)
       NODE_CONFIG_ARGS+=("\"failVisdiffs\":\"true\"")
+      ;;
+    x)
+      MOCHA="xvfb-run $MOCHA"
       ;;
     h)
       usage
