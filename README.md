@@ -181,6 +181,7 @@ A full list of config values are:
 | neverSaveScreenshots | Overrides the screenshot function so nothing is captured.  This is intended for use with the Applitools visual diff specs, since the screenshots are handled via their utilities instead. | <code>false</code> | Yes |  Yes |
 | checkForConsoleErrors | Automatically report on console errors in the browser | <code>true</code> | Yes |  Yes |
 | reportWarningsToSlack | Specifies whether warnings should be reported to Slack - should be used for CI builds | <code>false</code> | Yes |  Yes |
+| closeBrowserOnComplete | Specifies whether to close the browser window when the tests are done | <code>true</code> | Yes |  Yes |
 | sauceConfigurations | Config values for launching browsers on Sauce Labs | <code>{ "osx-chrome": { "browserName": "chrome", "platform": "OS X 10.11", "screenResolution": "2048x1536", "version": "50.0" } }</code>  | Yes (if using Sauce) |  Yes |
 | knownABTestKeys | An array of expected, known AB testing keys used in localstorage. If a key is found on any page that isn't in here, the test will fail | [ "freeTrials_20160112", "plansPageBusinessAATest_20160108" ] | Yes | Yes |
 | overrideABTests | An array of key/value pairs for AB tests and their values to manually override their settings | [ [ "signupStore_20160927", "designTypeWithStore" ] ] | Yes | Yes |
