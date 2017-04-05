@@ -100,10 +100,42 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 				} );
 			} );
 
-			test.describe( 'Publish and View', function() {
-				test.it( 'Can publish and view content', function() {
+			test.describe( 'Publish and Preview Published Content', function() {
+				test.it( 'Can publish and preview published content', function() {
 					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					this.postEditorToolbarComponent.publishAndViewContent();
+					this.postEditorToolbarComponent.publishAndPreviewPublished();
+					return this.pagePreviewComponent = new PagePreviewComponent( driver );
+				} );
+
+				test.it( 'Can see correct page title in preview', function() {
+					this.pagePreviewComponent.pageTitle().then( function( actualPageTitle ) {
+						assert.equal( actualPageTitle.toUpperCase(), pageTitle.toUpperCase(), 'The page preview title is not correct' );
+					} );
+				} );
+
+				test.it( 'Can see correct page content in preview', function() {
+					this.pagePreviewComponent.pageContent().then( function( content ) {
+						assert.equal( content.indexOf( pageQuote ) > -1, true, 'The page preview content (' + content + ') does not include the expected content (' + pageQuote + ')' );
+					} );
+				} );
+
+				test.it( 'Can see the image uploaded in the preview', function() {
+					this.pagePreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
+						assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
+					} );
+				} );
+
+				// Can close page preview
+				test.after( function() {
+					this.pagePreviewComponent.close();
+				} );
+			} );
+
+
+			test.describe( 'View published content', function() {
+				test.it( 'Can view content', function() {
+					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					this.postEditorToolbarComponent.viewPublishedPostOrPage();
 					this.viewPagePage = new ViewPagePage( driver );
 				} );
 
