@@ -71,6 +71,7 @@
 	[ "jetpackPlansNoMonthly_20170302", "showMonthly" ],
 	[ "signupStepOneCopyChanges_20170307", "modified" ],
 	[ "signupStepOneMobileOptimize_20170322", "original" ],
-	[ "signupSurveyStep_20170329", "hideSurveyStep" ]
+	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
+	[ "readerPostCardTagCount_20170315", "showThree" ]
   ]
 }
