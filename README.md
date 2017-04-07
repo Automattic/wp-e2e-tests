@@ -71,7 +71,7 @@ The local configurations are excluded from the repository, in order to prevent a
 
 ### To run an individual spec
 
-`./node_modules/mocha/bin/mocha specs/wp-log-in-out-spec.js lib/after.js`
+`./node_modules/.bin/mocha specs/wp-log-in-out-spec.js
 
 Note: you can also change the spec _temporarily_ the use the <code>.only</code> syntax so it is the only spec that runs (making sure this isn't committed)
 
@@ -86,7 +86,7 @@ You can run tests in different modes by setting an environment variable `BROWSER
 
 Eg:
 
-`env BROWSERSIZE=tablet ./node_modules/mocha/bin/mocha specs lib/after.js`
+`env BROWSERSIZE=tablet ./node_modules/.bin/mocha specs
 
 Or you can use the -s option on the run.sh script:
 
