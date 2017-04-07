@@ -4,6 +4,7 @@ import assert from 'assert';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper.js';
+import * as driverHelper from '../lib/driver-helper.js';
 
 import WPHomePage from '../lib/pages/wp-home-page.js';
 import ChooseAThemePage from '../lib/pages/signup/choose-a-theme-page.js';
@@ -249,7 +250,18 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 						this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
 							assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
 						} );
+
 						return this.findADomainComponent.selectFreeAddress();
+					} );
+
+					test.it( 'Verify OAuth error not present', function() {
+						const self = this;
+						return driverHelper.getErrorMessageIfPresent( driver ).then( ( errorMsg ) => {
+							if ( errorMsg !== undefined ) {
+								SlackNotifier.warn( `WARNING: Error message [${errorMsg}] encountered on Find Domain page!` );
+								return self.findADomainComponent.selectFreeAddress();
+							}
+						} );
 					} );
 
 					test.describe( 'Step Four: Plans', function() {
@@ -513,6 +525,17 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 						this.findADomainComponent.searchForBlogNameAndWaitForResults( siteName );
 						return this.findADomainComponent.selectDotComAddress( expectedDomainName );
 					} );
+
+					test.it( 'Verify OAuth error not present', function() {
+						const self = this;
+						return driverHelper.getErrorMessageIfPresent( driver ).then( ( errorMsg ) => {
+							if ( errorMsg !== undefined ) {
+								SlackNotifier.warn( `WARNING: Error message [${errorMsg}] encountered on Find Domain page!` );
+								return self.findADomainComponent.selectDotComAddress( expectedDomainName );
+							}
+						} );
+					} );
+
 
 					test.describe( 'Step Five: Account', function() {
 						test.it( 'Can then enter account details', function() {
