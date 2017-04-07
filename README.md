@@ -71,7 +71,7 @@ The local configurations are excluded from the repository, in order to prevent a
 
 ### To run an individual spec
 
-`./node_modules/mocha/bin/mocha specs/wp-log-in-out-spec.js lib/after.js`
+`./node_modules/.bin/mocha specs/wp-log-in-out-spec.js`
 
 Note: you can also change the spec _temporarily_ the use the <code>.only</code> syntax so it is the only spec that runs (making sure this isn't committed)
 
@@ -86,7 +86,7 @@ You can run tests in different modes by setting an environment variable `BROWSER
 
 Eg:
 
-`env BROWSERSIZE=tablet ./node_modules/mocha/bin/mocha specs lib/after.js`
+`env BROWSERSIZE=tablet ./node_modules/.bin/mocha specs`
 
 Or you can use the -s option on the run.sh script:
 
@@ -225,4 +225,3 @@ These environment variables are intended for use inside CircleCI, to control whi
 
 ## Ad Blocker
 To combat timeout issues with ads (both those from WordPress.com and any that may appear on any user sites that may load), we've included the uBlock Chrome extension.  Source code for that can be found [here](https://github.com/gorhill/uBlock/).  We're currently using release 1.11.5b1.  To manually add sites to be blocked, append them the [filters.txt](/ublock/assets/ublock/filters.txt) file
-

@@ -5,7 +5,6 @@ REPORTER=""
 PARALLEL=0
 CANARY_PARALLEL=0
 JOBS=0
-AFTER="lib/after.js"
 OPTS=""
 SCREENSIZES="mobile,desktop"
 BRANCH=""
@@ -160,7 +159,7 @@ if [ $PARALLEL == 1 ]; then
   if [ $CIRCLE_NODE_INDEX == $MOBILE ]; then
       echo "Executing tests at mobile screen width"
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
-      CMD="env BROWSERSIZE=mobile $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
+      CMD="env BROWSERSIZE=mobile $MOCHA $NC $GREP $REPORTER specs/"
 
       eval $CMD
       RETURN+=$?
@@ -168,7 +167,7 @@ if [ $PARALLEL == 1 ]; then
   if [ $CIRCLE_NODE_INDEX == $DESKTOP ]; then
       echo "Executing tests at desktop screen width"
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
-      CMD="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER specs/ $AFTER"
+      CMD="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER specs/"
 
       eval $CMD
       RETURN+=$?
@@ -181,7 +180,7 @@ else # Not a parallel run, just queue up the tests in sequence
     for size in ${SCREENSIZE_ARRAY[@]}; do
       for target in "${TARGETS[@]}"; do
         if [ "$target" != "" ]; then
-          CMD="env BROWSERSIZE=$size $MOCHA $NC $GREP $REPORTER $target $AFTER"
+          CMD="env BROWSERSIZE=$size $MOCHA $NC $GREP $REPORTER $target"
 
           eval $CMD
           RETURN+=$?
