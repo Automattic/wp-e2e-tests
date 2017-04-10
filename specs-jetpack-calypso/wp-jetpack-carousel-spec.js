@@ -52,6 +52,15 @@ test.describe( `${host} Jetpack Carousel on Calypso: '${ screenSize }'`, functio
 		} );
 
 		test.it( 'Can see the Carousel toggle switch', function() {
+			this.settingsPage.carouselToggleDisplayed().then( ( shown ) => {
+				assert( shown, 'Can\'t see the carousel setting toggle under the Writing settings' );
+			} );
+		} );
+
+		test.it( 'Can see the Carousel background color drop down', function() {
+			this.settingsPage.carouseBackgroundColorDisplayed().then( ( shown ) => {
+				assert( shown, 'Can\'t see the carousel background color setting toggle under the Writing settings' );
+			} );
 		} );
 	} );
 } );
