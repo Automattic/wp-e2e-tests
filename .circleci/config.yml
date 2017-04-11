@@ -1,14 +1,15 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/wp-e2e-tests
+    working_directory: /wp-e2e-tests
     docker:
       - image: node:6.10.2
         environment:
-                SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
+                SELENIUM_REMOTE_URL: http://127.0.0.1:4444/wd/hub
+                NODE_ENV: test
       - image: selenium/standalone-chrome:3.3.0
-
     steps:
       - checkout
+      - run: sleep 3
       - run: npm install
-      - run: npm test
+      - run: ./node_modules/.bin/mocha specs/wp-log-in-out-spec.js
