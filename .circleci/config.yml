@@ -10,6 +10,5 @@ jobs:
       - image: selenium/standalone-chrome:3.3.0
     steps:
       - checkout
-      - run: sleep 3
       - run: npm install
-      - run: ./node_modules/.bin/mocha specs/wp-log-in-out-spec.js
+      - run: npm test
