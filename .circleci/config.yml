@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/wp-e2e-tests
     docker:
-      - image: buildpack-deps:trusty
+      - image: node:6.10.2
         environment:
                 SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
       - image: selenium/standalone-chrome:3.3.0
