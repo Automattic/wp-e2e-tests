@@ -12,5 +12,5 @@ jobs:
                 JAVA_OPTS: -Xmx512m
     steps:
       - checkout
-      - run: npm install && npm install
-      - run: ./run.sh -R -p
+      - run: npm install
+      - run: ./run.sh -p
