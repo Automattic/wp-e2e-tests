@@ -13,7 +13,7 @@ jobs:
     steps:
       - checkout
       - run: |
-        # Print all files in one line
-        echo $(circleci tests glob "specs/*.js")
-        # Print one file per line
-        circleci tests glob "specs/*.js" | xargs -n 1 echo
+          # Print all files in one line
+          echo $(circleci tests glob "specs/*.js")
+          # Print one file per line
+          circleci tests glob "specs/*.js" | xargs -n 1 echo
