@@ -8,6 +8,8 @@ jobs:
                 SELENIUM_REMOTE_URL: http://127.0.0.1:4444/wd/hub
                 NODE_ENV: test
       - image: selenium/standalone-chrome:3.3.0
+        environment:
+                JAVA_OPTS: -Xmx512m
     steps:
       - checkout
       - run: npm install
