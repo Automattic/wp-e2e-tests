@@ -1,0 +1,12 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/wp-e2e-tests
+    docker:
+      - image: debian:jessie
+      - image: selenium/standalone-chrome
+
+    steps:
+      - checkout
+      - run: cat config/default.json
+      - run: cat /etc/hosts
