@@ -8,5 +8,4 @@ jobs:
 
     steps:
       - checkout
-      - run: cat config/default.json
-      - run: cat /etc/hosts
+      - run: sleep 5 && nc -vz localhost 4444
