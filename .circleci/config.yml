@@ -12,5 +12,8 @@ jobs:
                 JAVA_OPTS: -Xmx512m
     steps:
       - checkout
-      - run: npm install
-      - run: ./run.sh -p
+      - run: |
+        # Print all files in one line
+        echo $(circleci tests glob "specs/*.js")
+        # Print one file per line
+        circleci tests glob "specs/*.js" | xargs -n 1 echo
