@@ -20,7 +20,7 @@ if [ "$RUN_SPECIFIED" == "true" ]; then
 elif [[ "$CIRCLE_BRANCH" =~ .*[Jj]etpack.*|.*[Jj][Pp].* ]]; then
   TESTARGS="-R -j" # Execute Jetpack tests
 elif [[ "$CIRCLE_BRANCH" =~ .*[Ww][Oo][Oo].* ]]; then
-  TESTARGS="-R -W" # Execute WooCommerce tests
+  TESTARGS="-R -W -u https://wpcalypso.wordpress.com" # Execute WooCommerce tests
 elif [ "$CIRCLE_BRANCH" == "master" ]; then
   TESTARGS="-R -p" # Parallel execution, implies -g -s mobile,desktop
 fi
