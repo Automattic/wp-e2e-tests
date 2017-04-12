@@ -114,6 +114,7 @@ The `run.sh` script takes the following parameters, which can be combined to exe
 -i		  - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
 -v		  - Execute the visdiff tests in specs-visdiff/
 -x		  - Execute the tests from the context of xvfb-run
+-u [baseUrl]	  - Override the calypsoBaseURL config
 -h		  - This help listing
 ```
 
