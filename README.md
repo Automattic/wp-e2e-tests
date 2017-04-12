@@ -130,12 +130,12 @@ By default the tests start their own Selenium server in the background, which in
 
 *Note that this command needs to be run from the root of the wp-e2e-tests repo, as the `-v $(pwd):$(pwd):ro` flag needs to be in that location to share the uBlock extension location inside the container.  The `-p 5902:5900` flag opens VNC for access at `localhost:5902`, with password "secret".  The `-d` flag runs in the background, replace with `-it` if you want to view the Selenium server output on the screen.  If running in the background you can stop it with the `docker kill selenium` command.  The `-v /dev/shm:/dev/shm` flag is necessary to provide sufficient shared memory for Chrome.
 
-A few additional steps are necessary if you want to connect that Selenium server to a locally running branch of Calypso.  It requires that you also run wp-calypso from a Docker container, but all of the networking/hosts file updates are handled by the Docker daemon.  These steps assume you've already configured Calypso for Docker.
+A couple additional steps are necessary if you want to connect that Selenium server to a locally running branch of Calypso.  This runs two separate containers, for both Selenium and Calypso, and handles all the networking in between them.  These steps assume you've already configured and built Calypso for Docker with an image name of `wp-calypso`.
 
-1. `docker network create e2e` (This is a one-time setup step)
-1. (From wp-calypso) `docker run --name=wpcalypso.wordpress.com --network=e2e -it --rm -e PORT=80 -e NODE_ENV='production' -e CALYPSO_ENV='wpcalypso' wp-calypso`
-1. (From wp-e2e-tests) `docker run -d --rm  -v /dev/shm:/dev/shm -v $(pwd):$(pwd):ro -p 4444:4444 -p 5902:5900 --network=e2e selenium/standalone-chrome-debug`
 1. Set your `calypsoBaseUrl` config variable to `http://wpcalypso.wordpress.com` (note the http, not https)
+1. From the `wp-e2e-tests` directory, run `docker-compose up -d`
+
+The `-d` flag causes it to run in the background, omit that if you want to see the Selenium and Calypso console output.  To stop the containers, run `docker-compose down`.
 
 ### To run inside a Docker container
 We can also run the entire test suite (including Selenium) from within the context of a Docker container, which allows us to force a particular version of Chrome/driver to reduce compatibility issues.  This would mostly be useful from a CI server.
