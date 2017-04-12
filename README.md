@@ -71,7 +71,7 @@ The local configurations are excluded from the repository, in order to prevent a
 
 ### To run an individual spec
 
-`./node_modules/.bin/mocha specs/wp-log-in-out-spec.js
+`./node_modules/.bin/mocha specs/wp-log-in-out-spec.js`
 
 Note: you can also change the spec _temporarily_ the use the <code>.only</code> syntax so it is the only spec that runs (making sure this isn't committed)
 
@@ -103,7 +103,8 @@ The `run.sh` script takes the following parameters, which can be combined to exe
 -b [branch]	  - Run tests on given branch via https://calypso.live
 -s		  - Screensizes in a comma-separated list (defaults to mobile,desktop)
 -g		  - Execute general tests in the specs/ directory
--j 		  - Execute Jetpack tests in the specs-jetpack-calypso/ directory
+-j 		  - Execute Jetpack tests in the specs-jetpack-calypso/ directory (desktop and mobile)
+-W		  - Execute WooCommerce tests in the specs-woocommerce/ directory (desktop and mobile)
 -H [host]	  - Specify an alternate host for Jetpack tests
 -w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
 -l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration

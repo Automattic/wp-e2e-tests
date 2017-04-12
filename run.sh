@@ -27,7 +27,8 @@ usage () {
 -b [branch]	  - Run tests on given branch via https://calypso.live
 -s		  - Screensizes in a comma-separated list (defaults to mobile,desktop)
 -g		  - Execute general tests in the specs/ directory
--j 		  - Execute Jetpack tests in the specs-jetpack-calypso/ directory
+-j 		  - Execute Jetpack tests in the specs-jetpack-calypso/ directory (desktop and mobile)
+-W		  - Execute WooCommerce tests in the specs-woocommerce/ directory (desktop and mobile)
 -C		  - Execute tests tagged with @canary
 -H [host]	  - Specify an alternate host for Jetpack tests
 -w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
@@ -47,7 +48,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rpb:s:gjCH:wl:cm:fivxh" opt; do
+while getopts ":Rpb:s:gjWCH:wl:cm:fivxh" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
@@ -101,6 +102,11 @@ while getopts ":Rpb:s:gjCH:wl:cm:fivxh" opt; do
       MOCHA+=" --compilers js:babel-register"
       SCREENSIZES="desktop,mobile"
       TARGET="specs-jetpack-calypso/"
+      ;;
+    W)
+      MOCHA+=" --compilers js:babel-register"
+      SCREENSIZES="desktop,mobile"
+      TARGET="specs-woocommerce/"
       ;;
     C)
       if [ "$CI" == "true" ]; then
