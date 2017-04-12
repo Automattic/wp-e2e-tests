@@ -8,7 +8,7 @@ import SignUpFlow from '../lib/flows/signup-flow.js';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 
-const culture = process.env.CULTURE || 'en';
+const testLocale = process.env.LOCALE_TEST || 'en';
 
 var driver;
 
@@ -17,7 +17,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'https://get.blog Sign Up', function() {
+test.xdescribe( 'https://get.blog Sign Up', function() {
 	this.timeout( mochaTimeOut );
 
 	test.beforeEach( function() {
@@ -25,18 +25,18 @@ test.describe( 'https://get.blog Sign Up', function() {
 		driverManager.deleteLocalStorage( driver );
 	} );
 
-	test.it( `Can Get a Dot Blog (${culture}) Desktop`, function() {
+	test.it( `Can Get a Dot Blog Desktop (${ testLocale })`, function() {
 		const signupFlow = new SignUpFlow( driver, 'desktop' );
-		signupFlow.createGetDotBlogWithScreenshots( culture );
+		signupFlow.createGetDotBlogWithScreenshots( testLocale );
 	} );
 
-	test.it( `Can Get a Dot Blog (${culture}) Tablet`, function() {
+	test.it( `Can Get a Dot Blog Tablet (${ testLocale })`, function() {
 		const signupFlow = new SignUpFlow( driver, 'tablet' );
-		signupFlow.createGetDotBlogWithScreenshots( culture );
+		signupFlow.createGetDotBlogWithScreenshots( testLocale );
 	} );
 
-	test.it( `Can Get a Dot Blog (${culture}) Mobile`, function() {
+	test.it( `Can Get a Dot Blog Mobile (${ testLocale })`, function() {
 		const signupFlow = new SignUpFlow( driver, 'mobile' );
-		signupFlow.createGetDotBlogWithScreenshots( culture );
+		signupFlow.createGetDotBlogWithScreenshots( testLocale );
 	} );
 } );

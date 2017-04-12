@@ -109,6 +109,7 @@ var µBlock = (function() { // jshint ignore:line
             'moz-extension-scheme',
             'opera-scheme',
             'vivaldi-scheme',
+            'google.com',
             ''
         ].join('\n'),
 
