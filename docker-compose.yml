@@ -7,12 +7,4 @@ services:
       - "5902:5900"
     volumes:
       - ${PWD}:${PWD}
-    links:
-      - "wp-calypso:wpcalypso.wordpress.com"
-  wp-calypso:
-    image: wp-calypso
-    user: root
-    environment:
-      - PORT=80
-      - NODE_ENV=production
-      - CALYPSO_ENV=wpcalypso
+      - /dev/shm:/dev/shm

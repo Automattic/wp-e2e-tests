@@ -1,0 +1,19 @@
+version: "3"
+services:
+  selenium:
+    image: selenium/standalone-chrome-debug:3.3.0
+    ports:
+      - "4444:4444"
+      - "5902:5900"
+    volumes:
+      - ${PWD}:${PWD}
+      - /dev/shm:/dev/shm
+    links:
+      - "wp-calypso:wpcalypso.wordpress.com"
+  wp-calypso:
+    image: wp-calypso
+    user: root
+    environment:
+      - PORT=80
+      - NODE_ENV=production
+      - CALYPSO_ENV=wpcalypso
