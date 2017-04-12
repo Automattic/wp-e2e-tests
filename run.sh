@@ -39,6 +39,7 @@ usage () {
 -i		  - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
 -v		  - Execute the visdiff tests in specs-visdiff/
 -x		  - Execute the tests from the context of xvfb-run
+-u [baseUrl]	  - Override the calypsoBaseURL config
 -h		  - This help listing
 EOF
   exit 0
@@ -48,7 +49,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rpb:s:gjWCH:wl:cm:fivxh" opt; do
+while getopts ":Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
   case $opt in
     R)
       REPORTER="-R spec-xunit-slack-reporter"
@@ -127,6 +128,10 @@ while getopts ":Rpb:s:gjWCH:wl:cm:fivxh" opt; do
       ;;
     x)
       MOCHA="xvfb-run $MOCHA"
+      ;;
+    u)
+      NODE_CONFIG_ARGS+=("\"calypsoBaseURL\":\"$OPTARG\"")
+      continue
       ;;
     h)
       usage
