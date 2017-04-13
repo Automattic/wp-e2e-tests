@@ -30,6 +30,9 @@ jobs:
             set -x
             docker-compose up -d
       - run:
+          name: npm install
+          command: npm install
+      - run:
           name: Run Tests
           command: |
             set -x
