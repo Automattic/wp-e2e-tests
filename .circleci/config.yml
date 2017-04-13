@@ -38,5 +38,5 @@ jobs:
             set -x
             docker run --network container:wpe2etests_selenium_1 \
               -v /wp-e2e-tests:/wp-e2e-tests \
-              -e SELENIUM_REMOTE_URL=http://selenium:4444/wd/hub
+              -e SELENIUM_REMOTE_URL=http://selenium:4444/wd/hub \
               node:6.10.2 /wp-e2e-tests/node_modules/.bin/mocha /wp-e2e-tests/specs/wp-log-in-out-spec.js
