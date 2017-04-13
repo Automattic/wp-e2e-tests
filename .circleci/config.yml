@@ -8,6 +8,7 @@ jobs:
           NODE_ENV: test
     steps:
       - checkout
+      - run: npm install
       - setup_remote_docker
       - run:
           name: Install Docker client
@@ -24,22 +25,27 @@ jobs:
             curl -L https://github.com/docker/compose/releases/download/1.11.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
             chmod +x /usr/local/bin/docker-compose
       - run:
+          name: Create shared data volume
+          command: |
+            set -x
+            docker volume create wp-e2e-tests-data-volume
+            docker create -v wp-e2e-tests-data-volume:/wp-e2e-tests --name wp-e2e-tests-data-container alpine:3.4 /bin/true
+            docker cp /wp-e2e-tests wp-e2e-tests-data-container:/wp-e2e-tests
+      - run:
           name: Start Selenium
           command: |
             set -x
-            docker-compose up -d
-      - run:
-          name: npm install
-          command: npm install
+            docker-compose -f docker-compose-circleci.yml up -d
       - run:
           name: Run Tests
           command: |
             set -x
             docker run \
+              -it
               --network container:wpe2etests_selenium_1 \
-              -v /wp-e2e-tests:/wp-e2e-tests \
               -e SELENIUM_REMOTE_URL=http://selenium:4444/wd/hub \
               -e NODE_CONFIG \
               -e NODE_ENV \
               -w /wp-e2e-tests \
+              -v wp-e2e-tests-data-volume:/wp-e2e-tests \
               node:6.10.2 ./node_modules/.bin/mocha specs/wp-log-in-out-spec.js
