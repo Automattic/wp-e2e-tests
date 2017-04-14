@@ -76,14 +76,12 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 					} );
 				} );
 
-				// Skipping this test because of a bug with direct manipulation in Twenty Sixteen theme
-				test.xit( 'Direct Manipulation: clicking the icon on title jumps to site title field', function() {
+				test.it( 'Direct Manipulation: clicking the icon on title jumps to site title field', function() {
 					this.customizerPage.clickSiteTitleIconInPreview();
 					return assert( this.customizerPage.waitForTitleFieldDisplayed(), 'The title field is not displayed' );
 				} );
 
 				test.it( 'Close site identity', function() {
-					this.customizerPage._ensurePreviewViewOnMobile();
 					return this.customizerPage.closeOpenSection();
 				} );
 
@@ -96,7 +94,6 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 				} );
 
 				test.it( 'Close custom colors', function() {
-					this.customizerPage._ensurePreviewViewOnMobile();
 					return this.customizerPage.closeOpenSection();
 				} );
 
@@ -121,7 +118,6 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 					} );
 
 					test.it( 'Close custom fonts', function() {
-						this.customizerPage._ensurePreviewViewOnMobile();
 						return this.customizerPage.closeOpenSection();
 					} );
 
@@ -146,7 +142,6 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 						} );
 
 						test.it( 'Close custom fonts', function() {
-							this.customizerPage._ensurePreviewViewOnMobile();
 							return this.customizerPage.closeOpenSection();
 						} );
 
@@ -177,7 +172,6 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 								} );
 
 								test.it( 'Close custom header', function() {
-									this.customizerPage._ensurePreviewViewOnMobile();
 									return this.customizerPage.closeOpenSection();
 								} );
 
@@ -237,7 +231,6 @@ test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
 								} );
 
 								test.it( 'Close widgets', function() {
-									this.customizerPage._ensurePreviewViewOnMobile();
 									return this.customizerPage.closeOpenPanel();
 								} );
 
