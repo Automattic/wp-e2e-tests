@@ -1,0 +1,10 @@
+{
+  "mocha_tests": [
+    "specs"
+  ],
+  "mocha_opts": "test/mocha.opts",
+  "suiteTag": "parallel",
+  "sauce": false,
+  "browser": "chrome",
+  "framework": "testarmada-magellan-mocha-plugin"
+}

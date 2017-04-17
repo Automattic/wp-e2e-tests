@@ -19,7 +19,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'View site from sidebar: (' + screenSize + ')', function() {
+test.describe( 'View site from sidebar: (' + screenSize + ') @parallel', function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
