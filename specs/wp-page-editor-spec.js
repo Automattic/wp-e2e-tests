@@ -30,7 +30,7 @@ test.before( function() {
 test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Public Pages:', function() {
+	test.describe( 'Public Pages: @parallel', function() {
 		this.bailSuite( true );
 		let fileDetails;
 
@@ -172,7 +172,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Private Pages:', function() {
+	test.describe( 'Private Pages: @parallel', function() {
 		this.bailSuite( true );
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
@@ -235,7 +235,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Password Protected Pages:', function() {
+	test.describe( 'Password Protected Pages: @parallel', function() {
 		this.bailSuite( true );
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
