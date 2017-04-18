@@ -37,7 +37,7 @@
     "selenium-webdriver": "3.3.0",
     "slack-notify": "0.1.4",
     "testarmada-magellan":"8.8.6",
-    "testarmada-magellan-mocha-plugin":"7.0.1",
+    "testarmada-magellan-mocha-plugin":"hoverduck/magellan-mocha-plugin#89ce1ff",
     "parallel-mocha": "~0.0.7",
     "saucelabs": "^1.2.0",
     "grunt": "0.4.5",
