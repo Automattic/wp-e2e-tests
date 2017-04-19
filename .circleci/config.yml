@@ -36,17 +36,24 @@ jobs:
           command: |
             set -x
             docker-compose -f docker-compose/docker-compose-hub-circleci.yml up -d
+            docker-compose -f docker-compose/docker-compose-hub-circleci.yml scale chrome=3
       - run:
           name: Run Tests
           command: |
             set -x
+            if [ $CIRCLE_NODE_INDEX == 0 ]; then
+              BROWSERSIZE=mobile
+            else
+              BROWSERSIZE=desktop
+            fi
             docker run \
               -it \
               --network dockercompose_e2e \
               -e SELENIUM_REMOTE_URL=http://selenium-hub:4444/wd/hub \
+              -e BROWSERSIZE \
               -e NODE_CONFIG \
               -e NODE_ENV \
               -w /wp-e2e-tests \
               -v wp-e2e-tests-data-volume:/wp-e2e-tests \
               -v /dev/shm:/dev/shm \
-              node:6.10.2 ./node_modules/.bin/magellan --max_workers=1 --max_test_attempts=1
+              node:6.10.2 ./node_modules/.bin/magellan --max_test_attempts=1
