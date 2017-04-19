@@ -49,4 +49,4 @@ jobs:
               -w /wp-e2e-tests \
               -v wp-e2e-tests-data-volume:/wp-e2e-tests \
               -v /dev/shm:/dev/shm \
-              node:6.10.2 ./node_modules/.bin/magellan --max_test_attempts=1
+              node:6.10.2 ./node_modules/.bin/magellan --max_workers=1 --max_test_attempts=1
