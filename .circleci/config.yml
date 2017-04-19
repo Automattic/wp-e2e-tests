@@ -42,9 +42,9 @@ jobs:
           command: |
             set -x
             if [ $CIRCLE_NODE_INDEX == 0 ]; then
-              BROWSERSIZE=mobile
+              export BROWSERSIZE=mobile
             else
-              BROWSERSIZE=desktop
+              export BROWSERSIZE=desktop
             fi
             docker run \
               -it \
