@@ -35,17 +35,18 @@ jobs:
           name: Start Selenium
           command: |
             set -x
-            docker-compose -f docker-compose-circleci.yml up -d
+            docker-compose -f docker-compose/docker-compose-hub-circleci.yml up -d
       - run:
           name: Run Tests
           command: |
             set -x
             docker run \
               -it \
-              --network container:wpe2etests_selenium_1 \
-              -e SELENIUM_REMOTE_URL=http://selenium:4444/wd/hub \
+              --network dockercompose_e2e \
+              -e SELENIUM_REMOTE_URL=http://selenium-hub:4444/wd/hub \
               -e NODE_CONFIG \
               -e NODE_ENV \
               -w /wp-e2e-tests \
               -v wp-e2e-tests-data-volume:/wp-e2e-tests \
-              node:6.10.2 ./node_modules/.bin/mocha specs/wp-log-in-out-spec.js
+              -v /dev/shm:/dev/shm \
+              node:6.10.2 ./node_modules/.bin/magellan --max_test_attempts=1
