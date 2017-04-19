@@ -9,12 +9,11 @@ jobs:
     steps:
       - checkout
       - save_cache:
-        key: e2e-{{ .Branch }}-{{ checksum "package.json" }}
-        paths:
-          - /wp-e2e-tests/node_modules
+          key: e2e-{{ .Branch }}-{{ checksum "package.json" }}
+          paths:
+            - /wp-e2e-tests/node_modules
       - restore_cache:
-          keys:
-            - e2e-{{ .Branch }}-{{ checksum "package.json" }}
+          key: e2e-{{ .Branch }}-{{ checksum "package.json" }}
       - run: npm install
       - setup_remote_docker
       - run:
