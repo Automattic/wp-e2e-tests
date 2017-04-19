@@ -51,9 +51,14 @@ jobs:
               --network dockercompose_e2e \
               -e SELENIUM_REMOTE_URL=http://selenium-hub:4444/wd/hub \
               -e BROWSERSIZE \
+              -e CIRCLE_BRANCH \
+              -e CIRCLE_BUILD_NUM \
+              -e CIRCLE_TEST_REPORTS \
+              -e CIRCLE_PROJECT_USERNAME \
+              -e CIRCLE_PROJECT_REPONAME \
               -e NODE_CONFIG \
               -e NODE_ENV \
               -w /wp-e2e-tests \
               -v wp-e2e-tests-data-volume:/wp-e2e-tests \
               -v /dev/shm:/dev/shm \
-              node:6.10.2 ./node_modules/.bin/magellan --max_test_attempts=1 --test=./specs/wp-log-in-out-spec.js
+              node:6.10.2 ./node_modules/.bin/magellan --max_test_attempts=1
