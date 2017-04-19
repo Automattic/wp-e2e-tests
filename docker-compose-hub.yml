@@ -1,0 +1,16 @@
+version: "3"
+services:
+  selenium-hub:
+    image: selenium/hub:3.3.1
+    ports:
+      - "4444:4444"
+  chrome:
+    image: selenium/node-chrome:3.3.1
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_PORT_4444_TCP_ADDR=selenium-hub
+      - HUB_PORT_4444_TCP_PORT=4444
+    volumes:
+      - /dev/shm:/dev/shm
+      - ${PWD}:/wp-e2e-tests:ro
