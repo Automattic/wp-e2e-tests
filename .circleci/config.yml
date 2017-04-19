@@ -8,6 +8,13 @@ jobs:
           NODE_ENV: test
     steps:
       - checkout
+      - save_cache:
+        key: e2e-{{ .Branch }}-{{ checksum "package.json" }}
+        paths:
+          - /wp-e2e-tests/node_modules
+      - restore_cache:
+          keys:
+            - e2e-{{ .Branch }}-{{ checksum "package.json" }}
       - run: npm install
       - setup_remote_docker
       - run:
@@ -32,7 +39,7 @@ jobs:
             docker create -v wp-e2e-tests-data-volume:/wp-e2e-tests --name wp-e2e-tests-data-container alpine:3.4 /bin/true
             docker cp /wp-e2e-tests wp-e2e-tests-data-container:/
       - run:
-          name: Start Selenium
+          name: Start Selenium Hub
           command: |
             set -x
             docker-compose -f docker-compose/docker-compose-hub-circleci.yml up -d
@@ -41,6 +48,7 @@ jobs:
           name: Run Tests
           command: |
             set -x
+            date # Just to track CircleCI timing
             if [ $CIRCLE_NODE_INDEX == 0 ]; then
               export BROWSERSIZE=mobile
             else
@@ -62,3 +70,4 @@ jobs:
               -v wp-e2e-tests-data-volume:/wp-e2e-tests \
               -v /dev/shm:/dev/shm \
               node:6.10.2 ./node_modules/.bin/magellan --max_test_attempts=1
+            date # Just to track CircleCI timing
