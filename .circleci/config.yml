@@ -8,13 +8,13 @@ jobs:
           NODE_ENV: test
     steps:
       - checkout
+      - restore_cache:
+          key: e2e-{{ .Branch }}-{{ checksum "package.json" }}
+      - run: npm install
       - save_cache:
           key: e2e-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
             - /wp-e2e-tests/node_modules
-      - restore_cache:
-          key: e2e-{{ .Branch }}-{{ checksum "package.json" }}
-      - run: npm install
       - setup_remote_docker
       - run:
           name: Install Docker client
