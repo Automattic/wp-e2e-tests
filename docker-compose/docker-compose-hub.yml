@@ -4,6 +4,8 @@ services:
     image: selenium/hub:3.3.1
     ports:
       - "4444:4444"
+    networks:
+      - e2e
   chrome:
     image: selenium/node-chrome:3.3.1
     depends_on:
@@ -14,3 +16,7 @@ services:
     volumes:
       - /dev/shm:/dev/shm
       - ${PWD}:/wp-e2e-tests:ro
+    networks:
+      - e2e
+networks:
+  e2e:
