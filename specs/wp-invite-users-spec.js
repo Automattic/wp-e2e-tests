@@ -194,7 +194,7 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 									} );
 
 									test.it( 'Can remove the team member from the site', function() {
-										this.editTeamMemberPage.removeSelectedUser();
+										this.editTeamMemberPage.removeUserAndDeleteContent();
 										this.peoplePage = new PeoplePage( driver );
 										this.peoplePage.successNoticeDisplayed().then( ( displayed ) => {
 											assert.equal( displayed, true, 'The deletion successful notice was not shown on the people page.' );
