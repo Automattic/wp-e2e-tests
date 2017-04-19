@@ -20,3 +20,6 @@ services:
       - e2e
 networks:
   e2e:
+volumes:
+  wp-e2e-tests-data-volume:
+    external: true
