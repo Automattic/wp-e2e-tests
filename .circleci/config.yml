@@ -15,20 +15,6 @@ jobs:
           key: e2e-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
             - /home/circleci/wp-e2e-tests/node_modules
-      - setup_remote_docker
-      - run:
-          name: Create shared data volume
-          command: |
-            set -x
-            docker volume create wp-e2e-tests-data-volume
-            docker create -v wp-e2e-tests-data-volume:/wp-e2e-tests --name wp-e2e-tests-data-container alpine:3.4 /bin/true
-            docker cp /home/circleci/wp-e2e-tests wp-e2e-tests-data-container:/
-      - run:
-          name: Start Selenium Hub
-          command: |
-            set -x
-            docker-compose -f docker-compose/docker-compose-hub-circleci.yml up -d
-            docker-compose -f docker-compose/docker-compose-hub-circleci.yml scale chrome=3
       - run:
           name: Run Tests
           command: |
@@ -38,20 +24,4 @@ jobs:
             else
               export BROWSERSIZE=desktop
             fi
-            docker run \
-              -it \
-              --network dockercompose_e2e \
-              -e SELENIUM_REMOTE_URL=http://selenium-hub:4444/wd/hub \
-              -e BROWSERSIZE \
-              -e CIRCLE_BRANCH \
-              -e CIRCLE_BUILD_NUM \
-              -e CIRCLE_TEST_REPORTS \
-              -e CIRCLE_PROJECT_USERNAME \
-              -e CIRCLE_PROJECT_REPONAME \
-              -e NODE_CONFIG \
-              -e NODE_ENV \
-              -w /home/circleci/wp-e2e-tests \
-              -v wp-e2e-tests-data-volume:/home/circleci/wp-e2e-tests \
-              -v /dev/shm:/dev/shm \
-              -u root \
-              circleci/node:6.10.2 ./node_modules/.bin/magellan --max_test_attempts=1 --max_workers=3 --test=./specs/wp-post-editor-spec.js
+            ./node_modules/.bin/magellan --max_test_attempts=1 --max_workers=1 --test=./specs/wp-post-editor-spec.js
