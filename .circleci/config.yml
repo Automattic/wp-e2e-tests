@@ -42,7 +42,7 @@ jobs:
           command: |
             set -x
             docker-compose -f docker-compose/docker-compose-hub-circleci.yml up -d
-#            docker-compose -f docker-compose/docker-compose-hub-circleci.yml scale chrome=6
+            docker-compose -f docker-compose/docker-compose-hub-circleci.yml scale chrome=3
       - run:
           name: Run Tests
           command: |
@@ -67,4 +67,4 @@ jobs:
               -w /wp-e2e-tests \
               -v wp-e2e-tests-data-volume:/wp-e2e-tests \
               -v /dev/shm:/dev/shm \
-              node:6.10.2 ./node_modules/.bin/magellan --max_test_attempts=1 --max_workers=1 --serial --test=./specs/wp-post-editor-spec.js
+              node:6.10.2 ./node_modules/.bin/magellan --max_test_attempts=1 --max_workers=3 --test=./specs/wp-post-editor-spec.js
