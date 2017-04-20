@@ -43,4 +43,4 @@ jobs:
               -v wp-e2e-tests-data-volume:/home/circleci/wp-e2e-tests \
               -v /dev/shm:/dev/shm \
               -u root \
-              circleci/node:6.10.2 ./node_modules/.bin/magellan --max_test_attempts=1 --max_workers=3 --test=./specs/wp-post-editor-spec.js
+              circleci/node:6.10.2 ./node_modules/.bin/magellan --max_test_attempts=1 --max_workers=3
