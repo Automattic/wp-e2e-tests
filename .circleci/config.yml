@@ -1,27 +1,16 @@
 version: 2
 jobs:
   build:
-    working_directory: /home/circleci/wp-e2e-tests
+    working_directory: /wp-e2e-tests
     docker:
-      - image: circleci/node:6.10.2
+      - image: node:6.10.2
         environment:
-          NODE_ENV: test
+                SELENIUM_REMOTE_URL: http://127.0.0.1:4444/wd/hub
+                NODE_ENV: test
+      - image: selenium/standalone-chrome:3.3.0
+        environment:
+                JAVA_OPTS: -Xmx1024m
     steps:
       - checkout
-      - restore_cache:
-          key: e2e-{{ .Branch }}-{{ checksum "package.json" }}
       - run: npm install
-      - save_cache:
-          key: e2e-{{ .Branch }}-{{ checksum "package.json" }}
-          paths:
-            - /home/circleci/wp-e2e-tests/node_modules
-      - run:
-          name: Run Tests
-          command: |
-            set -x
-            if [ $CIRCLE_NODE_INDEX == 0 ]; then
-              export BROWSERSIZE=mobile
-            else
-              export BROWSERSIZE=desktop
-            fi
-            ./node_modules/.bin/magellan --max_test_attempts=1 --max_workers=1 --test=./specs/wp-post-editor-spec.js
+      - run: ./node_modules/.bin/magellan --max_test_attempts=1 --max_workers=3 --test=./specs/wp-post-editor-spec.js
