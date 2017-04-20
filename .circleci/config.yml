@@ -50,7 +50,7 @@ jobs:
               -e CIRCLE_PROJECT_REPONAME \
               -e NODE_CONFIG \
               -e NODE_ENV \
-              -w /home/circleci/wp-e2e-tests \
+              -w /wp-e2e-tests \
               -v wp-e2e-tests-data-volume:/wp-e2e-tests \
               -v /dev/shm:/dev/shm \
-              node:6.10.2 ./node_modules/.bin/magellan --max_test_attempts=1 --max_workers=3 --test=./specs/wp-post-editor-spec.js
+              circleci/node:6.10.2 ./node_modules/.bin/magellan --max_test_attempts=1 --max_workers=3 --test=./specs/wp-post-editor-spec.js
