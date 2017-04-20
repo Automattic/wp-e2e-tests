@@ -13,4 +13,4 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: ./node_modules/.bin/magellan --max_test_attempts=1 --max_workers=3 --test=./specs/wp-post-editor-spec.js
+      - run: ./node_modules/.bin/magellan --max_test_attempts=1 --max_workers=3
