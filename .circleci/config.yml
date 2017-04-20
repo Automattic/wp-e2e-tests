@@ -22,13 +22,15 @@ jobs:
           name: Start Selenium Server
           command: |
             set -x
-            docker run -d --rm -e JAVA_OPTS=-Xmx1024m -v /dev/shm:/dev/shm -v wp-e2e-tests-data-volume:/wp-e2e-tests --name selenium selenium/standalone-chrome:3.3.0 
+            docker network create e2e
+            docker run -d --network=e2e --rm -e JAVA_OPTS=-Xmx1024m -v /dev/shm:/dev/shm -v wp-e2e-tests-data-volume:/wp-e2e-tests --name selenium selenium/standalone-chrome:3.3.0 
       - run:
           name: Run Tests
           command: |
             set -x
             docker run \
               -it \
+              --network=e2e
               -e SELENIUM_REMOTE_URL=http://selenium:4444/wd/hub \
               -e BROWSERSIZE \
               -e CIRCLE_BRANCH \
