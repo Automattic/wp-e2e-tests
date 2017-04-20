@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: /wp-e2e-tests
+    working_directory: /home/circleci/wp-e2e-tests
     docker:
       - image: circleci/node:6.10.2
         environment:
@@ -14,7 +14,7 @@ jobs:
       - save_cache:
           key: e2e-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
-            - /wp-e2e-tests/node_modules
+            - /home/circleci/wp-e2e-tests/node_modules
       - setup_remote_docker
       - run:
           name: Create shared data volume
@@ -22,7 +22,7 @@ jobs:
             set -x
             docker volume create wp-e2e-tests-data-volume
             docker create -v wp-e2e-tests-data-volume:/wp-e2e-tests --name wp-e2e-tests-data-container alpine:3.4 /bin/true
-            docker cp /wp-e2e-tests wp-e2e-tests-data-container:/
+            docker cp /home/circleci/wp-e2e-tests wp-e2e-tests-data-container:/
       - run:
           name: Start Selenium Hub
           command: |
@@ -50,7 +50,7 @@ jobs:
               -e CIRCLE_PROJECT_REPONAME \
               -e NODE_CONFIG \
               -e NODE_ENV \
-              -w /wp-e2e-tests \
+              -w /home/circleci/wp-e2e-tests \
               -v wp-e2e-tests-data-volume:/wp-e2e-tests \
               -v /dev/shm:/dev/shm \
               node:6.10.2 ./node_modules/.bin/magellan --max_test_attempts=1 --max_workers=3 --test=./specs/wp-post-editor-spec.js
