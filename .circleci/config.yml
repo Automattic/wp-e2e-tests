@@ -3,14 +3,43 @@ jobs:
   build:
     working_directory: /wp-e2e-tests
     docker:
-      - image: node:6.10.2
+      - image: circleci/node:6.10.2
         environment:
                 SELENIUM_REMOTE_URL: http://127.0.0.1:4444/wd/hub
                 NODE_ENV: test
-      - image: selenium/standalone-chrome:3.3.0
-        environment:
-                JAVA_OPTS: -Xmx1024m
     steps:
       - checkout
       - run: npm install
-      - run: ./node_modules/.bin/magellan --max_test_attempts=1 --max_workers=3
+      - setup_remote_docker
+      - run:
+          name: Create shared data volume
+          command: |
+            set -x
+            docker volume create wp-e2e-tests-data-volume
+            docker create -v wp-e2e-tests-data-volume:/wp-e2e-tests --name wp-e2e-tests-data-container alpine:3.4 /bin/true
+            docker cp /home/circleci/wp-e2e-tests wp-e2e-tests-data-container:/
+      - run: 
+          name: Start Selenium Server
+          command: |
+            set -x
+            docker run -d --rm -e JAVA_OPTS=-Xmx1024m -v /dev/shm:/dev/shm -v wp-e2e-tests-data-volume:/wp-e2e-tests --name selenium selenium/standalone-chrome:3.3.0 
+      - run:
+          name: Run Tests
+          command: |
+            set -x
+            docker run \
+              -it \
+              -e SELENIUM_REMOTE_URL=http://selenium:4444/wd/hub \
+              -e BROWSERSIZE \
+              -e CIRCLE_BRANCH \
+              -e CIRCLE_BUILD_NUM \
+              -e CIRCLE_TEST_REPORTS \
+              -e CIRCLE_PROJECT_USERNAME \
+              -e CIRCLE_PROJECT_REPONAME \
+              -e NODE_CONFIG \
+              -e NODE_ENV \
+              -w /home/circleci/wp-e2e-tests \
+              -v wp-e2e-tests-data-volume:/home/circleci/wp-e2e-tests \
+              -v /dev/shm:/dev/shm \
+              -u root \
+              circleci/node:6.10.2 ./node_modules/.bin/magellan --max_test_attempts=1 --max_workers=3 --test=./specs/wp-post-editor-spec.js
