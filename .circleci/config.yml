@@ -13,6 +13,7 @@ jobs:
           key: << checksum "package.json" >>
       - run: npm install
       - save_cache:
-          path: /wp-e2e-tests/node_modules
+          paths:
+            - /wp-e2e-tests/node_modules
           key: << checksum "package.json" >>
       - run: ./run.sh -R -p -x
