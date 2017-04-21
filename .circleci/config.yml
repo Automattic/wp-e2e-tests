@@ -9,5 +9,10 @@ jobs:
                 NODE_ENV: test
     steps:
       - checkout
+      - restore_cache:
+          key: << checksum "package.json" >>
       - run: npm install
+      - save_cache:
+          path: /wp-e2e-tests/node_modules
+          key: << checksum "package.json" >>
       - run: ./run.sh -R -p -x
