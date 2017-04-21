@@ -17,5 +17,5 @@ jobs:
             - /wp-e2e-tests/node_modules
           key: << checksum "package.json" >>
       - run: ./run.sh -R -p -x
-      - store_artifacts:
-          path: /wp-e2e-tests/reports
+      - store_test_results:
+          path: reports/
