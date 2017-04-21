@@ -42,6 +42,9 @@ RUN wget http://www.slimjetbrowser.com/chrome/lnx/chrome64_$CHROME_VERSION.deb &
 	dpkg -i chrome64_$CHROME_VERSION.deb || \
 	apt-get -fy install
 
+# Remove install file
+RUN rm -rf /wp-e2e-tests/chrome64_$CHROME_VERSION.deb
+
 # Configure non-root account
 RUN	useradd -m e2e-tester
 RUN	chown -R e2e-tester /wp-e2e-tests

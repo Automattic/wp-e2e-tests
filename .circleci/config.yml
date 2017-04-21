@@ -9,4 +9,4 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: ./node_modules/.bin/magellan --max_test_attempts=1 --max_workers=3
+      - run: xvfb-run ./node_modules/.bin/magellan --max_test_attempts=1 --max_workers=3
