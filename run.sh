@@ -1,6 +1,6 @@
 #!/bin/bash
-MOCHA=./node_modules/mocha/bin/mocha
-MAGELLAN=./node_modules/mocha/bin/magellan
+MOCHA=./node_modules/.bin/mocha
+MAGELLAN=./node_modules/.bin/magellan
 GRUNT=./node_modules/.bin/grunt
 REPORTER=""
 PARALLEL=0
