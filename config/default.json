@@ -1,7 +1,7 @@
 {
   "authURL": "https://wordpress.com/wp-login.php",
   "calypsoBaseURL": "https://wordpress.com",
-  "explicitWaitMS": 20000,
+  "explicitWaitMS": 30000,
   "emailWaitMS": 60000,
   "mochaTimeoutMS": 160000,
   "mochaDevDocsTimeoutMS": 1000000,
