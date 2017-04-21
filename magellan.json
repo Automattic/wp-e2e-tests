@@ -5,6 +5,7 @@
   "mocha_opts": "test/mocha.opts",
   "mocha_args": "-R spec-xunit-slack-reporter",
   "max_test_attempts": 2,
+  "max_workers": 4,
   "suiteTag": "parallel",
   "sauce": false,
   "browser": "chrome",
