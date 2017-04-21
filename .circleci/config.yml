@@ -16,6 +16,6 @@ jobs:
           paths:
             - /wp-e2e-tests/node_modules
           key: << checksum "package.json" >>
-      - store_artifacts:
-          path: $CIRCLE_TEST_REPORTS
       - run: ./run.sh -R -p -x
+      - store_artifacts:
+          path: /wp-e2e-tests/reports
