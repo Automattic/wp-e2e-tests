@@ -1,6 +1,7 @@
 version: 2
 jobs:
   build:
+    parallelism: 2
     working_directory: /wp-e2e-tests
     docker:
       - image: hoverduck/wp-e2e-tests:0.0.1
