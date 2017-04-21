@@ -172,7 +172,7 @@ if [ $PARALLEL == 1 ]; then
   if [ $CIRCLE_NODE_INDEX == $MOBILE ]; then
       echo "Executing tests at mobile screen width"
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
-      CMD="env BROWSERSIZE=mobile $MAGELLAN"
+      CMD="env BROWSERSIZE=mobile $MAGELLAN --serial"
 
       eval $CMD
       RETURN+=$?
@@ -180,7 +180,7 @@ if [ $PARALLEL == 1 ]; then
   if [ $CIRCLE_NODE_INDEX == $DESKTOP ]; then
       echo "Executing tests at desktop screen width"
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
-      CMD="env BROWSERSIZE=desktop $MAGELLAN"
+      CMD="env BROWSERSIZE=desktop $MAGELLAN --serial"
 
       eval $CMD
       RETURN+=$?
