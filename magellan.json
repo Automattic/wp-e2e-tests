@@ -3,6 +3,7 @@
     "specs"
   ],
   "mocha_opts": "test/mocha.opts",
+  "mocha_args": "-R spec-xunit-slack-reporter",
   "max_test_attempts": 2,
   "suiteTag": "parallel",
   "sauce": false,
