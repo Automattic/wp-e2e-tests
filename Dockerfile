@@ -46,9 +46,3 @@ RUN wget http://www.slimjetbrowser.com/chrome/lnx/chrome64_$CHROME_VERSION.deb &
 RUN	useradd -m e2e-tester
 RUN	chown -R e2e-tester /wp-e2e-tests
 USER    e2e-tester
-
-# Sometimes "npm install" fails the first time when the cache is empty, so we retry once if it failed
-RUN     npm install || npm install
-
-# Run the tests
-CMD ./run.sh -R -g -x
