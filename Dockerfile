@@ -5,7 +5,7 @@ MAINTAINER Automattic
 WORKDIR /wp-e2e-tests
 
 # Version Numbers
-ENV NODE_VERSION 6.10.0
+ENV NODE_VERSION 6.10.2
 ENV CHROMEDRIVER_VERSION 2.28
 ENV CHROME_VERSION 56.0.2924.87
 
@@ -42,14 +42,6 @@ RUN wget http://www.slimjetbrowser.com/chrome/lnx/chrome64_$CHROME_VERSION.deb &
 	dpkg -i chrome64_$CHROME_VERSION.deb || \
 	apt-get -fy install
 
-# Shared directories
-VOLUME	/secrets
-VOLUME /screenshots
-RUN	ln -sf /screenshots ./screenshots
-
-# Load the code
-COPY     . /wp-e2e-tests
-
 # Configure non-root account
 RUN	useradd -m e2e-tester
 RUN	chown -R e2e-tester /wp-e2e-tests
@@ -57,10 +49,6 @@ USER    e2e-tester
 
 # Sometimes "npm install" fails the first time when the cache is empty, so we retry once if it failed
 RUN     npm install || npm install
-
-# Point to the secrets config file
-ENV	NODE_ENV docker
-RUN	["sh", "-c", "ln -sf /secrets/local-${NODE_ENV}.json ./config/local-${NODE_ENV}.json"]
 
 # Run the tests
 CMD ./run.sh -R -g -x
