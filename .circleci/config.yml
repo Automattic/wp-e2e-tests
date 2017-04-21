@@ -10,4 +10,4 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: ./run.sh -p -x
+      - run: ./run.sh -R -p -x
