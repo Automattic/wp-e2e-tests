@@ -2,6 +2,7 @@
   "mocha_tests": [
     "specs"
   ],
+  "test": "specs/wp-log-in-out-spec.js",
   "mocha_opts": "test/mocha.opts",
   "mocha_args": "-R spec-xunit-slack-reporter",
   "max_test_attempts": 2,
