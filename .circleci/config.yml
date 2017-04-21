@@ -8,6 +8,7 @@ jobs:
         environment:
                 NODE_ENV: test
     steps:
+      - run: rm -rf * # When the container is reused sometimes the checkout step chokes on existing files
       - checkout
       - restore_cache:
           key: << checksum "package.json" >>
