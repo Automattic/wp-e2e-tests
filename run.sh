@@ -1,5 +1,6 @@
 #!/bin/bash
 MOCHA=./node_modules/mocha/bin/mocha
+MAGELLAN=./node_modules/mocha/bin/magellan
 GRUNT=./node_modules/.bin/grunt
 REPORTER=""
 PARALLEL=0
@@ -128,6 +129,7 @@ while getopts ":Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
       ;;
     x)
       MOCHA="xvfb-run $MOCHA"
+      MAGELLAN="xvfb-run $MAGELLAN"
       ;;
     u)
       NODE_CONFIG_ARGS+=("\"calypsoBaseURL\":\"$OPTARG\"")
@@ -178,7 +180,7 @@ if [ $PARALLEL == 1 ]; then
   if [ $CIRCLE_NODE_INDEX == $DESKTOP ]; then
       echo "Executing tests at desktop screen width"
       NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
-      CMD="env BROWSERSIZE=desktop $MOCHA $NC $GREP $REPORTER specs/"
+      CMD="env BROWSERSIZE=desktop $MAGELLAN"
 
       eval $CMD
       RETURN+=$?
@@ -191,7 +193,7 @@ else # Not a parallel run, just queue up the tests in sequence
     for size in ${SCREENSIZE_ARRAY[@]}; do
       for target in "${TARGETS[@]}"; do
         if [ "$target" != "" ]; then
-          CMD="env BROWSERSIZE=$size $MOCHA $NC $GREP $REPORTER $target"
+          CMD="env BROWSERSIZE=$size $MAGELLAN"
 
           eval $CMD
           RETURN+=$?
