@@ -2,7 +2,6 @@
   "mocha_tests": [
     "specs"
   ],
-  "test": "specs/wp-page-editor-spec.js",
   "mocha_opts": "test/mocha.opts",
   "mocha_args": "-R spec-xunit-slack-reporter",
   "max_test_attempts": 2,
