@@ -74,7 +74,9 @@ The local configurations are excluded from the repository, in order to prevent a
 
 `./node_modules/.bin/magellan`
 
-See the magellan.json file for the default parameters
+See the magellan.json file for the default parameters.  This is the process used in CI.
+
+**NOTE!** - The magellan mocha plugin will search for all suites tagged with `@parallel`.  If you add a new test to this repo, you MUST add that tag to ensure that your test is run via CircleCI.
 
 ### To run an individual spec
 
