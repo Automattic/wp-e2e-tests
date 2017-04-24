@@ -30,7 +30,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Managing Domains: (' + screenSize + ')', function() {
+test.describe( 'Managing Domains: (' + screenSize + ') @parallel', function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 

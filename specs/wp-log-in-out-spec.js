@@ -23,7 +23,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Authentication: (' + screenSize + ')', function() {
+test.describe( 'Authentication: (' + screenSize + ') @parallel', function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -69,7 +69,7 @@ test.describe( 'Authentication: (' + screenSize + ')', function() {
 	} );
 } );
 
-test.describe( 'User Agent: (' + screenSize + ')', function() {
+test.describe( 'User Agent: (' + screenSize + ') @parallel', function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 

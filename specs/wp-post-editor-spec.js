@@ -37,7 +37,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Public Posts:', function() {
+	test.describe( 'Public Posts: @parallel', function() {
 		let fileDetails;
 
 		test.before( function() {
@@ -143,6 +143,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 						test.describe( 'Preview', function() {
 							test.it( 'Can launch post preview', function() {
 								this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+								this.postEditorToolbarComponent.ensureSaved();
 								this.postEditorToolbarComponent.launchPreview();
 								this.postPreviewComponent = new PostPreviewComponent( driver );
 							} );
@@ -280,7 +281,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Basic Public Post @canary0', function() {
+	test.describe( 'Basic Public Post @canary0 @parallel', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
@@ -321,7 +322,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Private Posts:', function() {
+	test.describe( 'Private Posts: @parallel', function() {
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
@@ -415,7 +416,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Password Protected Posts:', function() {
+	test.describe( 'Password Protected Posts: @parallel', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -720,7 +721,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Trash Post:', function() {
+	test.describe( 'Trash Post: @parallel', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -756,7 +757,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Edit a Post:', function() {
+	test.describe( 'Edit a Post: @parallel', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
@@ -848,7 +849,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Insert a contact form:', function() {
+	test.describe( 'Insert a contact form: @parallel', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {

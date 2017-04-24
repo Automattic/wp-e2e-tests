@@ -30,7 +30,7 @@ test.before( function() {
 test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Public Pages:', function() {
+	test.describe( 'Public Pages: @parallel', function() {
 		this.bailSuite( true );
 		let fileDetails;
 
@@ -72,6 +72,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 			test.describe( 'Preview', function() {
 				test.it( 'Can launch page preview', function() {
 					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					postEditorToolbarComponent.ensureSaved();
 					postEditorToolbarComponent.launchPreview();
 					this.pagePreviewComponent = new PagePreviewComponent( driver );
 				} );
@@ -89,13 +90,12 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 				} );
 
 				test.it( 'Can see the image uploaded in the preview', function() {
-					this.pagePreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
+					return this.pagePreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
 						assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
 					} );
 				} );
 
-				// Can close page preview
-				test.after( function() {
+				test.it( 'Can close page preview', function() {
 					this.pagePreviewComponent.close();
 				} );
 			} );
@@ -125,12 +125,10 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 					} );
 				} );
 
-				// Can close page preview
-				test.after( function() {
+				test.it( 'Can close page preview', function() {
 					this.pagePreviewComponent.close();
 				} );
 			} );
-
 
 			test.describe( 'View published content', function() {
 				test.it( 'Can view content', function() {
@@ -172,7 +170,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Private Pages:', function() {
+	test.describe( 'Private Pages: @parallel', function() {
 		this.bailSuite( true );
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
@@ -235,7 +233,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Password Protected Pages:', function() {
+	test.describe( 'Password Protected Pages: @parallel', function() {
 		this.bailSuite( true );
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );

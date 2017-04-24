@@ -19,7 +19,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Editor: Media Upload (' + screenSize + ')', function() {
+test.describe( 'Editor: Media Upload (' + screenSize + ') @parallel', function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Image Upload:', function() {

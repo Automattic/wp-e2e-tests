@@ -21,7 +21,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Post-NUX Flows (' + screenSize + ')', function() {
+test.describe( 'Post-NUX Flows (' + screenSize + ') @parallel', function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Sign in as a post NUX user and load the customizer', function() {

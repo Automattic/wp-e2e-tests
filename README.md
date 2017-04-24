@@ -12,6 +12,7 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
   - [Config / Environment Variables](#config--environment-variables)
 - [Run tests](#run-tests)
   - [To run all the specs](#to-run-all-the-specs-in-default-browser-sizes---mobile-and-desktop)
+  - [To run all the specs in parallel](#to-run-all-the-specs-in-parallel)
   - [To run an individual spec](#to-run-an-individual-spec)
   - [To run with different modes](#to-run-with-different-modes)
   - [To run a specific suite of specs](#to-run-a-specific-suite-of-specs)
@@ -68,6 +69,12 @@ The local configurations are excluded from the repository, in order to prevent a
 ### To run all the specs (in default browser sizes - mobile and desktop)
 
 `./run.sh -g`
+
+### To run all the specs in parallel
+
+`./node_modules/.bin/magellan`
+
+See the magellan.json file for the default parameters
 
 ### To run an individual spec
 
@@ -137,30 +144,11 @@ A couple additional steps are necessary if you want to connect that Selenium ser
 Note that you'll need to supply the `-f docker-compose-calypso.yml` parameter to the `down` command as well, or you'll get a warning message about orphaned containers.
 
 ### To run inside a Docker container
-We can also run the entire test suite (including Selenium) from within the context of a Docker container, which allows us to force a particular version of Chrome/driver to reduce compatibility issues.  This would mostly be useful from a CI server.
-
-The `run-docker.sh` script handles all of the interaction with this container, with the options listed below.  But first, here are the steps to get up and running quickly:
+We can also run the test suite (including Selenium) from within the context of a Docker container, which allows us to force a particular version of Chrome/driver to reduce compatibility issues.  This would mostly be useful from a CI server.
 
 1. If you haven't already, [install Docker](https://docs.docker.com/engine/installation/)
-1. Execute `./run-docker.sh -b` to build the image (this will take several minutes the first time)
-1. The tests inside the container have NODE_ENV set to `docker`, so create/link a config file named `local-docker.json`
-1. Execute `./run-docker.sh` and it will run the default test suite at mobile/desktop width
-
-To further customize the run, use these command line options:
-```
-Unless the -b option is given, this command runs the Docker image named wp-e2e-tests
--b		  - Build the Docker container (overrides all other options)
--c		  - Directory holding local-docker.json file (fully qualified)
--i		  - Launch an interactive shell instead of directly running the tests
--l		  - Mount the current directory inside the container for modification/testing
--s		  - Output directory for screenshots (fully qualified)
--h		  - This help listing
-```
-When the image is built, it copies the entire current directory (assuming the root of the repo) into the image.  It then creates a link in the config directory to the `local-docker.json` file stored in the `secrets` directory (inside the container), which is passed in on the command line to `docker run` as a mapped volume.  By default it assumes you're going to use `./config`, but if you have the json file stored elsewhere you can override it with the `-c` option.  It is possible to override the value if you call `docker run` directly with the `-e NODE_ENV=....` parameter, but I've avoided that with this script to ensure that we point to the live shared folder rather than an old version of the file that may have been copied in when the image was built.
-
-By copying the contents of the `wp-e2e-tests` directory into the image, that leaves us with a snapshot at the time the image was built.  To pick up new changes you need to re-build the image, or use the `-l` option to share your current directory inside the container for live updates.  That option is particularly useful if you pair it with `-i`, which gives you an interactive shell to run the tests manually rather than kick them off immediately.
-
-Note that if you run interactively, you need to either use the `-x` option with `run.sh` or preface your mocha commands with `xvfb-run` to have them use the virtual display.
+1. Execute `docker build -t wp-e2e-tests .` to build the image (this may take several minutes the first time)
+1. Execute `docker run -v /dev/shm:/dev/shm -v $(pwd):$(pwd) -w $(pwd) -e NODE_ENV -it --rm wp-e2e-tests ./run.sh -g -x` and it will run the default test suite at mobile/desktop width
 
 ### Config Values
 

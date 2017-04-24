@@ -1,0 +1,13 @@
+{
+  "mocha_tests": [
+    "specs"
+  ],
+  "mocha_opts": "test/mocha.opts",
+  "mocha_args": "-R spec-xunit-slack-reporter",
+  "max_test_attempts": 2,
+  "max_workers": 3,
+  "suiteTag": "parallel",
+  "sauce": false,
+  "browser": "chrome",
+  "framework": "testarmada-magellan-mocha-plugin"
+}

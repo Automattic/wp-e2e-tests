@@ -51,7 +51,7 @@ if ( process.env.DISABLE_EMAIL === 'true' ) {
 testDescribe( 'Invites: (' + screenSize + ')', function() {
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Inviting New User as an Editor:', function() {
+	test.describe( 'Inviting New User as an Editor: @parallel', function() {
 		this.bailSuite( true );
 		const inviteInboxId = config.get( 'inviteInboxId' );
 		const newUserName = 'e2eflowtestingeditor' + new Date().getTime().toString();
@@ -228,7 +228,7 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Inviting New User as a Follower:', function() {
+	test.describe( 'Inviting New User as a Follower: @parallel', function() {
 		this.bailSuite( true );
 		const inviteInboxId = config.get( 'inviteInboxId' );
 		const newUserName = 'e2eflowtestingfollower' + new Date().getTime().toString();
@@ -380,7 +380,7 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Inviting New User as a Viewer of a Private Site:', function() {
+	test.describe( 'Inviting New User as a Viewer of a Private Site: @parallel', function() {
 		this.bailSuite( true );
 
 		const inviteInboxId = config.get( 'inviteInboxId' );
@@ -558,7 +558,7 @@ testDescribe( 'Invites: (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Inviting New User as an Contributor, then change them to Author:', function() {
+	test.describe( 'Inviting New User as an Contributor, then change them to Author: @parallel', function() {
 		this.bailSuite( true );
 
 		const inviteInboxId = config.get( 'inviteInboxId' );
