@@ -8,7 +8,6 @@ jobs:
         environment:
                 NODE_ENV: test
     steps:
-      - run: ls
       - checkout
       - restore_cache:
           key: << checksum "package.json" >>
