@@ -893,7 +893,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 	
-	test.describe( 'Revert a post to draft', function() {
+	test.describe( 'Revert a post to draft: @parallel', function() {
 		this.bailSuite( true );
 		
 		test.before( function() {
