@@ -143,6 +143,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 						test.describe( 'Preview', function() {
 							test.it( 'Can launch post preview', function() {
 								this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+								this.postEditorToolbarComponent.ensureSaved();
 								this.postEditorToolbarComponent.launchPreview();
 								this.postPreviewComponent = new PostPreviewComponent( driver );
 							} );
