@@ -32,7 +32,7 @@ test.describe( `WooCommerce on Calypso: '${ screenSize }'`, function() {
 	// Login as WooCommerce store user
 	test.before( function() {
 		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.loginAndSelectMySite();
+		this.loginFlow.login();
 	} );
 
 	test.it( 'Can see store placeholder page when visiting /store', function() {
@@ -49,7 +49,7 @@ test.describe( `WooCommerce on Calypso: '${ screenSize }'`, function() {
 		} );
 	} );
 
-	test.it( 'Can see the add store stats placeholder page when visiting /store/stats', function() {
+	test.xit( 'Can see the add store stats placeholder page when visiting /store/stats', function() {
 		this.storeStatsPage = new StoreStatsPage( driver, true );
 		this.storeStatsPage.displayed().then( ( shown ) => {
 			assert( shown, 'Could not see the WooCommerce add product page after visting /store/stats' );
