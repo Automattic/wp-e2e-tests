@@ -84,6 +84,7 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fiUvxu:h" opt; do
       MAGELLAN_CONFIG="magellan.json"
       ;;
     i)
+      SCREENSIZES=desktop
       NODE_CONFIG_ARGS+=$I18N_CONFIG
       LOCALES="en,pt-BR,es,ja,fr,he"
       export SCREENSHOTDIR="screenshots-i18n"
