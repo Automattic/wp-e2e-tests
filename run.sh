@@ -75,6 +75,7 @@ while getopts ":Rpb:s:gjWCH:wl:cm:fiIvxh" opt; do
       TARGET="specs/"
       ;;
     i)
+      SCREENSIZES=desktop
       NODE_CONFIG_ARGS+=$I18N_CONFIG
       TARGET="specs-i18n/"
       ;;
