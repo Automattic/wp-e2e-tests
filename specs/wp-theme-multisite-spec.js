@@ -24,7 +24,7 @@ test.before( function() {
 } );
 
 test.describe( 'Themes: All sites (' + screenSize + ')', function() {
-	test.describe( 'Preview a theme', function() {
+	test.describe( 'Preview a theme @parallel', function() {
 		this.bailSuite( true );
 		this.timeout( mochaTimeOut );
 
@@ -93,7 +93,7 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Activate a theme', function() {
+	test.describe( 'Activate a theme @parallel', function() {
 		this.bailSuite( true );
 		this.timeout( mochaTimeOut );
 

@@ -8,3 +8,7 @@ services:
     volumes:
       - ${PWD}:${PWD}
       - /dev/shm:/dev/shm
+    networks:
+      - e2e
+networks:
+  e2e:

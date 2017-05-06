@@ -36,6 +36,8 @@
     "sanitize-filename": "1.6.0",
     "selenium-webdriver": "3.3.0",
     "slack-notify": "0.1.4",
+    "testarmada-magellan":"8.8.6",
+    "testarmada-magellan-mocha-plugin":"hoverduck/magellan-mocha-plugin#89ce1ff",
     "parallel-mocha": "~0.0.7",
     "saucelabs": "^1.2.0",
     "grunt": "0.4.5",

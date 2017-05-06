@@ -47,7 +47,7 @@ if ( process.env.DISABLE_EMAIL === 'true' ) {
 testDescribe( 'Sign Up (' + screenSize + ')', function() {
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Sign up for a free site', function() {
+	test.describe( 'Sign up for a free site @parallel', function() {
 		this.bailSuite( true );
 
 		const blogName = dataHelper.getNewBlogName();
@@ -187,7 +187,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Sign up for a site on a premium paid plan through main flow @canary1', function() {
+	test.describe( 'Sign up for a site on a premium paid plan through main flow @canary1 @parallel', function() {
 		this.bailSuite( true );
 
 		const blogName = dataHelper.getNewBlogName();
@@ -334,7 +334,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Sign up for a site on a premium paid plan coming in via /create as premium flow', function() {
+	test.describe( 'Sign up for a site on a premium paid plan coming in via /create as premium flow @parallel', function() {
 		this.bailSuite( true );
 
 		const blogName = dataHelper.getNewBlogName();
@@ -455,7 +455,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Partially sign up for a site on a business paid plan w/ domain name coming in via /create as business flow @canary2', function() {
+	test.describe( 'Partially sign up for a site on a business paid plan w/ domain name coming in via /create as business flow @canary2 @parallel', function() {
 		this.bailSuite( true );
 
 		const siteName = dataHelper.getNewBlogName();
@@ -602,7 +602,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Sign up for a Survey Step free site', function() {
+	test.describe( 'Sign up for a Survey Step free site @parallel', function() {
 		this.bailSuite( true );
 
 		const blogName = dataHelper.getNewBlogName();

@@ -10,6 +10,8 @@ services:
       - /dev/shm:/dev/shm
     links:
       - "wp-calypso:wpcalypso.wordpress.com"
+    networks:
+      - e2e
   wp-calypso:
     image: wp-calypso
     user: root
@@ -17,3 +19,7 @@ services:
       - PORT=80
       - NODE_ENV=production
       - CALYPSO_ENV=wpcalypso
+    networks:
+      - e2e
+networks:
+  e2e:

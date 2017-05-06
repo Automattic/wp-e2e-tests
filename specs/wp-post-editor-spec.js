@@ -37,7 +37,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Public Posts:', function() {
+	test.describe( 'Public Posts: @parallel', function() {
 		let fileDetails;
 
 		test.before( function() {
@@ -143,6 +143,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 						test.describe( 'Preview', function() {
 							test.it( 'Can launch post preview', function() {
 								this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+								this.postEditorToolbarComponent.ensureSaved();
 								this.postEditorToolbarComponent.launchPreview();
 								this.postPreviewComponent = new PostPreviewComponent( driver );
 							} );
@@ -280,7 +281,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Basic Public Post @canary0', function() {
+	test.describe( 'Basic Public Post @canary0 @parallel', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
@@ -321,7 +322,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Private Posts:', function() {
+	test.describe( 'Private Posts: @parallel', function() {
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
@@ -415,7 +416,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Password Protected Posts:', function() {
+	test.describe( 'Password Protected Posts: @parallel', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -720,7 +721,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Trash Post:', function() {
+	test.describe( 'Trash Post: @parallel', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -756,7 +757,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Edit a Post:', function() {
+	test.describe( 'Edit a Post: @parallel', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
@@ -848,7 +849,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Insert a contact form:', function() {
+	test.describe( 'Insert a contact form: @parallel', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
@@ -888,6 +889,54 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			test.it( 'Can see the contact form in our published post', function() {
 				this.viewPostPage.contactFormDisplayed().then( function( displayed ) {
 					assert.equal( displayed, true, 'The published post does not contain the contact form' );
+				} );
+			} );
+		} );
+	} );
+	
+	test.describe( 'Revert a post to draft: @parallel', function() {
+		this.bailSuite( true );
+		
+		test.before( function() {
+			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+		
+		test.describe( 'Publish a new post', function() {
+			const originalBlogPostTitle = dataHelper.randomPhrase();
+			const blogPostQuote = 'To really be of help to others we need to be guided by compassion.\n— Dalai Lama\n';
+			
+			test.it( 'Can log in', function() {
+				this.loginFlow = new LoginFlow( driver );
+				return this.loginFlow.loginAndStartNewPost();
+			} );
+			
+			test.it( 'Can enter post title and content', function() {
+				this.editorPage = new EditorPage( driver );
+				this.editorPage.enterTitle( originalBlogPostTitle );
+				this.editorPage.enterContent( blogPostQuote );
+				
+				return this.editorPage.errorDisplayed().then( ( errorShown ) => {
+					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+				} );
+			} );
+			
+			test.it( 'Can publish the post', function() {
+				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				this.postEditorToolbarComponent.ensureSaved();
+				this.postEditorToolbarComponent.publishPost();
+				return this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
+			} );
+		} );
+			
+		test.describe( 'Revert the post to draft', function() {
+			
+			test.it( 'Can revert the post to draft', function() {
+				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				postEditorSidebarComponent.revertToDraft();
+				postEditorToolbarComponent.waitForIsDraftStatus();
+				postEditorToolbarComponent.statusIsDraft().then( ( isDraft ) => {
+					assert.equal( isDraft, true, 'The post is not set as draft' );
 				} );
 			} );
 		} );
