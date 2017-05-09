@@ -13,7 +13,7 @@ if [ "$NODE_ENV_OVERRIDE" != "" ]; then
   NODE_ENV=$NODE_ENV_OVERRIDE
 fi
 
-export TESTARGS="-R -p"
+export TESTARGS="-R -p -x"
 
 if [ "$RUN_SPECIFIED" == "true" ]; then
   TESTARGS=$RUN_ARGS
@@ -21,12 +21,13 @@ elif [[ "$CIRCLE_BRANCH" =~ .*[Jj]etpack.*|.*[Jj][Pp].* ]]; then
   TESTARGS="-R -j" # Execute Jetpack tests
 elif [[ "$CIRCLE_BRANCH" =~ .*[Ww][Oo][Oo].* ]]; then
   TESTARGS="-R -W -u https://wpcalypso.wordpress.com" # Execute WooCommerce tests
-elif [ "$CIRCLE_BRANCH" == "master" ]; then
-  TESTARGS="-R -p" # Parallel execution, implies -g -s mobile,desktop
+elif [ "$CIRCLE_BRANCH" == "fix/use-run-wrapper-with-ci-2.0-again" ]; then
+  TESTARGS="-R -p -x" # Parallel execution, implies -g -s mobile,desktop
 fi
 
 if [ "$liveBranches" == "true" ]; then
   TESTARGS+=" -b $branchName"
 fi
 
+echo "TESTARGS='$TESTARGS'"
 npm test
