@@ -17,6 +17,6 @@ jobs:
             - /wp-e2e-tests/node_modules
           key: << checksum "package.json" >>
       - run: ./scripts/randomize.sh specs
-      - run: ./run.sh -R -p -x
+      - run: ./scrips/run-wrapper.sh
       - store_test_results:
           path: reports/
