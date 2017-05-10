@@ -25,7 +25,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `${host} Jetpack Sites on Calypso: '${ screenSize }'`, function() {
+test.describe( `${host} Jetpack Sites on Calypso - Existing Plugins: '${ screenSize }'`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -64,6 +64,20 @@ test.describe( `${host} Jetpack Sites on Calypso: '${ screenSize }'`, function()
 				assert.equal( successMessageText.indexOf( expectedPartialText ) > -1, true, `The success message '${successMessageText}' does not include '${expectedPartialText}'` );
 			} );
 		} );
+	} );
+} );
+
+test.describe( `${host} Jetpack Sites on Calypso - Searching Plugins: '${ screenSize }'`, function() {
+	this.timeout( mochaTimeOut );
+	this.bailSuite( true );
+
+	test.before( function() {
+		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	} );
+
+	test.before( function() {
+		let loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
+		loginFlow.loginAndSelectPlugins();
 	} );
 
 	test.describe( 'Can use the plugins browser to find Automattic plugins', function() {
