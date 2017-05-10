@@ -21,7 +21,7 @@ elif [[ "$CIRCLE_BRANCH" =~ .*[Jj]etpack.*|.*[Jj][Pp].* ]]; then
   TESTARGS="-R -j" # Execute Jetpack tests
 elif [[ "$CIRCLE_BRANCH" =~ .*[Ww][Oo][Oo].* ]]; then
   TESTARGS="-R -W -u https://wpcalypso.wordpress.com" # Execute WooCommerce tests
-elif [ "$CIRCLE_BRANCH" == "fix/use-run-wrapper-with-ci-2.0-again" ]; then
+elif [ "$CIRCLE_BRANCH" == "master" ]; then
   TESTARGS="-R -p -x" # Parallel execution, implies -g -s mobile,desktop
 fi
 
