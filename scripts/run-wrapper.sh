@@ -29,4 +29,9 @@ if [ "$liveBranches" == "true" ]; then
   TESTARGS+=" -b $branchName"
 fi
 
+# If on CI and the -x flag is not yet set, set it
+if [ "$CI" == "true" ] && [[ "$TESTARGS" != *"-x"* ]]; then
+  TESTARGS+=" -x"
+fi
+
 npm test
