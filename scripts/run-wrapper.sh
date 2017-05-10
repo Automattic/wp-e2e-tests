@@ -29,5 +29,4 @@ if [ "$liveBranches" == "true" ]; then
   TESTARGS+=" -b $branchName"
 fi
 
-echo "TESTARGS='$TESTARGS'"
 npm test
