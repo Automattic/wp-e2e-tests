@@ -66,11 +66,11 @@ The local configurations are excluded from the repository, in order to prevent a
 ## Run tests
 
 
-### To run all the specs (in default browser sizes - mobile and desktop)
+### To run the default specs in parallel (in default browser sizes - mobile and desktop)
 
 `./run.sh -g`
 
-### To run all the specs in parallel
+- or -
 
 `./node_modules/.bin/magellan`
 
@@ -107,6 +107,7 @@ Or you can use the -s option on the run.sh script:
 
 The `run.sh` script takes the following parameters, which can be combined to execute a variety of suites
 ```
+-a [workers]	  - Number of parallel workers in Magellan (defaults to 3)
 -R		  - Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
 -p 		  - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop)
 -b [branch]	  - Run tests on given branch via https://calypso.live
