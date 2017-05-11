@@ -1,10 +1,10 @@
 #!/bin/bash
-MOCHA=./node_modules/.bin/mocha
 MAGELLAN=./node_modules/.bin/magellan
+MOCHA_ARGS=""
+WORKERS=3
 GRUNT=./node_modules/.bin/grunt
 REPORTER=""
 PARALLEL=0
-CANARY_PARALLEL=0
 JOBS=0
 OPTS=""
 SCREENSIZES="mobile,desktop"
@@ -23,6 +23,7 @@ declare -a TARGETS
 
 usage () {
   cat <<EOF
+-a [workers]	  - Number of parallel workers in Magellan (defaults to 3)
 -R		  - Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
 -p 		  - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop)
 -b [branch]	  - Run tests on given branch via https://calypso.live
@@ -50,10 +51,14 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
+while getopts ":a:Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
   case $opt in
+    a)
+      WORKERS=$OPTARG
+      continue
+      ;;
     R)
-      REPORTER="-R spec-xunit-slack-reporter"
+      MOCHA_ARGS+="-R spec-xunit-slack-reporter "
       continue
       ;;
     p)
@@ -101,23 +106,15 @@ while getopts ":Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
       exit $?
       ;;
     j)
-      MOCHA+=" --compilers js:babel-register"
       SCREENSIZES="desktop,mobile"
       TARGET="specs-jetpack-calypso/"
       ;;
     W)
-      MOCHA+=" --compilers js:babel-register"
       SCREENSIZES="desktop,mobile"
       TARGET="specs-woocommerce/"
       ;;
     C)
-      if [ "$CI" == "true" ]; then
-        GREP="-g '@canary$CIRCLE_NODE_INDEX'"
-        CANARY_PARALLEL=1
-      else
-        GREP="-g '@canary'"
-      fi
-
+      MAGELLAN="$MAGELLAN --suiteTag=canary"
       SCREENSIZES="mobile"
       TARGET="specs/"
       ;;
@@ -128,7 +125,6 @@ while getopts ":Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
       NODE_CONFIG_ARGS+=("\"failVisdiffs\":\"true\"")
       ;;
     x)
-      MOCHA="xvfb-run $MOCHA"
       MAGELLAN="xvfb-run $MAGELLAN"
       ;;
     u)
@@ -154,13 +150,14 @@ while getopts ":Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
   unset TARGET
 done
 
-# Skip any tests in the given variable
+# Skip any tests in the given variable - DOES NOT WORK WITH MAGELLAN - See issue #506
 if [ "$SKIP_TEST_REGEX" != "" ]; then
-	GREP="-i -g '$SKIP_TEST_REGEX'"
+  GREP="-i -g '$SKIP_TEST_REGEX'"
 fi
 
 # Combine any NODE_CONFIG entries into a single object
 NODE_CONFIG_ARG="$(joinStr , ${NODE_CONFIG_ARGS[*]})"
+MOCHA_ARGS+="--NODE_CONFIG={$NODE_CONFIG_ARG}"
 
 if [ $PARALLEL == 1 ]; then
   # Assign an index to each test segment to run in parallel
@@ -171,29 +168,25 @@ if [ $PARALLEL == 1 ]; then
 
   if [ $CIRCLE_NODE_INDEX == $MOBILE ]; then
       echo "Executing tests at mobile screen width"
-      NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
-      CMD="env BROWSERSIZE=mobile $MAGELLAN"
+      CMD="env BROWSERSIZE=mobile $MAGELLAN --mocha_args='$MOCHA_ARGS' --max_workers=$WORKERS"
 
       eval $CMD
       RETURN+=$?
   fi
   if [ $CIRCLE_NODE_INDEX == $DESKTOP ]; then
       echo "Executing tests at desktop screen width"
-      NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
-      CMD="env BROWSERSIZE=desktop $MAGELLAN"
+      CMD="env BROWSERSIZE=desktop $MAGELLAN --mocha_args='$MOCHA_ARGS' --max_workers=$WORKERS"
 
       eval $CMD
       RETURN+=$?
   fi
-else # Not a parallel run, just queue up the tests in sequence
-  NC="--NODE_CONFIG='{$NODE_CONFIG_ARG}'"
-
-  if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ] || [ $CANARY_PARALLEL == 1 ]; then
+else # Not using multiple CircleCI containers, just queue up the tests in sequence
+  if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
     IFS=, read -r -a SCREENSIZE_ARRAY <<< "$SCREENSIZES"
     for size in ${SCREENSIZE_ARRAY[@]}; do
       for target in "${TARGETS[@]}"; do
         if [ "$target" != "" ]; then
-          CMD="env BROWSERSIZE=$size $MOCHA $NC $GREP $REPORTER $target"
+          CMD="env BROWSERSIZE=$size $MAGELLAN --mocha_args='$MOCHA_ARGS' --mocha_tests='$target' --max_workers=$WORKERS"
 
           eval $CMD
           RETURN+=$?

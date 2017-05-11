@@ -187,7 +187,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Sign up for a site on a premium paid plan through main flow @canary1 @parallel', function() {
+	test.describe( 'Sign up for a site on a premium paid plan through main flow @canary @parallel', function() {
 		this.bailSuite( true );
 
 		const blogName = dataHelper.getNewBlogName();
@@ -455,7 +455,7 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Partially sign up for a site on a business paid plan w/ domain name coming in via /create as business flow @canary2 @parallel', function() {
+	test.describe( 'Partially sign up for a site on a business paid plan w/ domain name coming in via /create as business flow @canary @parallel', function() {
 		this.bailSuite( true );
 
 		const siteName = dataHelper.getNewBlogName();
