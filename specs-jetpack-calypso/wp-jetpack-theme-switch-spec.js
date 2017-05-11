@@ -24,7 +24,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( host + 'Themes: (' + screenSize + ')', function() {
+test.describe( host + ' Themes: (' + screenSize + ')', function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
