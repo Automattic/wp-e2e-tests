@@ -37,9 +37,9 @@ test.describe( 'Themes: (' + screenSize + ') @parallel', function() {
 			test.it( 'Can select a different free theme', function() {
 				this.themesPage = new ThemesPage( driver );
 				this.themesPage.showOnlyFreeThemes();
-				this.themesPage.searchFor( 'Twenty F' );
-				this.themesPage.waitForThemeStartingWith( 'Twenty F' );
-				return this.themesPage.selectNewThemeStartingWith( 'Twenty F' );
+				this.themesPage.searchFor( 'Twenty' );
+				this.themesPage.waitForThemeStartingWith( 'Twenty' );
+				return this.themesPage.selectNewThemeStartingWith( 'Twenty' );
 			} );
 
 			test.it( 'Can see theme details page and open the live demo', function() {

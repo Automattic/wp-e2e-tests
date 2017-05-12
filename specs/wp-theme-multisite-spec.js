@@ -30,7 +30,7 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 
 		test.it( 'Login and select themes', function() {
 			this.themeSearchName = 'twenty';
-			this.expectedTheme = 'Twenty F';
+			this.expectedTheme = 'Twenty';
 
 			driverManager.clearCookiesAndDeleteLocalStorage( this.driver );
 
@@ -99,7 +99,7 @@ test.describe( 'Themes: All sites (' + screenSize + ')', function() {
 
 		test.it( 'Login and select themes', function() {
 			this.themeSearchName = 'twenty';
-			this.expectedTheme = 'Twenty F';
+			this.expectedTheme = 'Twenty';
 
 			driverManager.clearCookiesAndDeleteLocalStorage( this.driver );
 
