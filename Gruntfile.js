@@ -4,7 +4,11 @@ module.exports = function( grunt ) {
 		shell: {
 			runTests: {
 				command: function( browserSize, sauceConfig ) {
-					return './run.sh -R -c -f -v -l ' + sauceConfig + ' -s ' + browserSize
+					// The run.sh script no longer supports this format with the switch to
+					// magellan as the test runner.   For now just calling mocha directly
+					// until Grunt can be replaced with magellan entirely (Issue 508)
+//					return './run.sh -R -c -f -v -l ' + sauceConfig + ' -s ' + browserSize
+					return `env BROWSERSIZE=${browserSize} ./node_modules/.bin/mocha --NODE_CONFIG='{"failVisdiffs":"true","sauce":"true","sauceConfig":"${sauceConfig}"}' -R spec-xunit-slack-reporter specs-visdiff/`
 				}
 			}
 		},

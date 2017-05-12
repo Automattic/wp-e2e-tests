@@ -281,7 +281,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Basic Public Post @canary0 @parallel', function() {
+	test.describe( 'Basic Public Post @canary @parallel', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
