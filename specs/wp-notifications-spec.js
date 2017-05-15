@@ -58,7 +58,6 @@ test.describe( 'Notifications: (' + screenSize + ') @parallel', function() {
 
 			test.it( 'Can leave a comment', function() {
 				this.comment = dataHelper.randomPhrase();
-				console.log( this.comment );
 				return this.viewPostPage.leaveAComment( this.comment );
 			} );
 
