@@ -28,12 +28,11 @@ test.describe( 'Reader: (' + screenSize + ') @parallel', function() {
 	this.timeout( mochaTimeOut );
 
 	test.before( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
-		} );
+		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	} );
 
 	test.describe( 'Log in as commenting user', function() {
 		test.it( 'Can log in as commenting user', function() {
-			const commentingUser = 'e2eflowtestingcommenter';
 			this.loginFlow = new LoginFlow( driver, 'commentingUser' );
 			return this.loginFlow.login();
 		} );
@@ -44,19 +43,24 @@ test.describe( 'Reader: (' + screenSize + ') @parallel', function() {
 				return this.readerPage.waitForPage();
 			} );
 
-			test.it( 'The latest post is on the expected test site', function () {
+			test.it( 'The latest post is on the expected test site', function() {
 				const testSiteForNotifications = config.get( 'testSiteForNotifications' );
 				return this.readerPage.siteOfLatestPost().then( ( siteOfLatestPost ) => {
-					assert.equal( siteOfLatestPost, testSiteForNotifications, 'The site feed is not the expected test site' );
+					assert.equal( siteOfLatestPost, testSiteForNotifications, 'The latest post is not on the expected test site' );
 				} );
 			} );
 
 			test.it( 'Can comment on the latest post', function() {
 				this.comment = dataHelper.randomPhrase();
-				return this.readerPage.commentOnLatestPost( this.comment );
+				this.readerPage.commentOnLatestPost( this.comment );
+				return this.readerPage.waitForModeratedCommentToAppear();
 			} );
 
 			test.describe( 'Delete the new comment', function() {
+				test.before( function() {
+					driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				} );
+
 				test.it( 'Can log in as test site owner', function() {
 					this.loginFlow = new LoginFlow( driver, 'notificationsUser' );
 					return this.loginFlow.login();
