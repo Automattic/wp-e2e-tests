@@ -58,6 +58,7 @@ test.describe( 'Notifications: (' + screenSize + ') @parallel', function() {
 
 			test.it( 'Can leave a comment', function() {
 				this.comment = dataHelper.randomPhrase();
+				console.log( this.comment );
 				return this.viewPostPage.leaveAComment( this.comment );
 			} );
 
@@ -98,7 +99,8 @@ test.describe( 'Notifications: (' + screenSize + ') @parallel', function() {
 					test.it( 'Can delete the comment', function() {
 						this.notificationsComponent.selectCommentByText( this.comment );
 						this.notificationsComponent.trashComment();
-						return this.notificationsComponent.waitForUndoMessage();
+						this.notificationsComponent.waitForUndoMessage();
+						return this.notificationsComponent.waitForUndoMessageToDisappear();
 					} );
 				} );
 			} );
