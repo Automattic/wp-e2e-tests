@@ -57,7 +57,7 @@ test.describe( 'Notifications: (' + screenSize + ') @parallel', function() {
 			} );
 
 			test.it( 'Can leave a comment', function() {
-				this.comment = dataHelper.randomPhrase();
+				this.comment = dataHelper.randomPhrase() + ' TBD';
 				return this.viewPostPage.leaveAComment( this.comment );
 			} );
 
@@ -95,7 +95,7 @@ test.describe( 'Notifications: (' + screenSize + ') @parallel', function() {
 						} );
 					} );
 
-					test.it( 'Can delete the comment', function() {
+					test.it( 'Can delete the comment (and wait for UNDO grace period so it is actually deleted)', function() {
 						this.notificationsComponent.selectCommentByText( this.comment );
 						this.notificationsComponent.trashComment();
 						this.notificationsComponent.waitForUndoMessage();
