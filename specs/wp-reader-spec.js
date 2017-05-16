@@ -66,13 +66,14 @@ test.describe( 'Reader: (' + screenSize + ') @parallel', function() {
 					return this.loginFlow.login();
 				} );
 
-				test.it( 'Can delete the new comment', function() {
+				test.it( 'Can delete the new comment (and wait for UNDO grace period so it is actually deleted)', function() {
 					this.navBarComponent = new NavbarComponent( driver );
 					this.navBarComponent.openNotifications();
 					this.notificationsComponent = new NotificationsComponent( driver );
 					this.notificationsComponent.selectCommentByText( this.comment );
 					this.notificationsComponent.trashComment();
-					return this.notificationsComponent.waitForUndoMessage();
+					this.notificationsComponent.waitForUndoMessage();
+					return this.notificationsComponent.waitForUndoMessageToDisappear();
 				} );
 			} );
 		} );
