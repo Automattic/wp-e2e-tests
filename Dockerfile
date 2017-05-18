@@ -6,8 +6,7 @@ WORKDIR /wp-e2e-tests
 
 # Version Numbers
 ENV NODE_VERSION 6.10.3
-ENV CHROMEDRIVER_VERSION 2.28
-ENV CHROME_VERSION 56.0.2924.87
+ENV CHROMEDRIVER_VERSION 2.29
 
 # Install dependencies
 RUN     apt-get -y update && apt-get -y install \
@@ -18,8 +17,7 @@ RUN     apt-get -y update && apt-get -y install \
           build-essential \
 	  curl \
 	  unzip \
-	  fonts-ipafont-gothic xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic \
-	  xvfb
+	  fonts-ipafont-gothic xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic # Still needed?
 
 # Install NodeJS
 RUN     wget https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz && \
@@ -37,13 +35,19 @@ RUN mkdir -p /opt/chromedriver-$CHROMEDRIVER_VERSION && \
     chmod +x /opt/chromedriver-$CHROMEDRIVER_VERSION/chromedriver && \
     ln -fs /opt/chromedriver-$CHROMEDRIVER_VERSION/chromedriver /usr/local/bin/chromedriver
 
-# Install Google Chrome
-RUN wget http://www.slimjetbrowser.com/chrome/lnx/chrome64_$CHROME_VERSION.deb && \
-	dpkg -i chrome64_$CHROME_VERSION.deb || \
-	apt-get -fy install
-
-# Remove install file
-RUN rm -rf /wp-e2e-tests/chrome64_$CHROME_VERSION.deb
+# Install deps + add Chrome Stable + purge all the things
+RUN apt-get update && apt-get install -y \
+	apt-transport-https \
+	ca-certificates \
+	curl \
+	gnupg \
+	--no-install-recommends \
+	&& curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
+	&& echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
+	&& apt-get update && apt-get install -y \
+	google-chrome-beta \
+	--no-install-recommends \
+	&& rm -rf /var/lib/apt/lists/*
 
 # Configure non-root account
 RUN	useradd -m e2e-tester
