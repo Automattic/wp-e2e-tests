@@ -3,8 +3,7 @@
     "specs/*log*"
   ],
   "mocha_opts": "test/mocha.opts",
-  "_mocha_args": "-R spec-xunit-slack-reporter",
-  "mocha_args": "--reporter json",
+  "mocha_args": "-R spec-xunit-reporter",
   "max_test_attempts": 2,
   "max_workers": 3,
   "suiteTag": "parallel",
@@ -12,7 +11,6 @@
   "browser": "chrome",
   "framework": "testarmada-magellan-mocha-plugin",
   "reporters": [
-	  "./lib/reporter/magellan-reporter.js",
-	  "testarmada-magellan-xunit-reporter"
+	  "./lib/reporter/magellan-reporter.js"
   ]
 }

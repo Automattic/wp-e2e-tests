@@ -10,6 +10,7 @@
   "main": "greetings.js",
   "defaultTestArgs": "-g -s $BROWSERSIZE",
   "scripts": {
+    "postinstall": "npm pack lib/reporter && npm install ./spec-xunit-reporter-0.0.1.tgz",
     "test": "./run.sh ${TESTARGS:-$npm_package_defaultTestArgs}"
   },
   "dependencies": {
@@ -30,13 +31,13 @@
     "lodash": "^4.13.1",
     "mailosaur": "^3.0.0",
     "mocha": "hoverduck/mocha#57b51e8",
-    "node-slack-upload": "1.0.4",
+    "node-slack-upload": "1.2.1",
     "random-qoutes-generator": "0.0.1",
     "sanitize-filename": "1.6.0",
     "selenium-webdriver": "3.3.0",
     "slack-notify": "0.1.4",
     "testarmada-magellan":"8.8.6",
-    "testarmada-magellan-mocha-plugin":"hoverduck/magellan-mocha-plugin#89ce1ff",
+    "testarmada-magellan-mocha-plugin":"hoverduck/magellan-mocha-plugin#40a619c",
     "testarmada-magellan-xunit-reporter":"0.0.4",
     "parallel-mocha": "~0.0.7",
     "saucelabs": "^1.2.0",
@@ -44,7 +45,8 @@
     "grunt-shell": "^1.1.2",
     "grunt-concurrent": "^2.3.0",
     "grunt-cli": "^0.1.13",
-    "xml2json-command": "^0.0.3"
+    "xml2json-command": "^0.0.3",
+    "xunit-viewer": "5.0.3"
   },
   "devDependencies": {
     "eslint": "<2.3.0",

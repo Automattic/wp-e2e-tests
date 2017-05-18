@@ -33,9 +33,6 @@ test.describe( 'Authentication: (' + screenSize + ') @parallel', function() {
 		} );
 
 		test.describe( 'Can Log In', function() {
-			test.it( 'fail', () => {
-				assert.equal( true, false, 'Oopsie doopsie' );
-			} );
 			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
 				loginFlow.login();
