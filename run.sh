@@ -58,7 +58,7 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
       continue
       ;;
     R)
-      MOCHA_ARGS+="-R spec-xunit-slack-reporter "
+      MOCHA_ARGS+="-R spec-xunit-reporter "
       continue
       ;;
     p)
