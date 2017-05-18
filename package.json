@@ -38,7 +38,6 @@
     "slack-notify": "0.1.4",
     "testarmada-magellan":"8.8.6",
     "testarmada-magellan-mocha-plugin":"hoverduck/magellan-mocha-plugin#40a619c",
-    "testarmada-magellan-xunit-reporter":"0.0.4",
     "parallel-mocha": "~0.0.7",
     "saucelabs": "^1.2.0",
     "grunt": "0.4.5",

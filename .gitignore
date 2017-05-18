@@ -7,7 +7,7 @@ node_modules/
 screenshots-i18n/
 .*.swp
 spec-xunit-reporter-0.0.1.tgz
-xunit_*.xml
+*xunit_*.xml
 .DS_Store
 
 # Ignore all local config files, but keep the example there.
