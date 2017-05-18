@@ -20,3 +20,7 @@ jobs:
       - run: ./scripts/run-wrapper.sh
       - store_test_results:
           path: reports/
+      - store_artifacts:
+          path: reports/
+      - store_artifacts:
+          path: screenshots/

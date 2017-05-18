@@ -1,10 +1,9 @@
 {
-  "name": "spec-xunit-slack-reporter",
+  "name": "spec-xunit-reporter",
   "version": "0.0.1",
-  "description": "Mocha reporter that combines the default spec output with an xunit.xml file and a ping to Slack on failure",
+  "description": "Mocha reporter that combines the default spec output with an xunit.xml file in a dynamically allocated directory",
   "main": "index.js",
   "dependencies": {
-    "slack-notify": "0.1.4",
     "config": "1.16.0",
     "mocha": "2.4.5",
     "fs-extra": "0.22.1"
