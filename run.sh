@@ -125,8 +125,7 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
       NODE_CONFIG_ARGS+=("\"failVisdiffs\":\"true\"")
       ;;
     x)
-      # https://github.com/Automattic/wp-e2e-tests/issues/542
-     # MAGELLAN="xvfb-run $MAGELLAN"
+      MAGELLAN="xvfb-run $MAGELLAN"
       ;;
     u)
       NODE_CONFIG_ARGS+=("\"calypsoBaseURL\":\"$OPTARG\"")

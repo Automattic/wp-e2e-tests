@@ -1,0 +1,22 @@
+version: 2
+jobs:
+  build:
+    parallelism: 2
+    working_directory: /wp-e2e-tests
+    docker:
+      - image: hoverduck/wp-e2e-tests:0.0.1
+        environment:
+                NODE_ENV: test
+    steps:
+      - checkout
+      - restore_cache:
+          key: << checksum "package.json" >>
+      - run: npm install
+      - save_cache:
+          paths:
+            - /wp-e2e-tests/node_modules
+          key: << checksum "package.json" >>
+      - run: ./scripts/randomize.sh specs
+      - run: ./scripts/run-wrapper.sh
+      - store_test_results:
+          path: reports/
