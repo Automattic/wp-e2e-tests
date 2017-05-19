@@ -6,8 +6,8 @@ WORKDIR /wp-e2e-tests
 
 # Version Numbers
 ENV NODE_VERSION 6.10.3
-ENV CHROMEDRIVER_VERSION 2.28
-ENV CHROME_VERSION 56.0.2924.87
+ENV CHROMEDRIVER_VERSION 2.29
+ENV CHROME_VERSION 57.0.2987.133
 
 # Install dependencies
 RUN     apt-get -y update && apt-get -y install \
