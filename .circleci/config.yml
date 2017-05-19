@@ -17,6 +17,11 @@ jobs:
             - /wp-e2e-tests/node_modules
           key: << checksum "package.json" >>
       - run: ./scripts/randomize.sh specs
+      - run:
+         name: Update hosts file
+         command: |
+           echo 127.0.0.1 1.gravatar.com | sudo tee -a /etc/hosts
+           cat /etc/hosts
       - run: ./scripts/run-wrapper.sh
       - store_test_results:
           path: reports/
