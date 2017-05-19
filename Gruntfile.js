@@ -8,7 +8,7 @@ module.exports = function( grunt ) {
 					// magellan as the test runner.   For now just calling mocha directly
 					// until Grunt can be replaced with magellan entirely (Issue 508)
 //					return './run.sh -R -c -f -v -l ' + sauceConfig + ' -s ' + browserSize
-					return `env BROWSERSIZE=${browserSize} ./node_modules/.bin/mocha --NODE_CONFIG='{"failVisdiffs":"true","sauce":"true","sauceConfig":"${sauceConfig}"}' -R spec-xunit-slack-reporter specs-visdiff/ || echo true`
+					return `env BROWSERSIZE=${browserSize} ./node_modules/.bin/mocha --NODE_CONFIG='{"failVisdiffs":"true","sauce":"true","sauceConfig":"${sauceConfig}"}' -R spec-xunit-reporter specs-visdiff/ || echo true`
 				}
 			}
 		},
