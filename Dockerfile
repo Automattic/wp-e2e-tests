@@ -6,8 +6,8 @@ WORKDIR /wp-e2e-tests
 
 # Version Numbers
 ENV NODE_VERSION 6.10.3
-ENV CHROMEDRIVER_VERSION 2.28
-ENV CHROME_VERSION 56.0.2924.87
+ENV CHROMEDRIVER_VERSION 2.29
+ENV CHROME_VERSION 57.0.2987.133
 
 # Install dependencies
 RUN     apt-get -y update && apt-get -y install \
@@ -19,7 +19,8 @@ RUN     apt-get -y update && apt-get -y install \
 	  curl \
 	  unzip \
 	  fonts-ipafont-gothic xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic \
-	  xvfb
+	  xvfb \
+	  sudo
 
 # Install NodeJS
 RUN     wget https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz && \
@@ -47,5 +48,12 @@ RUN rm -rf /wp-e2e-tests/chrome64_$CHROME_VERSION.deb
 
 # Configure non-root account
 RUN	useradd -m e2e-tester
+RUN	adduser e2e-tester sudo
+
+# Enable passwordless sudo for users under the "sudo" group
+RUN sed -i.bkp -e \
+      's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' \
+      /etc/sudoers
+
 RUN	chown -R e2e-tester /wp-e2e-tests
 USER    e2e-tester
