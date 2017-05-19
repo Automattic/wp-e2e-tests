@@ -4,7 +4,7 @@ jobs:
     parallelism: 2
     working_directory: /wp-e2e-tests
     docker:
-      - image: hoverduck/wp-e2e-tests:0.0.1
+      - image: hoverduck/wp-e2e-tests:0.0.2
         environment:
                 NODE_ENV: test
     steps:
