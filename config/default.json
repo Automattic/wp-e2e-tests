@@ -56,7 +56,7 @@
         "version": "11.103"
     }
   },
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupStore", "signupStoreBenchmarking", "browserNotifications", "domainSuggestionPopover", "signupThemeUpload", "siteTitleStep", "jetpackConnectPlansFirst", "userFirstSignup", "premiumSquaredPlansWording", "domainContactNewPhoneInput", "boostedPostSurvey", "readerSearchOnFollowing", "siteTitleTour", "jetpackPlansNoMonthly", "signupStepOneCopyChanges", "signupDomainsHeadline", "readerPostCardTagCount", "domainSuggestionNudgeLabels", "jetpackNewDescriptions", "signupStepOneMobileOptimize", "signupSurveyStep", "presaleChatButton", "signupPlansCallToAction", "jetpackNoMonthly", "automatedTransfer2", "signupThemeStepCopyChanges", "signupPlansReorderTest", "reduceThemesInSignupTest" ],
+  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupStore", "signupStoreBenchmarking", "browserNotifications", "domainSuggestionPopover", "signupThemeUpload", "siteTitleStep", "jetpackConnectPlansFirst", "userFirstSignup", "premiumSquaredPlansWording", "domainContactNewPhoneInput", "boostedPostSurvey", "readerSearchOnFollowing", "siteTitleTour", "jetpackPlansNoMonthly", "signupStepOneCopyChanges", "signupDomainsHeadline", "readerPostCardTagCount", "domainSuggestionNudgeLabels", "jetpackNewDescriptions", "signupStepOneMobileOptimize", "signupSurveyStep", "presaleChatButton", "signupPlansCallToAction", "jetpackNoMonthly", "automatedTransfer2", "signupThemeStepCopyChanges", "signupPlansReorderTest", "reduceThemesInSignupTest", "savingsInCheckoutSummary" ],
   "overrideABTests": [
 	[ "signupStore_20160927", "designTypeWithStore" ],
 	[ "browserNotifications_20160628", "disabled" ],
