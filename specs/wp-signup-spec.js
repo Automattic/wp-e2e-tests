@@ -40,7 +40,6 @@ test.before( function() {
 // Faked out test.describe function to enable dynamic skipping of e-mail tests
 let testDescribe = test.describe;
 if ( process.env.DISABLE_EMAIL === 'true' ) {
-	SlackNotifier.warn( 'WARNING::: Any test that uses email is currently disabled as DISABLE_EMAIL is set to true' );
 	testDescribe = test.xdescribe;
 }
 
@@ -535,7 +534,6 @@ testDescribe( 'Sign Up (' + screenSize + ')', function() {
 							}
 						} );
 					} );
-
 
 					test.describe( 'Step Five: Account', function() {
 						test.it( 'Can then enter account details', function() {
