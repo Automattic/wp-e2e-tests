@@ -7,6 +7,9 @@ if [ "$CIRCLE_NODE_INDEX" == "0" ]; then
   if [ "$SKIP_TEST_REGEX" != "" ]; then
     babel-node --presets es2015 lib/slack-ping-cli.js "Attention! Tests are being skipped with pattern [$SKIP_TEST_REGEX]"
   fi
+  if [ "$DISABLE_EMAIL" == "true" ]; then
+    babel-node --presets es2015 lib/slack-ping-cli.js "WARNING::: Any test that uses email is currently disabled as DISABLE_EMAIL is set to true"
+  fi
 fi
 
 if [ "$NODE_ENV_OVERRIDE" != "" ]; then
