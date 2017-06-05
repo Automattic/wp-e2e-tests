@@ -161,8 +161,7 @@ test.describe( 'Post-NUX Flows (' + screenSize + ') @parallel', function() {
 								} );
 
 								test.it( 'Can set a custom header image', function() {
-									this.customizerPage.setHeaderImage( fileDetails );
-									return this.customizerPage.waitForPreviewRefresh();
+									return this.customizerPage.setHeaderImage( fileDetails );
 								} );
 
 								test.it( 'Can see the custom header image in preview', function() {
