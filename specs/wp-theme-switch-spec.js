@@ -22,7 +22,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Themes: (' + screenSize + ') @parallel', function() {
+test.describe( 'Themes: (' + screenSize + ') @parallel @jetpack', function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 

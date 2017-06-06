@@ -37,7 +37,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Public Posts: @parallel', function() {
+	test.describe( 'Public Posts: @jetpack', function() {
 		let fileDetails;
 
 		test.before( function() {
@@ -236,7 +236,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 		} );
 	} );
 
-	test.describe( 'Private Posts: @parallel', function() {
+	test.describe( 'Private Posts: @jetpack', function() {
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
@@ -300,7 +300,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 		} );
 	} );
 
-	test.describe( 'Password Protected Posts: @parallel', function() {
+	test.describe( 'Password Protected Posts: @jetpack', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -479,7 +479,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 		} );
 	} );
 
-	test.describe( 'Trash Post: @parallel', function() {
+	test.describe( 'Trash Post: @jetpack', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -522,7 +522,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 		} );
 	} );
 
-	test.describe( 'Edit a Post: @parallel', function() {
+	test.describe( 'Edit a Post: @jetpack', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
@@ -614,7 +614,7 @@ test.describe( host + ' Jetpack Site: Editor: Posts (' + screenSize + ')', funct
 		} );
 	} );
 
-	test.describe( 'Insert a contact form: @parallel', function() {
+	test.describe( 'Insert a contact form: @jetpack', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {

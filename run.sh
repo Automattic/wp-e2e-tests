@@ -19,7 +19,7 @@ function joinStr { local IFS="$1"; shift; echo "$*"; }
 I18N_CONFIG="\"browser\":\"firefox\",\"proxy\":\"system\",\"neverSaveScreenshots\":\"true\""
 IE11_CONFIG="\"sauce\":\"true\",\"sauceConfig\":\"win-ie11\""
 
-declare -a TARGETS
+declare -a MAGELLAN_CONFIGS
 
 usage () {
   cat <<EOF
@@ -78,23 +78,23 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
       continue
       ;;
     g)
-      TARGET="specs/"
+      MAGELLAN_CONFIG="magellan.json"
       ;;
     i)
       NODE_CONFIG_ARGS+=$I18N_CONFIG
-      TARGET="specs-i18n/"
+      MAGELLAN_CONFIG="magellan-i18n.json"
       ;;
     w)
       NODE_CONFIG_ARGS+=$IE11_CONFIG
       SCREENSIZES=desktop
-      TARGET="specs/*wp-signup-spec.js" # wildcard needed to account for random filename ordering
+      MAGELLAN_CONFIG="magellan-ie11.json"
       ;;
     l)
       NODE_CONFIG_ARGS+=("\"sauce\":\"true\",\"sauceConfig\":\"$OPTARG\"")
       continue
       ;;
     v)
-      TARGET="specs-visdiff/"
+      MAGELLAN_CONFIG="magellan-visdiff.json" # File does not exist, visdiffs aren't using Magellan yet
       ;;
     m)
       BROWSERS=$(echo $OPTARG | sed 's/,/ /g')
@@ -107,16 +107,15 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
       ;;
     j)
       SCREENSIZES="desktop,mobile"
-      TARGET="specs-jetpack-calypso/"
+      MAGELLAN_CONFIG="magellan-jetpack.json"
       ;;
     W)
       SCREENSIZES="desktop,mobile"
-      TARGET="specs-woocommerce/"
+      MAGELLAN_CONFIG="magellan-woocommerce.json"
       ;;
     C)
-      MAGELLAN="$MAGELLAN --suiteTag=canary"
       SCREENSIZES="mobile"
-      TARGET="specs/"
+      MAGELLAN_CONFIG="magellan-canary.json"
       ;;
     H)
       export JETPACKHOST=$OPTARG
@@ -146,8 +145,8 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
       ;;
   esac
 
-  TARGETS+=("$TARGET")
-  unset TARGET
+  MAGELLAN_CONFIGS+=("$MAGELLAN_CONFIG")
+  unset MAGELLAN_CONFIG
 done
 
 # Skip any tests in the given variable - DOES NOT WORK WITH MAGELLAN - See issue #506
@@ -184,10 +183,10 @@ else # Not using multiple CircleCI containers, just queue up the tests in sequen
   if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
     IFS=, read -r -a SCREENSIZE_ARRAY <<< "$SCREENSIZES"
     for size in ${SCREENSIZE_ARRAY[@]}; do
-      for target in "${TARGETS[@]}"; do
-        if [ "$target" != "" ]; then
-          CMD="env BROWSERSIZE=$size $MAGELLAN --mocha_args='$MOCHA_ARGS' --mocha_tests='$target' --max_workers=$WORKERS"
-
+      for config in "${MAGELLAN_CONFIGS[@]}"; do
+        if [ "$config" != "" ]; then
+          CMD="env BROWSERSIZE=$size $MAGELLAN --mocha_args='$MOCHA_ARGS' --config='$config' --max_workers=$WORKERS"
+  
           eval $CMD
           RETURN+=$?
         fi

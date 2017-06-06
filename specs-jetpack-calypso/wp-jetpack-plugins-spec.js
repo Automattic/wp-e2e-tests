@@ -25,7 +25,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `${host} Jetpack Sites on Calypso - Existing Plugins: '${ screenSize }' @parallel`, function() {
+test.describe( `${host} Jetpack Sites on Calypso - Existing Plugins: '${ screenSize }' @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -67,7 +67,7 @@ test.describe( `${host} Jetpack Sites on Calypso - Existing Plugins: '${ screenS
 	} );
 } );
 
-test.describe( `${host} Jetpack Sites on Calypso - Searching Plugins: '${ screenSize }' @parallel`, function() {
+test.describe( `${host} Jetpack Sites on Calypso - Searching Plugins: '${ screenSize }' @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
