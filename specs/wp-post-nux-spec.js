@@ -6,6 +6,7 @@ import * as driverManager from '../lib/driver-manager';
 import * as slackNotifier from '../lib/slack-notifier';
 import * as dataHelper from '../lib/data-helper';
 import * as mediaHelper from '../lib/media-helper';
+
 import LoginFlow from '../lib/flows/login-flow';
 import CustomizerPage from '../lib/pages/customizer-page';
 import SidebarComponent from '../lib/components/sidebar-component';
@@ -13,6 +14,7 @@ import SidebarComponent from '../lib/components/sidebar-component';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
+const host = dataHelper.getJetpackHost();
 
 var driver;
 
@@ -21,7 +23,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Post-NUX Flows (' + screenSize + ') @parallel', function() {
+test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Sign in as a post NUX user and load the customizer', function() {

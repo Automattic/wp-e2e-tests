@@ -7,10 +7,12 @@ import EditorPage from '../lib/pages/editor-page.js';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as mediaHelper from '../lib/media-helper.js';
+import * as dataHelper from '../lib/data-helper';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
+const host = dataHelper.getJetpackHost();
 
 var driver;
 
@@ -19,7 +21,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Editor: Media Upload (' + screenSize + ') @parallel @jetpack', function() {
+test.describe( `[${host}] Editor: Media Upload (${screenSize}) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Image Upload:', function() {
