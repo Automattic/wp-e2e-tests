@@ -1,14 +1,11 @@
 {
   "mocha_tests": [
-    "specs/wp-page-editor-spec.js"
-  ],
-  "_mocha_tests": [
     "specs",
     "specs-jetpack-calypso"
   ],
   "mocha_opts": "test/mocha.opts",
   "mocha_args": "-R spec-xunit-reporter",
-  "max_test_attempts": 1,
+  "max_test_attempts": 2,
   "max_workers": 3,
   "suiteTag": "jetpack",
   "sauce": false,
