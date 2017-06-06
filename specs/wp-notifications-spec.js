@@ -14,8 +14,6 @@ import ViewPostPage from '../lib/pages/view-post-page.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
 import NotificationsComponent from '../lib/components/notifications-component.js';
 
-import * as dataHelper from '../lib/data-helper.js';
-
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
