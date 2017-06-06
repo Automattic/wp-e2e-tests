@@ -31,6 +31,7 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const calypsoBaseUrl = config.get( 'calypsoBaseURL' );
+const host = dataHelper.getJetpackHost();
 
 var driver;
 
@@ -45,7 +46,7 @@ if ( process.env.DISABLE_EMAIL === 'true' ) {
 	testDescribe = test.xdescribe;
 }
 
-testDescribe( 'Invites: (' + screenSize + ')', function() {
+testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Inviting New User as an Editor: @parallel', function() {

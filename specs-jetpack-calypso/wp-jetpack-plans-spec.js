@@ -24,7 +24,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( host + ' Jetpack Plans: (' + screenSize + ') @jetpack', function() {
+test.describe( `[${host}] Jetpack Plans: (${screenSize}) @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Comparing Plans:', function() {
@@ -40,7 +40,6 @@ test.describe( host + ' Jetpack Plans: (' + screenSize + ') @jetpack', function(
 		} );
 
 		test.describe( 'Can compare plans', function() {
-
 			test.it( 'Can Select Plans', function() {
 				this.statsPage = new StatsPage( driver );
 				this.statsPage.waitForPage();

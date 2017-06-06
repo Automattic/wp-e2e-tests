@@ -3,6 +3,7 @@ import { assert } from 'chai';
 
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
+import * as dataHelper from '../lib/data-helper';
 
 import ThemesPage from '../lib/pages/themes-page.js';
 import CustomizerPage from '../lib/pages/customizer-page.js';
@@ -17,13 +18,14 @@ import LoginFlow from '../lib/flows/login-flow.js';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
+const host = dataHelper.getJetpackHost();
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	this.driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Themes: All sites (' + screenSize + ')', function() {
+test.describe( `[${host}] Themes: All sites (${screenSize})`, function() {
 	test.describe( 'Preview a theme @parallel', function() {
 		this.bailSuite( true );
 		this.timeout( mochaTimeOut );

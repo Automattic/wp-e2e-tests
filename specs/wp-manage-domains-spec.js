@@ -22,6 +22,7 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const domainsInboxId = config.get( 'domainsInboxId' );
+const host = dataHelper.getJetpackHost();
 
 var driver;
 
@@ -30,7 +31,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Managing Domains: (' + screenSize + ') @parallel', function() {
+test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 

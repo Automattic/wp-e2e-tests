@@ -3,6 +3,7 @@ import config from 'config';
 import assert from 'assert';
 
 import * as driverManager from '../lib/driver-manager.js';
+import * as dataHelper from '../lib/data-helper';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
@@ -14,6 +15,7 @@ import SidebarComponent from '../lib/components/sidebar-component.js';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
+const host = dataHelper.getJetpackHost();
 
 var driver;
 
@@ -22,7 +24,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Plans: (' + screenSize + ') @parallel', function() {
+test.describe( `[${host}] Plans: (${screenSize}) @parallel`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Comparing Plans:', function() {
