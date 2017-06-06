@@ -1,0 +1,20 @@
+{
+  "mocha_tests": [
+    "specs/wp-page-editor-spec.js"
+  ],
+  "_mocha_tests": [
+    "specs",
+    "specs-jetpack-calypso"
+  ],
+  "mocha_opts": "test/mocha.opts",
+  "mocha_args": "-R spec-xunit-reporter",
+  "max_test_attempts": 1,
+  "max_workers": 3,
+  "suiteTag": "jetpack",
+  "sauce": false,
+  "browser": "chrome",
+  "framework": "testarmada-magellan-mocha-plugin",
+  "reporters": [
+	  "./lib/reporter/magellan-reporter.js"
+  ]
+}

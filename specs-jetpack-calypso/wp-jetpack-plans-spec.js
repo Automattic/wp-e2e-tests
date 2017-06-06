@@ -24,7 +24,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( host + ' Jetpack Plans: (' + screenSize + ') @parallel', function() {
+test.describe( host + ' Jetpack Plans: (' + screenSize + ') @jetpack', function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Comparing Plans:', function() {

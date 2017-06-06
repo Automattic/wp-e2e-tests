@@ -19,7 +19,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Editor: Media Upload (' + screenSize + ') @parallel', function() {
+test.describe( 'Editor: Media Upload (' + screenSize + ') @parallel @jetpack', function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Image Upload:', function() {
@@ -89,6 +89,10 @@ test.describe( 'Editor: Media Upload (' + screenSize + ') @parallel', function()
 
 			test.describe( 'Can upload an mp3', function() {
 				let fileDetails;
+				// Skip this test on Jetpack sites due to https://github.com/Automattic/jetpack/issues/7159
+				if ( config.has( 'jetpackTests' ) && config.get( 'jetpackTests' ) ) {
+					return true;
+				}
 
 				test.it( 'Create mp3 for upload', function() {
 					mediaHelper.getMP3FileWithFilename( 'new.mp3' ).then( function( details ) {

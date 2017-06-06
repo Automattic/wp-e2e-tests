@@ -37,7 +37,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Public Posts: @parallel', function() {
+	test.describe( 'Public Posts: @parallel @jetpack', function() {
 		let fileDetails;
 
 		test.before( function() {
@@ -281,7 +281,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Basic Public Post @canary @parallel', function() {
+	test.describe( 'Basic Public Post @canary @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
@@ -322,7 +322,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Private Posts: @parallel', function() {
+	test.describe( 'Private Posts: @parallel @jetpack', function() {
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
@@ -416,7 +416,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Password Protected Posts: @parallel', function() {
+	test.describe( 'Password Protected Posts: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -721,7 +721,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Trash Post: @parallel', function() {
+	test.describe( 'Trash Post: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -757,7 +757,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Edit a Post: @parallel', function() {
+	test.describe( 'Edit a Post: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
@@ -849,7 +849,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Insert a contact form: @parallel', function() {
+	test.describe( 'Insert a contact form: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
@@ -893,33 +893,33 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			} );
 		} );
 	} );
-	
-	test.describe( 'Revert a post to draft: @parallel', function() {
+
+	test.describe( 'Revert a post to draft: @parallel @jetpack', function() {
 		this.bailSuite( true );
-		
+
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
-		
+
 		test.describe( 'Publish a new post', function() {
 			const originalBlogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = 'To really be of help to others we need to be guided by compassion.\n— Dalai Lama\n';
-			
+
 			test.it( 'Can log in', function() {
 				this.loginFlow = new LoginFlow( driver );
 				return this.loginFlow.loginAndStartNewPost();
 			} );
-			
+
 			test.it( 'Can enter post title and content', function() {
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterTitle( originalBlogPostTitle );
 				this.editorPage.enterContent( blogPostQuote );
-				
+
 				return this.editorPage.errorDisplayed().then( ( errorShown ) => {
 					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 				} );
 			} );
-			
+
 			test.it( 'Can publish the post', function() {
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				this.postEditorToolbarComponent.ensureSaved();
@@ -927,9 +927,8 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 				return this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 			} );
 		} );
-			
+
 		test.describe( 'Revert the post to draft', function() {
-			
 			test.it( 'Can revert the post to draft', function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );

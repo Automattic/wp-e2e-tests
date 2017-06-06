@@ -19,7 +19,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'View site from sidebar: (' + screenSize + ') @parallel', function() {
+test.describe( 'View site from sidebar: (' + screenSize + ') @parallel @jetpack', function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -67,5 +67,4 @@ test.describe( 'View site from sidebar: (' + screenSize + ') @parallel', functio
 			} );
 		} );
 	} );
-
 } );

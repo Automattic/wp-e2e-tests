@@ -19,6 +19,7 @@ import * as dataHelper from '../lib/data-helper.js';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
+const host = dataHelper.getJetpackHost();
 
 var driver;
 
@@ -27,10 +28,10 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Editor: Pages (' + screenSize + ')', function() {
+test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Public Pages: @parallel', function() {
+	test.describe( 'Public Pages: @parallel @jetpack', function() {
 		this.bailSuite( true );
 		let fileDetails;
 
@@ -45,7 +46,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 			} );
 		} );
 
-		test.describe( 'Preview and Publish a Public Page', function() {
+		test.describe( 'Publish a Public Page', function() {
 			var pageTitle = dataHelper.randomPhrase();
 			var pageQuote = 'If you have the same problem for a long time, maybe it’s not a problem. Maybe it’s a fact..\n— Itzhak Rabin';
 
@@ -69,66 +70,75 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 				postEditorSidebarComponent.closeSharingSection();
 			} );
 
-			test.describe( 'Preview', function() {
-				test.it( 'Can launch page preview', function() {
-					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					postEditorToolbarComponent.ensureSaved();
-					postEditorToolbarComponent.launchPreview();
-					this.pagePreviewComponent = new PagePreviewComponent( driver );
-				} );
+			if ( host === 'WPCOM' ) {
+				test.describe( 'Preview', function() {
+					test.it( 'Can launch page preview', function() {
+						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+						postEditorToolbarComponent.ensureSaved();
+						postEditorToolbarComponent.launchPreview();
+						this.pagePreviewComponent = new PagePreviewComponent( driver );
+					} );
 
-				test.it( 'Can see correct page title in preview', function() {
-					this.pagePreviewComponent.pageTitle().then( function( actualPageTitle ) {
-						assert.equal( actualPageTitle.toUpperCase(), pageTitle.toUpperCase(), 'The page preview title is not correct' );
+					test.it( 'Can see correct page title in preview', function() {
+						this.pagePreviewComponent.pageTitle().then( function( actualPageTitle ) {
+							assert.equal( actualPageTitle.toUpperCase(), pageTitle.toUpperCase(), 'The page preview title is not correct' );
+						} );
+					} );
+
+					test.it( 'Can see correct page content in preview', function() {
+						this.pagePreviewComponent.pageContent().then( function( content ) {
+							assert.equal( content.indexOf( pageQuote ) > -1, true, 'The page preview content (' + content + ') does not include the expected content (' + pageQuote + ')' );
+						} );
+					} );
+
+					test.it( 'Can see the image uploaded in the preview', function() {
+						return this.pagePreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
+							assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
+						} );
+					} );
+
+					test.it( 'Can close page preview', function() {
+						this.pagePreviewComponent.close();
 					} );
 				} );
 
-				test.it( 'Can see correct page content in preview', function() {
-					this.pagePreviewComponent.pageContent().then( function( content ) {
-						assert.equal( content.indexOf( pageQuote ) > -1, true, 'The page preview content (' + content + ') does not include the expected content (' + pageQuote + ')' );
+				test.describe( 'Publish and Preview Published Content', function() {
+					test.it( 'Can publish and preview published content', function() {
+						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+						this.postEditorToolbarComponent.publishAndPreviewPublished();
+						return this.pagePreviewComponent = new PagePreviewComponent( driver );
+					} );
+
+					test.it( 'Can see correct page title in preview', function() {
+						this.pagePreviewComponent.pageTitle().then( function( actualPageTitle ) {
+							assert.equal( actualPageTitle.toUpperCase(), pageTitle.toUpperCase(), 'The page preview title is not correct' );
+						} );
+					} );
+
+					test.it( 'Can see correct page content in preview', function() {
+						this.pagePreviewComponent.pageContent().then( function( content ) {
+							assert.equal( content.indexOf( pageQuote ) > -1, true, 'The page preview content (' + content + ') does not include the expected content (' + pageQuote + ')' );
+						} );
+					} );
+
+					test.it( 'Can see the image uploaded in the preview', function() {
+						this.pagePreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
+							assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
+						} );
+					} );
+
+					test.it( 'Can close page preview', function() {
+						this.pagePreviewComponent.close();
 					} );
 				} );
-
-				test.it( 'Can see the image uploaded in the preview', function() {
-					return this.pagePreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
-						assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
+			} else { // Jetpack tests
+				test.describe( 'Publish Content', function() {
+					test.it( 'Can publish content', function() {
+						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+						this.postEditorToolbarComponent.publishPost();
 					} );
 				} );
-
-				test.it( 'Can close page preview', function() {
-					this.pagePreviewComponent.close();
-				} );
-			} );
-
-			test.describe( 'Publish and Preview Published Content', function() {
-				test.it( 'Can publish and preview published content', function() {
-					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					this.postEditorToolbarComponent.publishAndPreviewPublished();
-					return this.pagePreviewComponent = new PagePreviewComponent( driver );
-				} );
-
-				test.it( 'Can see correct page title in preview', function() {
-					this.pagePreviewComponent.pageTitle().then( function( actualPageTitle ) {
-						assert.equal( actualPageTitle.toUpperCase(), pageTitle.toUpperCase(), 'The page preview title is not correct' );
-					} );
-				} );
-
-				test.it( 'Can see correct page content in preview', function() {
-					this.pagePreviewComponent.pageContent().then( function( content ) {
-						assert.equal( content.indexOf( pageQuote ) > -1, true, 'The page preview content (' + content + ') does not include the expected content (' + pageQuote + ')' );
-					} );
-				} );
-
-				test.it( 'Can see the image uploaded in the preview', function() {
-					this.pagePreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
-						assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
-					} );
-				} );
-
-				test.it( 'Can close page preview', function() {
-					this.pagePreviewComponent.close();
-				} );
-			} );
+			}
 
 			test.describe( 'View published content', function() {
 				test.it( 'Can view content', function() {
@@ -170,7 +180,7 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Private Pages: @parallel', function() {
+	test.describe( 'Private Pages: @parallel @jetpack', function() {
 		this.bailSuite( true );
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
@@ -193,47 +203,64 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 				return postEditorToolbarComponent.ensureSaved();
 			} );
 
-			test.it( 'Can set visibility to private', function() {
+			test.it( 'Can set visibility to private which immediately publishes it', function() {
 				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 				this.postEditorSidebarComponent.setVisibilityToPrivate();
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				return this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 			} );
 
-			test.describe( 'Publish and View', function() {
-				test.it( 'Can publish and view content', function() {
-					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					postEditorToolbarComponent.viewPublishedPostOrPage();
-				} );
+			if ( host === 'WPCOM' ) {
+				test.describe( 'View content as logged in user', function() {
+					test.it( 'Can view content', function() {
+						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+						postEditorToolbarComponent.viewPublishedPostOrPage();
+					} );
 
-				test.it( 'Can view page title as logged in user', function() {
-					let viewPagePage = new ViewPagePage( driver );
-					viewPagePage.pageTitle().then( function( actualPageTitle ) {
-						assert.equal( actualPageTitle.toUpperCase(), ( 'Private: ' + pageTitle ).toUpperCase(), 'The published blog page title is not correct' );
+					test.it( 'Can view page title as logged in user', function() {
+						let viewPagePage = new ViewPagePage( driver );
+						viewPagePage.pageTitle().then( function( actualPageTitle ) {
+							assert.equal( actualPageTitle.toUpperCase(), ( 'Private: ' + pageTitle ).toUpperCase(), 'The published blog page title is not correct' );
+						} );
+					} );
+
+					test.it( 'Can view page content as logged in user', function() {
+						let viewPagePage = new ViewPagePage( driver );
+						viewPagePage.pageContent().then( function( content ) {
+							assert.equal( content.indexOf( pageQuote ) > -1, true, 'The page content (' + content + ') does not include the expected content (' + pageQuote + ')' );
+						} );
+					} );
+
+					test.it( 'Can\'t view page title or content as non-logged in user', function() {
+						driver.manage().deleteAllCookies();
+						driver.navigate().refresh();
+
+						let notFoundPage = new NotFoundPage( driver );
+						notFoundPage.displayed().then( function( displayed ) {
+							assert.equal( displayed, true, 'Could not see the not found (404) page. Check that it is displayed' );
+						} );
 					} );
 				} );
+			} else { // Jetpack tests
+				test.describe( 'Cannot view content before logging in', function() {
+					test.it( 'Open published page', function() {
+						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+						postEditorToolbarComponent.viewPublishedPostOrPage();
+					} );
 
-				test.it( 'Can view page content as logged in user', function() {
-					let viewPagePage = new ViewPagePage( driver );
-					viewPagePage.pageContent().then( function( content ) {
-						assert.equal( content.indexOf( pageQuote ) > -1, true, 'The page content (' + content + ') does not include the expected content (' + pageQuote + ')' );
+					test.it( 'Can\'t view page title or content as non-logged in user', function() {
+						let notFoundPage = new NotFoundPage( driver );
+						notFoundPage.displayed().then( function( displayed ) {
+							assert.equal( displayed, true, 'Could not see the not found (404) page. Check that it is displayed' );
+						} );
 					} );
 				} );
-
-				test.it( 'Can\'t view page title or content as non-logged in user', function() {
-					driver.manage().deleteAllCookies();
-					driver.navigate().refresh();
-
-					let notFoundPage = new NotFoundPage( driver );
-					notFoundPage.displayed().then( function( displayed ) {
-						assert.equal( displayed, true, 'Could not see the not found (404) page. Check that it is displayed' );
-					} );
-				} );
-			} );
+				//TODO: Add Jetpack SSO and verify content actually published
+			}
 		} );
 	} );
 
-	test.describe( 'Password Protected Pages: @parallel', function() {
+	test.describe( 'Password Protected Pages: @parallel @jetpack', function() {
 		this.bailSuite( true );
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
