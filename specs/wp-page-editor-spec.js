@@ -64,6 +64,8 @@ test.describe( 'Editor: Pages (' + screenSize + ')', function() {
 
 			test.it( 'Can disable sharing buttons', function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				postEditorToolbarComponent.ensureSaved();
 				postEditorSidebarComponent.expandSharingSection();
 				postEditorSidebarComponent.setSharingButtons( false );
 				postEditorSidebarComponent.closeSharingSection();
