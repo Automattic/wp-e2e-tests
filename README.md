@@ -142,9 +142,9 @@ By default the tests start their own Selenium server in the background, which in
 A couple additional steps are necessary if you want to connect that Selenium server to a locally running branch of Calypso.  This runs two separate containers, for both Selenium and Calypso, and handles all the networking in between them.  These steps assume you've already configured and built Calypso for Docker with an image name of `wp-calypso`.
 
 1. Set your `calypsoBaseUrl` config variable to `http://wpcalypso.wordpress.com` (note the http, not https)
-1. From the `wp-e2e-tests` directory, run `docker-compose -f docker-compose-calypso.yml up -d`
+1. From the `wp-e2e-tests` directory, run `docker-compose -f docker-compose/docker-compose-calypso.yml up -d`
 
-Note that you'll need to supply the `-f docker-compose-calypso.yml` parameter to the `down` command as well, or you'll get a warning message about orphaned containers.
+Note that you'll need to supply the `-f docker-compose/docker-compose-calypso.yml` parameter to the `down` command as well, or you'll get a warning message about orphaned containers.
 
 ### To run inside a Docker container
 We can also run the test suite (including Selenium) from within the context of a Docker container, which allows us to force a particular version of Chrome/driver to reduce compatibility issues.  This would mostly be useful from a CI server.
