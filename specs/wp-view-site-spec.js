@@ -21,7 +21,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] View site from sidebar: (${screenSize}) @parallel @jetpack`, function() {
+test.describe( `[${host}] View site from sidebar: (${screenSize}) @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
