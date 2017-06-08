@@ -89,34 +89,33 @@ test.describe( `[${host}] Editor: Media Upload (${screenSize}) @parallel @jetpac
 				} );
 			} );
 
-			test.describe( 'Can upload an mp3', function() {
-				let fileDetails;
-				// Skip this test on Jetpack sites due to https://github.com/Automattic/jetpack/issues/7159
-				if ( config.has( 'jetpackTests' ) && config.get( 'jetpackTests' ) ) {
-					return true;
-				}
+			// Skip this test on Jetpack sites due to https://github.com/Automattic/jetpack/issues/7159
+			if ( host === 'WPCOM' ) {
+				test.describe( 'Can upload an mp3', function() {
+					let fileDetails;
 
-				test.it( 'Create mp3 for upload', function() {
-					mediaHelper.getMP3FileWithFilename( 'new.mp3' ).then( function( details ) {
-						fileDetails = details;
+					test.it( 'Create mp3 for upload', function() {
+						mediaHelper.getMP3FileWithFilename( 'new.mp3' ).then( function( details ) {
+							fileDetails = details;
+						} );
+					} );
+
+					test.it( 'Can upload an mp3', function() {
+						editorPage.uploadMedia( fileDetails );
+					} );
+
+					test.it( 'Can delete mp3', function() {
+						editorPage.deleteMedia();
+					} );
+
+					test.after( function() {
+						editorPage.dismissMediaModal();
+						if ( fileDetails ) {
+							mediaHelper.deleteFile( fileDetails ).then( function() {} );
+						}
 					} );
 				} );
-
-				test.it( 'Can upload an mp3', function() {
-					editorPage.uploadMedia( fileDetails );
-				} );
-
-				test.it( 'Can delete mp3', function() {
-					editorPage.deleteMedia();
-				} );
-
-				test.after( function() {
-					editorPage.dismissMediaModal();
-					if ( fileDetails ) {
-						mediaHelper.deleteFile( fileDetails ).then( function() {} );
-					}
-				} );
-			} );
+			}
 		} );
 	} );
 } );
