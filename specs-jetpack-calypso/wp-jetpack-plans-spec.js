@@ -27,7 +27,7 @@ test.before( function() {
 test.describe( `[${host}] Jetpack Plans: (${screenSize}) @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Comparing Plans:', function() {
+	test.xdescribe( 'Comparing Plans:', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -67,6 +67,23 @@ test.describe( `[${host}] Jetpack Plans: (${screenSize}) @jetpack`, function() {
 					assert( present, `Failed to detect correct plan (${planName})` );
 				} );
 			} );
+		} );
+	} );
+
+	test.describe( 'Purchase Professional Plan:', function() {
+		this.bailSuite( true );
+
+		test.before( function() {
+			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.it( 'Can log into WordPress.com', () => {
+			this.loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
+			return this.loginFlow.login();
+		} );
+
+		test.it( 'Can log into site via Jetpack SSO', () => {
+			return this.loginFlow.login( { jetpackSSO: true } );
 		} );
 	} );
 } );
