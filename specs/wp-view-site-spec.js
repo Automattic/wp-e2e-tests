@@ -45,9 +45,9 @@ test.describe( 'View site from sidebar: (' + screenSize + ') @parallel', functio
 			} );
 		} );
 
-		test.it( 'Can see the web preview viewport size selector', function() {
-			return this.siteViewComponent.isViewportSizeSelectorPresent().then( ( present ) => {
-				assert.equal( present, true, 'The web preview viewport size selector was not displayed' );
+		test.it( 'Can see the web preview "open in new window" button', function() {
+			return this.siteViewComponent.isOpenInNewWindowButtonPresent().then( ( present ) => {
+				assert.equal( present, true, 'The web preview "open in new window" button was not displayed' );
 			} );
 		} );
 
