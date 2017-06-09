@@ -3,6 +3,7 @@ import test from 'selenium-webdriver/testing';
 
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
+import * as dataHelper from '../lib/data-helper';
 
 import ReaderPage from '../lib/pages/reader-page';
 import ProfilePage from '../lib/pages/profile-page';
@@ -15,6 +16,7 @@ import LoginFlow from '../lib/flows/login-flow.js';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
+const host = dataHelper.getJetpackHost();
 
 var driver;
 
@@ -23,7 +25,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Authentication: (' + screenSize + ') @parallel', function() {
+test.describe( `[${host}] Authentication: (${screenSize}) @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -69,7 +71,7 @@ test.describe( 'Authentication: (' + screenSize + ') @parallel', function() {
 	} );
 } );
 
-test.describe( 'User Agent: (' + screenSize + ') @parallel', function() {
+test.describe( `[${host}] User Agent: (${screenSize}) @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 

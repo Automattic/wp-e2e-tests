@@ -29,6 +29,7 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const signupInboxId = config.get( 'signupInboxId' );
+const host = dataHelper.getJetpackHost();
 
 var driver;
 
@@ -43,7 +44,7 @@ if ( process.env.DISABLE_EMAIL === 'true' ) {
 	testDescribe = test.xdescribe;
 }
 
-testDescribe( 'Sign Up (' + screenSize + ')', function() {
+testDescribe( `[${host}] Sign Up  (${screenSize})`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Sign up for a free site @parallel', function() {

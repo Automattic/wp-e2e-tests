@@ -7,10 +7,12 @@ import EditorPage from '../lib/pages/editor-page.js';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as mediaHelper from '../lib/media-helper.js';
+import * as dataHelper from '../lib/data-helper';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
+const host = dataHelper.getJetpackHost();
 
 var driver;
 
@@ -19,7 +21,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Editor: Media Upload (' + screenSize + ') @parallel', function() {
+test.describe( `[${host}] Editor: Media Upload (${screenSize}) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Image Upload:', function() {
@@ -87,30 +89,33 @@ test.describe( 'Editor: Media Upload (' + screenSize + ') @parallel', function()
 				} );
 			} );
 
-			test.describe( 'Can upload an mp3', function() {
-				let fileDetails;
+			// Skip this test on Jetpack sites due to https://github.com/Automattic/jetpack/issues/7159
+			if ( host === 'WPCOM' ) {
+				test.describe( 'Can upload an mp3', function() {
+					let fileDetails;
 
-				test.it( 'Create mp3 for upload', function() {
-					mediaHelper.getMP3FileWithFilename( 'new.mp3' ).then( function( details ) {
-						fileDetails = details;
+					test.it( 'Create mp3 for upload', function() {
+						mediaHelper.getMP3FileWithFilename( 'new.mp3' ).then( function( details ) {
+							fileDetails = details;
+						} );
+					} );
+
+					test.it( 'Can upload an mp3', function() {
+						editorPage.uploadMedia( fileDetails );
+					} );
+
+					test.it( 'Can delete mp3', function() {
+						editorPage.deleteMedia();
+					} );
+
+					test.after( function() {
+						editorPage.dismissMediaModal();
+						if ( fileDetails ) {
+							mediaHelper.deleteFile( fileDetails ).then( function() {} );
+						}
 					} );
 				} );
-
-				test.it( 'Can upload an mp3', function() {
-					editorPage.uploadMedia( fileDetails );
-				} );
-
-				test.it( 'Can delete mp3', function() {
-					editorPage.deleteMedia();
-				} );
-
-				test.after( function() {
-					editorPage.dismissMediaModal();
-					if ( fileDetails ) {
-						mediaHelper.deleteFile( fileDetails ).then( function() {} );
-					}
-				} );
-			} );
+			}
 		} );
 	} );
 } );

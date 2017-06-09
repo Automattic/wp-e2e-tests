@@ -3,6 +3,7 @@ import test from 'selenium-webdriver/testing';
 
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
+import * as dataHelper from '../lib/data-helper';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import SiteViewComponent from '../lib/components/site-view-component.js';
@@ -11,6 +12,7 @@ import LoginFlow from '../lib/flows/login-flow.js';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
+const host = dataHelper.getJetpackHost();
 
 var driver;
 
@@ -19,7 +21,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'View site from sidebar: (' + screenSize + ') @parallel', function() {
+test.describe( `[${host}] View site from sidebar: (${screenSize}) @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -67,5 +69,4 @@ test.describe( 'View site from sidebar: (' + screenSize + ') @parallel', functio
 			} );
 		} );
 	} );
-
 } );

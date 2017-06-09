@@ -25,6 +25,7 @@ import * as slackNotifier from '../lib/slack-notifier';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
+const host = dataHelper.getJetpackHost();
 
 var driver;
 
@@ -33,11 +34,11 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Editor: Posts (' + screenSize + ')', function() {
+test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Public Posts: @parallel', function() {
+	test.describe( 'Public Posts: @parallel @jetpack', function() {
 		let fileDetails;
 
 		test.before( function() {
@@ -140,52 +141,12 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 							postEditorSidebarComponent.closeSharingSection();
 						} );
 
-						test.describe( 'Preview', function() {
-							test.it( 'Can launch post preview', function() {
-								this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-								this.postEditorToolbarComponent.ensureSaved();
-								this.postEditorToolbarComponent.launchPreview();
-								this.postPreviewComponent = new PostPreviewComponent( driver );
-							} );
-
-							test.it( 'Can see correct post title in preview', function() {
-								this.postPreviewComponent.postTitle().then( function( postTitle ) {
-									assert.equal( postTitle.toLowerCase(), blogPostTitle.toLowerCase(), 'The blog post preview title is not correct' );
-								} );
-							} );
-
-							test.it( 'Can see correct post content in preview', function() {
-								this.postPreviewComponent.postContent().then( function( content ) {
-									assert.equal( content.indexOf( blogPostQuote ) > -1, true, 'The post preview content (' + content + ') does not include the expected content (' + blogPostQuote + ')' );
-								} );
-							} );
-
-							test.it( 'Can see the post category in preview', function() {
-								this.postPreviewComponent.categoryDisplayed().then( function( categoryDisplayed ) {
-									assert.equal( categoryDisplayed.toUpperCase(), newCategoryName.toUpperCase(), 'The category: ' + newCategoryName + ' is not being displayed on the post' );
-								} );
-							} );
-
-							test.it( 'Can see the post tag in preview', function() {
-								this.postPreviewComponent.tagDisplayed().then( function( tagDisplayed ) {
-									assert.equal( tagDisplayed.toUpperCase(), newTagName.toUpperCase(), 'The tag: ' + newTagName + ' is not being displayed on the post' );
-								} );
-							} );
-
-							test.it( 'Can see the image in preview', function() {
-								this.postPreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
-									assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
-								} );
-							} );
-
-							test.it( 'Can close post preview', function() {
-								this.postPreviewComponent.close();
-							} );
-
-							test.describe( 'Publish and Preview Published Content', function() {
-								test.it( 'Can publish and view content', function() {
-									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-									postEditorToolbarComponent.publishAndPreviewPublished();
+						test.describe( 'Preview (WPCOM only)', function() {
+							if ( host === 'WPCOM' ) {
+								test.it( 'Can launch post preview', function() {
+									this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+									this.postEditorToolbarComponent.ensureSaved();
+									this.postEditorToolbarComponent.launchPreview();
 									this.postPreviewComponent = new PostPreviewComponent( driver );
 								} );
 
@@ -222,7 +183,54 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 								test.it( 'Can close post preview', function() {
 									this.postPreviewComponent.close();
 								} );
-							} );
+
+								test.describe( 'Publish and Preview Published Content', function() {
+									test.it( 'Can publish and view content', function() {
+										let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+										postEditorToolbarComponent.publishAndPreviewPublished();
+										this.postPreviewComponent = new PostPreviewComponent( driver );
+									} );
+
+									test.it( 'Can see correct post title in preview', function() {
+										this.postPreviewComponent.postTitle().then( function( postTitle ) {
+											assert.equal( postTitle.toLowerCase(), blogPostTitle.toLowerCase(), 'The blog post preview title is not correct' );
+										} );
+									} );
+
+									test.it( 'Can see correct post content in preview', function() {
+										this.postPreviewComponent.postContent().then( function( content ) {
+											assert.equal( content.indexOf( blogPostQuote ) > -1, true, 'The post preview content (' + content + ') does not include the expected content (' + blogPostQuote + ')' );
+										} );
+									} );
+
+									test.it( 'Can see the post category in preview', function() {
+										this.postPreviewComponent.categoryDisplayed().then( function( categoryDisplayed ) {
+											assert.equal( categoryDisplayed.toUpperCase(), newCategoryName.toUpperCase(), 'The category: ' + newCategoryName + ' is not being displayed on the post' );
+										} );
+									} );
+
+									test.it( 'Can see the post tag in preview', function() {
+										this.postPreviewComponent.tagDisplayed().then( function( tagDisplayed ) {
+											assert.equal( tagDisplayed.toUpperCase(), newTagName.toUpperCase(), 'The tag: ' + newTagName + ' is not being displayed on the post' );
+										} );
+									} );
+
+									test.it( 'Can see the image in preview', function() {
+										this.postPreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
+											assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
+										} );
+									} );
+
+									test.it( 'Can close post preview', function() {
+										this.postPreviewComponent.close();
+									} );
+								} );
+							} else { // Jetpack tests
+								test.it( 'Can publish content', function() {
+									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+									postEditorToolbarComponent.publishPost();
+								} );
+							}
 
 							test.describe( 'View Published Content', function() {
 								test.it( 'Can publish and view content', function() {
@@ -281,7 +289,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Basic Public Post @canary @parallel', function() {
+	test.describe( 'Basic Public Post @canary @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
@@ -322,7 +330,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Private Posts: @parallel', function() {
+	test.describe( 'Private Posts: @parallel @jetpack', function() {
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
@@ -369,41 +377,52 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 					this.postEditorToolbarComponent.viewPublishedPostOrPage();
 				} );
 
-				test.describe( 'As a logged in user ', function() {
-					test.it( 'Can see correct post title', function() {
-						let viewPostPage = new ViewPostPage( driver );
-						viewPostPage.postTitle().then( function( postTitle ) {
-							assert.equal( postTitle.toLowerCase(), 'private: ' + blogPostTitle.toLowerCase(), 'The published blog post title is not correct' );
+				if ( host === 'WPCOM' ) {
+					test.describe( 'As a logged in user ', function() {
+						test.it( 'Can see correct post title', function() {
+							let viewPostPage = new ViewPostPage( driver );
+							viewPostPage.postTitle().then( function( postTitle ) {
+								assert.equal( postTitle.toLowerCase(), 'private: ' + blogPostTitle.toLowerCase(), 'The published blog post title is not correct' );
+							} );
+						} );
+
+						test.it( 'Can see correct post content', function() {
+							let viewPostPage = new ViewPostPage( driver );
+							viewPostPage.postContent().then( function( content ) {
+								assert.equal( content.indexOf( blogPostQuote ) > -1, true, 'The post content (' + content + ') does not include the expected content (' + blogPostQuote + ')' );
+							} );
+						} );
+
+						test.it( 'Can see comments enabled', function() {
+							let viewPostPage = new ViewPostPage( driver );
+							viewPostPage.commentsVisible().then( function( visible ) {
+								assert.equal( visible, true, 'Comments are not shown even though they were enabled when creating the post.' );
+							} );
+						} );
+
+						test.it( 'Can\'t see sharing buttons', function() {
+							let viewPostPage = new ViewPostPage( driver );
+							viewPostPage.sharingButtonsVisible().then( function( visible ) {
+								assert.equal( visible, false, 'Sharing buttons are shown even though they were disabled when creating the post.' );
+							} );
+						} );
+
+						test.describe( 'As a non-logged in user ', function() {
+							test.it( 'Delete cookies (log out)', function() {
+								driverManager.clearCookiesAndDeleteLocalStorage( driver );
+								driver.navigate().refresh();
+							} );
+
+							test.it( 'Can\'t see post at all', function() {
+								let notFoundPage = new NotFoundPage( driver );
+								notFoundPage.displayed().then( function( displayed ) {
+									assert.equal( displayed, true, 'Could not see the not found (404) page. Check that it is displayed' );
+								} );
+							} );
 						} );
 					} );
-
-					test.it( 'Can see correct post content', function() {
-						let viewPostPage = new ViewPostPage( driver );
-						viewPostPage.postContent().then( function( content ) {
-							assert.equal( content.indexOf( blogPostQuote ) > -1, true, 'The post content (' + content + ') does not include the expected content (' + blogPostQuote + ')' );
-						} );
-					} );
-
-					test.it( 'Can see comments enabled', function() {
-						let viewPostPage = new ViewPostPage( driver );
-						viewPostPage.commentsVisible().then( function( visible ) {
-							assert.equal( visible, true, 'Comments are not shown even though they were enabled when creating the post.' );
-						} );
-					} );
-
-					test.it( 'Can\'t see sharing buttons', function() {
-						let viewPostPage = new ViewPostPage( driver );
-						viewPostPage.sharingButtonsVisible().then( function( visible ) {
-							assert.equal( visible, false, 'Sharing buttons are shown even though they were disabled when creating the post.' );
-						} );
-					} );
-
+				} else { // Jetpack tests
 					test.describe( 'As a non-logged in user ', function() {
-						test.it( 'Delete cookies (log out)', function() {
-							driverManager.clearCookiesAndDeleteLocalStorage( driver );
-							driver.navigate().refresh();
-						} );
-
 						test.it( 'Can\'t see post at all', function() {
 							let notFoundPage = new NotFoundPage( driver );
 							notFoundPage.displayed().then( function( displayed ) {
@@ -411,12 +430,13 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 							} );
 						} );
 					} );
-				} );
+					//TODO: Log in via SSO and verify content
+				}
 			} );
 		} );
 	} );
 
-	test.describe( 'Password Protected Posts: @parallel', function() {
+	test.describe( 'Password Protected Posts: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -721,7 +741,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Trash Post: @parallel', function() {
+	test.describe( 'Trash Post: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -757,7 +777,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Edit a Post: @parallel', function() {
+	test.describe( 'Edit a Post: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
@@ -849,7 +869,7 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 		} );
 	} );
 
-	test.describe( 'Insert a contact form: @parallel', function() {
+	test.describe( 'Insert a contact form: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
@@ -893,33 +913,33 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 			} );
 		} );
 	} );
-	
-	test.describe( 'Revert a post to draft: @parallel', function() {
+
+	test.describe( 'Revert a post to draft: @parallel @jetpack', function() {
 		this.bailSuite( true );
-		
+
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
-		
+
 		test.describe( 'Publish a new post', function() {
 			const originalBlogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = 'To really be of help to others we need to be guided by compassion.\n— Dalai Lama\n';
-			
+
 			test.it( 'Can log in', function() {
 				this.loginFlow = new LoginFlow( driver );
 				return this.loginFlow.loginAndStartNewPost();
 			} );
-			
+
 			test.it( 'Can enter post title and content', function() {
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterTitle( originalBlogPostTitle );
 				this.editorPage.enterContent( blogPostQuote );
-				
+
 				return this.editorPage.errorDisplayed().then( ( errorShown ) => {
 					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 				} );
 			} );
-			
+
 			test.it( 'Can publish the post', function() {
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				this.postEditorToolbarComponent.ensureSaved();
@@ -927,9 +947,8 @@ test.describe( 'Editor: Posts (' + screenSize + ')', function() {
 				return this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 			} );
 		} );
-			
+
 		test.describe( 'Revert the post to draft', function() {
-			
 			test.it( 'Can revert the post to draft', function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );

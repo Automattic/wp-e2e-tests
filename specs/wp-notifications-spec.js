@@ -4,6 +4,7 @@ import test from 'selenium-webdriver/testing';
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 import * as slackNotifier from '../lib/slack-notifier';
+import * as dataHelper from '../lib/data-helper';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
@@ -13,11 +14,10 @@ import ViewPostPage from '../lib/pages/view-post-page.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
 import NotificationsComponent from '../lib/components/notifications-component.js';
 
-import * as dataHelper from '../lib/data-helper.js';
-
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
+const host = dataHelper.getJetpackHost();
 
 var driver;
 
@@ -26,7 +26,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Notifications: (' + screenSize + ') @parallel', function() {
+test.describe( `[${host}] Notifications: (${screenSize}) @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
