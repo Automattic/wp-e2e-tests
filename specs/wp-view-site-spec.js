@@ -45,9 +45,9 @@ test.describe( 'View site from sidebar: (' + screenSize + ') @parallel', functio
 			} );
 		} );
 
-		test.it( 'Can see the web preview SEO label', function() {
-			return this.siteViewComponent.isSeoPresent().then( ( present ) => {
-				assert.equal( present, true, 'The web preview SEO label was not displayed' );
+		test.it( 'Can see the web preview viewport size selector', function() {
+			return this.siteViewComponent.isViewportSizeSelectorPresent().then( ( present ) => {
+				assert.equal( present, true, 'The web preview viewport size selector was not displayed' );
 			} );
 		} );
 
