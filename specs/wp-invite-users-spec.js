@@ -537,7 +537,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 											driverManager.ensureNotLoggedIn( driver );
 											this.loginPage = new LoginPage( driver, true );
 											this.loginPage.login( newUserName, password );
-											this.ReaderPage = new ReaderPage( driver );
+											this.ReaderPage = new ReaderPage( driver, true );
 										} );
 
 										test.it( 'Can not see the site - see the private site log in page', function() {
