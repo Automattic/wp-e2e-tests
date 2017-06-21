@@ -82,7 +82,7 @@ test.describe( `[${host}] Jetpack Sites on Calypso - Searching Plugins: (${scree
 
 	test.describe( 'Can use the plugins browser to find Automattic plugins', function() {
 		test.it( 'Open the plugins browser and find WP Job Manager by searching for Automattic', function() {
-			const pluginVendor = 'Automattic';
+			const pluginVendor = 'WP Job Manager';
 			const pluginTitle = 'WP Job Manager';
 			this.navbarComponent = new NavbarComponent( driver );
 			this.navbarComponent.clickMySites();
