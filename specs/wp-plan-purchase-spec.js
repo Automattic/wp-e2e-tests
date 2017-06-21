@@ -24,7 +24,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Plans: (${screenSize}) @parallel`, function() {
+test.describe( `[${host}] Plans: (${screenSize}) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Comparing Plans:', function() {
@@ -54,16 +54,25 @@ test.describe( `[${host}] Plans: (${screenSize}) @parallel`, function() {
 
 			test.it( 'Can Compare Plans', function() {
 				this.plansPage = new PlansPage( driver );
-				this.plansPage.openPlansTab();
-				return this.plansPage.waitForComparison();
-			} );
+				if ( host === 'WPCOM' ) {
+					this.plansPage.openPlansTab();
+					return this.plansPage.waitForComparison();
+				}
 
-			test.it( 'Can Verify Current Plan', function() {
-				const planName = 'premium';
-				return this.plansPage.confirmCurrentPlan( planName ).then( function( present ) {
-					assert( present, `Failed to detect correct plan (${planName})` );
+				// Jetpack
+				return this.plansPage.planTypesShown( 'jetpack' ).then( ( displayed ) => {
+					assert( displayed, 'The Jetpack plans are NOT displayed' );
 				} );
 			} );
+
+			if ( host === 'WPCOM' ) {
+				test.it( 'Can Verify Current Plan', function() {
+					const planName = 'premium';
+					return this.plansPage.confirmCurrentPlan( planName ).then( function( present ) {
+						assert( present, `Failed to detect correct plan (${planName})` );
+					} );
+				} );
+			}
 		} );
 
 		//test.describe( 'Can purchase plans', function() {

@@ -9,8 +9,16 @@ import LoginFlow from '../lib/flows/login-flow';
 
 import PlansPage from '../lib/pages/plans-page';
 import StatsPage from '../lib/pages/stats-page';
+import WPAdminJetpackPage from '../lib/pages/wp-admin/wp-admin-jetpack-page';
+import JetpackPlanSalesPage from '../lib/pages/jetpack-plans-sales-page';
 
-import SidebarComponent from '../lib/components/sidebar-component';
+import ReaderPage from '../lib/pages/reader-page.js';
+import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
+import ShoppingCartWidgetComponent from '../lib/components/shopping-cart-widget-component.js';
+import SidebarComponent from '../lib/components/sidebar-component.js';
+import NavbarComponent from '../lib/components/navbar-component.js';
+
+import WPAdminSidebar from '../lib/pages/wp-admin/wp-admin-sidebar';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -27,50 +35,7 @@ test.before( function() {
 test.describe( `[${host}] Jetpack Plans: (${screenSize}) @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
-	test.xdescribe( 'Comparing Plans:', function() {
-		this.bailSuite( true );
-
-		test.before( function() {
-			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
-		} );
-
-		test.it( 'Login and Select My Site', function() {
-			this.loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
-			return this.loginFlow.loginAndSelectMySite();
-		} );
-
-		test.describe( 'Can compare plans', function() {
-			test.it( 'Can Select Plans', function() {
-				this.statsPage = new StatsPage( driver );
-				this.statsPage.waitForPage();
-				this.sideBarComponent = new SidebarComponent( driver );
-				return this.sideBarComponent.selectPlan();
-			} );
-
-			test.it( 'Can See Plans', function() {
-				this.plansPage = new PlansPage( driver );
-				return this.plansPage.waitForPage();
-			} );
-
-			test.it( 'Can See Jetpack Plans for Comparison', function() {
-				this.plansPage = new PlansPage( driver );
-				this.plansPage.openPlansTab();
-				this.plansPage.waitForComparison();
-				return this.plansPage.planTypesShown( 'jetpack' ).then( ( displayed ) => {
-					assert( displayed, 'The Jetpack plans are NOT displayed' );
-				} );
-			} );
-
-			test.it( 'Can Verify Current Plan', function() {
-				const planName = 'premium';
-				return this.plansPage.confirmCurrentPlan( planName ).then( function( present ) {
-					assert( present, `Failed to detect correct plan (${planName})` );
-				} );
-			} );
-		} );
-	} );
-
-	test.describe( 'Purchase Professional Plan:', function() {
+	test.describe( 'Purchase Premium Plan:', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -84,6 +49,48 @@ test.describe( `[${host}] Jetpack Plans: (${screenSize}) @jetpack`, function() {
 
 		test.it( 'Can log into site via Jetpack SSO', () => {
 			return this.loginFlow.login( { jetpackSSO: true } );
+		} );
+
+		test.it( 'Can open Jetpack dashboard', () => {
+			this.wpAdminSidebar = new WPAdminSidebar( driver );
+			return this.wpAdminSidebar.selectJetpack();
+		} );
+
+		test.it( 'Can find and click Upgrade nudge button', () => {
+			this.jetpackDashboard = new WPAdminJetpackPage( driver );
+			// The nudge buttons are loaded after the page, and there's no good loaded status indicator to key off of
+			return driver.sleep( 3000 ).then( () => {
+				return this.jetpackDashboard.clickUpgradeNudge();
+			} );
+		} );
+
+		test.it( 'Can click the purchase premium button', () => {
+			this.jetpackPlanSalesPage = new JetpackPlanSalesPage( driver );
+			return this.jetpackPlanSalesPage.clickPurchaseButton();
+		} );
+
+		test.it( 'Can then see secure payment component', () => {
+			const securePaymentComponent = new SecurePaymentComponent( driver );
+			securePaymentComponent.displayed().then( ( displayed ) => {
+				assert.equal( displayed, true, 'Could not see the secure payment component' );
+			} );
+		} );
+
+		// Remove all items from basket for clean up
+		test.after( () => {
+			this.readerPage = new ReaderPage( driver, true );
+
+			this.navbarComponent = new NavbarComponent( driver );
+			this.navbarComponent.clickMySites();
+
+			this.statsPage = new StatsPage( driver, true );
+
+			this.sideBarComponent = new SidebarComponent( driver );
+			this.sideBarComponent.selectPlan();
+
+			this.domainsPage = new PlansPage( driver );
+			this.shoppingCartWidgetComponent = new ShoppingCartWidgetComponent( driver );
+			this.shoppingCartWidgetComponent.empty();
 		} );
 	} );
 } );
