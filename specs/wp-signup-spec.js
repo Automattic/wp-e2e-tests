@@ -30,6 +30,7 @@ const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const signupInboxId = config.get( 'signupInboxId' );
 const host = dataHelper.getJetpackHost();
+const locale = driverManager.currentLocale();
 
 var driver;
 
@@ -44,7 +45,7 @@ if ( process.env.DISABLE_EMAIL === 'true' ) {
 	testDescribe = test.xdescribe;
 }
 
-testDescribe( `[${host}] Sign Up  (${screenSize})`, function() {
+testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Sign up for a free site @parallel', function() {
@@ -207,13 +208,13 @@ testDescribe( `[${host}] Sign Up  (${screenSize})`, function() {
 		} );
 
 		test.it( 'We can set the sandbox cookie for payments', function() {
-			this.WPHomePage = new WPHomePage( driver, { visit: true } );
+			this.WPHomePage = new WPHomePage( driver, { visit: true, culture: locale } );
 			return this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 		} );
 
 		test.describe( 'Step One: Design Type Choice', function() {
 			test.it( 'Can see the design type choice page', function() {
-				this.startPage = new StartPage( driver, { visit: true } );
+				this.startPage = new StartPage( driver, { visit: true, culture: locale } );
 				this.designTypeChoicePage = new DesignTypeChoicePage( driver );
 				return this.designTypeChoicePage.displayed().then( ( displayed ) => {
 					return assert.equal( displayed, true, 'The design type choice page is not displayed' );
@@ -483,13 +484,13 @@ testDescribe( `[${host}] Sign Up  (${screenSize})`, function() {
 		} );
 
 		test.it( 'We can set the sandbox cookie for payments', function() {
-			this.WPHomePage = new WPHomePage( driver, { visit: true } );
+			this.WPHomePage = new WPHomePage( driver, { visit: true, culture: locale } );
 			this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 		} );
 
 		test.describe( 'Step Two: Design Type Choice', function() {
 			test.it( 'Can see the design type choice page', function() {
-				this.startPage = new StartPage( driver, { visit: true, flow: 'business' } );
+				this.startPage = new StartPage( driver, { visit: true, culture: locale, flow: 'business' } );
 
 				this.designTypeChoicePage = new DesignTypeChoicePage( driver );
 				return this.designTypeChoicePage.displayed().then( ( displayed ) => {
