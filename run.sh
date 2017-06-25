@@ -8,6 +8,7 @@ PARALLEL=0
 JOBS=0
 OPTS=""
 SCREENSIZES="mobile,desktop"
+LOCALES="en"
 BRANCH=""
 RETURN=0
 CLEAN=0
@@ -82,6 +83,7 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
       ;;
     i)
       NODE_CONFIG_ARGS+=$I18N_CONFIG
+      LOCALES="en,pt-BR,es,ja,fr,he"
       MAGELLAN_CONFIG="magellan-i18n.json"
       ;;
     w)
@@ -182,14 +184,17 @@ if [ $PARALLEL == 1 ]; then
 else # Not using multiple CircleCI containers, just queue up the tests in sequence
   if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
     IFS=, read -r -a SCREENSIZE_ARRAY <<< "$SCREENSIZES"
+    IFS=, read -r -a LOCALE_ARRAY <<< "$LOCALES"
     for size in ${SCREENSIZE_ARRAY[@]}; do
-      for config in "${MAGELLAN_CONFIGS[@]}"; do
-        if [ "$config" != "" ]; then
-          CMD="env BROWSERSIZE=$size $MAGELLAN --mocha_args='$MOCHA_ARGS' --config='$config' --max_workers=$WORKERS"
+      for locale in ${LOCALE_ARRAY[@]}; do
+        for config in "${MAGELLAN_CONFIGS[@]}"; do
+          if [ "$config" != "" ]; then
+            CMD="env BROWSERSIZE=$size BROWSERLOCALE=$locale $MAGELLAN --mocha_args='$MOCHA_ARGS' --config='$config' --max_workers=$WORKERS"
   
-          eval $CMD
-          RETURN+=$?
-        fi
+            eval $CMD
+            RETURN+=$?
+          fi
+        done
       done
     done
   fi
