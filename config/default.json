@@ -73,6 +73,7 @@
 	[ "signupStepOneMobileOptimize_20170322", "original" ],
 	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
 	[ "readerPostCardTagCount_20170315", "showThree" ],
-	[ "signupProgressIndicator_20170612", "original" ]
+	[ "signupProgressIndicator_20170612", "original" ],
+	[ "signupPlansCopyChanges_20170623", "original" ]
   ]
 }
