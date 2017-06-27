@@ -6,6 +6,7 @@ import * as driverManager from '../lib/driver-manager';
 
 import NavBarComponent from '../lib/components/navbar-component';
 import SidebarComponent from '../lib/components/sidebar-component';
+import StoreSidebarComponent from '../lib/components/store-sidebar-component';
 import StorePage from '../lib/pages/woocommerce/store-page';
 import StoreSettingsPage from '../lib/pages/woocommerce/store-settings-page';
 import StoreOrdersPage from '../lib/pages/woocommerce/store-orders-page';
@@ -38,18 +39,28 @@ test.describe( `Can see WooCommerce Store option in Calypso '${ screenSize }' @p
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
-	// Login as WooCommerce store user
+	// Login as WooCommerce store user and open the sidebar
 	test.before( function() {
 		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
 		this.loginFlow.login();
+		this.navBarComponent = new NavBarComponent( driver );
+		this.navBarComponent.clickMySites();
 	} );
 
 	test.it( 'Can see \'Store (BETA)\' option in main Calypso menu for a WooCommerce site', function() {
-		this.navBarComponent = new NavBarComponent( driver );
-		this.navBarComponent.clickMySites();
 		this.sideBarComponent = new SidebarComponent( driver );
 		this.sideBarComponent.storeOptionDisplayed().then( ( displayed ) => {
 			assert( displayed, 'The Store menu option is not displayed for the WooCommerce site' );
+		} );
+	} );
+
+	test.it( 'The \'Store (BETA)\' option opens the store management page with its own sidebar', function() {
+		this.sideBarComponent = new SidebarComponent( driver );
+		this.sideBarComponent.selectStoreOption();
+		this.storePage = new StorePage( driver );
+		this.storeSidebarComponent = new StoreSidebarComponent( driver );
+		this.storeSidebarComponent.displayed().then( ( d ) => {
+			assert( d, 'The store sidebar is not displayed' );
 		} );
 	} );
 } );
