@@ -4,6 +4,8 @@ import test from 'selenium-webdriver/testing';
 import config from 'config';
 import * as driverManager from '../lib/driver-manager';
 
+import NavBarComponent from '../lib/components/navbar-component';
+import SidebarComponent from '../lib/components/sidebar-component';
 import StorePage from '../lib/pages/woocommerce/store-page';
 import StoreSettingsPage from '../lib/pages/woocommerce/store-settings-page';
 import StoreOrdersPage from '../lib/pages/woocommerce/store-orders-page';
@@ -28,7 +30,31 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `WooCommerce on Calypso /store/{storeslug}: '${ screenSize }' @parallel`, function() {
+test.describe( `Can see WooCommerce Store option in Calypso '${ screenSize }' @parallel`, function() {
+	this.timeout( mochaTimeOut );
+	this.bailSuite( true );
+
+	test.before( function() {
+		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	} );
+
+	// Login as WooCommerce store user
+	test.before( function() {
+		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
+		this.loginFlow.login();
+	} );
+
+	test.it( 'Can see \'Store (BETA)\' option in main Calypso menu for a WooCommerce site', function() {
+		this.navBarComponent = new NavBarComponent( driver );
+		this.navBarComponent.clickMySites();
+		this.sideBarComponent = new SidebarComponent( driver );
+		this.sideBarComponent.storeOptionDisplayed().then( ( displayed ) => {
+			assert( displayed, 'The Store menu option is not displayed for the WooCommerce site' );
+		} );
+	} );
+} );
+
+test.xdescribe( `WooCommerce on Calypso /store/{storeslug}: '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -50,7 +76,7 @@ test.describe( `WooCommerce on Calypso /store/{storeslug}: '${ screenSize }' @pa
 	} );
 } );
 
-test.describe( `WooCommerce on Calypso /store/products/{storeslug}: '${ screenSize }' @parallel`, function() {
+test.xdescribe( `WooCommerce on Calypso /store/products/{storeslug}: '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -72,7 +98,7 @@ test.describe( `WooCommerce on Calypso /store/products/{storeslug}: '${ screenSi
 	} );
 } );
 
-test.describe( `WooCommerce on Calypso /store/products/{storeslug}/import: '${ screenSize }' @parallel`, function() {
+test.xdescribe( `WooCommerce on Calypso /store/products/{storeslug}/import: '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -94,7 +120,7 @@ test.describe( `WooCommerce on Calypso /store/products/{storeslug}/import: '${ s
 	} );
 } );
 
-test.describe( `WooCommerce on Calypso /store/orders/{storeslug}: '${ screenSize }' @parallel`, function() {
+test.xdescribe( `WooCommerce on Calypso /store/orders/{storeslug}: '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -116,7 +142,7 @@ test.describe( `WooCommerce on Calypso /store/orders/{storeslug}: '${ screenSize
 	} );
 } );
 
-test.describe( `WooCommerce on Calypso /store/orders/{storeslug}/add: '${ screenSize }' @parallel`, function() {
+test.xdescribe( `WooCommerce on Calypso /store/orders/{storeslug}/add: '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -138,7 +164,7 @@ test.describe( `WooCommerce on Calypso /store/orders/{storeslug}/add: '${ screen
 	} );
 } );
 
-test.describe( `WooCommerce on Calypso /store/promotions/{storeslug}: '${ screenSize }' @parallel`, function() {
+test.xdescribe( `WooCommerce on Calypso /store/promotions/{storeslug}: '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -160,7 +186,7 @@ test.describe( `WooCommerce on Calypso /store/promotions/{storeslug}: '${ screen
 	} );
 } );
 
-test.describe( `WooCommerce on Calypso /store/extensions/{storeslug}: '${ screenSize }' @parallel`, function() {
+test.xdescribe( `WooCommerce on Calypso /store/extensions/{storeslug}: '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -182,7 +208,7 @@ test.describe( `WooCommerce on Calypso /store/extensions/{storeslug}: '${ screen
 	} );
 } );
 
-test.describe( `WooCommerce on Calypso /store/settings/{storeslug}: '${ screenSize }' @parallel`, function() {
+test.xdescribe( `WooCommerce on Calypso /store/settings/{storeslug}: '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -209,7 +235,7 @@ test.describe( `WooCommerce on Calypso /store/settings/{storeslug}: '${ screenSi
 	// 									http://calypso.localhost:3000/store/settings/{storeslug}/shipping
 	// 										http://calypso.localhost:3000/store/settings/{storeslug}/tax
 
-test.describe( `WooCommerce on Calypso /store/products/{storeslug}/add: '${ screenSize }' @parallel`, function() {
+test.xdescribe( `WooCommerce on Calypso /store/products/{storeslug}/add: '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
