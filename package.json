@@ -29,7 +29,7 @@
     "fs-extra": "0.22.1",
     "junit-viewer": "4.9.6",
     "lodash": "^4.13.1",
-    "mailosaur": "^3.0.0",
+    "mailosaur": "4.0.0",
     "mocha": "hoverduck/mocha#57b51e8",
     "node-slack-upload": "1.2.1",
     "random-qoutes-generator": "0.0.1",
