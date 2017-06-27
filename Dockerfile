@@ -4,6 +4,9 @@ MAINTAINER Automattic
 
 WORKDIR /wp-e2e-tests
 
+# Create empty directories to also support the wrapper repos
+RUN	mkdir /wp-e2e-tests-canary /wp-e2e-tests-jetpack /wp-e2e-tests-visdiff /wp-e2e-tests-ie11 /wp-e2e-tests-woocommerce
+
 # Version Numbers
 ENV NODE_VERSION 6.10.3
 ENV CHROMEDRIVER_VERSION 2.29
@@ -55,5 +58,5 @@ RUN sed -i.bkp -e \
       's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' \
       /etc/sudoers
 
-RUN	chown -R e2e-tester /wp-e2e-tests
+RUN	chown -R e2e-tester /wp-e2e-tests*
 USER    e2e-tester
