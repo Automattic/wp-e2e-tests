@@ -458,7 +458,6 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				this.editorPage.enterTitle( blogPostTitle );
 				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 				this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
-				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterContent( blogPostQuote );
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				this.postEditorToolbarComponent.ensureSaved();
