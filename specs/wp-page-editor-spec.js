@@ -281,7 +281,6 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				this.editorPage.enterTitle( pageTitle );
 				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 				this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
-				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterContent( pageQuote );
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				this.postEditorToolbarComponent.ensureSaved();
