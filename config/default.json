@@ -74,6 +74,7 @@
 	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
 	[ "readerPostCardTagCount_20170315", "showThree" ],
 	[ "signupProgressIndicator_20170612", "original" ],
-	[ "signupPlansCopyChanges_20170623", "original" ]
+	[ "signupPlansCopyChanges_20170623", "original" ],
+	[ "postPublishPreview_20170627", "noShowPostPublishPreview" ]
   ]
 }
