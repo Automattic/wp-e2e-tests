@@ -102,7 +102,15 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 					} );
 				} );
 
-				test.describe( 'Publish and Preview Published Content', function() {
+				// Just publish instead of preview until the post-Publish preview flow is settled
+				test.describe( 'Publish Content', function() {
+					test.it( 'Can publish content', function() {
+						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+						this.postEditorToolbarComponent.publishPost();
+					} );
+				} );
+
+				test.xdescribe( 'Publish and Preview Published Content', function() {
 					test.it( 'Can publish and preview published content', function() {
 						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						this.postEditorToolbarComponent.publishAndPreviewPublished();
