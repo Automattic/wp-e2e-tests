@@ -56,20 +56,9 @@
         "version": "11.103"
     }
   },
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupStoreBenchmarking", "signupThemeUpload", "siteTitleStep", "jetpackConnectPlansFirst", "userFirstSignup", "premiumSquaredPlansWording", "domainContactNewPhoneInput", "boostedPostSurvey", "readerSearchOnFollowing", "siteTitleTour", "jetpackPlansNoMonthly", "signupStepOneCopyChanges", "signupDomainsHeadline", "readerPostCardTagCount", "domainSuggestionNudgeLabels", "jetpackNewDescriptions", "signupStepOneMobileOptimize", "signupSurveyStep", "presaleChatButton", "signupPlansCallToAction", "jetpackNoMonthly", "automatedTransfer2", "signupThemeStepCopyChanges", "signupPlansReorderTest", "reduceThemesInSignupTest", "savingsInCheckoutSummary", "selectCtaInDomainsSignup", "businessPlanDescriptionAT", "pulsingCartTestingAB", "newSiteWithJetpack", "signupProgressIndicator", "signupPlansCopyChanges", "postPublishPreview" ],
+  "knownABTestKeys": [ "multiDomainRegistrationV1", "siteTitleTour", "signupSurveyStep", "presaleChatButton", "automatedTransfer2", "savingsInCheckoutSummary", "selectCtaInDomainsSignup", "businessPlanDescriptionAT", "pulsingCartTestingAB", "newSiteWithJetpack", "signupProgressIndicator", "signupPlansCopyChanges", "postPublishPreview" ],
   "overrideABTests": [
-	[ "signupStoreBenchmarking_20160927", "pressable" ],
-	[ "signupThemeUpload_20160928", "hideThemeUpload" ],
-	[ "siteTitleStep_20160928", "hideSiteTitleStep" ],
-	[ "jetpackConnectPlansFirst_20161024", "showPlansAfterAuth" ],
-	[ "userFirstSignup_20161223", "userLast" ],
-	[ "domainContactNewPhoneInput_20170123", "enabled" ],
-	[ "boostedPostSurvey_20170127", "disabled" ],
-	[ "jetpackPlansNoMonthly_20170302", "showMonthly" ],
-	[ "signupStepOneCopyChanges_20170307", "modified" ],
-	[ "signupStepOneMobileOptimize_20170322", "original" ],
 	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
-	[ "readerPostCardTagCount_20170315", "showThree" ],
 	[ "signupProgressIndicator_20170612", "original" ],
 	[ "signupPlansCopyChanges_20170623", "original" ],
 	[ "postPublishPreview_20170627", "noShowPostPublishPreview" ]
