@@ -39,7 +39,7 @@ usage () {
 -c		  - Exit with status code 0 regardless of test results
 -m [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
 -f		  - Tell visdiffs to fail the tests rather than just send an alert
--i		  - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
+-i		  - Execute i18n screenshot tests, not compatible with -g flag
 -v		  - Execute the visdiff tests in specs-visdiff/
 -x		  - Execute the tests from the context of xvfb-run
 -u [baseUrl]	  - Override the calypsoBaseURL config
