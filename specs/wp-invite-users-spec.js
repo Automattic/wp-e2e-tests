@@ -679,6 +679,9 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 									this.navbarComponent.dismissGuidedTours();
 									this.navbarComponent.clickCreateNewPost();
 									this.editorPage = new EditorPage( driver );
+									this.driver.getCurrentUrl().then( ( urlDisplayed ) => {
+										return this.editorPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
+									} );
 									this.editorPage.enterTitle( reviewPostTitle );
 									this.editorPage.enterContent( postQuote );
 								} );
@@ -739,6 +742,9 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 												this.navbarComponent = new NavbarComponent( driver );
 												this.navbarComponent.clickCreateNewPost();
 												this.editorPage = new EditorPage( driver );
+												this.driver.getCurrentUrl().then( ( urlDisplayed ) => {
+													return this.editorPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
+												} );
 												this.editorPage.enterTitle( publishPostTitle );
 												this.editorPage.enterContent( postQuote );
 											} );
