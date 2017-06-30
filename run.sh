@@ -8,6 +8,7 @@ PARALLEL=0
 JOBS=0
 OPTS=""
 SCREENSIZES="mobile,desktop"
+LOCALES="en"
 BRANCH=""
 RETURN=0
 CLEAN=0
@@ -16,7 +17,7 @@ GREP=""
 # Function to join arrays into a string
 function joinStr { local IFS="$1"; shift; echo "$*"; }
 
-I18N_CONFIG="\"browser\":\"firefox\",\"proxy\":\"system\",\"neverSaveScreenshots\":\"true\""
+I18N_CONFIG="\"browser\":\"chrome\",\"proxy\":\"system\",\"saveAllScreenshots\":true"
 IE11_CONFIG="\"sauce\":\"true\",\"sauceConfig\":\"win-ie11\""
 
 declare -a MAGELLAN_CONFIGS
@@ -38,7 +39,7 @@ usage () {
 -c		  - Exit with status code 0 regardless of test results
 -m [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
 -f		  - Tell visdiffs to fail the tests rather than just send an alert
--i		  - Execute i18n tests in the specs-i18n/ directory, not compatible with -g flag
+-i		  - Execute i18n screenshot tests, not compatible with -g flag
 -v		  - Execute the visdiff tests in specs-visdiff/
 -x		  - Execute the tests from the context of xvfb-run
 -u [baseUrl]	  - Override the calypsoBaseURL config
@@ -82,6 +83,8 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
       ;;
     i)
       NODE_CONFIG_ARGS+=$I18N_CONFIG
+      LOCALES="en,pt-BR,es,ja,fr,he"
+      export SCREENSHOTDIR="screenshots-i18n"
       MAGELLAN_CONFIG="magellan-i18n.json"
       ;;
     w)
@@ -182,14 +185,17 @@ if [ $PARALLEL == 1 ]; then
 else # Not using multiple CircleCI containers, just queue up the tests in sequence
   if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
     IFS=, read -r -a SCREENSIZE_ARRAY <<< "$SCREENSIZES"
+    IFS=, read -r -a LOCALE_ARRAY <<< "$LOCALES"
     for size in ${SCREENSIZE_ARRAY[@]}; do
-      for config in "${MAGELLAN_CONFIGS[@]}"; do
-        if [ "$config" != "" ]; then
-          CMD="env BROWSERSIZE=$size $MAGELLAN --mocha_args='$MOCHA_ARGS' --config='$config' --max_workers=$WORKERS"
+      for locale in ${LOCALE_ARRAY[@]}; do
+        for config in "${MAGELLAN_CONFIGS[@]}"; do
+          if [ "$config" != "" ]; then
+            CMD="env BROWSERSIZE=$size BROWSERLOCALE=$locale $MAGELLAN --mocha_args='$MOCHA_ARGS' --config='$config' --max_workers=$WORKERS"
   
-          eval $CMD
-          RETURN+=$?
-        fi
+            eval $CMD
+            RETURN+=$?
+          fi
+        done
       done
     done
   fi
