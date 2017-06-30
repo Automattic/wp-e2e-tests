@@ -84,6 +84,7 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
     i)
       NODE_CONFIG_ARGS+=$I18N_CONFIG
       LOCALES="en,pt-BR,es,ja,fr,he"
+      export SCREENSHOTDIR="screenshots-i18n"
       MAGELLAN_CONFIG="magellan-i18n.json"
       ;;
     w)
