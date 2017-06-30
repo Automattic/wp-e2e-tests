@@ -52,8 +52,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel', function() {
 
 			test.it( 'Can comment on the latest post', function() {
 				this.comment = dataHelper.randomPhrase();
-				this.readerPage.commentOnLatestPost( this.comment );
-				return this.readerPage.waitForModeratedCommentToAppear();
+				return this.readerPage.commentOnLatestPost( this.comment );
 			} );
 
 			test.describe( 'Delete the new comment', function() {
