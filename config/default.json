@@ -56,10 +56,9 @@
         "version": "11.103"
     }
   },
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "siteTitleTour", "signupSurveyStep", "presaleChatButton", "automatedTransfer2", "savingsInCheckoutSummary", "selectCtaInDomainsSignup", "businessPlanDescriptionAT", "pulsingCartTestingAB", "newSiteWithJetpack", "signupProgressIndicator", "signupPlansCopyChanges", "postPublishPreview" ],
+  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupSurveyStep", "presaleChatButton", "savingsInCheckoutSummary", "businessPlanDescriptionAT", "newSiteWithJetpack", "signupPlansCopyChanges", "postPublishPreview" ],
   "overrideABTests": [
 	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
-	[ "signupProgressIndicator_20170612", "original" ],
 	[ "signupPlansCopyChanges_20170623", "original" ],
 	[ "postPublishPreview_20170627", "noShowPostPublishPreview" ]
   ]
