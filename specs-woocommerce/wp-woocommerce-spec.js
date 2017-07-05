@@ -7,7 +7,7 @@ import * as driverManager from '../lib/driver-manager';
 import NavBarComponent from '../lib/components/navbar-component';
 import SidebarComponent from '../lib/components/sidebar-component';
 import StoreSidebarComponent from '../lib/components/store-sidebar-component';
-import StorePage from '../lib/pages/woocommerce/store-page';
+import StoreDashboardPage from '../lib/pages/woocommerce/store-dashboard-page';
 import StoreSettingsPage from '../lib/pages/woocommerce/store-settings-page';
 import StoreOrdersPage from '../lib/pages/woocommerce/store-orders-page';
 import StoreOrdersAddPage from '../lib/pages/woocommerce/store-orders-add-page';
@@ -47,17 +47,17 @@ test.describe( `Can see WooCommerce Store option in Calypso '${ screenSize }' @p
 		this.navBarComponent.clickMySites();
 	} );
 
-	test.it( 'Can see \'Store (BETA)\' option in main Calypso menu for a WooCommerce site', function() {
+	test.it( 'Can see \'Store (BETA)\' option in main Calypso menu for an AT WooCommerce site set to the US', function() {
 		this.sideBarComponent = new SidebarComponent( driver );
 		this.sideBarComponent.storeOptionDisplayed().then( ( displayed ) => {
-			assert( displayed, 'The Store menu option is not displayed for the WooCommerce site' );
+			assert( displayed, 'The Store menu option is not displayed for the AT WooCommerce site set to the US' );
 		} );
 	} );
 
-	test.it( 'The \'Store (BETA)\' option opens the store management page with its own sidebar', function() {
+	test.it( 'The \'Store (BETA)\' option opens the store dashboard with its own sidebar', function() {
 		this.sideBarComponent = new SidebarComponent( driver );
 		this.sideBarComponent.selectStoreOption();
-		this.storePage = new StorePage( driver );
+		this.storeDashboardPage = new StoreDashboardPage( driver );
 		this.storeSidebarComponent = new StoreSidebarComponent( driver );
 		this.storeSidebarComponent.displayed().then( ( d ) => {
 			assert( d, 'The store sidebar is not displayed' );
@@ -80,9 +80,9 @@ test.xdescribe( `WooCommerce on Calypso /store/{storeslug}: '${ screenSize }' @p
 	} );
 
 	test.it( 'Can see store placeholder page when visiting /store/{storeSlug}', function() {
-		this.storePage = new StorePage( driver, true );
-		this.storePage.displayed().then( ( shown ) => {
-			assert( shown, 'Could not see the WooCommerce store page after visiting /store' );
+		this.storeDashboardPage = new StoreDashboardPage( driver, true );
+		this.storeDashboardPage.displayed().then( (shown ) => {
+			assert( shown, 'Could not see the WooCommerce store dashboard page after visiting /store' );
 		} );
 	} );
 } );
