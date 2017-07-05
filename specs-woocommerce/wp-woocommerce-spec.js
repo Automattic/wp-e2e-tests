@@ -65,6 +65,39 @@ test.describe( `Can see WooCommerce Store option in Calypso '${ screenSize }' @p
 	} );
 } );
 
+test.describe( `Can manage WooCommerce products option in Calypso '${ screenSize }' @parallel`, function() {
+	this.timeout( mochaTimeOut );
+	this.bailSuite( true );
+
+	test.before( function() {
+		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	} );
+
+	// Login as WooCommerce store user and open the woo store
+	test.before( function() {
+		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
+		return this.loginFlow.loginAndOpenWooStore();
+	} );
+
+	test.it( 'Can see \'Products\' option in the Woo store sidebar', function() {
+		this.storeDashboardPage = new StoreDashboardPage( driver );
+		this.storeSidebarComponent = new StoreSidebarComponent( driver );
+		this.storeSidebarComponent.productsLinkDisplayed().then( ( d ) => {
+			assert( d, 'The store sidebar products link is not displayed' );
+		} );
+	} );
+
+	test.it( 'Can see the products page with at least one product when selecting the products option in the Woo store sidebar', function() {
+		this.storeDashboardPage = new StoreDashboardPage( driver );
+		this.storeSidebarComponent = new StoreSidebarComponent( driver );
+		this.storeSidebarComponent.selectProducts();
+		this.storeProductsPage = new StoreProductsPage( driver );
+		this.storeProductsPage.atLeastOneProductDisplayed().then( ( displayed ) => {
+			assert( displayed, 'No Woo products are displayed on the product page' );
+		} );
+	} );
+} );
+
 test.xdescribe( `WooCommerce on Calypso /store/{storeslug}: '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
