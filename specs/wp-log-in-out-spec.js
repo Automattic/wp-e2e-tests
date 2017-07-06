@@ -25,7 +25,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Authentication: (${screenSize}) @parallel`, function() {
+test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -47,6 +47,21 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel`, function()
 				} );
 			} );
 		} );
+
+		// Test Jetpack SSO
+		if ( host !== 'WPCOM' ) {
+			test.describe( 'Can Log via Jetpack SSO', function() {
+				test.it( 'Can log into site via Jetpack SSO', () => {
+					let loginFlow = new LoginFlow( driver );
+					return loginFlow.login( { jetpackSSO: true } );
+				} );
+
+				test.it( 'Can return to Reader', () => {
+					let readerPage = new ReaderPage( driver, true );
+					return readerPage.displayed();
+				} );
+			} );
+		}
 
 		test.describe( 'Can Log Out', function() {
 			test.it( 'Can view profile to log out', function() {
@@ -71,7 +86,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel`, function()
 	} );
 } );
 
-test.describe( `[${host}] User Agent: (${screenSize}) @parallel`, function() {
+test.describe( `[${host}] User Agent: (${screenSize}) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
