@@ -297,6 +297,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 										if ( url.match( /wp-login.php/ ) ) {
 											SlackNotifier.warn( 'WARNING: Signup process sent me to the login screen!' );
 											let newUrl = url.replace( /^.*redirect_to=/, '' );
+											SlackNotifier.warn( `Old URL = [${url}], New URL = [${newUrl}]` );
 											return driver.get( decodeURIComponent( newUrl ) );
 										}
 
