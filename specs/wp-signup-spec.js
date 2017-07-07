@@ -193,6 +193,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
+		let selectedBlogAddress = '';
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
@@ -250,6 +251,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 						this.findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
 						this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
 							assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
+							selectedBlogAddress = actualAddress;
 						} );
 
 						return this.findADomainComponent.selectFreeAddress();
@@ -294,10 +296,10 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 								test.it( 'Verify login screen not present', () => {
 									return driver.getCurrentUrl().then( ( url ) => {
-										if ( url.match( /wp-login.php/ ) ) {
+										if ( url.match( /wp-login.php|log-in/ ) ) {
 											SlackNotifier.warn( 'WARNING: Signup process sent me to the login screen!' );
-											let newUrl = url.replace( /^.*redirect_to=/, '' );
-											SlackNotifier.warn( `Old URL = [${url}], New URL = [${newUrl}]` );
+											let baseURL = config.get( 'calypsoBaseURL' );
+											let newUrl = `${baseURL}/checkout/${selectedBlogAddress}`;
 											return driver.get( decodeURIComponent( newUrl ) );
 										}
 
@@ -555,9 +557,10 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 							test.it( 'Verify login screen not present', () => {
 								return driver.getCurrentUrl().then( ( url ) => {
-									if ( url.match( /wp-login.php/ ) ) {
+									if ( url.match( /wp-login.php|log-in/ ) ) {
 										SlackNotifier.warn( 'WARNING: Signup process sent me to the login screen!' );
-										let newUrl = url.replace( /^.*redirect_to=/, '' );
+										let baseURL = config.get( 'calypsoBaseURL' );
+										let newUrl = `${baseURL}/checkout/${expectedDomainName}/business`;
 										return driver.get( decodeURIComponent( newUrl ) );
 									}
 
