@@ -221,7 +221,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 									} );
 
 									test.it( 'Can close post preview', function() {
-										this.postPreviewComponent.close();
+										this.postPreviewComponent.edit();
 									} );
 								} );
 							} else { // Jetpack tests
