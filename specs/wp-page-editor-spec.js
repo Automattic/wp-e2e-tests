@@ -105,7 +105,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				test.describe( 'Publish and Preview Published Content', function() {
 					test.it( 'Can publish and preview published content', function() {
 						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-						this.postEditorToolbarComponent.publishAndPreviewPublished();
+						this.postEditorToolbarComponent.publishPost();
 						return this.pagePreviewComponent = new PagePreviewComponent( driver );
 					} );
 

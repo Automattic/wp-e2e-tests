@@ -8,7 +8,6 @@ import EditorPage from '../lib/pages/editor-page.js';
 import TwitterFeedPage from '../lib/pages/twitter-feed-page.js';
 import ViewPostPage from '../lib/pages/view-post-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
-import ReaderPage from '../lib/pages/reader-page.js';
 import PostsPage from '../lib/pages/posts-page.js';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
@@ -187,7 +186,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 								test.describe( 'Publish and Preview Published Content', function() {
 									test.it( 'Can publish and view content', function() {
 										let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-										postEditorToolbarComponent.publishAndPreviewPublished();
+										postEditorToolbarComponent.publishPost();
 										this.postPreviewComponent = new PostPreviewComponent( driver );
 									} );
 
@@ -944,7 +943,10 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				this.postEditorToolbarComponent.ensureSaved();
 				this.postEditorToolbarComponent.publishPost();
-				return this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
+				this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
+				let postPreviewComponent = new PostPreviewComponent( driver );
+
+				return postPreviewComponent.edit();
 			} );
 		} );
 
