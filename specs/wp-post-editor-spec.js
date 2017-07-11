@@ -186,7 +186,11 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 								test.describe( 'Publish and Preview Published Content', function() {
 									test.it( 'Can publish and view content', function() {
 										let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-										postEditorToolbarComponent.publishPost();
+										if ( host === 'WPCOM' ) {
+											postEditorToolbarComponent.publishPost();
+										} else {
+											postEditorToolbarComponent.publishAndPreviewPublished();
+										}
 										this.postPreviewComponent = new PostPreviewComponent( driver );
 									} );
 
@@ -221,7 +225,12 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 									} );
 
 									test.it( 'Can close post preview', function() {
-										this.postPreviewComponent.edit();
+										if ( host === 'WPCOM' ) {
+											return this.postPreviewComponent.edit();
+										}
+
+										// else Jetpack
+										return this.postPreviewComponent.close();
 									} );
 								} );
 							} else { // Jetpack tests
@@ -942,11 +951,16 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can publish the post', function() {
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				this.postEditorToolbarComponent.ensureSaved();
-				this.postEditorToolbarComponent.publishPost();
-				this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
-				let postPreviewComponent = new PostPreviewComponent( driver );
+				if ( host === 'WPCOM' ) {
+					this.postEditorToolbarComponent.publishPost();
+					this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
+					let postPreviewComponent = new PostPreviewComponent( driver );
 
-				return postPreviewComponent.edit();
+					return postPreviewComponent.edit();
+				}
+
+				// else Jetpack
+				return this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 			} );
 		} );
 

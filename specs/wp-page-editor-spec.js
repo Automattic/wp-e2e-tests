@@ -105,7 +105,11 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				test.describe( 'Publish and Preview Published Content', function() {
 					test.it( 'Can publish and preview published content', function() {
 						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-						this.postEditorToolbarComponent.publishPost();
+						if ( host === 'WPCOM' ) {
+							this.postEditorToolbarComponent.publishPost();
+						} else {
+							this.postEditorToolbarComponent.publishAndPreviewPublished();
+						}
 						return this.pagePreviewComponent = new PagePreviewComponent( driver );
 					} );
 
@@ -128,7 +132,12 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 					} );
 
 					test.it( 'Can close page preview', function() {
-						return this.pagePreviewComponent.edit();
+						if ( host === 'WPCOM' ) {
+							return this.pagePreviewComponent.edit();
+						}
+
+						// else Jetpack
+						return this.pagePreviewComponent.close();
 					} );
 				} );
 			} else { // Jetpack tests
