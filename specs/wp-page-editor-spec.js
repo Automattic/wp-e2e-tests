@@ -128,7 +128,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 					} );
 
 					test.it( 'Can close page preview', function() {
-						this.pagePreviewComponent.close();
+						return this.pagePreviewComponent.edit();
 					} );
 				} );
 			} else { // Jetpack tests
