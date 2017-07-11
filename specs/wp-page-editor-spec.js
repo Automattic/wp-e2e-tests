@@ -70,7 +70,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				postEditorSidebarComponent.closeSharingSection();
 			} );
 
-			if ( host === 'WPCOM' ) {
+			if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
 				test.describe( 'Preview', function() {
 					test.it( 'Can launch page preview', function() {
 						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
@@ -105,7 +105,11 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				test.describe( 'Publish and Preview Published Content', function() {
 					test.it( 'Can publish and preview published content', function() {
 						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-						this.postEditorToolbarComponent.publishPost();
+						if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
+							this.postEditorToolbarComponent.publishPost();
+						} else {
+							this.postEditorToolbarComponent.publishAndPreviewPublished();
+						}
 						return this.pagePreviewComponent = new PagePreviewComponent( driver );
 					} );
 
@@ -128,7 +132,12 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 					} );
 
 					test.it( 'Can close page preview', function() {
-						return this.pagePreviewComponent.edit();
+						if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
+							return this.pagePreviewComponent.edit();
+						}
+
+						// else Jetpack
+						return this.pagePreviewComponent.close();
 					} );
 				} );
 			} else { // Jetpack tests

@@ -140,8 +140,8 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 							postEditorSidebarComponent.closeSharingSection();
 						} );
 
-						test.describe( 'Preview (WPCOM only)', function() {
-							if ( host === 'WPCOM' ) {
+						test.describe( 'Preview (WPCOM/PRESSABLE only)', function() {
+							if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
 								test.it( 'Can launch post preview', function() {
 									this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 									this.postEditorToolbarComponent.ensureSaved();
@@ -186,7 +186,11 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 								test.describe( 'Publish and Preview Published Content', function() {
 									test.it( 'Can publish and view content', function() {
 										let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-										postEditorToolbarComponent.publishPost();
+										if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
+											postEditorToolbarComponent.publishPost();
+										} else {
+											postEditorToolbarComponent.publishAndPreviewPublished();
+										}
 										this.postPreviewComponent = new PostPreviewComponent( driver );
 									} );
 
@@ -221,7 +225,12 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 									} );
 
 									test.it( 'Can close post preview', function() {
-										this.postPreviewComponent.edit();
+										if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
+											return this.postPreviewComponent.edit();
+										}
+
+										// else Jetpack
+										return this.postPreviewComponent.close();
 									} );
 								} );
 							} else { // Jetpack tests
@@ -943,10 +952,16 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				this.postEditorToolbarComponent.ensureSaved();
 				this.postEditorToolbarComponent.publishPost();
-				this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
-				let postPreviewComponent = new PostPreviewComponent( driver );
 
-				return postPreviewComponent.edit();
+				if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
+					this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
+					let postPreviewComponent = new PostPreviewComponent( driver );
+
+					return postPreviewComponent.edit();
+				}
+
+				// else Jetpack
+				return this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 			} );
 		} );
 
