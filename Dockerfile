@@ -8,7 +8,7 @@ WORKDIR /wp-e2e-tests
 RUN	mkdir /wp-e2e-tests-canary /wp-e2e-tests-jetpack /wp-e2e-tests-visdiff /wp-e2e-tests-ie11 /wp-e2e-tests-woocommerce
 
 # Version Numbers
-ENV NODE_VERSION 6.10.3
+ENV NODE_VERSION 6.11.1
 ENV CHROMEDRIVER_VERSION 2.29
 ENV CHROME_VERSION 57.0.2987.133
 
