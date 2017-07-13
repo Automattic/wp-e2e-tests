@@ -73,7 +73,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			test.it( 'Can select the first design type', function() {
 				this.designTypeChoicePage.selectFirstDesignType();
 				driver.getCurrentUrl().then( ( u ) => {
-					console.log( 'URL: ' + u );
+					SlackNotifier.warn( 'Debug URL:::' + u );
 				} );
 			} );
 
