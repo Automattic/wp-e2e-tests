@@ -100,7 +100,7 @@ test.describe( `Can see WooCommerce products in Calypso '${ screenSize }' @paral
 	} );
 } );
 
-test.describe( `Can add a new WooCommerce product in Calypso '${ screenSize }' @parallel`, function() {
+test.describe( `Can add a new basic WooCommerce product in Calypso '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 	let fileDetails;
@@ -129,8 +129,14 @@ test.describe( `Can add a new WooCommerce product in Calypso '${ screenSize }' @
 		this.storeSidebarComponent = new StoreSidebarComponent( driver );
 		this.storeSidebarComponent.addProduct();
 		this.addProductPage = new AddProductPage( driver );
-		//this.addProductPage.addImage( fileDetails );
+		this.addProductPage.addImage( fileDetails );
 		this.addProductPage.enterTitle( productTitle );
+		this.addProductPage.saveAndPublish();
+		this.addProductPage.waitForSuccessNotice();
+		this.storeProductsPage = new StoreProductsPage( driver );
+		this.storeProductsPage.productDisplayed( productTitle ).then( ( displayed ) => {
+			assert( displayed, `The product '${productTitle}' isn't being displayed on the products page after being added` );
+		} );
 	} );
 
 	test.after( function() {
