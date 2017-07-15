@@ -13,6 +13,7 @@ BRANCH=""
 RETURN=0
 CLEAN=0
 GREP=""
+UPLOAD=0
 
 # Function to join arrays into a string
 function joinStr { local IFS="$1"; shift; echo "$*"; }
@@ -40,6 +41,7 @@ usage () {
 -m [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
 -f		  - Tell visdiffs to fail the tests rather than just send an alert
 -i		  - Execute i18n screenshot tests, not compatible with -g flag
+-U      - Execute the i18n screenshot upload script in scripts/
 -v		  - Execute the visdiff tests in specs-visdiff/
 -x		  - Execute the tests from the context of xvfb-run
 -u [baseUrl]	  - Override the calypsoBaseURL config
@@ -52,7 +54,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":a:Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
+while getopts ":a:Rpb:s:gjWCH:wl:cm:fiUvxu:h" opt; do
   case $opt in
     a)
       WORKERS=$OPTARG
@@ -86,6 +88,9 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
       LOCALES="en,pt-BR,es,ja,fr,he"
       export SCREENSHOTDIR="screenshots-i18n"
       MAGELLAN_CONFIG="magellan-i18n.json"
+      ;;
+    U)
+      UPLOAD=1
       ;;
     w)
       NODE_CONFIG_ARGS+=$IE11_CONFIG
@@ -199,6 +204,14 @@ else # Not using multiple CircleCI containers, just queue up the tests in sequen
       done
     done
   fi
+fi
+
+if [ $UPLOAD == 1 ]; then
+  echo "Uploading i18n tests screenshots:"
+  CMD="node ./scripts/i18nscreenshots.js $LOCALES"
+
+  eval $CMD
+  RETURN+=$?
 fi
 
 if [ $CLEAN == 1 ]; then
