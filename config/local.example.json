@@ -100,6 +100,16 @@
 		"postNUXUser": [
 			"username",
 			"password"
+		],
+		"i18nScreenshotUser": [
+			"username",
+			"password",
+			"site address or ID"
 		]
-	}
+	},
+	"restApiApplication": {
+		"client_id": "YOUR_CLIENT_ID",
+		"redirect_uri": "YOUR_REDIRECT_URI",
+		"client_secret": "YOUR_CLIENT_SECRET"
+    }
 }
