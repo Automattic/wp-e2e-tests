@@ -189,6 +189,10 @@ if [ $PARALLEL == 1 ]; then
   fi
 else # Not using multiple CircleCI containers, just queue up the tests in sequence
   if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
+    if [ $UPLOAD == 1 ]; then
+      # Clear out screenshots-i18n/ directory
+      rm -f screenshots-i18n/*
+    fi
     IFS=, read -r -a SCREENSIZE_ARRAY <<< "$SCREENSIZES"
     IFS=, read -r -a LOCALE_ARRAY <<< "$LOCALES"
     for size in ${SCREENSIZE_ARRAY[@]}; do
