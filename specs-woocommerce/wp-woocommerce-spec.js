@@ -131,6 +131,7 @@ test.describe( `Can add a new basic WooCommerce product in Calypso '${ screenSiz
 		this.addProductPage = new AddProductPage( driver );
 		this.addProductPage.addImage( fileDetails );
 		this.addProductPage.enterTitle( productTitle );
+		this.addProductPage.enterDescription( 'Another e2e test product' );
 		this.addProductPage.saveAndPublish();
 		this.addProductPage.waitForSuccessNotice();
 		this.storeProductsPage = new StoreProductsPage( driver );
