@@ -191,7 +191,7 @@ else # Not using multiple CircleCI containers, just queue up the tests in sequen
   if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
     if [ $UPLOAD == 1 ]; then
       # Clear out screenshots-i18n/ directory
-      rm -f screenshots-i18n/*
+      rm -f ${SCREENSHOTDIR}/*
     fi
     IFS=, read -r -a SCREENSIZE_ARRAY <<< "$SCREENSIZES"
     IFS=, read -r -a LOCALE_ARRAY <<< "$LOCALES"
@@ -212,7 +212,7 @@ fi
 
 if [ $UPLOAD == 1 ]; then
   echo "Uploading i18n tests screenshots:"
-  CMD="node ./scripts/i18nscreenshots.js $LOCALES"
+  CMD="node ./scripts/i18n-screenshots-upload.js $LOCALES"
 
   eval $CMD
   RETURN+=$?
