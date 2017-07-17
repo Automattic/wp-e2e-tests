@@ -38,6 +38,7 @@ service.run( function() {
 	var postFormData;
 	var postContent;
 	var r;
+	var postLink;
 
 	// Oauth login
 	oauth.login( service, account );
@@ -61,6 +62,7 @@ service.run( function() {
 		}
 
 		// Prepare post content with one gallery per flow
+		const dateString = new Date().toDateString();
 		postContent = '';
 		for ( const flowID in imageIDs ) {
 			if ( imageIDs.hasOwnProperty( flowID ) ) {
@@ -70,7 +72,8 @@ service.run( function() {
 		}
 
 		postFormData = {
-			title: `${locale} Signup Screenshots`,
+			title: `${locale} Signup Screenshots (${dateString})`,
+			slug: `${locale}-signup-screenshots`,
 			content: postContent,
 			categories: 'Signup',
 			tags: locale
@@ -79,7 +82,8 @@ service.run( function() {
 		// Publish post
 		r = posts.publish( service, account[2], postFormData );
 		expect( r.data.statusCode ).to.equal( 200 );
+		postLink = r.data.body.URL;
 
-		console.log( ` - Successfully published ${locale} post` );
+		console.log( ` - Successfully published ${locale} post: ${postLink}` );
 	}
 } );
