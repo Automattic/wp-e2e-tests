@@ -93,7 +93,7 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
     I)
       SCREENSIZES=desktop
       NODE_CONFIG_ARGS+=$I18N_CONFIG
-      LOCALES="en,pt-BR,es,ja,fr,he"
+      LOCALES="en,es,pt-br,de,fr,he,ja,it,nl,ru,tr,id,zh-cn,zh-tw,ko,ar,sv"
       MAGELLAN_CONFIG="magellan-i18n.json"
       ;;
     U)
