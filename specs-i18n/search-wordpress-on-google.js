@@ -10,8 +10,8 @@ import LandingPage from '../lib/pages/landing-page.js';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 
-const locale_test = process.env.LOCALE_TEST || 'en';
-const test_data = localization_data[ locale_test ];
+const locale = driverManager.currentLocale();
+const test_data = localization_data[ locale ];
 
 var driver;
 
@@ -21,9 +21,9 @@ test.before( function() {
 } );
 
 function doGoogleAdSearch( search_params ) {
-	var description = 'Search for "' + search_params.query + '" on Google from '
-		+ search_params.originating_location
-		+ ( search_params.originating_location_english
+	var description = 'Search for "' + search_params.query + '" on Google from ' +
+		search_params.originating_location +
+		( search_params.originating_location_english
 			? ' (' + search_params.originating_location_english + ')'
 			: '' );
 
@@ -45,22 +45,20 @@ function doGoogleAdSearch( search_params ) {
 
 		test.it( `Our landing page exists`, function() {
 			const that = this;
-			if( ! this.searchPage ) {
+			if ( ! this.searchPage ) {
 				this.skip( 'Depends on previous test passing' );
 			}
 			this.searchPage.getAdUrl().then( function( url ) {
 				that.landingPage = new LandingPage( driver, url );
-
 			} );
 		} );
 
 		test.it( `Localized string found on landing page`, function() {
-			if( ! this.landingPage ) {
+			if ( ! this.landingPage ) {
 				this.skip( 'Depends on previous test passing' );
 			}
 			this.landingPage.checkLocalizedString( test_data.wpcom_landing_page_string );
 		} );
-
 	} );
 }
 
