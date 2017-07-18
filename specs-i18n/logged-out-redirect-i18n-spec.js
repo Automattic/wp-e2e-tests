@@ -23,7 +23,7 @@ test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 } );
 
-test.describe( `logged out homepage redirect test (${ locale })`, function() {
+test.describe( `Logged out homepage redirect test @i18n (${ locale })`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.it( `should redirect to the correct url for wordpress.com (${ locale })`, function() {

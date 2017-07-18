@@ -27,7 +27,7 @@ function doGoogleAdSearch( search_params ) {
 			? ' (' + search_params.originating_location_english + ')'
 			: '' );
 
-	test.describe( description, function() {
+	test.describe( description + ' @i18n', function() {
 		this.timeout( mochaTimeOut );
 
 		test.beforeEach( function() {
