@@ -40,7 +40,8 @@ usage () {
 -c		  - Exit with status code 0 regardless of test results
 -m [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
 -f		  - Tell visdiffs to fail the tests rather than just send an alert
--i		  - Execute i18n screenshot tests, not compatible with -g flag
+-i		  - Execute i18n NUX screenshot tests, not compatible with -g flag
+-I		  - Execute tests in specs-i18n/ directory
 -U      - Execute the i18n screenshot upload script in scripts/
 -v		  - Execute the visdiff tests in specs-visdiff/
 -x		  - Execute the tests from the context of xvfb-run
@@ -54,7 +55,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":a:Rpb:s:gjWCH:wl:cm:fiUvxu:h" opt; do
+while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
   case $opt in
     a)
       WORKERS=$OPTARG
@@ -87,6 +88,12 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fiUvxu:h" opt; do
       NODE_CONFIG_ARGS+=$I18N_CONFIG
       LOCALES="en,pt-BR,es,ja,fr,he"
       export SCREENSHOTDIR="screenshots-i18n"
+      MAGELLAN_CONFIG="magellan-i18n-nux.json"
+      ;;
+    I)
+      SCREENSIZES=desktop
+      NODE_CONFIG_ARGS+=$I18N_CONFIG
+      LOCALES="en,es,pt-br,de,fr,he,ja,it,nl,ru,tr,id,zh-cn,zh-tw,ko,ar,sv"
       MAGELLAN_CONFIG="magellan-i18n.json"
       ;;
     U)
