@@ -218,6 +218,5 @@ These environment variables are intended for use inside CircleCI, to control whi
 | DISABLE_EMAIL | Setting this to `true` will cause the Invite and Signup tests to be skipped | false | No |
 | SKIP_TEST_REGEX | The value of this variable will be used in the `-i -g *****` parameter, to skip any tests that match the given RegEx.  List multiple keywords separated by a `|` (i.e. `Invite|Domain|Theme`) | `Empty String` | No |
 
-## Ad Blocker
-To combat timeout issues with ads (both those from WordPress.com and any that may appear on any user sites that may load), we've included the uBlock Chrome extension.  Source code for that can be found [here](https://github.com/gorhill/uBlock/).  We're currently using release 1.11.5b1.  To manually add sites to be blocked, append them the [filters.txt](/ublock/assets/ublock/filters.txt) file
-
+### NodeJS Version
+The node version should be defined in the `.nvmrc` file for use with the [nvm](https://github.com/creationix/nvm) project.  When changing the version a new Docker container should be built/pushed to Docker Hub for use on CircleCI 2.0
