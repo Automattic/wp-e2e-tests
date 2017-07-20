@@ -11,13 +11,13 @@ jobs:
       - checkout
       - restore_cache:
           key: << checksum "package.json" >>
-      - run: npm install
+      - run: source $HOME/.nvm/nvm.sh && npm install
       - save_cache:
           paths:
             - /wp-e2e-tests/node_modules
           key: << checksum "package.json" >>
       - run: ./scripts/randomize.sh specs
-      - run: ./scripts/run-wrapper.sh
+      - run: source $HOME/.nvm/nvm.sh && ./scripts/run-wrapper.sh
       - store_test_results:
           path: reports/
       - store_artifacts:
