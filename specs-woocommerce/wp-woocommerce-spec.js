@@ -100,7 +100,7 @@ test.describe( `Can see WooCommerce products in Calypso '${ screenSize }' @paral
 	} );
 } );
 
-test.describe( `Can add a new basic WooCommerce product in Calypso '${ screenSize }' @parallel`, function() {
+test.describe( `Can add a new WooCommerce product in Calypso '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 	let fileDetails;
