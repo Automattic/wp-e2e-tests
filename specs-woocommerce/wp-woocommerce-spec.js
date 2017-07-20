@@ -3,6 +3,8 @@ import test from 'selenium-webdriver/testing';
 
 import config from 'config';
 import * as driverManager from '../lib/driver-manager';
+import * as mediaHelper from '../lib/media-helper';
+import * as dataHelper from '../lib/data-helper';
 
 import NavBarComponent from '../lib/components/navbar-component';
 import SidebarComponent from '../lib/components/sidebar-component';
@@ -65,7 +67,7 @@ test.describe( `Can see WooCommerce Store option in Calypso '${ screenSize }' @p
 	} );
 } );
 
-test.describe( `Can manage WooCommerce products option in Calypso '${ screenSize }' @parallel`, function() {
+test.describe( `Can see WooCommerce products in Calypso '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -95,6 +97,59 @@ test.describe( `Can manage WooCommerce products option in Calypso '${ screenSize
 		this.storeProductsPage.atLeastOneProductDisplayed().then( ( displayed ) => {
 			assert( displayed, 'No Woo products are displayed on the product page' );
 		} );
+	} );
+} );
+
+test.describe( `Can add a new WooCommerce product in Calypso '${ screenSize }' @parallel`, function() {
+	this.timeout( mochaTimeOut );
+	this.bailSuite( true );
+	let fileDetails;
+
+	test.before( function() {
+		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	} );
+
+	// 'Create image file for upload'
+	test.before( function() {
+		mediaHelper.createFile( false, 'image-uploads-store' ).then( function( details ) {
+			fileDetails = details;
+		} );
+	} );
+
+	// Login as WooCommerce store user and open the woo store
+	test.before( function() {
+		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
+		return this.loginFlow.loginAndOpenWooStore();
+	} );
+
+	test.it( 'Can add a new product via the Products Menu in the Woo store sidebar', function() {
+		const productTitle = dataHelper.randomPhrase();
+		const productDescription = 'A test e2e product';
+		this.storeDashboardPage = new StoreDashboardPage( driver );
+		this.storeSidebarComponent = new StoreSidebarComponent( driver );
+		this.storeSidebarComponent.addProduct();
+		this.addProductPage = new AddProductPage( driver );
+		this.addProductPage.enterTitle( productTitle );
+		// this.addProductPage.addImage( fileDetails );
+		this.addProductPage.enterDescription( 'Another e2e test product' );
+		this.addProductPage.addCategory( 'Art' );
+		this.addProductPage.setPrice( '888.00' );
+		this.addProductPage.setDimensions( '6', '7', '8' );
+		this.addProductPage.setWeight( '2.2' );
+		this.addProductPage.addQuantity( '80' );
+		this.addProductPage.allowBackorders();
+		this.addProductPage.saveAndPublish();
+		this.addProductPage.waitForSuccessNotice();
+		this.storeProductsPage = new StoreProductsPage( driver );
+		this.storeProductsPage.productDisplayed( productTitle ).then( ( displayed ) => {
+			assert( displayed, `The product '${productTitle}' isn't being displayed on the products page after being added` );
+		} );
+	} );
+
+	test.after( function() {
+		if ( fileDetails ) {
+			mediaHelper.deleteFile( fileDetails ).then( function() {} );
+		}
 	} );
 } );
 
