@@ -16,7 +16,7 @@ GREP=""
 UPLOAD=0
 
 # On CI, use nvm to define NodeJS version if possible
-if [ "$CI" != "true" ] && [ -d $HOME/.nvm ]; then
+if [ "$CI" == "true" ] && [ -d $HOME/.nvm ]; then
   export NVM_DIR="$HOME/.nvm"
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
