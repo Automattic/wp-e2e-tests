@@ -57,7 +57,8 @@ USER    e2e-tester
 RUN     curl -o- https://raw.githubusercontent.com/creationix/nvm/v$NVM_VERSION/install.sh | bash
 
 # Install the current version of NodeJS from .nvmrc
-ADD	.nvmrc	/wp-e2e-tests
-RUN	export NVM_DIR="$HOME/.nvm" && \
+ADD	.nvmrc	/home/e2e-tester
+RUN	cd $HOME && \
+	export NVM_DIR="$HOME/.nvm" && \
 	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" || \
 	nvm install
