@@ -129,8 +129,8 @@ test.describe( `Can add a new WooCommerce product in Calypso '${ screenSize }' @
 		this.storeSidebarComponent = new StoreSidebarComponent( driver );
 		this.storeSidebarComponent.addProduct();
 		this.addProductPage = new AddProductPage( driver );
-		// this.addProductPage.addImage( fileDetails );
 		this.addProductPage.enterTitle( productTitle );
+		// this.addProductPage.addImage( fileDetails );
 		this.addProductPage.enterDescription( 'Another e2e test product' );
 		this.addProductPage.addCategory( 'Art' );
 		this.addProductPage.setPrice( '888.00' );
