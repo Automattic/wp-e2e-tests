@@ -15,6 +15,14 @@ CLEAN=0
 GREP=""
 UPLOAD=0
 
+# If nvm exists for this user, install/use the NodeJS version in .nvmrc
+if [ -d $HOME/.nvm ]; then
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+  nvm install
+fi
+
 # Function to join arrays into a string
 function joinStr { local IFS="$1"; shift; echo "$*"; }
 

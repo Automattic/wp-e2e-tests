@@ -8,9 +8,9 @@ WORKDIR /wp-e2e-tests
 RUN	mkdir /wp-e2e-tests-canary /wp-e2e-tests-jetpack /wp-e2e-tests-visdiff /wp-e2e-tests-ie11 /wp-e2e-tests-woocommerce
 
 # Version Numbers
-ENV NODE_VERSION 6.11.1
-ENV CHROMEDRIVER_VERSION 2.29
-ENV CHROME_VERSION 57.0.2987.133
+ENV CHROMEDRIVER_VERSION 2.30
+ENV CHROME_VERSION 59.0.3071.86
+ENV NVM_VERSION 0.33.2
 
 # Install dependencies
 RUN     apt-get -y update && apt-get -y install \
@@ -24,14 +24,6 @@ RUN     apt-get -y update && apt-get -y install \
 	  fonts-ipafont-gothic xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic \
 	  xvfb \
 	  sudo
-
-# Install NodeJS
-RUN     wget https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz && \
-          tar -zxf node-v$NODE_VERSION-linux-x64.tar.gz -C /usr/local && \
-          ln -sf /usr/local/node-v$NODE_VERSION-linux-x64 /usr/local/node && \
-          ln -sf /usr/local/node/bin/npm /usr/local/bin/ && \
-          ln -sf /usr/local/node/bin/node /usr/local/bin/ && \
-          rm node-v$NODE_VERSION-linux-x64.tar.gz
 
 # Install Chrome WebDriver
 RUN mkdir -p /opt/chromedriver-$CHROMEDRIVER_VERSION && \
@@ -60,3 +52,12 @@ RUN sed -i.bkp -e \
 
 RUN	chown -R e2e-tester /wp-e2e-tests*
 USER    e2e-tester
+
+# Install nvm as e2e-tester
+RUN     curl -o- https://raw.githubusercontent.com/creationix/nvm/v$NVM_VERSION/install.sh | bash
+
+# Install the current version of NodeJS from .nvmrc
+ADD	.nvmrc	/wp-e2e-tests
+RUN	export NVM_DIR="$HOME/.nvm" && \
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" || \
+	nvm install
