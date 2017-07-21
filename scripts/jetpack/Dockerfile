@@ -24,8 +24,9 @@ RUN npm install --prefix / localtunnel wp-cli
 
 # Copy tunnel/wp init scripts
 ADD wp-tunnel-init.js /
-ADD wp-init.sh /usr/local/bin
-RUN chmod +x /usr/local/bin/wp-init.sh
+# Use prefix apache2 on file to trigger docker-entrypoint check to install WordPress
+ADD wp-init.sh /usr/local/bin/apache2-wp-init.sh
+RUN chmod +x /usr/local/bin/apache2-wp-init.sh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["wp-init.sh"]
+CMD ["apache2-wp-init.sh"]
