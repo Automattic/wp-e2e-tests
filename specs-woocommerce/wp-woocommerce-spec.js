@@ -161,7 +161,7 @@ test.describe( `Can add a new WooCommerce product in Calypso '${ screenSize }' @
 	} );
 } );
 
-test.xdescribe( `WooCommerce on Calypso /store/{storeslug}: '${ screenSize }' @parallel`, function() {
+test.describe( `Can see WooCommerce orders in Calypso '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -169,82 +169,27 @@ test.xdescribe( `WooCommerce on Calypso /store/{storeslug}: '${ screenSize }' @p
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
-	// Login as WooCommerce store user
+	// Login as WooCommerce store user and open the woo store
 	test.before( function() {
 		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.login();
+		return this.loginFlow.loginAndOpenWooStore();
 	} );
 
-	test.it( 'Can see store placeholder page when visiting /store/{storeSlug}', function() {
-		this.storeDashboardPage = new StoreDashboardPage( driver, true );
-		this.storeDashboardPage.displayed().then( (shown ) => {
-			assert( shown, 'Could not see the WooCommerce store dashboard page after visiting /store' );
+	test.it( 'Can see \'Orders\' option in the Woo store sidebar', function() {
+		this.storeDashboardPage = new StoreDashboardPage( driver );
+		this.storeSidebarComponent = new StoreSidebarComponent( driver );
+		this.storeSidebarComponent.productsLinkDisplayed().then( ( d ) => {
+			assert( d, 'The store sidebar orders link is not displayed' );
 		} );
 	} );
-} );
 
-test.xdescribe( `WooCommerce on Calypso /store/products/{storeslug}: '${ screenSize }' @parallel`, function() {
-	this.timeout( mochaTimeOut );
-	this.bailSuite( true );
-
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
-	} );
-
-	// Login as WooCommerce store user
-	test.before( function() {
-		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.login();
-	} );
-
-	test.it( 'Can see store placeholder page when visiting /store/products/{storeSlug}', function() {
-		this.storeProductsPage = new StoreProductsPage( driver, true );
-		this.storeProductsPage.displayed().then( ( shown ) => {
-			assert( shown, 'Could not see the WooCommerce store products page after visiting /store/products' );
-		} );
-	} );
-} );
-
-test.xdescribe( `WooCommerce on Calypso /store/products/{storeslug}/import: '${ screenSize }' @parallel`, function() {
-	this.timeout( mochaTimeOut );
-	this.bailSuite( true );
-
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
-	} );
-
-	// Login as WooCommerce store user
-	test.before( function() {
-		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.login();
-	} );
-
-	test.it( 'Can see store placeholder page when visiting /store/products/{storeSlug}/import', function() {
-		this.storeProductsImportPage = new StoreProductsImportPage( driver, true );
-		this.storeProductsImportPage.displayed().then( ( shown ) => {
-			assert( shown, 'Could not see the WooCommerce store products import page after visiting /store/products/{storeSlug}/import' );
-		} );
-	} );
-} );
-
-test.xdescribe( `WooCommerce on Calypso /store/orders/{storeslug}: '${ screenSize }' @parallel`, function() {
-	this.timeout( mochaTimeOut );
-	this.bailSuite( true );
-
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
-	} );
-
-	// Login as WooCommerce store user
-	test.before( function() {
-		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.login();
-	} );
-
-	test.it( 'Can see store placeholder page when visiting /store/orders/{storeSlug}', function() {
-		this.storeOrdersPage = new StoreOrdersPage( driver, true );
-		this.storeOrdersPage.displayed().then( ( shown ) => {
-			assert( shown, 'Could not see the WooCommerce store orders page after visiting /store/orders' );
+	test.it( 'Can see the orders page with at least one order when selecting the orders option in the Woo store sidebar', function() {
+		this.storeDashboardPage = new StoreDashboardPage( driver );
+		this.storeSidebarComponent = new StoreSidebarComponent( driver );
+		this.storeSidebarComponent.selectOrders();
+		this.storeOrdersPage = new StoreOrdersPage( driver );
+		this.storeOrdersPage.atLeastOneOrderDisplayed().then( ( displayed ) => {
+			assert( displayed, 'No Woo orders are displayed on the orders page' );
 		} );
 	} );
 } );
