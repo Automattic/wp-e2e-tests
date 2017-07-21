@@ -11,8 +11,15 @@ import BluehostInstallWordPressDetailsPage from '../lib/pages/bluehost/bluehost-
 import BluehostInstallingwordPressPage from '../lib/pages/bluehost/bluehost-installing-wordpress-page';
 
 import BluehostJPOFirstStepPage from '../lib/pages/bluehost/bluehost-jpo-first-step-page';
+import BluehostJPOIsBlogStepPage from '../lib/pages/bluehost/bluehost-jpo-is-blog-step-page';
+import BluehostJPOHomepageStepPage from '../lib/pages/bluehost/bluehost-jpo-homepage-step-page';
+import BluehostJPOContactStepPage from '../lib/pages/bluehost/bluehost-jpo-contact-step-page';
+import BluehostJPOJetpackStepPage from '../lib/pages/bluehost/bluehost-jpo-jetpack-step-page';
+import BluehostJPOReviewStepPage from '../lib/pages/bluehost/bluehost-jpo-review-step-page';
 
+import WpcomLoginPage from '../lib/pages/login-page';
 import WPAdminLogonPage from '../lib/pages/wp-admin/wp-admin-logon-page';
+import WPAdminHomePage from '../lib/pages/wp-admin/wp-admin-home-page';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -87,6 +94,79 @@ test.describe( 'Can step through JPO flow on Bluehost', function() {
 
 			test.it( 'can submit site title and description form', () => {
 				return this.bluehostJPOFirstStepPage.submitSiteTitleAndDescriptionForm();
+			} );
+		} );
+
+		test.describe( 'can interact with blog step page', () => {
+			test.it( 'can select site will not have blog posts', () => {
+				this.bluehostJPOIsBlogStepPage = new BluehostJPOIsBlogStepPage( driver );
+				this.bluehostJPOIsBlogStepPage.clickNopeButton();
+				return this.bluehostJPOIsBlogStepPage.revisitIsBlogStep();
+			} );
+
+			test.it( 'can select site will have blog posts', () => {
+				return this.bluehostJPOIsBlogStepPage.clickYesButton();
+			} );
+		} );
+
+		test.describe( 'can interact with homepage step page', () => {
+			test.it( 'can select front page will contain posts', () => {
+				this.bluehostJPOIsHomepageStep = new BluehostJPOHomepageStepPage( driver );
+				this.bluehostJPOIsHomepageStep.clickBlogRadio();
+				return this.bluehostJPOIsHomepageStep.revisitHomepageStep();
+			} );
+
+			test.it( 'can select static home page', () => {
+				this.bluehostJPOIsHomepageStep.clickStaticRadio();
+				return this.bluehostJPOIsHomepageStep.revisitHomepageStep();
+			} );
+
+			test.it( 'can skip homepage step', () => {
+				return this.bluehostJPOIsHomepageStep.clickSkipThisStep();
+			} );
+		} );
+
+		test.describe( 'can interact with contact page step', () => {
+			test.it( 'can select no thanks', () => {
+				this.bluehostJPOContactStepPage = new BluehostJPOContactStepPage( driver );
+				this.bluehostJPOContactStepPage.clickNoButton();
+				return this.bluehostJPOContactStepPage.revisitContactPageStep();
+			} );
+
+			test.it( 'can select yes button', () => {
+				return this.bluehostJPOContactStepPage.clickYesButton();
+			} );
+		} );
+
+		test.describe( 'can interact with Jetpack step', () => {
+			// test.it( 'can click connect button', () => {
+			// 	this.bluehostJPOJetpackStepPage = new BluehostJPOJetpackStepPage( driver );
+			// 	return this.bluehostJPOJetpackStepPage.clickConnectButton();
+			// } )
+
+			// test.it( 'clicking connect sends user to WordPress.com', () => {
+			// 	this.wpcomLoginPage = new WpcomLoginPage( driver );
+			// 	return this.wpcomLoginPage.isLegacyLoginShowing();
+			// } );
+
+			test.it( 'can click not now button', () => {
+				this.bluehostJPOJetpackStepPage = new BluehostJPOJetpackStepPage( driver );
+				return this.bluehostJPOJetpackStepPage.clickNotNowButton();
+			} );
+		} );
+
+		test.describe( 'can interact with dismiss step', () => {
+			test.it( 'can click dismiss button', () => {
+				this.bluehostJPOReviewStepPage = new BluehostJPOReviewStepPage( driver );
+				return this.bluehostJPOReviewStepPage.clickDismissButton();
+			} );
+		} );
+
+		test.describe( 'JPO dismissal', () => {
+			test.it( 'user lands on dashboard when JPO dismissed', () => {
+				const urlBase = config.get( 'bluehostTestDomain' );
+				this.wpAdminHomePage = new WPAdminHomePage( driver, false, `${urlBase}/wp-admin` );
+				return this.wpAdminHomePage.isJetpackDashboardConnectWidgetShowing();
 			} );
 		} );
 	} );
