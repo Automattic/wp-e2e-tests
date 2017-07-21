@@ -17,7 +17,7 @@ import StorePromotionsPage from '../lib/pages/woocommerce/store-promotions-page'
 import StoreExtensionsPage from '../lib/pages/woocommerce/store-extensions-page';
 import StoreProductsPage from '../lib/pages/woocommerce/store-products-page';
 import StoreProductsImportPage from '../lib/pages/woocommerce/store-products-import-page';
-import AddProductPage from '../lib/pages/woocommerce/add-product-page';
+import AddEditProductPage from '../lib/pages/woocommerce/add-edit-product-page';
 // import StoreStatsPage from '../lib/pages/woocommerce/store-stats-page';
 
 import LoginFlow from '../lib/flows/login-flow';
@@ -124,25 +124,33 @@ test.describe( `Can add a new WooCommerce product in Calypso '${ screenSize }' @
 
 	test.it( 'Can add a new product via the Products Menu in the Woo store sidebar', function() {
 		const productTitle = dataHelper.randomPhrase();
-		const productDescription = 'A test e2e product';
+		const productDescription = 'Another test e2e product';
 		this.storeDashboardPage = new StoreDashboardPage( driver );
 		this.storeSidebarComponent = new StoreSidebarComponent( driver );
 		this.storeSidebarComponent.addProduct();
-		this.addProductPage = new AddProductPage( driver );
+		this.addProductPage = new AddEditProductPage( driver );
 		this.addProductPage.enterTitle( productTitle );
 		// this.addProductPage.addImage( fileDetails );
-		this.addProductPage.enterDescription( 'Another e2e test product' );
-		this.addProductPage.addCategory( 'Art' );
+		this.addProductPage.enterDescription( productDescription );
 		this.addProductPage.setPrice( '888.00' );
 		this.addProductPage.setDimensions( '6', '7', '8' );
 		this.addProductPage.setWeight( '2.2' );
 		this.addProductPage.addQuantity( '80' );
 		this.addProductPage.allowBackorders();
+		this.addProductPage.addCategory( 'Art' ); //Adding a category at the end to prevent errors being thrown on save
 		this.addProductPage.saveAndPublish();
 		this.addProductPage.waitForSuccessNotice();
 		this.storeProductsPage = new StoreProductsPage( driver );
 		this.storeProductsPage.productDisplayed( productTitle ).then( ( displayed ) => {
 			assert( displayed, `The product '${productTitle}' isn't being displayed on the products page after being added` );
+		} );
+		this.storeProductsPage.selectProduct( productTitle );
+		this.editProductPage = new AddEditProductPage( driver );
+		this.editProductPage.deleteProduct();
+		this.editProductPage.waitForSuccessNotice();
+		this.storeProductsPage = new StoreProductsPage( driver );
+		this.storeProductsPage.productDisplayed( productTitle ).then( ( displayed ) => {
+			assert( !displayed, `The product '${productTitle}' isn't still being displayed on the products page after being deleted` );
 		} );
 	} );
 
@@ -349,7 +357,7 @@ test.xdescribe( `WooCommerce on Calypso /store/products/{storeslug}/add: '${ scr
 	} );
 
 	test.it( 'Can see the add product placeholder page when visiting /store/products/add', function() {
-		this.addProductPage = new AddProductPage( driver, true );
+		this.addProductPage = new AddEditProductPage( driver, true );
 		this.addProductPage.displayed().then( ( shown ) => {
 			assert( shown, 'Could not see the WooCommerce add product page after visting /store/products/add' );
 		} );
