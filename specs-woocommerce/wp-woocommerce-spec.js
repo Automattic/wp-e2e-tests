@@ -193,12 +193,14 @@ test.describe( `Can see WooCommerce orders in Calypso '${ screenSize }' @paralle
 		} );
 	} );
 
-	test.it( 'Can see the order details page when opening an order', function() {
+	test.it( 'Can see the order details page when opening an order, product details page when clicking a product in an order', function() {
 		this.storeSidebarComponent = new StoreSidebarComponent( driver );
 		this.storeSidebarComponent.selectOrders();
 		this.storeOrdersPage = new StoreOrdersPage( driver );
 		this.storeOrdersPage.clickFirstOrder();
 		this.storeOrderDetailsPage = new StoreOrderDetailsPage( driver );
+		this.storeOrderDetailsPage.clickFirstProduct();
+		this.editProductPage = new AddEditProductPage( driver );
 	} );
 } );
 
