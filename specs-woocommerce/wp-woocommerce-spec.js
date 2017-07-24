@@ -192,6 +192,13 @@ test.describe( `Can see WooCommerce orders in Calypso '${ screenSize }' @paralle
 			assert( displayed, 'No Woo orders are displayed on the orders page' );
 		} );
 	} );
+
+	test.it( 'Can see the order details page when opening an order', function() {
+		this.storeSidebarComponent = new StoreSidebarComponent( driver );
+		this.storeSidebarComponent.selectOrders();
+		this.storeOrdersPage = new StoreOrdersPage( driver );
+		return this.storeOrdersPage.clickFirstOrder();
+	} );
 } );
 
 test.xdescribe( `WooCommerce on Calypso /store/orders/{storeslug}/add: '${ screenSize }' @parallel`, function() {
