@@ -12,7 +12,7 @@ import StoreSidebarComponent from '../lib/components/store-sidebar-component';
 import StoreDashboardPage from '../lib/pages/woocommerce/store-dashboard-page';
 import StoreSettingsPage from '../lib/pages/woocommerce/store-settings-page';
 import StoreOrdersPage from '../lib/pages/woocommerce/store-orders-page';
-import StoreOrdersAddPage from '../lib/pages/woocommerce/store-orders-add-page';
+import StoreOrderDetailsPage from '../lib/pages/woocommerce/store-order-details-page';
 import StorePromotionsPage from '../lib/pages/woocommerce/store-promotions-page';
 import StoreExtensionsPage from '../lib/pages/woocommerce/store-extensions-page';
 import StoreProductsPage from '../lib/pages/woocommerce/store-products-page';
@@ -197,29 +197,8 @@ test.describe( `Can see WooCommerce orders in Calypso '${ screenSize }' @paralle
 		this.storeSidebarComponent = new StoreSidebarComponent( driver );
 		this.storeSidebarComponent.selectOrders();
 		this.storeOrdersPage = new StoreOrdersPage( driver );
-		return this.storeOrdersPage.clickFirstOrder();
-	} );
-} );
-
-test.xdescribe( `WooCommerce on Calypso /store/orders/{storeslug}/add: '${ screenSize }' @parallel`, function() {
-	this.timeout( mochaTimeOut );
-	this.bailSuite( true );
-
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
-	} );
-
-	// Login as WooCommerce store user
-	test.before( function() {
-		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.login();
-	} );
-
-	test.it( 'Can see store placeholder page when visiting /store/orders/{storeSlug}/add', function() {
-		this.storeOrdersAddPage = new StoreOrdersAddPage( driver, true );
-		this.storeOrdersAddPage.displayed().then( ( shown ) => {
-			assert( shown, 'Could not see the WooCommerce store orders add page after visiting /store/orders/{storeSlug}/add' );
-		} );
+		this.storeOrdersPage.clickFirstOrder();
+		this.storeOrderDetailsPage = new StoreOrderDetailsPage( driver );
 	} );
 } );
 
