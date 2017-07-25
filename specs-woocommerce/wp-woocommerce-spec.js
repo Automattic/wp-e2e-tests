@@ -225,6 +225,14 @@ test.describe( `Can see WooCommerce settings in Calypso '${ screenSize }' @paral
 			assert( d, 'The store sidebar settings link is not displayed' );
 		} );
 	} );
+
+	test.it( 'Can see the settings page when selecting the settings option in the Woo store sidebar', function() {
+		this.storeDashboardPage = new StoreDashboardPage( driver );
+		this.storeSidebarComponent = new StoreSidebarComponent( driver );
+		this.storeSidebarComponent.selectSettings();
+		this.storeSettingsPage = new StoreSettingsPage( driver );
+	} );
+
 } );
 
 test.xdescribe( `WooCommerce on Calypso /store/promotions/{storeslug}: '${ screenSize }' @parallel`, function() {
