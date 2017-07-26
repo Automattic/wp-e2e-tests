@@ -20,7 +20,7 @@ RUN     wget https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x6
 RUN curl  -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x /usr/local/bin/wp
 
 # Install npm packages at /node_modules
-RUN npm install --prefix / localtunnel wp-cli
+RUN npm install --prefix / localtunnel wp-cli config
 
 # Copy tunnel/wp init scripts
 ADD wp-tunnel-init.js /
