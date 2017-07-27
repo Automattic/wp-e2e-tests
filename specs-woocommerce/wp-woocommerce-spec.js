@@ -233,6 +233,23 @@ test.describe( `Can see WooCommerce settings in Calypso '${ screenSize }' @paral
 		this.storeSettingsPage = new StoreSettingsPage( driver );
 	} );
 
+	test.it( 'Can select payments, shipping, and taxes tabs on the settings page', function() {
+		this.storeSidebarComponent = new StoreSidebarComponent( driver );
+		this.storeSidebarComponent.selectSettings();
+		this.storeSettingsPage = new StoreSettingsPage( driver );
+		this.storeSettingsPage.selectPaymentsTab();
+		this.storeSettingsPage.paymentsSettingsDisplayed().then( ( displayed ) => {
+			assert( displayed, 'The payment settings were not displayed' );
+		} );
+		this.storeSettingsPage.selectShippingTab();
+		this.storeSettingsPage.shippingSettingsDisplayed().then( ( displayed ) => {
+			assert( displayed, 'The shipping settings were not displayed' );
+		} );
+		this.storeSettingsPage.selectTaxesTab();
+		this.storeSettingsPage.taxesSettingsDisplayed().then( ( displayed ) => {
+			assert( displayed, 'The taxes settings were not displayed' );
+		} );
+	} );
 } );
 
 test.xdescribe( `WooCommerce on Calypso /store/promotions/{storeslug}: '${ screenSize }' @parallel`, function() {
