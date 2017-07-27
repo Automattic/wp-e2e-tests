@@ -20,6 +20,7 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
+const httpsHost = config.get( 'httpsHosts' ).indexOf( host ) !== -1;
 
 var driver;
 
@@ -70,7 +71,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				postEditorSidebarComponent.closeSharingSection();
 			} );
 
-			if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
+			if ( httpsHost ) {
 				test.describe( 'Preview', function() {
 					test.it( 'Can launch page preview', function() {
 						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
@@ -105,7 +106,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				test.describe( 'Publish and Preview Published Content', function() {
 					test.it( 'Can publish and preview published content', function() {
 						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-						if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
+						if ( httpsHost ) {
 							this.postEditorToolbarComponent.publishPost();
 						} else {
 							this.postEditorToolbarComponent.publishAndPreviewPublished();
@@ -132,7 +133,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 					} );
 
 					test.it( 'Can close page preview', function() {
-						if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
+						if ( httpsHost ) {
 							return this.pagePreviewComponent.edit();
 						}
 

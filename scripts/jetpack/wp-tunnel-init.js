@@ -7,8 +7,8 @@ var ltPrefix = process.env.TUNNEL_PREFIX || new Date().getTime().toString();
 // Gets the account configs from the NODE_CONFIG variable (code copied from login-flow.js for use inside Docker)
 let localConfig = config.get( 'testAccounts' );
 
-const username = localConfig[ 'jetpackUserMULTI' ][0];
-const password = localConfig[ 'jetpackUserMULTI' ][1];
+const username = localConfig.jetpackUserCI[0];
+const password = localConfig.jetpackUserCI[1];
 
 var t = localtunnel( 80, { subdomain: ltPrefix }, function( err, tunnel ) {
 	if ( err ) {

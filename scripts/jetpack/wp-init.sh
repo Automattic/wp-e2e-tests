@@ -8,6 +8,6 @@ cd /var/www/html/wp-content/plugins
 git clone --depth 1 https://github.com/Automattic/jetpack.git
 cd jetpack
 yarn build
-chown -R www-data:www-data /var/www/html/wp-content/plugins/jetpack
+chown -R www-data:www-data /var/www/html
 
 exec apache2-foreground
