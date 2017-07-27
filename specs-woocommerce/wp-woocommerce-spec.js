@@ -295,25 +295,3 @@ test.xdescribe( `WooCommerce on Calypso /store/extensions/{storeslug}: '${ scree
 		} );
 	} );
 } );
-
-test.xdescribe( `WooCommerce on Calypso /store/products/{storeslug}/add: '${ screenSize }' @parallel`, function() {
-	this.timeout( mochaTimeOut );
-	this.bailSuite( true );
-
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
-	} );
-
-	// Login as WooCommerce store user
-	test.before( function() {
-		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.login();
-	} );
-
-	test.it( 'Can see the add product placeholder page when visiting /store/products/add', function() {
-		this.addProductPage = new AddEditProductPage( driver, true );
-		this.addProductPage.displayed().then( ( shown ) => {
-			assert( shown, 'Could not see the WooCommerce add product page after visting /store/products/add' );
-		} );
-	} );
-} );
