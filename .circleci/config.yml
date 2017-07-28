@@ -50,7 +50,7 @@ jobs:
                   done
       - run:
           name: Run Jetpack activation spec
-          command: source $HOME/.nvm/nvm.sh && ./node_modules/.bin/mocha scripts/jetpack/wp-jetpack-activate.js
+          command: source $HOME/.nvm/nvm.sh && xvfb-run ./node_modules/.bin/mocha scripts/jetpack/wp-jetpack-activate.js
       - run: ./scripts/run-wrapper.sh
       - store_test_results:
           path: reports/
