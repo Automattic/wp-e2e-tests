@@ -15,6 +15,7 @@ jobs:
         environment:
                 WORDPRESS_DB_PASSWORD: abc
                 WORDPRESS_DB_HOST: 127.0.0.1:3306
+                NODE_CONFIG: ${NODE_CONFIG}
     steps:
       - checkout
       - restore_cache:
