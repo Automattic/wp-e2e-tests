@@ -3,11 +3,12 @@ services:
   mysql:
     image: mariadb:10.3
     environment:
-      MYSQL_ROOT_PASSWORD: super_secret_secure_password
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
   wordpress:
     image: automattic/wp-e2e-tests-jetpack:0.0.1
     depends_on:
       - mysql
     environment:
-      WORDPRESS_DB_PASSWORD: super_secret_secure_password
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
       NODE_CONFIG: ${NODE_CONFIG}
+      CIRCLE_BUILD_NUM: ${CIRCLE_BUILD_NUM}

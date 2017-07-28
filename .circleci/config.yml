@@ -9,7 +9,6 @@ jobs:
                 JETPACKHOST: CI
                 NODE_ENV: test
     steps:
-      - run: echo 'export CIRCLE_BUILD_NUM=27Jul17' >> $BASH_ENV
       - run:
           name: Install Docker client
           command: |
