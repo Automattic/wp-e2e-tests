@@ -8,16 +8,25 @@ jobs:
         environment:
                 JETPACKHOST: CI
                 NODE_ENV: test
-      - image: mariadb:10.3
-        environment:
-                MYSQL_ROOT_PASSWORD: abc
-      - image: automattic/wp-e2e-tests-jetpack:0.0.1
-        environment:
-                WORDPRESS_DB_PASSWORD: abc
-                WORDPRESS_DB_HOST: 127.0.0.1:3306
-                NODE_CONFIG: ${NODE_CONFIG}
     steps:
+      - run: echo 'export CIRCLE_BUILD_NUM=27Jul17' >> $BASH_ENV
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="17.03.0-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            sudo mv /tmp/docker/* /usr/bin
+      - run:
+          name: Install Docker Compose
+          command: |
+            set -x
+            sudo bash -c "curl -L https://github.com/docker/compose/releases/download/1.11.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose"
+            sudo chmod +x /usr/local/bin/docker-compose
+      - setup_remote_docker
       - checkout
+      - run: docker-compose -f scripts/jetpack/docker-compose.yml up -d
       - restore_cache:
           key: << checksum "package.json" >>
       - run: source $HOME/.nvm/nvm.sh && npm install
