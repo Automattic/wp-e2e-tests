@@ -25,7 +25,10 @@ jobs:
             sudo chmod +x /usr/local/bin/docker-compose
       - setup_remote_docker
       - checkout
-      - run: docker-compose -f scripts/jetpack/docker-compose.yml up -d
+      - run:
+          name: Start database / webserver
+          command: docker-compose -f scripts/jetpack/docker-compose.yml up
+          background: true
       - restore_cache:
           key: << checksum "package.json" >>
       - run: source $HOME/.nvm/nvm.sh && npm install
