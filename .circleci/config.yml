@@ -6,7 +6,15 @@ jobs:
     docker:
       - image: automattic/wp-e2e-tests:0.0.5
         environment:
+                JETPACKHOST: CI
                 NODE_ENV: test
+      - image: mariadb:10.3
+        environment:
+                MYSQL_ROOT_PASSWORD: abc
+      - image: automattic/wp-e2e-tests-jetpack:0.0.1
+        environment:
+                WORDPRESS_DB_PASSWORD: abc
+                WORDPRESS_DB_HOST: 127.0.0.1:3306
     steps:
       - checkout
       - restore_cache:
@@ -17,6 +25,20 @@ jobs:
             - /wp-e2e-tests/node_modules
           key: << checksum "package.json" >>
       - run: ./scripts/randomize.sh specs
+      - run: 
+          name: Wait for Jetpack site to initialize
+          command: |
+                  set +e
+                  CMD="curl -f --max-time 10 -I https://wp-e2e-tests-jetpack-${CIRCLE_BUILD_NUM}.localtunnel.me/wp-login.php"
+                  eval $CMD
+                  RC=$?
+                  while [ $RC != 0 ]; do
+                    eval $CMD
+                    RC=$?
+                  done
+      - run:
+          name: Run Jetpack activation spec
+          command: ./node_modules/.bin/mocha scripts/jetpack/wp-jetpack-activate.js
       - run: ./scripts/run-wrapper.sh
       - store_test_results:
           path: reports/

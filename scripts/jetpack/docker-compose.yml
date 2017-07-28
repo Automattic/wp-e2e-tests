@@ -5,10 +5,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: super_secret_secure_password
   wordpress:
-    image: wp-jetpack
+    image: automattic/wp-e2e-tests-jetpack:0.0.1
     depends_on:
       - mysql
     environment:
       WORDPRESS_DB_PASSWORD: super_secret_secure_password
-      TUNNEL_PREFIX: ${TUNNEL_PREFIX}
       NODE_CONFIG: ${NODE_CONFIG}

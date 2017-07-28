@@ -2,7 +2,7 @@ var WP = require( 'wp-cli' );
 var localtunnel = require( 'localtunnel' );
 var config = require( 'config' );
 
-var ltPrefix = process.env.TUNNEL_PREFIX || new Date().getTime().toString();
+var ltPrefix = `wp-e2e-tests-jetpack-${process.env.CIRCLE_BUILD_NUM}` || new Date().getTime().toString();
 
 // Gets the account configs from the NODE_CONFIG variable (code copied from login-flow.js for use inside Docker)
 let localConfig = config.get( 'testAccounts' );

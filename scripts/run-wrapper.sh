@@ -30,7 +30,7 @@ export TESTARGS="-R -p -x"
 if [ "$RUN_SPECIFIED" == "true" ]; then
   TESTARGS=$RUN_ARGS
 elif [[ "$CIRCLE_BRANCH" =~ .*[Jj]etpack.*|.*[Jj][Pp].* ]]; then
-  export JETPACKHOST=GODADDY
+  export JETPACKHOST=CI
   TESTARGS="-R -j" # Execute Jetpack tests
 elif [[ "$CIRCLE_BRANCH" =~ .*[Ww][Oo][Oo].* ]]; then
   TESTARGS="-R -W" # Execute WooCommerce tests
