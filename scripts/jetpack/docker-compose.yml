@@ -5,7 +5,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
   wordpress:
-    image: automattic/wp-e2e-tests-jetpack:0.0.1
+    image: automattic/wp-e2e-tests-jetpack:0.0.2
     depends_on:
       - mysql
     environment:
