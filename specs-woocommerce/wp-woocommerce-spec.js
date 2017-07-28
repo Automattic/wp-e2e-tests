@@ -13,12 +13,8 @@ import StoreDashboardPage from '../lib/pages/woocommerce/store-dashboard-page';
 import StoreSettingsPage from '../lib/pages/woocommerce/store-settings-page';
 import StoreOrdersPage from '../lib/pages/woocommerce/store-orders-page';
 import StoreOrderDetailsPage from '../lib/pages/woocommerce/store-order-details-page';
-import StorePromotionsPage from '../lib/pages/woocommerce/store-promotions-page';
-import StoreExtensionsPage from '../lib/pages/woocommerce/store-extensions-page';
 import StoreProductsPage from '../lib/pages/woocommerce/store-products-page';
-import StoreProductsImportPage from '../lib/pages/woocommerce/store-products-import-page';
 import AddEditProductPage from '../lib/pages/woocommerce/add-edit-product-page';
-// import StoreStatsPage from '../lib/pages/woocommerce/store-stats-page';
 
 import LoginFlow from '../lib/flows/login-flow';
 
@@ -248,50 +244,6 @@ test.describe( `Can see WooCommerce settings in Calypso '${ screenSize }' @paral
 		this.storeSettingsPage.selectTaxesTab();
 		this.storeSettingsPage.taxesSettingsDisplayed().then( ( displayed ) => {
 			assert( displayed, 'The taxes settings were not displayed' );
-		} );
-	} );
-} );
-
-test.xdescribe( `WooCommerce on Calypso /store/promotions/{storeslug}: '${ screenSize }' @parallel`, function() {
-	this.timeout( mochaTimeOut );
-	this.bailSuite( true );
-
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
-	} );
-
-	// Login as WooCommerce store user
-	test.before( function() {
-		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.login();
-	} );
-
-	test.it( 'Can see store placeholder page when visiting /store/promotions/{storeSlug}', function() {
-		this.storePromotionsPage = new StorePromotionsPage( driver, true );
-		this.storePromotionsPage.displayed().then( ( shown ) => {
-			assert( shown, 'Could not see the WooCommerce store promotions page after visiting /store/promotions' );
-		} );
-	} );
-} );
-
-test.xdescribe( `WooCommerce on Calypso /store/extensions/{storeslug}: '${ screenSize }' @parallel`, function() {
-	this.timeout( mochaTimeOut );
-	this.bailSuite( true );
-
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
-	} );
-
-	// Login as WooCommerce store user
-	test.before( function() {
-		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.login();
-	} );
-
-	test.it( 'Can see store placeholder page when visiting /store/extensions/{storeSlug}', function() {
-		this.storeExtensionsPage = new StoreExtensionsPage( driver, true );
-		this.storeExtensionsPage.displayed().then( ( shown ) => {
-			assert( shown, 'Could not see the WooCommerce store extensions page after visiting /store/promotions' );
 		} );
 	} );
 } );
