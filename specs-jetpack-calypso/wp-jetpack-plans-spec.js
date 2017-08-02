@@ -67,7 +67,10 @@ test.describe( `[${host}] Jetpack Plans: (${screenSize}) @jetpack`, function() {
 
 		test.it( 'Can click the Proceed button', () => {
 			this.jetpackPlanSalesPage = new JetpackPlanSalesPage( driver );
-			return this.jetpackPlanSalesPage.clickPurchaseButton();
+			// The upgrade buttons are loaded after the page, and there's no good loaded status indicator to key off of
+			return driver.sleep( 3000 ).then( () => {
+				return this.jetpackPlanSalesPage.clickPurchaseButton();
+			} );
 		} );
 
 		test.it( 'Can click the purchase premium button', () => {
