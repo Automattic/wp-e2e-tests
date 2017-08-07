@@ -5,10 +5,12 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
   wordpress:
-    image: automattic/wp-e2e-tests-jetpack:0.0.2
+    image: automattic/wp-e2e-tests-jetpack:0.0.3
+    ports:
+      - "9876:80"
     depends_on:
       - mysql
     environment:
       WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
       NODE_CONFIG: ${NODE_CONFIG}
-      CIRCLE_BUILD_NUM: ${CIRCLE_BUILD_NUM}
+      TUNNEL_PREFIX: ${TUNNEL_PREFIX}
