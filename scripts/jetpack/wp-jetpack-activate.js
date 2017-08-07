@@ -65,8 +65,7 @@ test.describe( `[${host}] Jetpack Connection: (${screenSize}) @jetpack`, functio
 			return this.pickAPlanPage.selectFreePlan();
 		} );
 
-		// Button may not always be present?
-		test.xit( 'Can activate recommended features', () => {
+		test.it( 'Can activate recommended features', () => {
 			this.jetpackDashboard = new WPAdminJetpackPage( driver );
 			return this.jetpackDashboard.activateRecommendedFeatures();
 		} );
