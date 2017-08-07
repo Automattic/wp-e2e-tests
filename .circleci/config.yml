@@ -45,6 +45,7 @@ jobs:
           command: |
                   set +e
                   CMD="curl -f --max-time 10 -I https://wpe2etestsjetpack${TUNNEL_PREFIX}.localtunnel.me/wp-login.php"
+                  echo "eval $CMD"
                   eval $CMD
                   RC=$?
                   while [ $RC != 0 ]; do
