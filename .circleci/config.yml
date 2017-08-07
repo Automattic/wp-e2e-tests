@@ -27,7 +27,7 @@ jobs:
       - checkout
       - run:
           name: Set name for LocalTunnel
-          command:  echo 'export TUNNEL_PREFIX=$(date +"%s")' >> $BASH_ENV
+          command:  echo "export TUNNEL_PREFIX=$(date +'%s')" >> $BASH_ENV
       - run:
           name: Start database / webserver
           command: docker-compose -f scripts/jetpack/docker-compose.yml up
