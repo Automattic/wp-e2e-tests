@@ -37,8 +37,6 @@ var ltCloseHandler = function() {
 
 var ltErrorHandler = function( receivedError ) {
 	console.log( `LocalTunnel ERROR, attempting reconnect - ${receivedError}` );
-	console.log( 't = ' );
-	console.log( t );
 	t.close();
 
 	t = localtunnel( 80, { subdomain: ltPrefix }, function( err, tunnel ) {
