@@ -5,7 +5,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
   wordpress:
-    image: automattic/wp-e2e-tests-jetpack:0.0.3
+    image: automattic/wp-e2e-tests-jetpack:0.0.4
     ports:
       - "9876:80"
     depends_on:

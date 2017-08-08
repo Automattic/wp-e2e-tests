@@ -2,10 +2,10 @@ var WP = require( 'wp-cli' );
 var localtunnel = require( 'localtunnel' );
 var config = require( 'config' );
 
-var ltPrefix = `wpe2etestsjetpack${process.env.TUNNEL_PREFIX}` || new Date().getTime().toString();
+const ltPrefix = `wpe2etestsjetpack${process.env.TUNNEL_PREFIX}` || new Date().getTime().toString();
 
-// Gets the account configs from the NODE_CONFIG variable (code copied from login-flow.js for use inside Docker)
-let localConfig = config.get( 'testAccounts' );
+// Gets the account configs from the NODE_CONFIG variable
+const localConfig = config.get( 'testAccounts' );
 
 const username = localConfig.jetpackUserCI[0];
 const password = localConfig.jetpackUserCI[1];
@@ -37,6 +37,8 @@ var ltCloseHandler = function() {
 
 var ltErrorHandler = function( receivedError ) {
 	console.log( `LocalTunnel ERROR, attempting reconnect - ${receivedError}` );
+	console.log( 't = ' );
+	console.log( t );
 	t.close();
 
 	t = localtunnel( 80, { subdomain: ltPrefix }, function( err, tunnel ) {
@@ -46,7 +48,6 @@ var ltErrorHandler = function( receivedError ) {
 		}
 
 		console.log( 'Tunnel: ' + tunnel.url );
-		ltPrefix = tunnel.url.replace( /https:\/\//, '' ).split( '.' )[0];
 	} );
 
 	t.on( 'error', ltErrorHandler );
