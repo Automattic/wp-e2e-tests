@@ -10,7 +10,7 @@ const localConfig = config.get( 'testAccounts' );
 const username = localConfig.jetpackUserCI[0];
 const password = localConfig.jetpackUserCI[1];
 
-var t = localtunnel( 80, { subdomain: ltPrefix, host: 'http://wp-e2e-tests.pw' }, function( err, tunnel ) {
+var t = localtunnel( 80, { subdomain: ltPrefix }, function( err, tunnel ) {
 	if ( err ) {
 		console.log( 'UH OH! - Failed to establish localtunnel - ' + err );
 		return;
@@ -39,7 +39,7 @@ var ltErrorHandler = function( receivedError ) {
 	console.log( `LocalTunnel ERROR, attempting reconnect - ${receivedError}` );
 	t.close();
 
-	t = localtunnel( 80, { subdomain: ltPrefix, host: 'http://wp-e2e-tests.pw' }, function( err, tunnel ) {
+	t = localtunnel( 80, { subdomain: ltPrefix }, function( err, tunnel ) {
 		if ( err ) {
 			console.log( 'UH OH! - Failed to establish localtunnel - ' + err );
 			return;

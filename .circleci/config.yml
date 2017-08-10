@@ -44,7 +44,7 @@ jobs:
           name: Wait for Jetpack site to initialize
           command: |
                   set +e
-                  CMD="curl -f --max-time 10 -I http://wpe2etestsjetpack${TUNNEL_PREFIX}.wp-e2e-tests.pw/wp-login.php"
+                  CMD="curl -f --max-time 10 -I https://wpe2etestsjetpack${TUNNEL_PREFIX}.localtunnel.me/wp-login.php"
                   echo "eval $CMD"
                   eval $CMD
                   RC=$?
