@@ -21,7 +21,8 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
   - [Config Values](#config-values)
   - [Standalone Environment Variables](#standalone-environment-variables)
   - [CircleCI Environment Variables](#circleci-environment-variables)
-- [Ad Blocker](#ad-blocker)
+- [NodeJS Version](#nodejs-version)
+- [Launch Logged-In Window](#launch-logged-in-window)
 
 
 ## Pre-requisites
@@ -220,3 +221,11 @@ These environment variables are intended for use inside CircleCI, to control whi
 
 ### NodeJS Version
 The node version should be defined in the `.nvmrc` file for use with the [nvm](https://github.com/creationix/nvm) project.  When changing the version a new Docker container should be built/pushed to Docker Hub for use on CircleCI 2.0
+
+### Launch Logged-In Window
+To facilitate manual testing, the [launch-wpcom-login.js](/scripts/launch-wpcom-login.js) file in `/scripts` will launch a Chrome browser window to WordPress.com and log in with the account definition given on the command line.  The only config requirement for this is that the `local-${NODE_ENV}.json` file needs to have the `testAccounts` object defined.  If no account is given on the command line, `defaultUser` will be used.
+
+Example:
+```bash
+./node_modules/.bin/babel-node scripts/launch-wpcom-login.js multiSiteUser
+```
