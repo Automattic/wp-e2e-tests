@@ -22,7 +22,7 @@ jobs:
           command:  echo "export JP_PREFIX=$(date +'%s')$RANDOM" >> $BASH_ENV
       - run:
           name: Initialize site on Digital Ocean via ServerPilot
-          command: ./scripts/jetpack/wp-serverpilot-init.js
+          command: source $HOME/.nvm/nvm.sh && ./scripts/jetpack/wp-serverpilot-init.js
       - run:
           name: Install Jetpack from master
           command: ssh serverpilot@wp-e2e-tests.pw ~/git-jetpack.sh wordpress-$SP_APP_ID
