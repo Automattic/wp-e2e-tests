@@ -22,7 +22,6 @@ elif [ ! -d apps/$APP_NAME ]; then
 fi
 echo "App directory apps/$APP_NAME found!  Installing Jetpack..."
 
-cd apps/$APP_NAME/public/wp-content/plugins
-git clone --depth 1 https://github.com/Automattic/jetpack.git
-cd jetpack
-yarn build
+# Refresh jetpack in home directory and copy it into the site
+cd jetpack && git checkout master && git pull && yarn build && cd ..
+cp -a jetpack apps/$APP_NAME/public/wp-content/plugins

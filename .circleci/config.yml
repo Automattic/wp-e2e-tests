@@ -31,10 +31,10 @@ jobs:
           name: Run Jetpack activation spec
           command: source $HOME/.nvm/nvm.sh && xvfb-run ./node_modules/.bin/mocha scripts/jetpack/wp-jetpack-activate.js
       - run: ./scripts/run-wrapper.sh
-      - run:
-          name: Delete site from Digital Ocean via ServerPilot
-          command: source $HOME/.nvm/nvm.sh && ./scripts/jetpack/wp-serverpilot-delete.js
-          when: always
+#      - run:
+#          name: Delete site from Digital Ocean via ServerPilot
+#          command: source $HOME/.nvm/nvm.sh && ./scripts/jetpack/wp-serverpilot-delete.js
+#          when: always
       - store_test_results:
           path: reports/
       - store_artifacts:
