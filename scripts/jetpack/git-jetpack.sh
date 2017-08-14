@@ -24,6 +24,6 @@ echo "App directory apps/$APP_NAME found!  Installing Jetpack..."
 
 # Refresh jetpack in home directory and copy it into the site
 cp -a jetpack apps/$APP_NAME/public/wp-content/plugins
-cd apps/$APP_NAME/public-wp-content-plugins/jetpack
+cd apps/$APP_NAME/public/wp-content/plugins/jetpack
 git checkout master && git pull
 npm build
