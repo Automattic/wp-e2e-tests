@@ -19,7 +19,7 @@ const serverPrefix = process.env.JP_PREFIX;
 const serverOptions = {
 	name: `wordpress-${serverPrefix}`,
 	sysuserid: spConfig.sysuserid,
-	runtime: 'php7.1',
+	runtime: 'php7.0',
 	domains: [ `${serverPrefix}.wp-e2e-tests.pw` ],
 	wordpress: {
 		site_title: 'Jetpack e2e Testing',
