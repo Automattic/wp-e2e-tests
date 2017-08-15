@@ -194,7 +194,8 @@ if [ $PARALLEL == 1 ]; then
       echo "Executing tests at mobile screen width"
       CMD="env BROWSERSIZE=mobile $MAGELLAN --config=$MAGELLAN_CONFIGS --mocha_args='$MOCHA_ARGS' --max_workers=$WORKERS"
 
-      eval $CMD
+# FIXME - desktop only for testing
+#      eval $CMD
       RETURN+=$?
   fi
   if [ $CIRCLE_NODE_INDEX == $DESKTOP ]; then
