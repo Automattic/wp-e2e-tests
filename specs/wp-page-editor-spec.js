@@ -30,6 +30,7 @@ test.before( function() {
 
 test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 	this.timeout( mochaTimeOut );
+	const usePublishConfirmation = config.get( 'usePublishConfirmation' );
 
 	test.describe( 'Public Pages: @parallel @jetpack', function() {
 		this.bailSuite( true );
@@ -106,9 +107,9 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 					test.it( 'Can publish and preview published content', function() {
 						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
-							this.postEditorToolbarComponent.publishPost();
+							this.postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
 						} else {
-							this.postEditorToolbarComponent.publishAndPreviewPublished();
+							this.postEditorToolbarComponent.publishAndPreviewPublished( { useConfirmStep: usePublishConfirmation } );
 						}
 						return this.pagePreviewComponent = new PagePreviewComponent( driver );
 					} );
@@ -144,7 +145,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				test.describe( 'Publish Content', function() {
 					test.it( 'Can publish content', function() {
 						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-						this.postEditorToolbarComponent.publishPost();
+						return this.postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
 					} );
 				} );
 			}
@@ -191,6 +192,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 
 	test.describe( 'Private Pages: @parallel @jetpack', function() {
 		this.bailSuite( true );
+
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
@@ -299,7 +301,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 			test.describe( 'Publish and View', function() {
 				test.it( 'Can publish and view content', function() {
 					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					postEditorToolbarComponent.publishAndViewContent();
+					postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
 				} );
 
 				test.describe( 'As a logged in user', function() {

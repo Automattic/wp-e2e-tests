@@ -15,6 +15,7 @@
   "checkForConsoleErrors": false,
   "reportWarningsToSlack": false,
   "closeBrowserOnComplete": true,
+  "usePublishConfirmation": false,
   "sauceConfigurations": {
     "osx-chrome": {
         "browserName": "chrome",
@@ -59,6 +60,6 @@
   "overrideABTests": [
 	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
 	[ "signupPlansCopyChanges_20170623", "original" ],
-	[ "postPublishConfirmation_20170713", "noPublishConfirmation" ]
+	[ "postPublishConfirmation_20170801", "noPublishConfirmation" ]
   ]
 }
