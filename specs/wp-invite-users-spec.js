@@ -48,6 +48,7 @@ if ( process.env.DISABLE_EMAIL === 'true' ) {
 
 testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 	this.timeout( mochaTimeOut );
+	const usePublishConfirmation = config.get( 'usePublishConfirmation' );
 
 	test.describe( 'Inviting New User as an Editor: @parallel @jetpack', function() {
 		this.bailSuite( true );
@@ -752,7 +753,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 											test.it( 'New user can publish the post as an author', function() {
 												this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 												this.postEditorToolbarComponent.ensureSaved();
-												return this.postEditorToolbarComponent.publishAndViewContent();
+												return this.postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
 											} );
 										} );
 									} );

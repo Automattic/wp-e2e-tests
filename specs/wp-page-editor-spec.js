@@ -106,7 +106,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 					test.it( 'Can publish and preview published content', function() {
 						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
-							this.postEditorToolbarComponent.publishPost();
+							this.postEditorToolbarComponent.clickPublishPost();
 						} else {
 							this.postEditorToolbarComponent.publishAndPreviewPublished();
 						}
@@ -144,7 +144,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				test.describe( 'Publish Content', function() {
 					test.it( 'Can publish content', function() {
 						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-						this.postEditorToolbarComponent.publishPost();
+						this.postEditorToolbarComponent.clickPublishPost();
 					} );
 				} );
 			}
