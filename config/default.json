@@ -59,6 +59,6 @@
   "overrideABTests": [
 	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
 	[ "signupPlansCopyChanges_20170623", "original" ],
-	[ "postPublishConfirmation_20170713", "noPublishConfirmation" ]
+	[ "postPublishConfirmation_20170713", "showPublishConfirmation" ]
   ]
 }
