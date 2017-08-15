@@ -161,7 +161,6 @@ A full list of config values are:
 
 | Name | Description | Example | Required | Store in file? |
 | ---- | ----------- | ------- | -------- | ------------------- |
-| authURL | The page where you authenticate to use calypso - this **should not** include the redirect | https://wordpress.com/wp-login.php | Yes | Yes |
 | calypsoBaseURL | The home page for calypso | https://wordpress.com | Yes | Yes |
 | explicitWaitMS | The explicit wait time in milliseconds to wait for an element to appear - for example a widget loading data via an API | 10000 | Yes | Yes |
 | mochaTimeoutMS | This is the maximum total time in milliseconds a single mocha end to end test can take to finish - otherwise it will time out. | 120000 | Yes | Yes |
