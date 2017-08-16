@@ -25,7 +25,9 @@ jobs:
           command: source $HOME/.nvm/nvm.sh && ./scripts/jetpack/wp-serverpilot-init.js
       - run:
           name: Install Jetpack from master
-          command: ssh -o "StrictHostKeyChecking no" serverpilot@wp-e2e-tests.pw ~serverpilot/git-jetpack.sh wordpress-$JP_PREFIX
+          command: |
+                  scp -o "StrictHostKeyChecking no" scripts/jetpack/git-jetpach.sh serverpilot@wp-e2e-tests.pw:~serverpilot/git-jetpack.sh
+                  ssh -o "StrictHostKeyChecking no" serverpilot@wp-e2e-tests.pw ~serverpilot/git-jetpack.sh wordpress-$JP_PREFIX
       - run: ./scripts/randomize.sh specs
       - run:
           name: Run Jetpack activation spec

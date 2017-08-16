@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "NEW TEXT!"
 export APP_NAME=$1
 if [ "$APP_NAME" == "" ]; then
   echo "Please supply app directory name!"
