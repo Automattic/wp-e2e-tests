@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Install Jetpack from master
           command: |
-                  scp -o "StrictHostKeyChecking no" scripts/jetpack/git-jetpach.sh serverpilot@wp-e2e-tests.pw:~serverpilot/git-jetpack.sh
+                  scp -o "StrictHostKeyChecking no" scripts/jetpack/git-jetpack.sh serverpilot@wp-e2e-tests.pw:~serverpilot/git-jetpack.sh
                   ssh -o "StrictHostKeyChecking no" serverpilot@wp-e2e-tests.pw ~serverpilot/git-jetpack.sh wordpress-$JP_PREFIX
       - run: ./scripts/randomize.sh specs
       - run:
