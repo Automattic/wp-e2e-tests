@@ -197,12 +197,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
-		const testCardHolder = 'End To End Testing';
-		const testVisaNumber = '4242424242424242'; // https://stripe.com/docs/testing#cards
-		const testVisaExpiry = '02/19';
-		const testCVV = '300';
-		const testCardCountryCode = 'TR'; // using Turkey to force Stripe as payment processor
-		const testCardPostCode = '4000';
+		const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
 			return driverManager.ensureNotLoggedIn( driver );
@@ -316,7 +311,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 									} );
 
 									test.it( 'Can enter and submit test payment details', function() {
-										this.securePaymentComponent.enterTestCreditCardDetails( testCardHolder, testVisaNumber, testVisaExpiry, testCVV, testCardCountryCode, testCardPostCode );
+										this.securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
 										this.securePaymentComponent.submitPaymentDetails();
 										return this.securePaymentComponent.waitForPageToDisappear();
 									} );
@@ -346,12 +341,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
-		const testCardHolder = 'End To End Testing';
-		const testVisaNumber = '4242424242424242'; // https://stripe.com/docs/testing#cards
-		const testVisaExpiry = '02/19';
-		const testCVV = '301';
-		const testCardCountryCode = 'TR'; // using Turkey to force Stripe as payment processor
-		const testCardPostCode = '4000';
+		const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
 			return driverManager.ensureNotLoggedIn( driver );
@@ -438,7 +428,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 								} );
 
 								test.it( 'Can enter and submit test payment details', function() {
-									this.securePaymentComponent.enterTestCreditCardDetails( testCardHolder, testVisaNumber, testVisaExpiry, testCVV, testCardCountryCode, testCardPostCode );
+									this.securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
 									this.securePaymentComponent.submitPaymentDetails();
 									return this.securePaymentComponent.waitForPageToDisappear();
 								} );
@@ -467,12 +457,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
-		const testCardHolder = 'End To End Testing';
-		const testVisaNumber = '4242424242424242'; // https://stripe.com/docs/testing#cards
-		const testVisaExpiry = '02/19';
-		const testCVV = '303';
-		const testCardCountryCode = 'TR'; // using Turkey to force Stripe as payment processor
-		const testCardPostCode = '4000';
+		const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
 		const firstName = 'End to End';
 		const lastName = 'Testing';
 		const phoneNumber = '0422 888 888';
@@ -596,7 +581,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 								test.it( 'Can enter and submit test payment details', function() {
 									this.securePaymentComponent = new SecurePaymentComponent( driver );
-									return this.securePaymentComponent.enterTestCreditCardDetails( testCardHolder, testVisaNumber, testVisaExpiry, testCVV, testCardCountryCode, testCardPostCode );
+									return this.securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
 								} );
 							} );
 						} );

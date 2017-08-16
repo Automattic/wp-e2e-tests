@@ -37,6 +37,7 @@ test.before( function() {
 test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
+	const usePublishConfirmation = config.get( 'usePublishConfirmation' );
 
 	test.describe( 'Public Posts: @parallel @jetpack', function() {
 		let fileDetails;
@@ -190,9 +191,9 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 									test.it( 'Can publish and view content', function() {
 										let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 										if ( httpsHost ) {
-											postEditorToolbarComponent.publishPost();
+											postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
 										} else {
-											postEditorToolbarComponent.publishAndPreviewPublished();
+											postEditorToolbarComponent.publishAndPreviewPublished( { useConfirmStep: usePublishConfirmation } );
 										}
 										this.postPreviewComponent = new PostPreviewComponent( driver );
 									} );
@@ -239,7 +240,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 							} else { // Jetpack tests
 								test.it( 'Can publish content', function() {
 									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-									postEditorToolbarComponent.publishPost();
+									postEditorToolbarComponent.publishThePost(  { useConfirmStep: usePublishConfirmation } );
 								} );
 							}
 
@@ -329,9 +330,9 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			} );
 
 			test.it( 'Can publish and view content', function() {
-				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				postEditorToolbarComponent.ensureSaved();
-				postEditorToolbarComponent.publishAndViewContent();
+				return postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
 			} );
 
 			test.it( 'Can see correct post title', function() {
@@ -495,7 +496,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				// Can publish and view content
 				test.before( function() {
 					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					postEditorToolbarComponent.publishAndViewContent();
+					postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
 				} );
 
 				test.describe( 'As a logged in user', function() {
@@ -819,7 +820,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can publish the post', function() {
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				this.postEditorToolbarComponent.ensureSaved();
-				this.postEditorToolbarComponent.publishPost();
+				this.postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
 				return this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 			} );
 
@@ -915,7 +916,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can publish and view content', function() {
 				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				postEditorToolbarComponent.ensureSaved();
-				postEditorToolbarComponent.publishAndViewContent();
+				postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
 				this.viewPostPage = new ViewPostPage( driver );
 			} );
 
@@ -956,7 +957,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can publish the post', function() {
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				this.postEditorToolbarComponent.ensureSaved();
-				this.postEditorToolbarComponent.publishPost();
+				this.postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
 
 				if ( httpsHost ) {
 					this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
