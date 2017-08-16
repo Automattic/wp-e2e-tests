@@ -56,7 +56,7 @@
         "version": "11.103"
     }
   },
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupSurveyStep", "presaleChatButton", "savingsInCheckoutSummary", "businessPlanDescriptionAT", "newSiteWithJetpack", "signupPlansCopyChanges", "showCartAbandonmentNotice", "postPublishConfirmation", "readerIntroIllustration", "paymentShowPaypalLogo", "jetpackConnectPlansCopyChanges" ],
+  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupSurveyStep", "presaleChatButton", "savingsInCheckoutSummary", "businessPlanDescriptionAT", "newSiteWithJetpack", "signupPlansCopyChanges", "showCartAbandonmentNotice", "postPublishConfirmation", "readerIntroIllustration", "paymentShowPaypalLogo", "jetpackConnectPlansCopyChanges", "postSignupUpgradeScreen" ],
   "overrideABTests": [
 	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
 	[ "signupPlansCopyChanges_20170623", "original" ],
