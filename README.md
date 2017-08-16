@@ -21,6 +21,7 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
   - [Config Values](#config-values)
   - [Standalone Environment Variables](#standalone-environment-variables)
   - [CircleCI Environment Variables](#circleci-environment-variables)
+  - [Jetpack Tests on CircleCI](#jetpack-tests-on-circleci)
 - [NodeJS Version](#nodejs-version)
 - [Launch Logged-In Window](#launch-logged-in-window)
 
@@ -200,6 +201,7 @@ A full list of config values are:
 | testAccounts | A JSON object with username/password pairs assigned to keynames for easy retrieval.  The necessary accounts can be found in the config/local.example.json file.  | {"defaultUser": ["username1","password1"], "multiSiteUser": ["username2","password2"] } | No | **NO** |
 | highlightElements | Boolean to indicate whether to visually highlight elements being interacted with on the page | true | No | Yes |
 | restApiApplication | A JSON object with your [WordPress REST API app](https://developer.wordpress.com/apps/) client ID, redirect URI, and client secret | {"client_id": "YOUR_CLIENT_ID", "redirect_uri": "YOUR_REDIRECT_URI", "client_secret": "YOUR CLIENT_SECRET"} | Yes (for REST API scripts only) | **NO** |
+| spConfig | A JSON object with your [ServerPilot API](serverpilot.io) client ID, API key, and System User ID | {"clientId": "YOUR_CLIENT_ID", "apiKey": "YOUR_API_KEY", "sysuserid": "YOUR_SYSUSERID"} | Yes (for Jetpack on CI scripts only) | **NO** |
 
 ### Standalone Environment Variables
 
@@ -217,6 +219,9 @@ These environment variables are intended for use inside CircleCI, to control whi
 | ---- | ----------- | ------- | -------- |
 | DISABLE_EMAIL | Setting this to `true` will cause the Invite and Signup tests to be skipped | false | No |
 | SKIP_TEST_REGEX | The value of this variable will be used in the `-i -g *****` parameter, to skip any tests that match the given RegEx.  List multiple keywords separated by a `|` (i.e. `Invite|Domain|Theme`) | `Empty String` | No |
+
+### Jetpack Tests on CircleCI
+The scripts in the `scripts/jetpack` directory are designed to build/configure a Jetpack site via the ServerPilot API on a DigitalOcean droplet.  Once you've built a droplet and connected it to ServerPilot (and configured your keys in the `spConfig` object), build the site via `./scripts/jetpack/wp-serverpilot-init.js`.  There are also scripts in that directory for installing/activating/connecting/disconnecting Jetpack, and deleting the site.
 
 ### NodeJS Version
 The node version should be defined in the `.nvmrc` file for use with the [nvm](https://github.com/creationix/nvm) project.  When changing the version a new Docker container should be built/pushed to Docker Hub for use on CircleCI 2.0

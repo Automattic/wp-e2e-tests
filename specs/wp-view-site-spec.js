@@ -13,10 +13,11 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
+const httpsHost = config.get( 'httpsHosts' ).indexOf( host ) !== -1;
 
 var driver;
 
-if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
+if ( httpsHost ) {
 	test.before( function() {
 		this.timeout( startBrowserTimeoutMS );
 		driver = driverManager.startBrowser();

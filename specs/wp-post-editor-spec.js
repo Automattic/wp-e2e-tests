@@ -25,6 +25,7 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
+const httpsHost = config.get( 'httpsHosts' ).indexOf( host ) !== -1;
 
 var driver;
 
@@ -117,32 +118,34 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 							postEditorSidebarComponent.expandSharingSection();
 						} );
 
-						test.it( 'Can see the publicise to twitter account', function() {
-							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-							postEditorSidebarComponent.publicizeToTwitterAccountDisplayed().then( function( accountDisplayed ) {
-								assert.equal( accountDisplayed, publicizeTwitterAccount, 'Could not see see the publicize to twitter account ' + publicizeTwitterAccount + ' in the editor' );
+						if ( host !== 'CI' ) {
+							test.it( 'Can see the publicise to twitter account', function() {
+								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+								postEditorSidebarComponent.publicizeToTwitterAccountDisplayed().then( function( accountDisplayed ) {
+									assert.equal( accountDisplayed, publicizeTwitterAccount, 'Could not see see the publicize to twitter account ' + publicizeTwitterAccount + ' in the editor' );
+								} );
 							} );
-						} );
 
-						test.it( 'Can see the default publicise message', function() {
-							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-							postEditorSidebarComponent.publicizeMessagePlaceholder().then( function( placeholderDisplayed ) {
-								assert.equal( placeholderDisplayed, blogPostTitle, 'The placeholder for publicize is not equal to the blog post title. Placeholder: \'' + placeholderDisplayed + '\', Title: \'' + blogPostTitle + '\'' );
+							test.it( 'Can see the default publicise message', function() {
+								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+								postEditorSidebarComponent.publicizeMessagePlaceholder().then( function( placeholderDisplayed ) {
+									assert.equal( placeholderDisplayed, blogPostTitle, 'The placeholder for publicize is not equal to the blog post title. Placeholder: \'' + placeholderDisplayed + '\', Title: \'' + blogPostTitle + '\'' );
+								} );
 							} );
-						} );
 
-						test.it( 'Can set a custom publicise message', function() {
-							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-							postEditorSidebarComponent.setPublicizeMessage( publicizeMessage );
-						} );
+							test.it( 'Can set a custom publicise message', function() {
+								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+								postEditorSidebarComponent.setPublicizeMessage( publicizeMessage );
+							} );
+						}
 
 						test.it( 'Close sharing section', function() {
 							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 							postEditorSidebarComponent.closeSharingSection();
 						} );
 
-						test.describe( 'Preview (WPCOM/PRESSABLE only)', function() {
-							if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
+						test.describe( 'Preview (https only)', function() {
+							if ( httpsHost ) {
 								test.it( 'Can launch post preview', function() {
 									this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 									this.postEditorToolbarComponent.ensureSaved();
@@ -187,7 +190,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 								test.describe( 'Publish and Preview Published Content', function() {
 									test.it( 'Can publish and view content', function() {
 										let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-										if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
+										if ( httpsHost ) {
 											postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
 										} else {
 											postEditorToolbarComponent.publishAndPreviewPublished( { useConfirmStep: usePublishConfirmation } );
@@ -226,7 +229,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 									} );
 
 									test.it( 'Can close post preview', function() {
-										if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
+										if ( httpsHost ) {
 											return this.postPreviewComponent.edit();
 										}
 
@@ -278,12 +281,14 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 									} );
 								} );
 
-								test.describe( 'Can see post publicized on twitter', function() {
-									test.it( 'Can see post message', function() {
-										let twitterFeedPage = new TwitterFeedPage( driver, publicizeTwitterAccount, true );
-										twitterFeedPage.checkLatestTweetsContain( publicizeMessage );
+								if ( host !== 'CI' ) {
+									test.describe( 'Can see post publicized on twitter', function() {
+										test.it( 'Can see post message', function() {
+											let twitterFeedPage = new TwitterFeedPage( driver, publicizeTwitterAccount, true );
+											twitterFeedPage.checkLatestTweetsContain( publicizeMessage );
+										} );
 									} );
-								} );
+								}
 							} );
 						} );
 					} );
@@ -954,7 +959,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				this.postEditorToolbarComponent.ensureSaved();
 				this.postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
 
-				if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
+				if ( httpsHost ) {
 					this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 					let postPreviewComponent = new PostPreviewComponent( driver );
 
