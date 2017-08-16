@@ -1,3 +1,4 @@
+# NOTE - This file is only useful on a Jetpack-specific repo.  I'm only leaving it here at the moment for comparison while I get CircleCI set up on Jetpack itself -- SRS
 version: 2
 jobs:
   build:
