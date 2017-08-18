@@ -890,7 +890,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.describe( 'Publish a New Post', function() {
+		test.describe( 'Publish a New Post with a Contact Form', function() {
 			const originalBlogPostTitle = 'Contact Us: ' + dataHelper.randomPhrase();
 
 			test.it( 'Can log in', function() {
@@ -923,6 +923,51 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can see the contact form in our published post', function() {
 				this.viewPostPage.contactFormDisplayed().then( function( displayed ) {
 					assert.equal( displayed, true, 'The published post does not contain the contact form' );
+				} );
+			} );
+		} );
+	} );
+
+	test.describe( 'Insert a payment button: @parallel @jetpack', function() {
+		this.bailSuite( true );
+
+		test.it( 'Delete Cookies and Local Storage', function() {
+			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.describe( 'Publish a New Post with a Payment Button', function() {
+			const originalBlogPostTitle = 'Payment Button: ' + dataHelper.randomPhrase();
+
+			test.it( 'Can log in', function() {
+				this.loginFlow = new LoginFlow( driver );
+				return this.loginFlow.loginAndStartNewPost();
+			} );
+
+			test.it( 'Can insert the payment button', function() {
+				this.editorPage = new EditorPage( driver );
+				this.editorPage.enterTitle( originalBlogPostTitle );
+				this.editorPage.insertPaymentButton();
+
+				return this.editorPage.errorDisplayed().then( ( errorShown ) => {
+					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+				} );
+			} );
+
+			test.it( 'Can see the payment button inserted into the visual editor', function() {
+				this.editorPage = new EditorPage( driver );
+				return this.editorPage.ensurePaymentButtonDisplayedInPost();
+			} );
+
+			test.it( 'Can publish and view content', function() {
+				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				postEditorToolbarComponent.ensureSaved();
+				postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
+				this.viewPostPage = new ViewPostPage( driver );
+			} );
+
+			test.it( 'Can see the payment button in our published post', function() {
+				this.viewPostPage.paymentButtonDisplayed().then( function( displayed ) {
+					assert.equal( displayed, true, 'The published post does not contain the payment button' );
 				} );
 			} );
 		} );
