@@ -3,7 +3,7 @@ import config from 'config';
 
 import * as driverManager from '../lib/driver-manager.js';
 
-import localization_data from '../../localization_data.json';
+import localization_data from '../localization-data.json';
 import GoogleFlow from '../lib/flows/google-flow.js';
 import LandingPage from '../lib/pages/landing-page.js';
 
