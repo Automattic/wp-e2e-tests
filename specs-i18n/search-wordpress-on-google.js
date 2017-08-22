@@ -64,5 +64,8 @@ function doGoogleAdSearch( search_params ) {
 
 test_data.google_searches.forEach( function( search_params ) {
 	doGoogleAdSearch( search_params );
+	if ( process.env.CIRCLECI === 'true' ) {
+		sleep( 15000 );
+	}
 } );
 
