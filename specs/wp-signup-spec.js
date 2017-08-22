@@ -1,4 +1,5 @@
 import test from 'selenium-webdriver/testing';
+import webdriver from 'selenium-webdriver';
 import config from 'config';
 import assert from 'assert';
 
@@ -17,6 +18,8 @@ import SignupProcessingPage from '../lib/pages/signup/signup-processing-page.js'
 import CheckOutPage from '../lib/pages/signup/checkout-page';
 import CheckOutThankyouPage from '../lib/pages/signup/checkout-thankyou-page.js';
 import ViewBlogPage from '../lib/pages/signup/view-blog-page.js';
+import EditorPage from '../lib/pages/editor-page.js';
+import AdminTopBar from '../lib/pages/wp-admin/wp-admin-topbar.js';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
@@ -33,6 +36,7 @@ const host = dataHelper.getJetpackHost();
 const locale = driverManager.currentLocale();
 
 var driver;
+var until = webdriver.until;
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -56,6 +60,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
+		let inboxEmails = null;
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
 			return driverManager.ensureNotLoggedIn( driver );
@@ -168,14 +173,48 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 										} );
 									} );
 
-									test.describe( 'Step Eight: Can activate my account from an email', function() {
-										test.before( function() {
-											return this.emailClient = new EmailClient( signupInboxId );
+									test.describe( 'Step Eight: Can not publish until email is confirmed', function() {
+										test.it( 'Can see a disabled publish button', function() {
+											const blogPostTitle = dataHelper.randomPhrase();
+											const blogPostQuote = dataHelper.randomPhrase();
+
+											this.adminTopBar = new AdminTopBar( this.driver );
+											this.adminTopBar.createNewPost();
+
+											this.editor = new EditorPage( this.driver );
+											this.editor.enterTitle( blogPostTitle );
+											this.editor.enterContent( blogPostQuote + '\n' );
+											return this.editor.publishEnabled().then( ( enabled ) => {
+												return assert.equal( enabled, false, 'Publish button is not disabled when activation link has not been clicked' );
+											} );
 										} );
 
-										test.it( 'Can see a single activation message', function() {
-											return this.emailClient.pollEmailsByRecipient( emailAddress ).then( function( emails ) {
-												return assert.equal( emails.length, 1, 'The number of invite emails is not equal to 1' );
+										test.describe( 'Step Nine: Can activate my account from an email', function() {
+											test.before( function() {
+												return this.emailClient = new EmailClient( signupInboxId );
+											} );
+
+											test.it( 'Can see a single activation message', function() {
+												return this.emailClient.pollEmailsByRecipient( emailAddress ).then( function( emails ) {
+													inboxEmails = emails;
+													return assert.equal( inboxEmails.length, 1, 'The number of invite emails is not equal to 1' );
+												} );
+											} );
+
+											test.describe( 'Step 10: Can publish when email is confirmed', function() {
+												test.it( 'Can not see a disabled publish button', function() {
+													this.driver.executeScript( `window.open( '${inboxEmails[0].html.links[0].href}' )` );
+													this.driver.getAllWindowHandles().then( function windowHandles( allhandles ) {
+														driver.switchTo().window( allhandles[0] );
+													} );
+
+													this.editor = new EditorPage( this.driver );
+													const publishButton = driver.findElement( webdriver.By.css( '.editor-publish-button' ) );
+													this.driver.wait( until.elementIsEnabled( publishButton ), mochaTimeOut );
+													return this.editor.publishEnabled().then( ( enabled ) => {
+														return assert.equal( enabled, true, 'Publish button is disabled after account activation' );
+													} );
+												} );
 											} );
 										} );
 									} );
