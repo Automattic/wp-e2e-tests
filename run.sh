@@ -58,7 +58,7 @@ usage () {
 -u [baseUrl]	  - Override the calypsoBaseURL config
 -h		  - This help listing
 EOF
-  exit 0
+  exit 1
 }
 
 if [ $# -eq 0 ]; then
