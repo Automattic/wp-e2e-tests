@@ -54,6 +54,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 	test.describe( 'Sign up for a free site @parallel @canary', function() {
 		this.bailSuite( true );
+		let stepNum = 1;
 
 		const blogName = dataHelper.getNewBlogName();
 		let newBlogAddress = '';
@@ -66,7 +67,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.describe( 'Step One: Design Type Choice', function() {
+		test.describe( `Step ${stepNum}: Design Type Choice`, function() {
+			stepNum++;
+
 			test.it( 'Can see the design type choice page', function() {
 				this.startPage = new StartPage( driver, { visit: true } );
 				this.designTypeChoicePage = new DesignTypeChoicePage( driver );
@@ -79,7 +82,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 				this.designTypeChoicePage.selectFirstDesignType();
 			} );
 
-			test.describe( 'Step Two: Themes', function() {
+			test.describe( `Step ${stepNum}: Themes`, function() {
+				stepNum++;
+
 				test.it( 'Can see the choose a theme page', function() {
 					this.chooseAThemePage = new ChooseAThemePage( driver );
 					return this.chooseAThemePage.displayed().then( ( displayed ) => {
@@ -91,7 +96,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 					this.chooseAThemePage.selectFirstTheme();
 				} );
 
-				test.describe( 'Step Three: Domains', function() {
+				test.describe( `Step ${stepNum}: Domains`, function() {
+					stepNum++;
+
 					test.it( 'Can then see the domains page ', function() {
 						this.findADomainComponent = new FindADomainComponent( driver );
 						return this.findADomainComponent.displayed().then( ( displayed ) => {
@@ -109,7 +116,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 						return this.findADomainComponent.selectFreeAddress();
 					} );
 
-					test.describe( 'Step Four: Plans', function() {
+					test.describe( `Step ${stepNum}: Plans`, function() {
+						stepNum++;
+
 						test.it( 'Can then see the plans page', function() {
 							this.pickAPlanPage = new PickAPlanPage( driver );
 							return this.pickAPlanPage.displayed().then( ( displayed ) => {
@@ -121,7 +130,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 							return this.pickAPlanPage.selectFreePlan();
 						} );
 
-						test.describe( 'Step Five: Account', function() {
+						test.describe( `Step ${stepNum}: Account`, function() {
+							stepNum++;
+
 							test.it( 'Can then see the account page', function() {
 								this.createYourAccountPage = new CreateYourAccountPage( driver );
 								return this.createYourAccountPage.displayed().then( ( displayed ) => {
@@ -133,7 +144,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 								return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
 							} );
 
-							test.describe( 'Step Six: Sign Up Processing', function() {
+							test.describe( `Step ${stepNum}: Sign Up Processing`, function() {
+								stepNum++;
+
 								test.it( 'Can then see the sign up processing page', function() {
 									this.signupProcessingPage = new SignupProcessingPage( driver );
 									return this.signupProcessingPage.displayed().then( ( displayed ) => {
@@ -149,7 +162,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 									return this.signupProcessingPage.continueAlong();
 								} );
 
-								test.describe( 'Step Seven: View Site/Trampoline', function() {
+								test.describe( `Step ${stepNum}: View Site/Trampoline`, function() {
+									stepNum++;
+
 									test.it( 'We are on the view blog page, can see trampoline, our URL and title', function() {
 										return this.viewBlogPage = new ViewBlogPage( driver );
 									} );
@@ -173,15 +188,17 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 										} );
 									} );
 
-									test.describe( 'Step Eight: Can not publish until email is confirmed', function() {
+									test.describe( `Step ${stepNum}: Can not publish until email is confirmed`, function() {
+										stepNum++;
+
 										test.it( 'Can see a disabled publish button', function() {
 											const blogPostTitle = dataHelper.randomPhrase();
 											const blogPostQuote = dataHelper.randomPhrase();
 
-											this.adminTopBar = new AdminTopBar( this.driver );
+											this.adminTopBar = new AdminTopBar( driver );
 											this.adminTopBar.createNewPost();
 
-											this.editor = new EditorPage( this.driver );
+											this.editor = new EditorPage( driver );
 											this.editor.enterTitle( blogPostTitle );
 											this.editor.enterContent( blogPostQuote + '\n' );
 											return this.editor.publishEnabled().then( ( enabled ) => {
@@ -189,7 +206,15 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 											} );
 										} );
 
-										test.describe( 'Step Nine: Can activate my account from an email', function() {
+										test.it( 'Can see email verification required message', function() {
+											return this.editor.emailVerificationNotice().then( ( displayed ) => {
+												return assert.equal( displayed, true, 'Email Verification Notice is not displayed when activation link has not been clicked' );
+											} );
+										} );
+
+										test.describe( `Step ${stepNum}: Can activate my account from an email`, function() {
+											stepNum++;
+
 											test.before( function() {
 												return this.emailClient = new EmailClient( signupInboxId );
 											} );
@@ -201,18 +226,25 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 												} );
 											} );
 
-											test.describe( 'Step 10: Can publish when email is confirmed', function() {
-												test.it( 'Can not see a disabled publish button', function() {
-													this.driver.executeScript( `window.open( '${inboxEmails[0].html.links[0].href}' )` );
-													this.driver.getAllWindowHandles().then( function windowHandles( allhandles ) {
-														driver.switchTo().window( allhandles[0] );
-													} );
+											test.describe( `Step ${stepNum}: Can publish when email is confirmed`, function() {
+												stepNum++;
 
-													this.editor = new EditorPage( this.driver );
+												test.it( 'Can not see a disabled publish button', function() {
+													let postUrl = driver.getCurrentUrl();
+													driver.get( inboxEmails[0].html.links[0].href );
+													driver.get( postUrl );
+
+													this.editor = new EditorPage( driver );
 													const publishButton = driver.findElement( webdriver.By.css( '.editor-publish-button' ) );
-													this.driver.wait( until.elementIsEnabled( publishButton ), mochaTimeOut );
+													driver.wait( until.elementIsEnabled( publishButton ), mochaTimeOut );
 													return this.editor.publishEnabled().then( ( enabled ) => {
 														return assert.equal( enabled, true, 'Publish button is disabled after account activation' );
+													} );
+												} );
+
+												test.it( 'Can not see email verification required message', function() {
+													return this.editor.emailVerificationNotice().then( ( displayed ) => {
+														return assert.equal( displayed, false, 'Email Verification Notice is displayed when activation link has been clicked' );
 													} );
 												} );
 											} );
@@ -229,6 +261,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 	test.describe( 'Sign up for a site on a premium paid plan through main flow @parallel', function() {
 		this.bailSuite( true );
+		let stepNum = 1;
 
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
@@ -247,7 +280,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			return this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 		} );
 
-		test.describe( 'Step One: Design Type Choice', function() {
+		test.describe( `Step ${stepNum}: Design Type Choice`, function() {
+			stepNum++;
+
 			test.it( 'Can see the design type choice page', function() {
 				this.startPage = new StartPage( driver, { visit: true, culture: locale } );
 				this.designTypeChoicePage = new DesignTypeChoicePage( driver );
@@ -260,7 +295,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 				return this.designTypeChoicePage.selectFirstDesignType();
 			} );
 
-			test.describe( 'Step Two: Themes', function() {
+			test.describe( `Step ${stepNum}: Themes`, function() {
+				stepNum++;
+
 				test.it( 'Can see the choose a theme page as the starting page', function() {
 					this.chooseAThemePage = new ChooseAThemePage( driver );
 					return this.chooseAThemePage.displayed().then( ( displayed ) => {
@@ -272,7 +309,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 					return this.chooseAThemePage.selectFirstTheme();
 				} );
 
-				test.describe( 'Step Three: Domains', function() {
+				test.describe( `Step ${stepNum}: Domains`, function() {
+					stepNum++;
+
 					test.it( 'Can then see the domains page ', function() {
 						this.findADomainComponent = new FindADomainComponent( driver );
 						return this.findADomainComponent.displayed().then( ( displayed ) => {
@@ -301,7 +340,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 						} );
 					} );
 
-					test.describe( 'Step Four: Plans', function() {
+					test.describe( `Step ${stepNum}: Plans`, function() {
+						stepNum++;
+
 						test.it( 'Can then see the plans page', function() {
 							this.pickAPlanPage = new PickAPlanPage( driver );
 							return this.pickAPlanPage.displayed().then( ( displayed ) => {
@@ -313,7 +354,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 							return this.pickAPlanPage.selectPremiumPlan();
 						} );
 
-						test.describe( 'Step Five: Account', function() {
+						test.describe( `Step ${stepNum}: Account`, function() {
+							stepNum++;
+
 							test.it( 'Can then enter account details', function() {
 								this.createYourAccountPage = new CreateYourAccountPage( driver );
 								this.createYourAccountPage.displayed().then( ( displayed ) => {
@@ -322,7 +365,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 								return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
 							} );
 
-							test.describe( 'Step Six: Processing', function() {
+							test.describe( `Step ${stepNum}: Processing`, function() {
+								stepNum++;
+
 								test.it( 'Can then see the sign up processing page which will automatically move along', function() {
 									this.signupProcessingPage = new SignupProcessingPage( driver );
 									return this.signupProcessingPage.waitToDisappear();
@@ -341,7 +386,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 									} );
 								} );
 
-								test.describe( 'Step Seven: Secure Payment Page', function() {
+								test.describe( `Step ${stepNum}: Secure Payment Page`, function() {
+									stepNum++;
+
 									test.it( 'Can then see the secure payment page', function() {
 										this.securePaymentComponent = new SecurePaymentComponent( driver );
 										return this.securePaymentComponent.displayed().then( ( displayed ) => {
@@ -355,7 +402,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 										return this.securePaymentComponent.waitForPageToDisappear();
 									} );
 
-									test.describe( 'Step Eight: Checkout Thank You Page', function() {
+									test.describe( `Step ${stepNum}: Checkout Thank You Page`, function() {
+										stepNum++;
+
 										test.it( 'Can see the secure check out thank you page', function() {
 											this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
 											return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
@@ -374,6 +423,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 	test.describe( 'Sign up for a site on a premium paid plan coming in via /create as premium flow @parallel', function() {
 		this.bailSuite( true );
+		let stepNum = 1;
 
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
@@ -391,7 +441,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			return this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 		} );
 
-		test.describe( 'Step One: Design Type Choice', function() {
+		test.describe( `Step ${stepNum}: Design Type Choice`, function() {
+			stepNum++;
+
 			test.it( 'Can see the design type choice page', function() {
 				this.startPage = new StartPage( driver, { visit: true, flow: 'premium' } );
 				this.designTypeChoicePage = new DesignTypeChoicePage( driver );
@@ -404,7 +456,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 				return this.designTypeChoicePage.selectFirstDesignType();
 			} );
 
-			test.describe( 'Step Two: Themes', function() {
+			test.describe( `Step ${stepNum}: Themes`, function() {
+				stepNum++;
+
 				test.it( 'Can see the choose a theme page as the starting page', function() {
 					this.chooseAThemePage = new ChooseAThemePage( driver );
 					return this.chooseAThemePage.displayed().then( ( displayed ) => {
@@ -416,7 +470,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 					return this.chooseAThemePage.selectFirstTheme();
 				} );
 
-				test.describe( 'Step Three: Domains', function() {
+				test.describe( `Step ${stepNum}: Domains`, function() {
+					stepNum++;
+
 					test.it( 'Can then see the domains page ', function() {
 						this.findADomainComponent = new FindADomainComponent( driver );
 						return this.findADomainComponent.displayed().then( ( displayed ) => {
@@ -433,7 +489,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 						return this.findADomainComponent.selectFreeAddress();
 					} );
 
-					test.describe( 'Step Four: Account', function() {
+					test.describe( `Step ${stepNum}: Account`, function() {
+						stepNum++;
+
 						test.it( 'Can then enter account details', function() {
 							this.createYourAccountPage = new CreateYourAccountPage( driver );
 							this.createYourAccountPage.displayed().then( ( displayed ) => {
@@ -442,7 +500,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 							return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
 						} );
 
-						test.describe( 'Step Five: Processing', function() {
+						test.describe( `Step ${stepNum}: Processing`, function() {
+							stepNum++;
+
 							test.it( 'Can then see the sign up processing page', function() {
 								this.signupProcessingPage = new SignupProcessingPage( driver );
 								return this.signupProcessingPage.displayed().then( ( displayed ) => {
@@ -458,7 +518,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 								return this.signupProcessingPage.continueAlong();
 							} );
 
-							test.describe( 'Step Six: Secure Payment Page', function() {
+							test.describe( `Step ${stepNum}: Secure Payment Page`, function() {
+								stepNum++;
+
 								test.it( 'Can then see the secure payment page', function() {
 									this.securePaymentComponent = new SecurePaymentComponent( driver );
 									return this.securePaymentComponent.displayed().then( ( displayed ) => {
@@ -472,7 +534,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 									return this.securePaymentComponent.waitForPageToDisappear();
 								} );
 
-								test.describe( 'Step Seven: Checkout Thank You Page', function() {
+								test.describe( `Step ${stepNum}: Checkout Thank You Page`, function() {
+									stepNum++;
+
 									test.it( 'Can see the secure check out thank you page', function() {
 										this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
 										return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
@@ -490,6 +554,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 	test.describe( 'Partially sign up for a site on a business paid plan w/ domain name coming in via /create as business flow @parallel', function() {
 		this.bailSuite( true );
+		let stepNum = 1;
 
 		const siteName = dataHelper.getNewBlogName();
 		const expectedDomainName = `${siteName}.com`;
@@ -515,7 +580,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 		} );
 
-		test.describe( 'Step Two: Design Type Choice', function() {
+		test.describe( `Step ${stepNum}: Design Type Choice`, function() {
+			stepNum++;
+
 			test.it( 'Can see the design type choice page', function() {
 				this.startPage = new StartPage( driver, { visit: true, culture: locale, flow: 'business' } );
 
@@ -529,7 +596,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 				this.designTypeChoicePage.selectFirstDesignType();
 			} );
 
-			test.describe( 'Step Three: Themes', function() {
+			test.describe( `Step ${stepNum}: Themes`, function() {
+				stepNum++;
+
 				test.it( 'Can see the choose a theme page as the starting page', function() {
 					this.chooseAThemePage = new ChooseAThemePage( driver );
 					return this.chooseAThemePage.displayed().then( ( displayed ) => {
@@ -541,7 +610,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 					return this.chooseAThemePage.selectFirstTheme();
 				} );
 
-				test.describe( 'Step Four: Domains', function() {
+				test.describe( `Step ${stepNum}: Domains`, function() {
+					stepNum++;
+
 					test.it( 'Can then see the domains page ', function() {
 						this.findADomainComponent = new FindADomainComponent( driver );
 						return this.findADomainComponent.displayed().then( ( displayed ) => {
@@ -564,7 +635,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 						} );
 					} );
 
-					test.describe( 'Step Five: Account', function() {
+					test.describe( `Step ${stepNum}: Account`, function() {
+						stepNum++;
+
 						test.it( 'Can then enter account details', function() {
 							this.createYourAccountPage = new CreateYourAccountPage( driver );
 							this.createYourAccountPage.displayed().then( ( displayed ) => {
@@ -573,7 +646,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 							return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, siteName, password );
 						} );
 
-						test.describe( 'Step Six: Processing', function() {
+						test.describe( `Step ${stepNum}: Processing`, function() {
+							stepNum++;
+
 							test.it( 'Can then see the sign up processing page which will finish automatically move along', function() {
 								this.signupProcessingPage = new SignupProcessingPage( driver );
 								return this.signupProcessingPage.waitToDisappear();
@@ -592,7 +667,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 								} );
 							} );
 
-							test.describe( 'Step Seven: Secure Payment Page', function() {
+							test.describe( `Step ${stepNum}: Secure Payment Page`, function() {
+								stepNum++;
+
 								test.it( 'Can see checkout page', () => {
 									this.checkOutPage = new CheckOutPage( driver );
 									this.checkOutPage.displayed().then( ( displayed ) => {
@@ -632,6 +709,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 	test.describe( 'Sign up for a Survey Step free site @parallel', function() {
 		this.bailSuite( true );
+		let stepNum = 1;
 
 		const blogName = dataHelper.getNewBlogName();
 		let newBlogAddress = '';
@@ -643,7 +721,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.describe( 'Step One: Survey', function() {
+		test.describe( `Step ${stepNum}: Survey`, function() {
+			stepNum++;
+
 			test.it( 'When we visit the start URL we see the survey page', function() {
 				this.startPage = new StartPage( driver, { visit: true, flow: 'surveystep' } );
 				this.surveyPage = new SurveyPage( driver );
@@ -656,7 +736,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 				return this.surveyPage.selectOtherSurveyOption( 'e2e Automated Testing' );
 			} );
 
-			test.describe( 'Step Two: Design Type Choice', function() {
+			test.describe( `Step ${stepNum}: Design Type Choice`, function() {
+				stepNum++;
+
 				test.it( 'Can see the design type choice page', function() {
 					this.designTypeChoicePage = new DesignTypeChoicePage( driver );
 					return this.designTypeChoicePage.displayed().then( ( displayed ) => {
@@ -668,7 +750,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 					return this.designTypeChoicePage.selectFirstDesignType();
 				} );
 
-				test.describe( 'Step Three: Themes', function() {
+				test.describe( `Step ${stepNum}: Themes`, function() {
+					stepNum++;
+
 					test.it( 'Can see the choose a theme page', function() {
 						this.chooseAThemePage = new ChooseAThemePage( driver );
 						return this.chooseAThemePage.displayed().then( ( displayed ) => {
@@ -680,7 +764,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 						return this.chooseAThemePage.selectFirstTheme();
 					} );
 
-					test.describe( 'Step Four: Domains', function() {
+					test.describe( `Step ${stepNum}: Domains`, function() {
+						stepNum++;
+
 						test.it( 'Can then see the domains page ', function() {
 							this.findADomainComponent = new FindADomainComponent( driver );
 							return this.findADomainComponent.displayed().then( ( displayed ) => {
@@ -698,7 +784,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 							return this.findADomainComponent.selectFreeAddress();
 						} );
 
-						test.describe( 'Step Five: Plans', function() {
+						test.describe( `Step ${stepNum}: Plans`, function() {
+							stepNum++;
+
 							test.it( 'Can then see the plans page', function() {
 								this.pickAPlanPage = new PickAPlanPage( driver );
 								return this.pickAPlanPage.displayed().then( ( displayed ) => {
@@ -710,7 +798,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 								return this.pickAPlanPage.selectFreePlan();
 							} );
 
-							test.describe( 'Step Six: Account', function() {
+							test.describe( `Step ${stepNum}: Account`, function() {
+								stepNum++;
+
 								test.it( 'Can then see the account page', function() {
 									this.createYourAccountPage = new CreateYourAccountPage( driver );
 									return this.createYourAccountPage.displayed().then( ( displayed ) => {
@@ -722,7 +812,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 									return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
 								} );
 
-								test.describe( 'Step Seven: Sign Up Processing', function() {
+								test.describe( `Step ${stepNum}: Sign Up Processing`, function() {
+									stepNum++;
+
 									test.it( 'Can then see the sign up processing page', function() {
 										this.signupProcessingPage = new SignupProcessingPage( driver );
 										return this.signupProcessingPage.displayed().then( ( displayed ) => {
@@ -738,7 +830,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 										return this.signupProcessingPage.continueAlong();
 									} );
 
-									test.describe( 'Step Eight: View Site/Trampoline', function() {
+									test.describe( `Step ${stepNum}: View Site/Trampoline`, function() {
+										stepNum++;
+
 										test.it( 'We are on the view blog page, can see trampoline, our URL and title', function() {
 											return this.viewBlogPage = new ViewBlogPage( driver );
 										} );
@@ -762,7 +856,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 											} );
 										} );
 
-										test.describe( 'Step Nine: Can activate my account from an email', function() {
+										test.describe( `Step ${stepNum}: Can activate my account from an email`, function() {
+											stepNum++;
+
 											test.before( function() {
 												return this.emailClient = new EmailClient( signupInboxId );
 											} );
