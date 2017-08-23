@@ -60,7 +60,7 @@
   "knownABTestKeys": [ "multiDomainRegistrationV1", "signupSurveyStep", "presaleChatButton", "businessPlanDescriptionAT", "newSiteWithJetpack", "signupPlansCopyChanges", "postPublishConfirmation", "readerIntroIllustration", "paymentShowPaypalLogo", "jetpackConnectPlansCopyChanges", "postSignupUpgradeScreen" ],
   "overrideABTests": [
 	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
-	[ "signupPlansCopyChanges_20170623", "original" ],
+	[ "signupPlansCopyChanges_20170623", "modified" ],
 	[ "postPublishConfirmation_20170801", "noPublishConfirmation" ]
   ]
 }
