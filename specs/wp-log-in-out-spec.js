@@ -64,8 +64,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, f
 			} );
 		}
 
-		test.describe.only( 'Can Log In with Google account', function() {
-
+		test.describe( 'Can Log In with Google account', function() {
 			test.it( 'Can log in', function() {
 				let googleLoginFlow = new GoogleLoginFlow( driver, 'googleLoginUser' );
 				googleLoginFlow.login();
