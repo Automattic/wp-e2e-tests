@@ -643,7 +643,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		} );
 	} );
 
-	test.describe.only( 'Sign up for a Survey Step free site @parallel', function() {
+	test.describe( 'Sign up for a Survey Step free site @parallel', function() {
 		this.bailSuite( true );
 		let stepNum = 1;
 
