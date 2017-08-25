@@ -643,7 +643,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		} );
 	} );
 
-	test.describe( 'Sign up for a Survey Step free site @parallel', function() {
+	test.describe.only( 'Sign up for a Survey Step free site @parallel', function() {
 		this.bailSuite( true );
 		let stepNum = 1;
 
@@ -836,6 +836,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 														this.editor = new EditorPage( driver );
 														this.editor.enterTitle( blogPostTitle );
 														this.editor.enterContent( blogPostQuote + '\n' );
+														this.editor.postSaved();
 														return this.editor.publishEnabled().then( ( enabled ) => {
 															return assert.equal( enabled, true, 'Publish button is enabled after account activation' );
 														} );
