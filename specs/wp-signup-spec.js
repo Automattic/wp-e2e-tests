@@ -61,7 +61,6 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
-		let inboxEmails = null;
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
 			return driverManager.ensureNotLoggedIn( driver );
@@ -186,71 +185,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 										return this.viewBlogPage.title().then( ( title ) => {
 											return assert.equal( title, 'Site Title', 'The expected blog title is not displaying correctly' );
 										} );
-									} );
-
-									test.describe( `Step ${stepNum}: Can not publish until email is confirmed`, function() {
-										stepNum++;
-
-										test.it( 'Can see a disabled publish button', function() {
-											const blogPostTitle = dataHelper.randomPhrase();
-											const blogPostQuote = dataHelper.randomPhrase();
-											driver.get( calypsoBaseURL + '/post/' + newBlogAddress );
-
-											this.editor = new EditorPage( driver );
-											this.editor.enterTitle( blogPostTitle );
-											this.editor.enterContent( blogPostQuote + '\n' );
-											return this.editor.publishEnabled().then( ( enabled ) => {
-												return assert.equal( enabled, false, 'Publish button is not disabled when activation link has not been clicked' );
-											} );
-										} );
-
-										test.it( 'Can see email verification required message', function() {
-											//This feature isn't currently working on mobile https://github.com/Automattic/wp-calypso/issues/10212
-											if ( screenSize === 'mobile' ) {
-												console.log( 'Email verification required messaging not supported on mobile - skipping test' );
-												return true;
-											}
-											return this.editor.emailVerificationNoticeDisplayed().then( ( displayed ) => {
-												return assert.equal( displayed, true, 'Email Verification Notice is not displayed when activation link has not been clicked' );
-											} );
-										} );
-
-										test.describe( `Step ${stepNum}: Can activate my account from an email`, function() {
-											stepNum++;
-
-											test.before( function() {
-												return this.emailClient = new EmailClient( signupInboxId );
-											} );
-
-											test.it( 'Can see a single activation message', function() {
-												return this.emailClient.pollEmailsByRecipient( emailAddress ).then( function( emails ) {
-													inboxEmails = emails;
-													return assert.equal( inboxEmails.length, 1, 'The number of invite emails is not equal to 1' );
-												} );
-											} );
-
-											test.describe( `Step ${stepNum}: Can publish when email is confirmed`, function() {
-												stepNum++;
-
-												test.it( 'Can not see a disabled publish button', function() {
-													driver.wait( until.elementTextContains( driver.findElement( webdriver.By.css( '.editor-ground-control__save-status' ) ), 'Saved' ), mochaTimeOut );
-													driver.get( inboxEmails[0].html.links[0].href );
-													driver.navigate().back();
-
-													this.editor = new EditorPage( driver );
-													return this.editor.publishEnabled().then( ( enabled ) => {
-														return assert.equal( enabled, true, 'Publish button is disabled after account activation' );
-													} );
-												} );
-
-												test.it( 'Can not see email verification required message', function() {
-													return this.editor.emailVerificationNoticeDisplayed().then( ( displayed ) => {
-														return assert.equal( displayed, false, 'Email Verification Notice is displayed when activation link has been clicked' );
-													} );
-												} );
-											} );
-										} );
-									} );
+									} )
 								} );
 							} );
 						} );
@@ -717,6 +652,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
+		let inboxEmails = null;
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
 			return driverManager.ensureNotLoggedIn( driver );
@@ -857,16 +793,59 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 											} );
 										} );
 
-										test.describe( `Step ${stepNum}: Can activate my account from an email`, function() {
+										test.describe( `Step ${stepNum}: Can not publish until email is confirmed`, function() {
 											stepNum++;
 
-											test.before( function() {
-												return this.emailClient = new EmailClient( signupInboxId );
+											test.it( 'Can see a disabled publish button', function() {
+												const blogPostTitle = dataHelper.randomPhrase();
+												const blogPostQuote = dataHelper.randomPhrase();
+												driver.get( calypsoBaseURL + '/post/' + newBlogAddress );
+
+												this.editor = new EditorPage( driver );
+												this.editor.enterTitle( blogPostTitle );
+												this.editor.enterContent( blogPostQuote + '\n' );
+												this.editor.postSaved();
+												return this.editor.publishEnabled().then( ( enabled ) => {
+													return assert.equal( enabled, false, 'Publish button is not enabled when activation link has not been clicked' );
+												} );
 											} );
 
-											test.it( 'Can see a single activation message', function() {
-												return this.emailClient.pollEmailsByRecipient( emailAddress ).then( function( emails ) {
-													return assert.equal( emails.length, 1, 'The number of invite emails is not equal to 1' );
+											test.describe( `Step ${stepNum}: Can activate my account from an email`, function() {
+												stepNum++;
+
+												test.before( function() {
+													return this.emailClient = new EmailClient( signupInboxId );
+												} );
+
+												test.it( 'Can see a single activation message', function() {
+													return this.emailClient.pollEmailsByRecipient( emailAddress ).then( function( emails ) {
+														inboxEmails = emails;
+														return assert.equal( emails.length, 1, 'The number of invite emails is not equal to 1' );
+													} );
+												} );
+
+												test.describe( `Step ${stepNum}: Can publish when email is confirmed`, function() {
+													stepNum++;
+
+													test.it( 'Can not see a disabled publish button', function() {
+														const blogPostTitle = dataHelper.randomPhrase();
+														const blogPostQuote = dataHelper.randomPhrase();
+														driver.get( inboxEmails[0].html.links[0].href );
+														driver.get( calypsoBaseURL + '/post/' + newBlogAddress );
+
+														this.editor = new EditorPage( driver );
+														this.editor.enterTitle( blogPostTitle );
+														this.editor.enterContent( blogPostQuote + '\n' );
+														return this.editor.publishEnabled().then( ( enabled ) => {
+															return assert.equal( enabled, true, 'Publish button is enabled after account activation' );
+														} );
+													} );
+
+													test.it( 'Can not see email verification required message', function() {
+														return this.editor.emailVerificationNoticeDisplayed().then( ( displayed ) => {
+															return assert.equal( displayed, false, 'Email Verification Notice is displayed when activation link has been clicked' );
+														} );
+													} );
 												} );
 											} );
 										} );
