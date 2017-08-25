@@ -19,7 +19,6 @@ import CheckOutPage from '../lib/pages/signup/checkout-page';
 import CheckOutThankyouPage from '../lib/pages/signup/checkout-thankyou-page.js';
 import ViewBlogPage from '../lib/pages/signup/view-blog-page.js';
 import EditorPage from '../lib/pages/editor-page.js';
-import AdminTopBar from '../lib/pages/wp-admin/wp-admin-topbar.js';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
@@ -34,6 +33,7 @@ const screenSize = driverManager.currentScreenSize();
 const signupInboxId = config.get( 'signupInboxId' );
 const host = dataHelper.getJetpackHost();
 const locale = driverManager.currentLocale();
+const calypsoBaseURL = config.get( 'calypsoBaseURL' );
 
 var driver;
 var until = webdriver.until;
@@ -194,9 +194,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 										test.it( 'Can see a disabled publish button', function() {
 											const blogPostTitle = dataHelper.randomPhrase();
 											const blogPostQuote = dataHelper.randomPhrase();
-
-											this.adminTopBar = new AdminTopBar( driver );
-											this.adminTopBar.createNewPost();
+											driver.get( calypsoBaseURL + '/post/' + newBlogAddress );
 
 											this.editor = new EditorPage( driver );
 											this.editor.enterTitle( blogPostTitle );
@@ -212,7 +210,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 												console.log( 'Email verification required messaging not supported on mobile - skipping test' );
 												return true;
 											}
-											return this.editor.emailVerificationNotice().then( ( displayed ) => {
+											return this.editor.emailVerificationNoticeDisplayed().then( ( displayed ) => {
 												return assert.equal( displayed, true, 'Email Verification Notice is not displayed when activation link has not been clicked' );
 											} );
 										} );
@@ -240,15 +238,13 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 													driver.navigate().back();
 
 													this.editor = new EditorPage( driver );
-													const publishButton = driver.findElement( webdriver.By.css( '.editor-publish-button' ) );
-													driver.wait( until.elementIsEnabled( publishButton ), mochaTimeOut );
 													return this.editor.publishEnabled().then( ( enabled ) => {
 														return assert.equal( enabled, true, 'Publish button is disabled after account activation' );
 													} );
 												} );
 
 												test.it( 'Can not see email verification required message', function() {
-													return this.editor.emailVerificationNotice().then( ( displayed ) => {
+													return this.editor.emailVerificationNoticeDisplayed().then( ( displayed ) => {
 														return assert.equal( displayed, false, 'Email Verification Notice is displayed when activation link has been clicked' );
 													} );
 												} );
