@@ -4,7 +4,6 @@ import assert from 'assert';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper.js';
-import * as driverHelper from '../lib/driver-helper.js';
 
 import WPHomePage from '../lib/pages/wp-home-page.js';
 import ChooseAThemePage from '../lib/pages/signup/choose-a-theme-page.js';
@@ -21,8 +20,6 @@ import ViewBlogPage from '../lib/pages/signup/view-blog-page.js';
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
 
-import * as SlackNotifier from '../lib/slack-notifier';
-
 import EmailClient from '../lib/email-client.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
@@ -32,13 +29,12 @@ const signupInboxId = config.get( 'signupInboxId' );
 const host = dataHelper.getJetpackHost();
 const locale = driverManager.currentLocale();
 
-var driver;
+let driver;
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
-
 
 test.describe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 	this.timeout( mochaTimeOut );
@@ -91,7 +87,6 @@ test.describe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 					test.it( 'Can search for a blog name, can see and select a free .wordpress address in the results', function() {
 						this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-						this.findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
 						this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
 							assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
 							newBlogAddress = actualAddress;
@@ -238,23 +233,12 @@ test.describe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 					test.it( 'Can search for a blog name, can see and select a free WordPress.com blog address in results', function() {
 						this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-						this.findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
 						this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
 							assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
 							selectedBlogAddress = actualAddress;
 						} );
 
 						return this.findADomainComponent.selectFreeAddress();
-					} );
-
-					test.it( 'Verify OAuth error not present', function() {
-						const self = this;
-						return driverHelper.getErrorMessageIfPresent( driver ).then( ( errorMsg ) => {
-							if ( errorMsg !== undefined ) {
-								SlackNotifier.warn( `WARNING: Error message [${errorMsg}] encountered on Find Domain page!` );
-								return self.findADomainComponent.selectFreeAddress();
-							}
-						} );
 					} );
 
 					test.describe( 'Step Four: Plans', function() {
@@ -282,19 +266,6 @@ test.describe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 								test.it( 'Can then see the sign up processing page which will automatically move along', function() {
 									this.signupProcessingPage = new SignupProcessingPage( driver );
 									return this.signupProcessingPage.waitToDisappear();
-								} );
-
-								test.it( 'Verify login screen not present', () => {
-									return driver.getCurrentUrl().then( ( url ) => {
-										if ( ! url.match( /checkout/ ) ) {
-											let baseURL = config.get( 'calypsoBaseURL' );
-											let newUrl = `${baseURL}/checkout/${selectedBlogAddress}`;
-											SlackNotifier.warn( `WARNING: Signup process sent me to ${url} instead of ${newUrl}` );
-											return driver.get( decodeURIComponent( newUrl ) );
-										}
-
-										return true;
-									} );
 								} );
 
 								test.describe( 'Step Seven: Secure Payment Page', function() {
@@ -382,7 +353,6 @@ test.describe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 					test.it( 'Can search for a blog name, can see and select a free WordPress.com blog address in results', function() {
 						this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-						this.findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
 						this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
 							assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
 						} );
@@ -510,16 +480,6 @@ test.describe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 						return this.findADomainComponent.selectDotComAddress( expectedDomainName );
 					} );
 
-					test.it( 'Verify OAuth error not present', function() {
-						const self = this;
-						return driverHelper.getErrorMessageIfPresent( driver ).then( ( errorMsg ) => {
-							if ( errorMsg !== undefined ) {
-								SlackNotifier.warn( `WARNING: Error message [${errorMsg}] encountered on Find Domain page!` );
-								return self.findADomainComponent.selectDotComAddress( expectedDomainName );
-							}
-						} );
-					} );
-
 					test.describe( 'Step Five: Account', function() {
 						test.it( 'Can then enter account details', function() {
 							this.createYourAccountPage = new CreateYourAccountPage( driver );
@@ -533,19 +493,6 @@ test.describe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 							test.it( 'Can then see the sign up processing page which will finish automatically move along', function() {
 								this.signupProcessingPage = new SignupProcessingPage( driver );
 								return this.signupProcessingPage.waitToDisappear();
-							} );
-
-							test.it( 'Verify login screen not present', () => {
-								return driver.getCurrentUrl().then( ( url ) => {
-									if ( ! url.match( /checkout/ ) ) {
-										let baseURL = config.get( 'calypsoBaseURL' );
-										let newUrl = `${baseURL}/checkout/${expectedDomainName}/business`;
-										SlackNotifier.warn( `WARNING: Signup process sent me to ${url} instead of ${newUrl}!` );
-										return driver.get( decodeURIComponent( newUrl ) );
-									}
-
-									return true;
-								} );
 							} );
 
 							test.describe( 'Step Seven: Secure Payment Page', function() {
@@ -646,7 +593,6 @@ test.describe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 						test.it( 'Can search for a blog name, can see and select a free .wordpress address in the results', function() {
 							this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-							this.findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
 							this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
 								assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
 								newBlogAddress = actualAddress;
