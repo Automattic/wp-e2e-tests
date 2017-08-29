@@ -15,16 +15,19 @@ sp.getApps( ( getErr, data ) => {
 		throw getErr;
 	}
 
-	const currentApp = data.data.filter( ( app ) => {
+	const currentApps = data.data.filter( ( app ) => {
 		return app.name === `wordpress-${process.env.CIRCLE_SHA1.substr( 0, 20 )}`;
-	} )[0];
-
-	sp.deleteApp( currentApp.id, function( delErr ) {
-		if ( delErr !== null ) {
-			console.log( delErr );
-			throw delErr;
-		} else {
-			console.log( `App ${currentApp.id} successfully deleted` );
-		}
 	} );
+
+	// There should only be one, but if not we just silently ignore
+	if ( currentApps.length === 1 ) {
+		sp.deleteApp( currentApps[0].id, function( delErr ) {
+			if ( delErr !== null ) {
+				console.log( delErr );
+				throw delErr;
+			} else {
+				console.log( `App ${currentApps[0].id} successfully deleted` );
+			}
+		} );
+	}
 } );
