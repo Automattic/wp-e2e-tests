@@ -39,13 +39,8 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-// Faked out test.describe function to enable dynamic skipping of e-mail tests
-let testDescribe = test.describe;
-if ( process.env.DISABLE_EMAIL === 'true' ) {
-	testDescribe = test.xdescribe;
-}
 
-testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
+test.describe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Sign up for a free site @parallel @canary', function() {
