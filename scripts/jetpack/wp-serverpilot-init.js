@@ -35,9 +35,4 @@ sp.createApp( serverOptions, function( err, data ) {
 	}
 
 	console.log( `Site created - http://${serverPrefix}.wp-e2e-tests.pw - ID ${data.data.id}` );
-
-	// Write the app ID to the BASH_ENV file to be used by later steps in CircleCI
-	if ( process.env.CIRCLECI === 'true' ) {
-		fs.appendFileSync( process.env.BASH_ENV, `export SP_APP_ID=${data.data.id}` );
-	}
 } );
