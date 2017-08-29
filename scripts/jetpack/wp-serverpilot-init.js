@@ -14,7 +14,7 @@ const userConfig = config.get( 'testAccounts' );
 const username = userConfig.jetpackUserCI[0];
 const password = userConfig.jetpackUserCI[1];
 
-const serverPrefix = process.env.JP_PREFIX;
+const serverPrefix = process.env.CIRCLE_BUILD_NUM;
 
 const serverOptions = {
 	name: `wordpress-${serverPrefix}`,
