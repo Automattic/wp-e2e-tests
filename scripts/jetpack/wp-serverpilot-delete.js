@@ -17,7 +17,7 @@ sp.getApps( ( getErr, data ) => {
 
 	const currentApp = data.data.filter( ( app ) => {
 		return app.name === `wordpress-${process.env.CIRCLE_SHA1.substr( 0, 20 )}`;
-	} );
+	} )[0];
 
 	sp.deleteApp( currentApp.id, function( delErr ) {
 		if ( delErr !== null ) {
