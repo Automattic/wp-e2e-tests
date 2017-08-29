@@ -40,7 +40,13 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Invites:  (${screenSize})`, function() {
+// Faked out test.describe function to enable dynamic skipping of e-mail tests
+let testDescribe = test.describe;
+if ( process.env.DISABLE_EMAIL === 'true' ) {
+	testDescribe = test.xdescribe;
+}
+
+testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 	this.timeout( mochaTimeOut );
 	const usePublishConfirmation = config.get( 'usePublishConfirmation' );
 
