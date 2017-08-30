@@ -22,6 +22,7 @@ import EditorPage from '../lib/pages/editor-page.js';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
+import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
 
 import * as SlackNotifier from '../lib/slack-notifier';
 
@@ -804,7 +805,10 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 												this.editor = new EditorPage( driver );
 												this.editor.enterTitle( blogPostTitle );
 												this.editor.enterContent( blogPostQuote + '\n' );
-												this.editor.postSaved();
+
+												this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+												this.postEditorToolbarComponent.ensureSaved();
+
 												return this.editor.publishEnabled().then( ( enabled ) => {
 													return assert.equal( enabled, false, 'Publish button is not enabled when activation link has not been clicked' );
 												} );
@@ -836,7 +840,10 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 														this.editor = new EditorPage( driver );
 														this.editor.enterTitle( blogPostTitle );
 														this.editor.enterContent( blogPostQuote + '\n' );
-														this.editor.postSaved();
+
+														this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+														this.postEditorToolbarComponent.ensureSaved();
+
 														return this.editor.publishEnabled().then( ( enabled ) => {
 															return assert.equal( enabled, true, 'Publish button is enabled after account activation' );
 														} );
