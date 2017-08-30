@@ -20,6 +20,10 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
+test.afterEach( function() {
+	this.sleep( 15000 );
+} );
+
 function doGoogleAdSearch( search_params ) {
 	var description = 'Search for "' + search_params.query + '" on Google from ' +
 		search_params.originating_location +
