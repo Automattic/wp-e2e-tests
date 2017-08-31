@@ -1,5 +1,5 @@
 {
-  "calypsoBaseURL": "https://wpcalypso.wordpress.com",
+  "calypsoBaseURL": "https://horizon.wordpress.com",
   "explicitWaitMS": 20000,
   "emailWaitMS": 60000,
   "mochaTimeoutMS": 160000,
