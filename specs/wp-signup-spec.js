@@ -45,7 +45,7 @@ test.before( function() {
 } );
 
 // Faked out test.describe function to enable dynamic skipping of e-mail tests
-let testDescribe = test.describe.only;
+let testDescribe = test.describe;
 if ( process.env.DISABLE_EMAIL === 'true' ) {
 	testDescribe = test.xdescribe;
 }
