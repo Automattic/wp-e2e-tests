@@ -9,9 +9,25 @@ const sp = new ServerPilot( {
 	apiKey: spConfig.apiKey
 } );
 
-sp.deleteApp( process.env.SP_APP_ID, function( err ) {
-	if ( err !== null ) {
-		console.log( err );
-		throw err;
+sp.getApps( ( getErr, data ) => {
+	if ( getErr !== null ) {
+		console.log( getErr );
+		throw getErr;
+	}
+
+	const currentApps = data.data.filter( ( app ) => {
+		return app.name === `wordpress-${process.env.CIRCLE_SHA1.substr( 0, 20 )}`;
+	} );
+
+	// There should only be one, but if not we just silently ignore
+	if ( currentApps.length === 1 ) {
+		sp.deleteApp( currentApps[0].id, function( delErr ) {
+			if ( delErr !== null ) {
+				console.log( delErr );
+				throw delErr;
+			} else {
+				console.log( `App ${currentApps[0].id} successfully deleted` );
+			}
+		} );
 	}
 } );
