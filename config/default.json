@@ -1,5 +1,4 @@
 {
-  "authURL": "https://wordpress.com/wp-login.php",
   "calypsoBaseURL": "https://wpcalypso.wordpress.com",
   "explicitWaitMS": 20000,
   "emailWaitMS": 60000,
@@ -16,6 +15,7 @@
   "checkForConsoleErrors": false,
   "reportWarningsToSlack": false,
   "closeBrowserOnComplete": true,
+  "usePublishConfirmation": false,
   "sauceConfigurations": {
     "osx-chrome": {
         "browserName": "chrome",
@@ -56,9 +56,11 @@
         "version": "11.103"
     }
   },
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupSurveyStep", "presaleChatButton", "savingsInCheckoutSummary", "businessPlanDescriptionAT", "newSiteWithJetpack", "signupPlansCopyChanges", "showCartAbandonmentNotice" ],
+  "httpsHosts": [ "WPCOM", "PRESSABLE" ],
+  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupSurveyStep", "presaleChatButton", "businessPlanDescriptionAT", "newSiteWithJetpack", "postPublishConfirmation", "readerIntroIllustration", "paymentShowPaypalLogo", "jetpackConnectPlansCopyChanges", "postSignupUpgradeScreen", "privacyNoPopup" ],
   "overrideABTests": [
 	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
-	[ "signupPlansCopyChanges_20170623", "original" ]
+	[ "postPublishConfirmation_20170801", "noPublishConfirmation" ],
+	[ "privacyNoPopup_20170829", "original" ]
   ]
 }

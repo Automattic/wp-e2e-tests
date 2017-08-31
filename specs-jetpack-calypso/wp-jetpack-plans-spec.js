@@ -8,6 +8,7 @@ import * as dataHelper from '../lib/data-helper';
 import LoginFlow from '../lib/flows/login-flow';
 
 import PlansPage from '../lib/pages/plans-page';
+import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page';
 import StatsPage from '../lib/pages/stats-page';
 import WPAdminJetpackPage from '../lib/pages/wp-admin/wp-admin-jetpack-page';
 import JetpackPlanSalesPage from '../lib/pages/jetpack-plans-sales-page';
@@ -64,9 +65,17 @@ test.describe( `[${host}] Jetpack Plans: (${screenSize}) @jetpack`, function() {
 			} );
 		} );
 
-		test.it( 'Can click the purchase premium button', () => {
+		test.it( 'Can click the Proceed button', () => {
 			this.jetpackPlanSalesPage = new JetpackPlanSalesPage( driver );
-			return this.jetpackPlanSalesPage.clickPurchaseButton();
+			// The upgrade buttons are loaded after the page, and there's no good loaded status indicator to key off of
+			return driver.sleep( 3000 ).then( () => {
+				return this.jetpackPlanSalesPage.clickPurchaseButton();
+			} );
+		} );
+
+		test.it( 'Can click the purchase premium button', () => {
+			this.pickAPlanPage = new PickAPlanPage( driver );
+			return this.pickAPlanPage.selectPremiumPlan();
 		} );
 
 		test.it( 'Can then see secure payment component', () => {

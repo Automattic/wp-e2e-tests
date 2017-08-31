@@ -25,6 +25,7 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
+const httpsHost = config.get( 'httpsHosts' ).indexOf( host ) !== -1;
 
 var driver;
 
@@ -36,6 +37,7 @@ test.before( function() {
 test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
+	const usePublishConfirmation = config.get( 'usePublishConfirmation' );
 
 	test.describe( 'Public Posts: @parallel @jetpack', function() {
 		let fileDetails;
@@ -116,32 +118,34 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 							postEditorSidebarComponent.expandSharingSection();
 						} );
 
-						test.it( 'Can see the publicise to twitter account', function() {
-							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-							postEditorSidebarComponent.publicizeToTwitterAccountDisplayed().then( function( accountDisplayed ) {
-								assert.equal( accountDisplayed, publicizeTwitterAccount, 'Could not see see the publicize to twitter account ' + publicizeTwitterAccount + ' in the editor' );
+						if ( host !== 'CI' ) {
+							test.it( 'Can see the publicise to twitter account', function() {
+								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+								postEditorSidebarComponent.publicizeToTwitterAccountDisplayed().then( function( accountDisplayed ) {
+									assert.equal( accountDisplayed, publicizeTwitterAccount, 'Could not see see the publicize to twitter account ' + publicizeTwitterAccount + ' in the editor' );
+								} );
 							} );
-						} );
 
-						test.it( 'Can see the default publicise message', function() {
-							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-							postEditorSidebarComponent.publicizeMessagePlaceholder().then( function( placeholderDisplayed ) {
-								assert.equal( placeholderDisplayed, blogPostTitle, 'The placeholder for publicize is not equal to the blog post title. Placeholder: \'' + placeholderDisplayed + '\', Title: \'' + blogPostTitle + '\'' );
+							test.it( 'Can see the default publicise message', function() {
+								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+								postEditorSidebarComponent.publicizeMessagePlaceholder().then( function( placeholderDisplayed ) {
+									assert.equal( placeholderDisplayed, blogPostTitle, 'The placeholder for publicize is not equal to the blog post title. Placeholder: \'' + placeholderDisplayed + '\', Title: \'' + blogPostTitle + '\'' );
+								} );
 							} );
-						} );
 
-						test.it( 'Can set a custom publicise message', function() {
-							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-							postEditorSidebarComponent.setPublicizeMessage( publicizeMessage );
-						} );
+							test.it( 'Can set a custom publicise message', function() {
+								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+								postEditorSidebarComponent.setPublicizeMessage( publicizeMessage );
+							} );
+						}
 
 						test.it( 'Close sharing section', function() {
 							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 							postEditorSidebarComponent.closeSharingSection();
 						} );
 
-						test.describe( 'Preview (WPCOM/PRESSABLE only)', function() {
-							if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
+						test.describe( 'Preview (https only)', function() {
+							if ( httpsHost ) {
 								test.it( 'Can launch post preview', function() {
 									this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 									this.postEditorToolbarComponent.ensureSaved();
@@ -186,10 +190,10 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 								test.describe( 'Publish and Preview Published Content', function() {
 									test.it( 'Can publish and view content', function() {
 										let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-										if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
-											postEditorToolbarComponent.publishPost();
+										if ( httpsHost ) {
+											postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
 										} else {
-											postEditorToolbarComponent.publishAndPreviewPublished();
+											postEditorToolbarComponent.publishAndPreviewPublished( { useConfirmStep: usePublishConfirmation } );
 										}
 										this.postPreviewComponent = new PostPreviewComponent( driver );
 									} );
@@ -225,7 +229,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 									} );
 
 									test.it( 'Can close post preview', function() {
-										if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
+										if ( httpsHost ) {
 											return this.postPreviewComponent.edit();
 										}
 
@@ -236,7 +240,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 							} else { // Jetpack tests
 								test.it( 'Can publish content', function() {
 									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-									postEditorToolbarComponent.publishPost();
+									postEditorToolbarComponent.publishThePost(  { useConfirmStep: usePublishConfirmation } );
 								} );
 							}
 
@@ -277,12 +281,14 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 									} );
 								} );
 
-								test.describe( 'Can see post publicized on twitter', function() {
-									test.it( 'Can see post message', function() {
-										let twitterFeedPage = new TwitterFeedPage( driver, publicizeTwitterAccount, true );
-										twitterFeedPage.checkLatestTweetsContain( publicizeMessage );
+								if ( host !== 'CI' ) {
+									test.describe( 'Can see post publicized on twitter', function() {
+										test.it( 'Can see post message', function() {
+											let twitterFeedPage = new TwitterFeedPage( driver, publicizeTwitterAccount, true );
+											twitterFeedPage.checkLatestTweetsContain( publicizeMessage );
+										} );
 									} );
-								} );
+								}
 							} );
 						} );
 					} );
@@ -324,9 +330,9 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			} );
 
 			test.it( 'Can publish and view content', function() {
-				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				postEditorToolbarComponent.ensureSaved();
-				postEditorToolbarComponent.publishAndViewContent();
+				return postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
 			} );
 
 			test.it( 'Can see correct post title', function() {
@@ -490,7 +496,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				// Can publish and view content
 				test.before( function() {
 					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					postEditorToolbarComponent.publishAndViewContent();
+					postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
 				} );
 
 				test.describe( 'As a logged in user', function() {
@@ -814,7 +820,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can publish the post', function() {
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				this.postEditorToolbarComponent.ensureSaved();
-				this.postEditorToolbarComponent.publishPost();
+				this.postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
 				return this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 			} );
 
@@ -884,7 +890,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.describe( 'Publish a New Post', function() {
+		test.describe( 'Publish a New Post with a Contact Form', function() {
 			const originalBlogPostTitle = 'Contact Us: ' + dataHelper.randomPhrase();
 
 			test.it( 'Can log in', function() {
@@ -910,13 +916,58 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can publish and view content', function() {
 				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				postEditorToolbarComponent.ensureSaved();
-				postEditorToolbarComponent.publishAndViewContent();
+				postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
 				this.viewPostPage = new ViewPostPage( driver );
 			} );
 
 			test.it( 'Can see the contact form in our published post', function() {
 				this.viewPostPage.contactFormDisplayed().then( function( displayed ) {
 					assert.equal( displayed, true, 'The published post does not contain the contact form' );
+				} );
+			} );
+		} );
+	} );
+
+	test.describe( 'Insert a payment button: @parallel', function() {
+		this.bailSuite( true );
+
+		test.it( 'Delete Cookies and Local Storage', function() {
+			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.describe( 'Publish a New Post with a Payment Button', function() {
+			const originalBlogPostTitle = 'Payment Button: ' + dataHelper.randomPhrase();
+
+			test.it( 'Can log in', function() {
+				this.loginFlow = new LoginFlow( driver );
+				return this.loginFlow.loginAndStartNewPost();
+			} );
+
+			test.it( 'Can insert the payment button', function() {
+				this.editorPage = new EditorPage( driver );
+				this.editorPage.enterTitle( originalBlogPostTitle );
+				this.editorPage.insertPaymentButton();
+
+				return this.editorPage.errorDisplayed().then( ( errorShown ) => {
+					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+				} );
+			} );
+
+			test.it( 'Can see the payment button inserted into the visual editor', function() {
+				this.editorPage = new EditorPage( driver );
+				return this.editorPage.ensurePaymentButtonDisplayedInPost();
+			} );
+
+			test.it( 'Can publish and view content', function() {
+				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				postEditorToolbarComponent.ensureSaved();
+				postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
+				this.viewPostPage = new ViewPostPage( driver );
+			} );
+
+			test.it( 'Can see the payment button in our published post', function() {
+				this.viewPostPage.paymentButtonDisplayed().then( function( displayed ) {
+					assert.equal( displayed, true, 'The published post does not contain the payment button' );
 				} );
 			} );
 		} );
@@ -951,9 +1002,9 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can publish the post', function() {
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				this.postEditorToolbarComponent.ensureSaved();
-				this.postEditorToolbarComponent.publishPost();
+				this.postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
 
-				if ( host === 'WPCOM' || host === 'PRESSABLE' ) {
+				if ( httpsHost ) {
 					this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 					let postPreviewComponent = new PostPreviewComponent( driver );
 

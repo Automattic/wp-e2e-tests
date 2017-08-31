@@ -16,6 +16,7 @@
   "dependencies": {
     "asana-phrase": "0.0.8",
     "babel-runtime": "^6.3.19",
+    "bluecat": "^1.1.6",
     "chai": "^3.4.1",
     "config": "1.16.0",
     "creditcard-generator": "0.0.7",
@@ -35,6 +36,7 @@
     "random-qoutes-generator": "0.0.1",
     "sanitize-filename": "1.6.0",
     "selenium-webdriver": "3.3.0",
+    "serverpilot": "0.1.2",
     "slack-notify": "0.1.4",
     "testarmada-magellan":"8.8.6",
     "testarmada-magellan-mocha-plugin":"hoverduck/magellan-mocha-plugin#40a619c",

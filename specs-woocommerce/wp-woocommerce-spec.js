@@ -3,6 +3,8 @@ import test from 'selenium-webdriver/testing';
 
 import config from 'config';
 import * as driverManager from '../lib/driver-manager';
+import * as mediaHelper from '../lib/media-helper';
+import * as dataHelper from '../lib/data-helper';
 
 import NavBarComponent from '../lib/components/navbar-component';
 import SidebarComponent from '../lib/components/sidebar-component';
@@ -10,13 +12,9 @@ import StoreSidebarComponent from '../lib/components/store-sidebar-component';
 import StoreDashboardPage from '../lib/pages/woocommerce/store-dashboard-page';
 import StoreSettingsPage from '../lib/pages/woocommerce/store-settings-page';
 import StoreOrdersPage from '../lib/pages/woocommerce/store-orders-page';
-import StoreOrdersAddPage from '../lib/pages/woocommerce/store-orders-add-page';
-import StorePromotionsPage from '../lib/pages/woocommerce/store-promotions-page';
-import StoreExtensionsPage from '../lib/pages/woocommerce/store-extensions-page';
+import StoreOrderDetailsPage from '../lib/pages/woocommerce/store-order-details-page';
 import StoreProductsPage from '../lib/pages/woocommerce/store-products-page';
-import StoreProductsImportPage from '../lib/pages/woocommerce/store-products-import-page';
-import AddProductPage from '../lib/pages/woocommerce/add-product-page';
-// import StoreStatsPage from '../lib/pages/woocommerce/store-stats-page';
+import AddEditProductPage from '../lib/pages/woocommerce/add-edit-product-page';
 
 import LoginFlow from '../lib/flows/login-flow';
 
@@ -65,7 +63,7 @@ test.describe( `Can see WooCommerce Store option in Calypso '${ screenSize }' @p
 	} );
 } );
 
-test.describe( `Can manage WooCommerce products option in Calypso '${ screenSize }' @parallel`, function() {
+test.describe( `Can see WooCommerce products in Calypso '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -98,29 +96,68 @@ test.describe( `Can manage WooCommerce products option in Calypso '${ screenSize
 	} );
 } );
 
-test.xdescribe( `WooCommerce on Calypso /store/{storeslug}: '${ screenSize }' @parallel`, function() {
+test.describe( `Can add a new WooCommerce product in Calypso '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
+	let fileDetails;
 
 	test.before( function() {
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
-	// Login as WooCommerce store user
+	// 'Create image file for upload'
 	test.before( function() {
-		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.login();
+		mediaHelper.createFile( false, 'image-uploads-store' ).then( function( details ) {
+			fileDetails = details;
+		} );
 	} );
 
-	test.it( 'Can see store placeholder page when visiting /store/{storeSlug}', function() {
-		this.storeDashboardPage = new StoreDashboardPage( driver, true );
-		this.storeDashboardPage.displayed().then( (shown ) => {
-			assert( shown, 'Could not see the WooCommerce store dashboard page after visiting /store' );
+	// Login as WooCommerce store user and open the woo store
+	test.before( function() {
+		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
+		return this.loginFlow.loginAndOpenWooStore();
+	} );
+
+	test.it( 'Can add a new product via the Products Menu in the Woo store sidebar', function() {
+		const productTitle = dataHelper.randomPhrase();
+		const productDescription = 'Another test e2e product';
+		this.storeDashboardPage = new StoreDashboardPage( driver );
+		this.storeSidebarComponent = new StoreSidebarComponent( driver );
+		this.storeSidebarComponent.addProduct();
+		this.addProductPage = new AddEditProductPage( driver );
+		this.addProductPage.enterTitle( productTitle );
+		// this.addProductPage.addImage( fileDetails );
+		this.addProductPage.enterDescription( productDescription );
+		this.addProductPage.setPrice( '888.00' );
+		this.addProductPage.setDimensions( '6', '7', '8' );
+		this.addProductPage.setWeight( '2.2' );
+		this.addProductPage.addQuantity( '80' );
+		this.addProductPage.allowBackorders();
+		this.addProductPage.addCategory( 'Art' ); //Adding a category at the end to prevent errors being thrown on save
+		this.addProductPage.saveAndPublish();
+		this.addProductPage.waitForSuccessNotice();
+		this.storeProductsPage = new StoreProductsPage( driver );
+		this.storeProductsPage.productDisplayed( productTitle ).then( ( displayed ) => {
+			assert( displayed, `The product '${productTitle}' isn't being displayed on the products page after being added` );
 		} );
+		this.storeProductsPage.selectProduct( productTitle );
+		this.editProductPage = new AddEditProductPage( driver );
+		this.editProductPage.deleteProduct();
+		this.editProductPage.waitForSuccessNotice();
+		this.storeProductsPage = new StoreProductsPage( driver );
+		this.storeProductsPage.productDisplayed( productTitle ).then( ( displayed ) => {
+			assert( !displayed, `The product '${productTitle}' isn't still being displayed on the products page after being deleted` );
+		} );
+	} );
+
+	test.after( function() {
+		if ( fileDetails ) {
+			mediaHelper.deleteFile( fileDetails ).then( function() {} );
+		}
 	} );
 } );
 
-test.xdescribe( `WooCommerce on Calypso /store/products/{storeslug}: '${ screenSize }' @parallel`, function() {
+test.describe( `Can see WooCommerce orders in Calypso '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -128,21 +165,42 @@ test.xdescribe( `WooCommerce on Calypso /store/products/{storeslug}: '${ screenS
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
-	// Login as WooCommerce store user
+	// Login as WooCommerce store user and open the woo store
 	test.before( function() {
 		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.login();
+		return this.loginFlow.loginAndOpenWooStore();
 	} );
 
-	test.it( 'Can see store placeholder page when visiting /store/products/{storeSlug}', function() {
-		this.storeProductsPage = new StoreProductsPage( driver, true );
-		this.storeProductsPage.displayed().then( ( shown ) => {
-			assert( shown, 'Could not see the WooCommerce store products page after visiting /store/products' );
+	test.it( 'Can see \'Orders\' option in the Woo store sidebar', function() {
+		this.storeDashboardPage = new StoreDashboardPage( driver );
+		this.storeSidebarComponent = new StoreSidebarComponent( driver );
+		this.storeSidebarComponent.productsLinkDisplayed().then( ( d ) => {
+			assert( d, 'The store sidebar orders link is not displayed' );
 		} );
+	} );
+
+	test.it( 'Can see the orders page with at least one order when selecting the orders option in the Woo store sidebar', function() {
+		this.storeDashboardPage = new StoreDashboardPage( driver );
+		this.storeSidebarComponent = new StoreSidebarComponent( driver );
+		this.storeSidebarComponent.selectOrders();
+		this.storeOrdersPage = new StoreOrdersPage( driver );
+		this.storeOrdersPage.atLeastOneOrderDisplayed().then( ( displayed ) => {
+			assert( displayed, 'No Woo orders are displayed on the orders page' );
+		} );
+	} );
+
+	test.it( 'Can see the order details page when opening an order, product details page when clicking a product in an order', function() {
+		this.storeSidebarComponent = new StoreSidebarComponent( driver );
+		this.storeSidebarComponent.selectOrders();
+		this.storeOrdersPage = new StoreOrdersPage( driver );
+		this.storeOrdersPage.clickFirstOrder();
+		this.storeOrderDetailsPage = new StoreOrderDetailsPage( driver );
+		this.storeOrderDetailsPage.clickFirstProduct();
+		this.editProductPage = new AddEditProductPage( driver );
 	} );
 } );
 
-test.xdescribe( `WooCommerce on Calypso /store/products/{storeslug}/import: '${ screenSize }' @parallel`, function() {
+test.describe( `Can see WooCommerce settings in Calypso '${ screenSize }' @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -150,153 +208,42 @@ test.xdescribe( `WooCommerce on Calypso /store/products/{storeslug}/import: '${ 
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
-	// Login as WooCommerce store user
+	// Login as WooCommerce store user and open the woo store
 	test.before( function() {
 		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.login();
+		return this.loginFlow.loginAndOpenWooStore();
 	} );
 
-	test.it( 'Can see store placeholder page when visiting /store/products/{storeSlug}/import', function() {
-		this.storeProductsImportPage = new StoreProductsImportPage( driver, true );
-		this.storeProductsImportPage.displayed().then( ( shown ) => {
-			assert( shown, 'Could not see the WooCommerce store products import page after visiting /store/products/{storeSlug}/import' );
+	test.it( 'Can see \'Settings\' option in the Woo store sidebar', function() {
+		this.storeDashboardPage = new StoreDashboardPage( driver );
+		this.storeSidebarComponent = new StoreSidebarComponent( driver );
+		this.storeSidebarComponent.settingsLinkDisplayed().then( ( d ) => {
+			assert( d, 'The store sidebar settings link is not displayed' );
 		} );
 	} );
-} );
 
-test.xdescribe( `WooCommerce on Calypso /store/orders/{storeslug}: '${ screenSize }' @parallel`, function() {
-	this.timeout( mochaTimeOut );
-	this.bailSuite( true );
-
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	test.it( 'Can see the settings page when selecting the settings option in the Woo store sidebar', function() {
+		this.storeDashboardPage = new StoreDashboardPage( driver );
+		this.storeSidebarComponent = new StoreSidebarComponent( driver );
+		this.storeSidebarComponent.selectSettings();
+		this.storeSettingsPage = new StoreSettingsPage( driver );
 	} );
 
-	// Login as WooCommerce store user
-	test.before( function() {
-		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.login();
-	} );
-
-	test.it( 'Can see store placeholder page when visiting /store/orders/{storeSlug}', function() {
-		this.storeOrdersPage = new StoreOrdersPage( driver, true );
-		this.storeOrdersPage.displayed().then( ( shown ) => {
-			assert( shown, 'Could not see the WooCommerce store orders page after visiting /store/orders' );
+	test.it( 'Can select payments, shipping, and taxes tabs on the settings page', function() {
+		this.storeSidebarComponent = new StoreSidebarComponent( driver );
+		this.storeSidebarComponent.selectSettings();
+		this.storeSettingsPage = new StoreSettingsPage( driver );
+		this.storeSettingsPage.selectPaymentsTab();
+		this.storeSettingsPage.paymentsSettingsDisplayed().then( ( displayed ) => {
+			assert( displayed, 'The payment settings were not displayed' );
 		} );
-	} );
-} );
-
-test.xdescribe( `WooCommerce on Calypso /store/orders/{storeslug}/add: '${ screenSize }' @parallel`, function() {
-	this.timeout( mochaTimeOut );
-	this.bailSuite( true );
-
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
-	} );
-
-	// Login as WooCommerce store user
-	test.before( function() {
-		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.login();
-	} );
-
-	test.it( 'Can see store placeholder page when visiting /store/orders/{storeSlug}/add', function() {
-		this.storeOrdersAddPage = new StoreOrdersAddPage( driver, true );
-		this.storeOrdersAddPage.displayed().then( ( shown ) => {
-			assert( shown, 'Could not see the WooCommerce store orders add page after visiting /store/orders/{storeSlug}/add' );
+		this.storeSettingsPage.selectShippingTab();
+		this.storeSettingsPage.shippingSettingsDisplayed().then( ( displayed ) => {
+			assert( displayed, 'The shipping settings were not displayed' );
 		} );
-	} );
-} );
-
-test.xdescribe( `WooCommerce on Calypso /store/promotions/{storeslug}: '${ screenSize }' @parallel`, function() {
-	this.timeout( mochaTimeOut );
-	this.bailSuite( true );
-
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
-	} );
-
-	// Login as WooCommerce store user
-	test.before( function() {
-		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.login();
-	} );
-
-	test.it( 'Can see store placeholder page when visiting /store/promotions/{storeSlug}', function() {
-		this.storePromotionsPage = new StorePromotionsPage( driver, true );
-		this.storePromotionsPage.displayed().then( ( shown ) => {
-			assert( shown, 'Could not see the WooCommerce store promotions page after visiting /store/promotions' );
-		} );
-	} );
-} );
-
-test.xdescribe( `WooCommerce on Calypso /store/extensions/{storeslug}: '${ screenSize }' @parallel`, function() {
-	this.timeout( mochaTimeOut );
-	this.bailSuite( true );
-
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
-	} );
-
-	// Login as WooCommerce store user
-	test.before( function() {
-		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.login();
-	} );
-
-	test.it( 'Can see store placeholder page when visiting /store/extensions/{storeSlug}', function() {
-		this.storeExtensionsPage = new StoreExtensionsPage( driver, true );
-		this.storeExtensionsPage.displayed().then( ( shown ) => {
-			assert( shown, 'Could not see the WooCommerce store extensions page after visiting /store/promotions' );
-		} );
-	} );
-} );
-
-test.xdescribe( `WooCommerce on Calypso /store/settings/{storeslug}: '${ screenSize }' @parallel`, function() {
-	this.timeout( mochaTimeOut );
-	this.bailSuite( true );
-
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
-	} );
-
-	// Login as WooCommerce store user
-	test.before( function() {
-		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.login();
-	} );
-
-	test.it( 'Can see store placeholder page when visiting /store/settings/{storeSlug}', function() {
-		this.storeSettingsPage = new StoreSettingsPage( driver, true );
-		this.storeSettingsPage.displayed().then( ( shown ) => {
-			assert( shown, 'Could not see the WooCommerce store settings page after visiting /store/settings' );
-		} );
-	} );
-} );
-
-	// 							http://calypso.localhost:3000/store/settings/{storeslug}
-	// 								http://calypso.localhost:3000/store/settings/{storeslug}/checkout
-	// 									http://calypso.localhost:3000/store/settings/{storeslug}/shipping
-	// 										http://calypso.localhost:3000/store/settings/{storeslug}/tax
-
-test.xdescribe( `WooCommerce on Calypso /store/products/{storeslug}/add: '${ screenSize }' @parallel`, function() {
-	this.timeout( mochaTimeOut );
-	this.bailSuite( true );
-
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
-	} );
-
-	// Login as WooCommerce store user
-	test.before( function() {
-		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		this.loginFlow.login();
-	} );
-
-	test.it( 'Can see the add product placeholder page when visiting /store/products/add', function() {
-		this.addProductPage = new AddProductPage( driver, true );
-		this.addProductPage.displayed().then( ( shown ) => {
-			assert( shown, 'Could not see the WooCommerce add product page after visting /store/products/add' );
+		this.storeSettingsPage.selectTaxesTab();
+		this.storeSettingsPage.taxesSettingsDisplayed().then( ( displayed ) => {
+			assert( displayed, 'The taxes settings were not displayed' );
 		} );
 	} );
 } );

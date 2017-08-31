@@ -1,5 +1,14 @@
 #!/bin/bash
 
+if [ "$CI" == "true" ]; then
+  if [ -d $HOME/.nvm ]; then
+    export NVM_DIR="$HOME/.nvm"
+  fi
+
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  nvm install
+fi
+
 # Notify Slack if any tests are being skipped -- Only runs on Node 0 so you just get one ping
 # -- Note that since this is called before run.sh the BROWSERSIZE variable is not yet set and
 #    it will always say "screen size 'desktop'"
@@ -24,7 +33,7 @@ elif [[ "$CIRCLE_BRANCH" =~ .*[Jj]etpack.*|.*[Jj][Pp].* ]]; then
   export JETPACKHOST=GODADDY
   TESTARGS="-R -j" # Execute Jetpack tests
 elif [[ "$CIRCLE_BRANCH" =~ .*[Ww][Oo][Oo].* ]]; then
-  TESTARGS="-R -W -u https://wpcalypso.wordpress.com" # Execute WooCommerce tests
+  TESTARGS="-R -W" # Execute WooCommerce tests
 elif [ "$CIRCLE_BRANCH" == "master" ]; then
   TESTARGS="-R -p -x" # Parallel execution, implies -g -s mobile,desktop
 fi
