@@ -12,6 +12,7 @@ import WPHomePage from '../lib/pages/wp-home-page';
 import NavbarComponent from '../lib/components/navbar-component.js';
 
 import LoginFlow from '../lib/flows/login-flow.js';
+import GoogleLoginFlow from '../lib/flows/google-login-flow.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -81,6 +82,36 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, f
 					}
 					assert.equal( url, 'https://wordpress.com', 'The home page url was incorrect after signing out' );
 				} );
+			} );
+		} );
+	} );
+
+	test.describe( 'Can Log In with Google account', function() {
+		test.before( function() {
+			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.it( 'Can log in', function() {
+			let googleLoginFlow = new GoogleLoginFlow( driver, 'googleLoginUser' );
+			googleLoginFlow.login();
+		} );
+
+		test.it( 'Can see Reader Page after logging in', function() {
+			let readerPage = new ReaderPage( driver );
+			readerPage.displayed().then( function( displayed ) {
+				assert.equal( displayed, true, 'The reader page is not displayed after log in' );
+			} );
+		} );
+
+		test.describe( 'Can Log Out', function() {
+			test.it( 'Can view profile to log out', function() {
+				let navbarComponent = new NavbarComponent( driver );
+				navbarComponent.clickProfileLink();
+			} );
+
+			test.it( 'Can logout from profile page', function() {
+				let profilePage = new ProfilePage( driver );
+				profilePage.clickSignOut();
 			} );
 		} );
 	} );
