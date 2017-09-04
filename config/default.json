@@ -61,7 +61,7 @@
   "overrideABTests": [
 	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
 	[ "postPublishConfirmation_20170801", "showPublishConfirmation" ],
-	[ "privacyNoPopup_20170829", "original" ]
+	[ "privacyNoPopup_20170830", "original" ],
 	[ "skipThemesSelectionModal_20170830", "show" ]
   ]
 }
