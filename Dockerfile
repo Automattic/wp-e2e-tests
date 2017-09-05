@@ -8,8 +8,7 @@ WORKDIR /wp-e2e-tests
 RUN	mkdir /wp-e2e-tests-canary /wp-e2e-tests-jetpack /wp-e2e-tests-visdiff /wp-e2e-tests-ie11 /wp-e2e-tests-woocommerce
 
 # Version Numbers
-ENV CHROMEDRIVER_VERSION 2.30
-ENV CHROME_VERSION 59.0.3071.86
+ENV CHROMEDRIVER_VERSION 2.32
 ENV NVM_VERSION 0.33.2
 
 # Install dependencies
@@ -33,10 +32,19 @@ RUN mkdir -p /opt/chromedriver-$CHROMEDRIVER_VERSION && \
     chmod +x /opt/chromedriver-$CHROMEDRIVER_VERSION/chromedriver && \
     ln -fs /opt/chromedriver-$CHROMEDRIVER_VERSION/chromedriver /usr/local/bin/chromedriver
 
-# Install Google Chrome
-RUN wget http://www.slimjetbrowser.com/chrome/lnx/chrome64_$CHROME_VERSION.deb && \
-	dpkg -i chrome64_$CHROME_VERSION.deb || \
-	apt-get -fy install
+# Install deps + add Chrome Stable + purge all the things
+RUN apt-get update && apt-get install -y \
+	apt-transport-https \
+	ca-certificates \
+	curl \
+	gnupg \
+	--no-install-recommends \
+	&& curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
+	&& echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
+	&& apt-get update && apt-get install -y \
+	google-chrome-beta \
+	--no-install-recommends \
+	&& rm -rf /var/lib/apt/lists/*
 
 # Remove install file
 RUN rm -rf /wp-e2e-tests/chrome64_$CHROME_VERSION.deb
