@@ -158,6 +158,10 @@ test.describe( `[${host}] Editor: Media Upload (${screenSize}) @parallel @jetpac
 					editorSidebar.closeFeaturedImage();
 				} );
 			} );
+			// FIXME: Workaround of https://github.com/Automattic/wp-calypso/issues/17701
+			test.after( () => {
+				editorPage.cleanDirtyState();
+			} );
 		} );
 	} );
 } );
