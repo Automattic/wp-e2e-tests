@@ -24,6 +24,23 @@ const screenSize = driverManager.currentScreenSize();
 const domainsInboxId = config.get( 'domainsInboxId' );
 const host = dataHelper.getJetpackHost();
 
+const expect = require( 'chai' ).expect;
+
+const bluecat = require( 'bluecat' );
+const path = require( 'path' );
+
+
+const oauth = require( '../lib/wpcom-api/oauth.js' );
+const posts = require( '../lib/wpcom-api/posts.js' );
+const media = require( '../lib/wpcom-api/media.js' );
+
+const api = bluecat.Api( 'wp' );
+api.oauth2.host = 'https://public-api.wordpress.com';
+const service = new bluecat.ServiceSync( api, 'public-api.wordpress.com/rest/v1.1' );
+
+// Test account for the API
+const account = config.testAccounts.defaultUser;
+
 var driver;
 
 test.before( function() {
@@ -110,20 +127,30 @@ test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function
 				} );
 
 				// Remove all items from basket for clean up
-				test.after( () => {
-					this.readerPage = new ReaderPage( driver, true );
-
-					this.navbarComponent = new NavbarComponent( driver );
-					this.navbarComponent.clickMySites();
-
-					this.statsPage = new StatsPage( driver, true );
-
-					this.sideBarComponent = new SidebarComponent( driver );
-					this.sideBarComponent.selectDomains();
-
-					this.domainsPage = new DomainsPage( driver );
-					this.shoppingCartWidgetComponent = new ShoppingCartWidgetComponent( driver );
-					this.shoppingCartWidgetComponent.empty();
+				test.it( 'Clean up', () => {
+					return service.run( function() {
+						oauth.login( service, account );
+						let res = service.sites['${site}'].shopping-cart.clear.POST( {
+							params: { site: account[2] }
+						} );
+						expect( res.data.statusCode ).to.equal( 444 );
+						console.log ( 'blah' );
+						console.log( res.data.body );
+						return true;
+					} );
+					// this.readerPage = new ReaderPage( driver, true );
+                    //
+					// this.navbarComponent = new NavbarComponent( driver );
+					// this.navbarComponent.clickMySites();
+                    //
+					// this.statsPage = new StatsPage( driver, true );
+                    //
+					// this.sideBarComponent = new SidebarComponent( driver );
+					// this.sideBarComponent.selectDomains();
+                    //
+					// this.domainsPage = new DomainsPage( driver );
+					// this.shoppingCartWidgetComponent = new ShoppingCartWidgetComponent( driver );
+					// this.shoppingCartWidgetComponent.empty();
 				} );
 			} );
 		} );
