@@ -110,7 +110,7 @@ test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function
 				} );
 
 				// Remove all items from basket for clean up
-				test.after( () => {
+				test.it( 'Can empty cart for next test', () => {
 					this.readerPage = new ReaderPage( driver, true );
 
 					this.navbarComponent = new NavbarComponent( driver );
@@ -123,7 +123,7 @@ test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function
 
 					this.domainsPage = new DomainsPage( driver );
 					this.shoppingCartWidgetComponent = new ShoppingCartWidgetComponent( driver );
-					this.shoppingCartWidgetComponent.empty();
+					return this.shoppingCartWidgetComponent.empty();
 				} );
 			} );
 		} );
