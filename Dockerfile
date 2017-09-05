@@ -21,7 +21,6 @@ RUN     apt-get -y update && apt-get -y install \
 	  curl \
 	  unzip \
 	  fonts-ipafont-gothic xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic \
-	  xvfb \
 	  sudo
 
 # Install Chrome WebDriver
