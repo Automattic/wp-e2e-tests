@@ -127,7 +127,7 @@ test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function
 				} );
 
 				// Remove all items from basket for clean up
-				test.it( 'Clean up', () => {
+				test.it( 'Can empty cart for next test', () => {
 					return service.run( function() {
 						oauth.login( service, account );
 						let res = service.sites['${site}'].shopping-cart.clear.POST( {
@@ -150,7 +150,7 @@ test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function
                     //
 					// this.domainsPage = new DomainsPage( driver );
 					// this.shoppingCartWidgetComponent = new ShoppingCartWidgetComponent( driver );
-					// this.shoppingCartWidgetComponent.empty();
+					// return this.shoppingCartWidgetComponent.empty();
 				} );
 			} );
 		} );
