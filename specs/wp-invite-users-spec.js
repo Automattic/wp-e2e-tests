@@ -144,8 +144,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 
 						test.it( 'Can enter new username and password and sign up', function() {
 							this.acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
-							this.acceptInvitePage.waitUntilNotVisible();
-							return this.acceptInvitePage.ensureWeAreLoggedIn( newUserName, password );
+							return this.acceptInvitePage.waitUntilNotVisible();
 						} );
 
 						test.describe( 'User has been added as Editor', function() {
@@ -314,8 +313,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 
 						test.it( 'Can enter new username and password and sign up', function() {
 							this.acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
-							this.acceptInvitePage.waitUntilNotVisible();
-							this.acceptInvitePage.ensureWeAreLoggedIn( newUserName, password );
+							return this.acceptInvitePage.waitUntilNotVisible();
 						} );
 
 						test.describe( 'User has been added as a Follower', function() {
@@ -480,8 +478,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 
 							test.it( 'Can enter new username and password and sign up', function() {
 								this.acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
-								this.acceptInvitePage.waitUntilNotVisible();
-								this.acceptInvitePage.ensureWeAreLoggedIn( newUserName, password );
+								return this.acceptInvitePage.waitUntilNotVisible();
 							} );
 
 							test.describe( 'User has been added as a Viewer', function() {
@@ -653,8 +650,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 
 							test.it( 'Can enter new username and password and sign up', function() {
 								this.acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
-								this.acceptInvitePage.waitUntilNotVisible();
-								this.acceptInvitePage.ensureWeAreLoggedIn( newUserName, password );
+								return this.acceptInvitePage.waitUntilNotVisible();
 							} );
 
 							test.describe( 'User has been added as Contributor - Can edit but not publish a post', function() {
