@@ -29,7 +29,6 @@ const expect = require( 'chai' ).expect;
 const bluecat = require( 'bluecat' );
 const path = require( 'path' );
 
-
 const oauth = require( '../lib/wpcom-api/oauth.js' );
 const posts = require( '../lib/wpcom-api/posts.js' );
 const media = require( '../lib/wpcom-api/media.js' );
@@ -130,7 +129,7 @@ test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function
 				test.it( 'Can empty cart for next test', () => {
 					return service.run( function() {
 						oauth.login( service, account );
-						let res = service.sites['${site}'].shopping-cart.clear.POST( {
+						let res = service.sites['${site}']['shopping-cart'].clear.POST( {
 							params: { site: account[2] }
 						} );
 						expect( res.data.statusCode ).to.equal( 444 );
