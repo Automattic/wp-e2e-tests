@@ -10,6 +10,7 @@ import ProfilePage from '../lib/pages/profile-page';
 import WPHomePage from '../lib/pages/wp-home-page';
 
 import NavbarComponent from '../lib/components/navbar-component.js';
+import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component'
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
@@ -75,11 +76,9 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, f
 			} );
 
 			test.it( 'Can see wordpress.com home when after logging out', function() {
-				driver.getCurrentUrl().then( function( url ) {
-					if ( url.endsWith( '/?apppromo' ) ) {
-						url = url.replace( '/?apppromo', '' );
-					}
-					assert.equal( url, 'https://wordpress.com', 'The home page url was incorrect after signing out' );
+				const loggedOutMasterbarComponent = new LoggedOutMasterbarComponent( driver );
+				loggedOutMasterbarComponent.displayed().then( ( displayed ) => {
+					assert( displayed, 'The logged out masterbar isn\'t displayed after logging out' );
 				} );
 			} );
 		} );
