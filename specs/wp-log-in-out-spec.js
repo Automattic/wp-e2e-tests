@@ -8,6 +8,7 @@ import * as dataHelper from '../lib/data-helper';
 import ReaderPage from '../lib/pages/reader-page';
 import ProfilePage from '../lib/pages/profile-page';
 import WPHomePage from '../lib/pages/wp-home-page';
+import DevDocsNoticesPage from '../lib/pages/devdocs/devdocs-notices-page';
 
 import NavbarComponent from '../lib/components/navbar-component.js';
 import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component'
@@ -98,5 +99,26 @@ test.describe( `[${host}] User Agent: (${screenSize}) @parallel @jetpack`, funct
 		driver.executeScript( 'return navigator.userAgent;' ).then( ( userAgent ) => {
 			assert( userAgent.match( 'wp-e2e-tests' ), `User Agent does not contain 'wp-e2e-tests'.  [${userAgent}]` );
 		} );
+	} );
+} );
+
+test.describe( `[${host}] Can check for errors and warnings on every page: (${screenSize}) @parallel`, function() {
+	this.timeout( mochaTimeOut );
+	this.bailSuite( true );
+
+	test.before( function() {
+		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		const loginFlow = new LoginFlow( driver );
+		return loginFlow.login();
+	} );
+
+	test.it( 'Login and check dev docs for error message', function() {
+		const devDocsNoticesPage = new DevDocsNoticesPage( driver, true );
+		return devDocsNoticesPage.checkForGlobalErrors( { reportErrors: false } );
+	} );
+
+	test.it( 'Login and check dev docs for warning message', function() {
+		const devDocsNoticesPage = new DevDocsNoticesPage( driver, true );
+		return devDocsNoticesPage.checkForGlobalWarnings( { reportWarnings: false } );
 	} );
 } );
