@@ -128,8 +128,8 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 
 							test.it( 'Can see the default publicise message', function() {
 								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-								postEditorSidebarComponent.publicizeMessagePlaceholder().then( function( placeholderDisplayed ) {
-									assert.equal( placeholderDisplayed, blogPostTitle, 'The placeholder for publicize is not equal to the blog post title. Placeholder: \'' + placeholderDisplayed + '\', Title: \'' + blogPostTitle + '\'' );
+								postEditorSidebarComponent.publicizeMessageDisplayed().then( function( messageDisplayed ) {
+									assert.equal( messageDisplayed, '', 'The publicize message is not defaulting to empty' );
 								} );
 							} );
 
