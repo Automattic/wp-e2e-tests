@@ -110,7 +110,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 							if ( link.href.includes( 'accept-invite' ) ) {
 								acceptInviteURL = link.href;
 								acceptInviteURL = acceptInviteURL.replace( 'https://wordpress.com', calypsoBaseUrl );
-								if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) === 'true' ) {
+								if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) ) {
 									acceptInviteURL = acceptInviteURL + '?branch=' + config.get( 'branchName' );
 								}
 							}
@@ -279,7 +279,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 							if ( link.href.includes( 'accept-invite' ) ) {
 								acceptInviteURL = link.href;
 								acceptInviteURL = acceptInviteURL.replace( 'https://wordpress.com', calypsoBaseUrl );
-								if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) === 'true' ) {
+								if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) ) {
 									acceptInviteURL = acceptInviteURL + '?branch=' + config.get( 'branchName' );
 								}
 							}
@@ -444,7 +444,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 								if ( link.href.includes( 'accept-invite' ) ) {
 									acceptInviteURL = link.href;
 									acceptInviteURL = acceptInviteURL.replace( 'https://wordpress.com', calypsoBaseUrl );
-									if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) === 'true' ) {
+									if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) ) {
 										acceptInviteURL = acceptInviteURL + '?branch=' + config.get( 'branchName' );
 									}
 								}
@@ -616,7 +616,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 								if ( link.href.includes( 'accept-invite' ) ) {
 									acceptInviteURL = link.href;
 									acceptInviteURL = acceptInviteURL.replace( 'https://wordpress.com', calypsoBaseUrl );
-									if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) === 'true' ) {
+									if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) ) {
 										acceptInviteURL = acceptInviteURL + '?branch=' + config.get( 'branchName' );
 									}
 								}
