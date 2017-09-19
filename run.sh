@@ -65,7 +65,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
+while getopts ":a:Rpb:s:gjWCLH:wl:cm:fiIUvxu:h" opt; do # The colon indicates a trailing argument
   case $opt in
     a)
       WORKERS=$OPTARG
@@ -142,6 +142,10 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
       SCREENSIZES="mobile"
       MAGELLAN_CONFIG="magellan-canary.json"
       ;;
+    L)
+      SCREENSIZES="desktop"
+      MAGELLAN_CONFIG="magellan-livebranch-warmup.json"
+      ;;
     H)
       export JETPACKHOST=$OPTARG
       ;;
@@ -217,7 +221,7 @@ else # Not using multiple CircleCI containers, just queue up the tests in sequen
         for config in "${MAGELLAN_CONFIGS[@]}"; do
           if [ "$config" != "" ]; then
             CMD="env BROWSERSIZE=$size BROWSERLOCALE=$locale $MAGELLAN --mocha_args='$MOCHA_ARGS' --config='$config' --max_workers=$WORKERS"
-  
+
             eval $CMD
             RETURN+=$?
           fi
