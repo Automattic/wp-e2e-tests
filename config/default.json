@@ -14,7 +14,7 @@
   "neverSaveScreenshots": false,
   "checkForConsoleErrors": false,
   "reportWarningsToSlack": false,
-  "closeBrowserOnComplete": false,
+  "closeBrowserOnComplete": true,
   "usePublishConfirmation": true,
   "branchName": "try/live-branch-test-pr-only",
   "liveBranch": true,

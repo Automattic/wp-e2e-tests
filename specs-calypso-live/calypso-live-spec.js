@@ -5,16 +5,15 @@ import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper';
 
+import LoginPage from '../lib/pages/login-page';
 import ReaderPage from '../lib/pages/reader-page';
-import ProfilePage from '../lib/pages/profile-page';
-import WPHomePage from '../lib/pages/wp-home-page';
-
-import NavbarComponent from '../lib/components/navbar-component.js';
-import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component'
+import CalypsoLiveBranchesStatusPage from '../lib/pages/calypso-live/calypso-live-branches-status-page';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
 const mochaTimeOutMs = 600000; // 10 mins
+const liveBranchActiveTimeOutMS = 60000; // 1 min
+const liveBranchReadyTimeOutMS = 360000; // 6 mins
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
@@ -40,36 +39,48 @@ test.describe( `[${host}] Calypso.Live: (${screenSize}) @parallel`, function() {
 		} );
 
 		test.describe( 'Waiting and visiting', function() {
-			test.it( 'Can use the status page to wait ', function() {
-				let loginFlow = new LoginFlow( driver );
-				loginFlow.login();
+			test.it( 'Load the live branch by visiting the login page for that live branch - this will make sure it\'s loaded', function() {
+				const liveBranchLoginURL = LoginPage.getLoginURL();
+				return driver.get( liveBranchLoginURL ); // This will either be the calypso.live loading page or the actual logon page
 			} );
 
-			// test.it( 'Can see the logged out start page for live branch when it is ready', function() {
-			// 	let readerPage = new ReaderPage( driver );
-			// 	readerPage.displayed().then( function( displayed ) {
-			// 		assert.equal( displayed, true, 'The reader page is not displayed after log in' );
-			// 	} );
-			// } );
-		} );
+			test.it( 'Load the calypso.live status page and make sure branch is not in \'Error\' list', function() {
+				const calypsoLiveBranchesStatusPage = new CalypsoLiveBranchesStatusPage( driver, { visit: true } );
+				return calypsoLiveBranchesStatusPage.branchHasError( branchName ).then( ( hasError ) => {
+					assert.equal( hasError, false, `Branch '${ branchName }' has an error in Calypso live!` );
+				} );
+			} );
 
-		// test.describe( 'Can Log Out', function() {
-		// 	test.it( 'Can view profile to log out', function() {
-		// 		let navbarComponent = new NavbarComponent( driver );
-		// 		navbarComponent.clickProfileLink();
-		// 	} );
-        //
-		// 	test.it( 'Can logout from profile page', function() {
-		// 		let profilePage = new ProfilePage( driver );
-		// 		profilePage.clickSignOut();
-		// 	} );
-        //
-		// 	test.it( 'Can see wordpress.com home when after logging out', function() {
-		// 		const loggedOutMasterbarComponent = new LoggedOutMasterbarComponent( driver );
-		// 		loggedOutMasterbarComponent.displayed().then( ( displayed ) => {
-		// 			assert( displayed, 'The logged out masterbar isn\'t displayed after logging out' );
-		// 		} );
-		// 	} );
-		// } );
+			test.it( 'Wait until the branch is showing as \'active\'', function() {
+				const calypsoLiveBranchesStatusPage = new CalypsoLiveBranchesStatusPage( driver, { visit: true } );
+				return calypsoLiveBranchesStatusPage.waitUntilBranchIsStatus( branchName, 'active', liveBranchActiveTimeOutMS );
+			} );
+
+			test.it( 'Wait until the branch is showing as \'ready\'', function() {
+				const calypsoLiveBranchesStatusPage = new CalypsoLiveBranchesStatusPage( driver, { visit: true } );
+				return calypsoLiveBranchesStatusPage.waitUntilBranchIsStatus( branchName, 'ready', liveBranchReadyTimeOutMS );
+			} );
+
+			test.it( 'Load the calypso.live status page and make sure branch is still not in \'Error\' list', function() {
+				const calypsoLiveBranchesStatusPage = new CalypsoLiveBranchesStatusPage( driver, { visit: true } );
+				return calypsoLiveBranchesStatusPage.branchHasError( branchName ).then( ( hasError ) => {
+					assert.equal( hasError, false, `Branch '${ branchName }' has an error in Calypso live!` );
+				} );
+			} );
+
+			test.describe( 'Can Log In', function() {
+				test.it( 'Can log in', function() {
+					let loginFlow = new LoginFlow( driver );
+					loginFlow.login();
+				} );
+
+				test.it( 'Can see Reader Page after logging in', function() {
+					let readerPage = new ReaderPage( driver );
+					readerPage.displayed().then( function( displayed ) {
+						assert.equal( displayed, true, 'The reader page is not displayed after log in' );
+					} );
+				} );
+			} );
+		} );
 	} );
 } );
