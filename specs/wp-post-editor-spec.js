@@ -27,7 +27,7 @@ const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
 const httpsHost = config.get( 'httpsHosts' ).indexOf( host ) !== -1;
 
-var driver;
+let driver;
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -37,7 +37,6 @@ test.before( function() {
 test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
-	const usePublishConfirmation = config.get( 'usePublishConfirmation' );
 
 	test.describe( 'Public Posts: @parallel @jetpack', function() {
 		let fileDetails;
@@ -191,9 +190,9 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 									test.it( 'Can publish and view content', function() {
 										let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 										if ( httpsHost ) {
-											postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
+											postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 										} else {
-											postEditorToolbarComponent.publishAndPreviewPublished( { useConfirmStep: usePublishConfirmation } );
+											postEditorToolbarComponent.publishAndPreviewPublished( { useConfirmStep: true } );
 										}
 										this.postPreviewComponent = new PostPreviewComponent( driver );
 									} );
@@ -240,7 +239,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 							} else { // Jetpack tests
 								test.it( 'Can publish content', function() {
 									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-									postEditorToolbarComponent.publishThePost(  { useConfirmStep: usePublishConfirmation } );
+									postEditorToolbarComponent.publishThePost(  { useConfirmStep: true } );
 								} );
 							}
 
@@ -332,7 +331,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can publish and view content', function() {
 				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				postEditorToolbarComponent.ensureSaved();
-				return postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
+				return postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 			} );
 
 			test.it( 'Can see correct post title', function() {
@@ -496,7 +495,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				// Can publish and view content
 				test.before( function() {
 					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
+					postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 				} );
 
 				test.describe( 'As a logged in user', function() {
@@ -820,7 +819,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can publish the post', function() {
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				this.postEditorToolbarComponent.ensureSaved();
-				this.postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
+				this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 				return this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 			} );
 
@@ -916,7 +915,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can publish and view content', function() {
 				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				postEditorToolbarComponent.ensureSaved();
-				postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
+				postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 				this.viewPostPage = new ViewPostPage( driver );
 			} );
 
@@ -961,7 +960,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can publish and view content', function() {
 				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				postEditorToolbarComponent.ensureSaved();
-				postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
+				postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 				this.viewPostPage = new ViewPostPage( driver );
 			} );
 
@@ -1002,7 +1001,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can publish the post', function() {
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				this.postEditorToolbarComponent.ensureSaved();
-				this.postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
+				this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 
 				if ( httpsHost ) {
 					this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
