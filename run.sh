@@ -65,7 +65,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":a:Rpb:s:gjWCLH:wl:cm:fiIUvxu:h" opt; do # The colon indicates a trailing argument
+while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
   case $opt in
     a)
       WORKERS=$OPTARG
@@ -141,10 +141,6 @@ while getopts ":a:Rpb:s:gjWCLH:wl:cm:fiIUvxu:h" opt; do # The colon indicates a 
     C)
       SCREENSIZES="mobile"
       MAGELLAN_CONFIG="magellan-canary.json"
-      ;;
-    L)
-      SCREENSIZES="desktop"
-      MAGELLAN_CONFIG="magellan-livebranch-warmup.json"
       ;;
     H)
       export JETPACKHOST=$OPTARG
