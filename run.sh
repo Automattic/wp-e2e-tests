@@ -217,7 +217,7 @@ else # Not using multiple CircleCI containers, just queue up the tests in sequen
         for config in "${MAGELLAN_CONFIGS[@]}"; do
           if [ "$config" != "" ]; then
             CMD="env BROWSERSIZE=$size BROWSERLOCALE=$locale $MAGELLAN --mocha_args='$MOCHA_ARGS' --config='$config' --max_workers=$WORKERS"
-  
+
             eval $CMD
             RETURN+=$?
           fi

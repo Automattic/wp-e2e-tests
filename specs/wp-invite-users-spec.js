@@ -107,11 +107,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 						let links = emails[0].html.links;
 						for ( let link of links ) {
 							if ( link.href.includes( 'accept-invite' ) ) {
-								acceptInviteURL = link.href;
-								acceptInviteURL = acceptInviteURL.replace( 'https://wordpress.com', calypsoBaseUrl );
-								if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) === 'true' ) {
-									acceptInviteURL = acceptInviteURL + '?branch=' + config.get( 'branchName' );
-								}
+								acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 							}
 						}
 						assert.notEqual( acceptInviteURL, '', 'Could not locate the accept invite URL in the invite email' );
@@ -276,11 +272,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 						let links = emails[0].html.links;
 						for ( let link of links ) {
 							if ( link.href.includes( 'accept-invite' ) ) {
-								acceptInviteURL = link.href;
-								acceptInviteURL = acceptInviteURL.replace( 'https://wordpress.com', calypsoBaseUrl );
-								if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) === 'true' ) {
-									acceptInviteURL = acceptInviteURL + '?branch=' + config.get( 'branchName' );
-								}
+								acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 							}
 						}
 						assert.notEqual( acceptInviteURL, '', 'Could not locate the accept invite URL in the invite email' );
@@ -441,11 +433,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 							let links = emails[0].html.links;
 							for ( let link of links ) {
 								if ( link.href.includes( 'accept-invite' ) ) {
-									acceptInviteURL = link.href;
-									acceptInviteURL = acceptInviteURL.replace( 'https://wordpress.com', calypsoBaseUrl );
-									if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) === 'true' ) {
-										acceptInviteURL = acceptInviteURL + '?branch=' + config.get( 'branchName' );
-									}
+									acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 								}
 							}
 							assert.notEqual( acceptInviteURL, '', 'Could not locate the accept invite URL in the invite email' );
@@ -613,11 +601,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 							let links = emails[0].html.links;
 							for ( let link of links ) {
 								if ( link.href.includes( 'accept-invite' ) ) {
-									acceptInviteURL = link.href;
-									acceptInviteURL = acceptInviteURL.replace( 'https://wordpress.com', calypsoBaseUrl );
-									if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) === 'true' ) {
-										acceptInviteURL = acceptInviteURL + '?branch=' + config.get( 'branchName' );
-									}
+									acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 								}
 							}
 							assert.notEqual( acceptInviteURL, '', 'Could not locate the accept invite URL in the invite email' );
