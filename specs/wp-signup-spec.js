@@ -5,6 +5,7 @@ import assert from 'assert';
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper.js';
 import * as driverHelper from '../lib/driver-helper.js';
+import * as eyesHelper from '../lib/eyes-helper.js';
 
 import WPHomePage from '../lib/pages/wp-home-page.js';
 import ChooseAThemePage from '../lib/pages/signup/choose-a-theme-page.js';
@@ -48,6 +49,11 @@ const host = dataHelper.getJetpackHost();
 const locale = driverManager.currentLocale();
 
 let driver;
+
+let Eyes = require( 'eyes.selenium' ).Eyes;
+let eyes = new Eyes();
+eyes.setApiKey( config.get( 'eyesKey' ) );
+eyes.setForceFullPageScreenshot( true );
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -256,6 +262,12 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
 
+		test.before( function() {
+			let testEnvironment = 'WordPress.com';
+			let testName = `Signup [${global.browserName}] [${screenSize}]`;
+			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
+		} );
+
 		test.it( 'Ensure we are not logged in as anyone', function() {
 			return driverManager.ensureNotLoggedIn( driver );
 		} );
@@ -272,6 +284,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 				this.startPage = new StartPage( driver, { visit: true, culture: locale } );
 				this.aboutPage = new AboutPage( driver );
 				return this.aboutPage.displayed().then( ( displayed ) => {
+					if ( process.env.VISDIFF ) {
+						eyesHelper.eyesScreenshot( driver, eyes, 'About Page' );
+					}
 					return assert.equal( displayed, true, 'The about page is not displayed' );
 				} );
 			} );
@@ -286,6 +301,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 				test.it( 'Can then see the domains page ', function() {
 					this.findADomainComponent = new FindADomainComponent( driver );
 					return this.findADomainComponent.displayed().then( ( displayed ) => {
+						if ( process.env.VISDIFF ) {
+							eyesHelper.eyesScreenshot( driver, eyes, 'Domains Page' );
+						}
 						return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
 					} );
 				} );
@@ -298,6 +316,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 						selectedBlogAddress = actualAddress;
 					} );
 
+					if ( process.env.VISDIFF ) {
+						eyesHelper.eyesScreenshot( driver, eyes, 'Domains Page Site Address Search' );
+					}
 					return this.findADomainComponent.selectFreeAddress();
 				} );
 
@@ -317,6 +338,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 					test.it( 'Can then see the plans page', function() {
 						this.pickAPlanPage = new PickAPlanPage( driver );
 						return this.pickAPlanPage.displayed().then( ( displayed ) => {
+							if ( process.env.VISDIFF ) {
+								eyesHelper.eyesScreenshot( driver, eyes, 'Plans Page' );
+							}
 							return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
 						} );
 					} );
@@ -333,6 +357,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 							this.createYourAccountPage.displayed().then( ( displayed ) => {
 								assert.equal( displayed, true, 'The create account page is not displayed' );
 							} );
+							if ( process.env.VISDIFF ) {
+								eyesHelper.eyesScreenshot( driver, eyes, 'Create Account Page' );
+							}
 							return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
 						} );
 
@@ -363,6 +390,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 								test.it( 'Can then see the secure payment page', function() {
 									this.securePaymentComponent = new SecurePaymentComponent( driver );
 									return this.securePaymentComponent.displayed().then( ( displayed ) => {
+										if ( process.env.VISDIFF ) {
+											eyesHelper.eyesScreenshot( driver, eyes, 'Secure Payment Page' );
+										}
 										return assert.equal( displayed, true, 'The secure payment page is not displayed' );
 									} );
 								} );
@@ -379,7 +409,14 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 									test.it( 'Can see the secure check out thank you page', function() {
 										this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
 										return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
+											if ( process.env.VISDIFF ) {
+												eyesHelper.eyesScreenshot( driver, eyes, 'Checkout Thank You Page' );
+											}
 											return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
+										} );
+
+										test.after( function() {
+											eyesHelper.eyesClose( eyes );
 										} );
 									} );
 								} );
