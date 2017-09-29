@@ -16,10 +16,7 @@ const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 let driver, screenSizeName;
 screenSizeName = driverManager.currentScreenSize();
 
-let Eyes = require( 'eyes.selenium' ).Eyes;
-let eyes = new Eyes();
-eyes.setApiKey( config.get( 'eyesKey' ) );
-eyes.setForceFullPageScreenshot( true );
+let eyes = eyesHelper.eyesSetup( true );
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
