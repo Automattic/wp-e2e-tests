@@ -11,12 +11,15 @@ import NotificationsComponent from '../lib/components/notifications-component.js
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper.js';
+import * as eyesHelper from '../lib/eyes-helper.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 
 let driver;
+
+let eyes = eyesHelper.eyesSetup( true );
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -29,6 +32,10 @@ test.describe( 'Reader: (' + screenSize + ') @parallel', function() {
 
 	test.before( function() {
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+
+		let testEnvironment = 'WordPress.com';
+		let testName = `Reader [${global.browserName}] [${screenSize}]`;
+		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 	} );
 
 	test.describe( 'Log in as commenting user', function() {
@@ -40,6 +47,9 @@ test.describe( 'Reader: (' + screenSize + ') @parallel', function() {
 		test.describe( 'Leave a comment on the latest post in the Reader', function() {
 			test.it( 'Can see the Reader stream', function() {
 				this.readerPage = new ReaderPage( driver );
+				if ( process.env.VISDIFF ) {
+					eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
+				}
 				return this.readerPage.waitForPage();
 			} );
 
@@ -52,7 +62,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel', function() {
 
 			test.it( 'Can comment on the latest post', function() {
 				this.comment = dataHelper.randomPhrase();
-				return this.readerPage.commentOnLatestPost( this.comment );
+				return this.readerPage.commentOnLatestPost( this.comment, eyes );
 			} );
 
 			test.describe( 'Delete the new comment', function() {
@@ -78,5 +88,9 @@ test.describe( 'Reader: (' + screenSize + ') @parallel', function() {
 				} );
 			} );
 		} );
+	} );
+
+	test.after( function() {
+		eyesHelper.eyesClose( eyes );
 	} );
 } );
