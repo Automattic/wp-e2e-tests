@@ -15,6 +15,7 @@ import SidebarComponent from '../lib/components/sidebar-component';
 import WPAdminCustomizerPage from '../lib/pages/wp-admin/wp-admin-customizer-page.js';
 import WPAdminLogonPage from '../lib/pages/wp-admin/wp-admin-logon-page.js';
 import * as dataHelper from '../lib/data-helper';
+import * as eyesHelper from '../lib/eyes-helper';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -22,6 +23,8 @@ const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
 
 var driver;
+
+let eyes = eyesHelper.eyesSetup( true );
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -31,6 +34,12 @@ test.before( function() {
 test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
+
+	test.before( function() {
+		let testEnvironment = 'WordPress.com';
+		let testName = `Themes [${global.browserName}] [${screenSize}]`;
+		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
+	} );
 
 	test.describe( 'Switching Themes @parallel @jetpack', function() {
 		test.it( 'Delete Cookies and Login', function() {
@@ -42,6 +51,9 @@ test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
 		test.describe( 'Can switch free themes', function() {
 			test.it( 'Can select a different free theme', function() {
 				this.themesPage = new ThemesPage( driver );
+				if ( process.env.VISDIFF ) {
+					eyesHelper.eyesScreenshot( driver, eyes, 'Themes Page' );
+				}
 				this.themesPage.showOnlyFreeThemes();
 				this.themesPage.searchFor( 'Twenty F' );
 				this.themesPage.waitForThemeStartingWith( 'Twenty F' );
@@ -50,6 +62,9 @@ test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
 
 			test.it( 'Can see theme details page and open the live demo', function() {
 				this.themeDetailPage = new ThemeDetailPage( driver );
+				if ( process.env.VISDIFF ) {
+					eyesHelper.eyesScreenshot( driver, eyes, 'Theme Details Page' );
+				}
 				return this.themeDetailPage.openLiveDemo();
 			} );
 
@@ -67,6 +82,10 @@ test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
 				} );
 			} );
 		} );
+	} );
+
+	test.after( function() {
+		eyesHelper.eyesClose( eyes );
 	} );
 } );
 
