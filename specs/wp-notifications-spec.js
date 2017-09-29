@@ -5,6 +5,7 @@ import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 import * as slackNotifier from '../lib/slack-notifier';
 import * as dataHelper from '../lib/data-helper';
+import * as eyesHelper from '../lib/eyes-helper.js';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
@@ -21,6 +22,8 @@ const host = dataHelper.getJetpackHost();
 
 var driver;
 
+let eyes = eyesHelper.eyesSetup( true );
+
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
@@ -32,6 +35,10 @@ test.describe( `[${host}] Notifications: (${screenSize}) @parallel`, function() 
 
 	test.before( function() {
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+
+		let testEnvironment = 'WordPress.com';
+		let testName = `Notifications [${global.browserName}] [${screenSize}]`;
+		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 	} );
 
 	test.describe( 'Log in as commenting user', function() {
@@ -88,6 +95,9 @@ test.describe( `[${host}] Notifications: (${screenSize}) @parallel`, function() 
 						const expectedContent = `${this.commentingUser} commented on ${this.commentedPostTitle}\n${this.comment}`;
 						this.navBarComponent = new NavbarComponent( driver );
 						this.navBarComponent.openNotifications();
+						if ( process.env.VISDIFF ) {
+							eyesHelper.eyesScreenshot( driver, eyes, 'Notifications List' );
+						}
 						this.notificationsComponent = new NotificationsComponent( driver );
 						this.notificationsComponent.selectComments();
 						return this.notificationsComponent.allCommentsContent().then( ( content ) => {
@@ -97,6 +107,9 @@ test.describe( `[${host}] Notifications: (${screenSize}) @parallel`, function() 
 
 					test.it( 'Can delete the comment (and wait for UNDO grace period so it is actually deleted)', function() {
 						this.notificationsComponent.selectCommentByText( this.comment );
+						if ( process.env.VISDIFF ) {
+							eyesHelper.eyesScreenshot( driver, eyes, 'Single Comment Notification' );
+						}
 						this.notificationsComponent.trashComment();
 						this.notificationsComponent.waitForUndoMessage();
 						return this.notificationsComponent.waitForUndoMessageToDisappear();
@@ -104,5 +117,9 @@ test.describe( `[${host}] Notifications: (${screenSize}) @parallel`, function() 
 				} );
 			} );
 		} );
+	} );
+
+	test.after( function() {
+		eyesHelper.eyesClose( eyes );
 	} );
 } );
