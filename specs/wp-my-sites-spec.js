@@ -11,7 +11,6 @@ import SettingsPage from '../lib/pages/settings-page.js';
 import StatsPage from '../lib/pages/stats-page.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
 import SidebarComponent from '../lib/components/sidebar-component.js';
-import SiteViewComponent from '../lib/components/site-view-component.js';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as eyesHelper from '../lib/eyes-helper.js';
@@ -55,19 +54,8 @@ test.describe( 'My Sites: (' + screenSize + ') @parallel', function() {
 				return this.statsPage.waitForPage();
 			} );
 
-			test.it( 'Can open the Site Preview', function() {
-				this.sidebarComponent = new SidebarComponent( driver );
-				this.sidebarComponent.selectViewThisSite();
-				this.siteViewComponent = new SiteViewComponent( driver );
-				this.siteViewComponent.waitForPage();
-			} );
-
-			test.it( 'Can see the Search & Social Preview', function() {
-				this.siteViewComponent.selectSearchAndSocialPreview();
-				eyesHelper.eyesScreenshot( driver, eyes, 'Search And Social Preview' );
-			} );
-
 			test.it( 'Can see the Site Pages list', function() {
+				this.sidebarComponent = new SidebarComponent( driver );
 				this.sidebarComponent.selectPages();
 				this.pagesPage = new PagesPage( driver );
 				this.pagesPage.waitForPages();
