@@ -5,9 +5,12 @@ import assert from 'assert';
 import LoginFlow from '../lib/flows/login-flow.js';
 
 import ReaderPage from '../lib/pages/reader-page.js';
+import ReaderManagePage from '../lib/pages/reader-manage-page.js';
+import ReaderSearchPage from '../lib/pages/reader-search-page.js';
 
 import NavbarComponent from '../lib/components/navbar-component.js';
 import NotificationsComponent from '../lib/components/notifications-component.js';
+import ReaderSidebarComponent from '../lib/components/reader-sidebar-component.js';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper.js';
@@ -47,8 +50,9 @@ test.describe( 'Reader: (' + screenSize + ') @parallel', function() {
 		test.describe( 'Leave a comment on the latest post in the Reader', function() {
 			test.it( 'Can see the Reader stream', function() {
 				this.readerPage = new ReaderPage( driver );
-				eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
-				return this.readerPage.waitForPage();
+				return this.readerPage.waitForPage().then( () => {
+					eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
+				} );
 			} );
 
 			test.it( 'The latest post is on the expected test site', function() {
@@ -83,6 +87,25 @@ test.describe( 'Reader: (' + screenSize + ') @parallel', function() {
 					this.notificationsComponent.trashComment();
 					this.notificationsComponent.waitForUndoMessage();
 					return this.notificationsComponent.waitForUndoMessageToDisappear();
+				} );
+
+				test.describe( 'Manage Followed Sites', function() {
+					test.it( 'Can see the Manage page', function() {
+						this.readerSidebarComponent = new ReaderSidebarComponent( driver );
+						this.readerSidebarComponent.selectManageFollowing();
+						this.readerManagePage = new ReaderManagePage( driver );
+						this.readerManagePage.waitForSites();
+						eyesHelper.eyesScreenshot( driver, eyes, 'Manage Followed Sites' );
+					} );
+
+					test.describe( 'Reader Search', function() {
+						test.it( 'Can see the Search page', function() {
+							this.readerSidebarComponent.selectSearch();
+							this.readerSearchPage = new ReaderSearchPage( driver );
+							this.readerSearchPage.waitForRecommendations();
+							eyesHelper.eyesScreenshot( driver, eyes, 'Search with Recommended Sites' );
+						} );
+					} )
 				} );
 			} );
 		} );
