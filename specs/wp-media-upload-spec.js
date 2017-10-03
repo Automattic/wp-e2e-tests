@@ -22,146 +22,149 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Editor: Media Upload (${screenSize}) @parallel @jetpack`, function() {
-	this.timeout( mochaTimeOut );
+// https://github.com/Automattic/wp-calypso/issues/18488
+if ( screenSize !== 'mobile' ) {
+	test.describe( `[${host}] Editor: Media Upload (${screenSize}) @parallel @jetpack`, function() {
+		this.timeout( mochaTimeOut );
 
-	test.describe( 'Image Upload:', function() {
-		this.bailSuite( true );
-		let editorPage;
+		test.describe( 'Image Upload:', function() {
+			this.bailSuite( true );
+			let editorPage;
 
-		test.before( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
-		} );
-
-		test.describe( 'Can upload many media types', () => {
-			test.it( 'Can log in and navigate to Editor page', () => {
-				const loginFlow = new LoginFlow( driver );
-				loginFlow.loginAndStartNewPage();
-				editorPage = new EditorPage( driver );
+			test.before( function() {
+				driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			} );
 
-			test.describe( 'Can upload a normal image', function() {
-				let fileDetails;
+			test.describe( 'Can upload many media types', () => {
+				test.it( 'Can log in and navigate to Editor page', () => {
+					const loginFlow = new LoginFlow( driver );
+					loginFlow.loginAndStartNewPage();
+					editorPage = new EditorPage( driver );
+				} );
 
-				test.it( 'Create image file for upload', function() {
-					mediaHelper.createFileWithFilename( 'normal.jpg' ).then( function( details ) {
-						fileDetails = details;
+				test.describe( 'Can upload a normal image', function() {
+					let fileDetails;
+
+					test.it( 'Create image file for upload', function() {
+						mediaHelper.createFileWithFilename( 'normal.jpg' ).then( function( details ) {
+							fileDetails = details;
+						} );
+					} );
+
+					test.it( 'Can upload an image', function() {
+						editorPage.uploadMedia( fileDetails );
+					} );
+
+					test.it( 'Can delete image', function() {
+						editorPage.deleteMedia();
+					} );
+
+					test.after( function() {
+						editorPage.dismissMediaModal();
+						if ( fileDetails ) {
+							mediaHelper.deleteFile( fileDetails ).then( function() {} );
+						}
 					} );
 				} );
 
-				test.it( 'Can upload an image', function() {
-					editorPage.uploadMedia( fileDetails );
-				} );
+				test.describe( 'Can upload an image with reserved url chars in the filename', function() {
+					let fileDetails;
 
-				test.it( 'Can delete image', function() {
-					editorPage.deleteMedia();
-				} );
+					test.it( 'Create image file for upload', function() {
+						mediaHelper.createFileWithFilename( 'filewith#?#?reservedurlchars.jpg', true ).then( function( details ) {
+							fileDetails = details;
+						} );
+					} );
 
-				test.after( function() {
-					editorPage.dismissMediaModal();
-					if ( fileDetails ) {
-						mediaHelper.deleteFile( fileDetails ).then( function() {} );
-					}
-				} );
-			} );
+					test.it( 'Can upload an image', function() {
+						editorPage.uploadMedia( fileDetails );
+					} );
 
-			test.describe( 'Can upload an image with reserved url chars in the filename', function() {
-				let fileDetails;
+					test.it( 'Can delete image', function() {
+						editorPage.deleteMedia();
+					} );
 
-				test.it( 'Create image file for upload', function() {
-					mediaHelper.createFileWithFilename( 'filewith#?#?reservedurlchars.jpg', true ).then( function( details ) {
-						fileDetails = details;
+					test.after( function() {
+						editorPage.dismissMediaModal();
+						if ( fileDetails ) {
+							mediaHelper.deleteFile( fileDetails ).then( function() {} );
+						}
 					} );
 				} );
 
-				test.it( 'Can upload an image', function() {
-					editorPage.uploadMedia( fileDetails );
-				} );
+				test.describe( 'Can upload an mp3', function() {
+					let fileDetails;
 
-				test.it( 'Can delete image', function() {
-					editorPage.deleteMedia();
-				} );
+					test.it( 'Create mp3 for upload', function() {
+						mediaHelper.getMP3FileWithFilename( 'new.mp3' ).then( function( details ) {
+							fileDetails = details;
+						} );
+					} );
 
-				test.after( function() {
-					editorPage.dismissMediaModal();
-					if ( fileDetails ) {
-						mediaHelper.deleteFile( fileDetails ).then( function() {} );
-					}
-				} );
-			} );
+					test.it( 'Can upload an mp3', function() {
+						editorPage.uploadMedia( fileDetails );
+					} );
 
-			test.describe( 'Can upload an mp3', function() {
-				let fileDetails;
+					test.it( 'Can delete mp3', function() {
+						editorPage.deleteMedia();
+					} );
 
-				test.it( 'Create mp3 for upload', function() {
-					mediaHelper.getMP3FileWithFilename( 'new.mp3' ).then( function( details ) {
-						fileDetails = details;
+					test.after( function() {
+						editorPage.dismissMediaModal();
+						if ( fileDetails ) {
+							mediaHelper.deleteFile( fileDetails ).then( function() {} );
+						}
 					} );
 				} );
 
-				test.it( 'Can upload an mp3', function() {
-					editorPage.uploadMedia( fileDetails );
-				} );
+				test.describe( 'Can upload Featured image', () => {
+					let fileDetails;
+					let editorSidebar;
 
-				test.it( 'Can delete mp3', function() {
-					editorPage.deleteMedia();
-				} );
+					test.it( 'Create image file for upload', function() {
+						mediaHelper.createFile().then( function( details ) {
+							fileDetails = details;
+						} );
+					} );
 
-				test.after( function() {
-					editorPage.dismissMediaModal();
-					if ( fileDetails ) {
-						mediaHelper.deleteFile( fileDetails ).then( function() {} );
-					}
-				} );
-			} );
+					test.it( 'Can open Featured Image upload modal', function() {
+						editorSidebar = new PostEditorSidebarComponent( driver );
+						editorSidebar.expandFeaturedImage();
+						editorSidebar.openFeaturedImageDialog();
+					} );
 
-			test.describe( 'Can upload Featured image', () => {
-				let fileDetails;
-				let editorSidebar;
+					test.it( 'Can set Featured Image', function() {
+						editorPage.sendFile( fileDetails.file );
+						editorPage.saveImage( fileDetails.imageName );
+						// Will wait until image is actually shows up on editor page
+						editorPage.waitUntilFeaturedImageInserted();
+					} );
 
-				test.it( 'Create image file for upload', function() {
-					mediaHelper.createFile().then( function( details ) {
-						fileDetails = details;
+					test.it( 'Can remove Featured Image', function() {
+						editorSidebar.removeFeaturedImage();
+						editorSidebar.closeFeaturedImage();
+					} );
+
+					test.it( 'Can delete uploaded image', function() {
+						editorSidebar.expandFeaturedImage();
+						editorSidebar.openFeaturedImageDialog();
+						editorPage.selectImageByNumber( 0 );
+						editorPage.deleteMedia();
+					} );
+
+					test.after( () => {
+						editorPage.dismissMediaModal();
+						if ( fileDetails ) {
+							mediaHelper.deleteFile( fileDetails ).then( function() {} );
+						}
+						editorSidebar.closeFeaturedImage();
 					} );
 				} );
-
-				test.it( 'Can open Featured Image upload modal', function() {
-					editorSidebar = new PostEditorSidebarComponent( driver );
-					editorSidebar.expandFeaturedImage();
-					editorSidebar.openFeaturedImageDialog();
-				} );
-
-				test.it( 'Can set Featured Image', function() {
-					editorPage.sendFile( fileDetails.file );
-					editorPage.saveImage( fileDetails.imageName );
-					// Will wait until image is actually shows up on editor page
-					editorPage.waitUntilFeaturedImageInserted();
-				} );
-
-				test.it( 'Can remove Featured Image', function() {
-					editorSidebar.removeFeaturedImage();
-					editorSidebar.closeFeaturedImage();
-				} );
-
-				test.it( 'Can delete uploaded image', function() {
-					editorSidebar.expandFeaturedImage();
-					editorSidebar.openFeaturedImageDialog();
-					editorPage.selectImageByNumber( 0 );
-					editorPage.deleteMedia();
-				} );
-
+				// FIXME: Workaround of https://github.com/Automattic/wp-calypso/issues/17701
 				test.after( () => {
-					editorPage.dismissMediaModal();
-					if ( fileDetails ) {
-						mediaHelper.deleteFile( fileDetails ).then( function() {} );
-					}
-					editorSidebar.closeFeaturedImage();
+					editorPage.cleanDirtyState();
 				} );
-			} );
-			// FIXME: Workaround of https://github.com/Automattic/wp-calypso/issues/17701
-			test.after( () => {
-				editorPage.cleanDirtyState();
 			} );
 		} );
 	} );
-} );
+}
