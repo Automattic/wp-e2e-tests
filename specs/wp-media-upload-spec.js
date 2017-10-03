@@ -60,9 +60,7 @@ test.describe( `[${host}] Editor: Media Upload (${screenSize}) @parallel @jetpac
 
 				test.it( 'Can upload an image', function() {
 					editorPage.uploadMedia( fileDetails );
-					if ( process.env.VISDIFF ) {
-						eyesHelper.eyesScreenshot( driver, eyes, 'Editor Media Modal' );
-					}
+					eyesHelper.eyesScreenshot( driver, eyes, 'Editor Media Modal' );
 				} );
 
 				test.it( 'Can delete image', function() {

@@ -51,9 +51,7 @@ test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
 		test.describe( 'Can switch free themes', function() {
 			test.it( 'Can select a different free theme', function() {
 				this.themesPage = new ThemesPage( driver );
-				if ( process.env.VISDIFF ) {
-					eyesHelper.eyesScreenshot( driver, eyes, 'Themes Page' );
-				}
+				eyesHelper.eyesScreenshot( driver, eyes, 'Themes Page' );
 				this.themesPage.showOnlyFreeThemes();
 				this.themesPage.searchFor( 'Twenty F' );
 				this.themesPage.waitForThemeStartingWith( 'Twenty F' );
@@ -62,9 +60,7 @@ test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
 
 			test.it( 'Can see theme details page and open the live demo', function() {
 				this.themeDetailPage = new ThemeDetailPage( driver );
-				if ( process.env.VISDIFF ) {
-					eyesHelper.eyesScreenshot( driver, eyes, 'Theme Details Page' );
-				}
+				eyesHelper.eyesScreenshot( driver, eyes, 'Theme Details Page' );
 				return this.themeDetailPage.openLiveDemo();
 			} );
 

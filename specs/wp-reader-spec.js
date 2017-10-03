@@ -47,9 +47,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel', function() {
 		test.describe( 'Leave a comment on the latest post in the Reader', function() {
 			test.it( 'Can see the Reader stream', function() {
 				this.readerPage = new ReaderPage( driver );
-				if ( process.env.VISDIFF ) {
-					eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
-				}
+				eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
 				return this.readerPage.waitForPage();
 			} );
 

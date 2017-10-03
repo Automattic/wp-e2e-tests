@@ -95,9 +95,7 @@ test.describe( `[${host}] Notifications: (${screenSize}) @parallel`, function() 
 						const expectedContent = `${this.commentingUser} commented on ${this.commentedPostTitle}\n${this.comment}`;
 						this.navBarComponent = new NavbarComponent( driver );
 						this.navBarComponent.openNotifications();
-						if ( process.env.VISDIFF ) {
-							eyesHelper.eyesScreenshot( driver, eyes, 'Notifications List' );
-						}
+						eyesHelper.eyesScreenshot( driver, eyes, 'Notifications List' );
 						this.notificationsComponent = new NotificationsComponent( driver );
 						this.notificationsComponent.selectComments();
 						return this.notificationsComponent.allCommentsContent().then( ( content ) => {
@@ -107,9 +105,7 @@ test.describe( `[${host}] Notifications: (${screenSize}) @parallel`, function() 
 
 					test.it( 'Can delete the comment (and wait for UNDO grace period so it is actually deleted)', function() {
 						this.notificationsComponent.selectCommentByText( this.comment );
-						if ( process.env.VISDIFF ) {
-							eyesHelper.eyesScreenshot( driver, eyes, 'Single Comment Notification' );
-						}
+						eyesHelper.eyesScreenshot( driver, eyes, 'Single Comment Notification' );
 						this.notificationsComponent.trashComment();
 						this.notificationsComponent.waitForUndoMessage();
 						return this.notificationsComponent.waitForUndoMessageToDisappear();
