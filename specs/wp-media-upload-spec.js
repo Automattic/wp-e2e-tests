@@ -63,6 +63,15 @@ test.describe( `[${host}] Editor: Media Upload (${screenSize}) @parallel @jetpac
 					eyesHelper.eyesScreenshot( driver, eyes, 'Editor Media Modal' );
 				} );
 
+				test.it( 'Can edit an image', function() {
+					editorPage.openImageDetails();
+					editorPage.selectEditImage();
+					editorPage.waitForImageEditor();
+					eyesHelper.eyesScreenshot( driver, eyes, 'Image Editor Media Modal' );
+					editorPage.dismissImageEditor();
+					editorPage.dismissImageDetails();
+				} );
+
 				test.it( 'Can delete image', function() {
 					editorPage.deleteMedia();
 				} );
