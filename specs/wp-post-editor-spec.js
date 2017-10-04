@@ -957,7 +957,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 		} );
 	} );
 
-	test.describe.only( 'Insert a payment button: @parallel', function() {
+	test.describe( 'Insert a payment button: @parallel', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
