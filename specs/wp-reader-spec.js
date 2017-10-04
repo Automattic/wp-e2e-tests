@@ -91,17 +91,14 @@ test.describe( 'Reader: (' + screenSize + ') @parallel', function() {
 
 				test.describe( 'Manage Followed Sites', function() {
 					test.it( 'Can see the Manage page', function() {
-						this.readerSidebarComponent = new ReaderSidebarComponent( driver );
-						this.readerSidebarComponent.selectManageFollowing();
-						this.readerManagePage = new ReaderManagePage( driver );
+						this.readerManagePage = new ReaderManagePage( driver, true );
 						this.readerManagePage.waitForSites();
 						eyesHelper.eyesScreenshot( driver, eyes, 'Manage Followed Sites' );
 					} );
 
 					test.describe( 'Reader Search', function() {
 						test.it( 'Can see the Search page', function() {
-							this.readerSidebarComponent.selectSearch();
-							this.readerSearchPage = new ReaderSearchPage( driver );
+							this.readerSearchPage = new ReaderSearchPage( driver, true );
 							this.readerSearchPage.waitForRecommendations();
 							eyesHelper.eyesScreenshot( driver, eyes, 'Search with Recommended Sites' );
 						} );

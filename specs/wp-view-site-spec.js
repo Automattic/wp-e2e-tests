@@ -68,10 +68,12 @@ if ( httpsHost ) {
 				} );
 			} );
 
-			test.it( 'Can see the Search & Social preview', function() {
-				this.siteViewComponent.selectSearchAndSocialPreview();
-				eyesHelper.eyesScreenshot( driver, eyes, 'Search And Social Preview' );
-			} );
+			if ( screenSize !== 'mobile' ) {
+				test.it( 'Can see the Search & Social preview', function() {
+					this.siteViewComponent.selectSearchAndSocialPreview();
+					eyesHelper.eyesScreenshot( driver, eyes, 'Search And Social Preview' );
+				} );
+			}
 
 			if ( screenSize === 'mobile' ) {
 				test.it( 'Can close site view', function() {
