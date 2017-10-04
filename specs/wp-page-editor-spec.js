@@ -7,7 +7,10 @@ import LoginFlow from '../lib/flows/login-flow.js';
 import EditorPage from '../lib/pages/editor-page.js';
 import ViewPagePage from '../lib/pages/view-page-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
+import PagesPage from '../lib/pages/pages-page.js';
 
+import SidebarComponent from '../lib/components/sidebar-component.js';
+import NavbarComponent from '../lib/components/navbar-component.js';
 import PagePreviewComponent from '../lib/components/page-preview-component.js';
 import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
@@ -15,6 +18,8 @@ import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-co
 import * as driverManager from '../lib/driver-manager.js';
 import * as mediaHelper from '../lib/media-helper.js';
 import * as dataHelper from '../lib/data-helper.js';
+import * as slackNotifier from '../lib/slack-notifier';
+import * as eyesHelper from '../lib/eyes-helper.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -24,9 +29,15 @@ const httpsHost = config.get( 'httpsHosts' ).indexOf( host ) !== -1;
 
 var driver;
 
+let eyes = eyesHelper.eyesSetup( true );
+
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
+
+	let testEnvironment = 'WordPress.com';
+	let testName = `Site Pages [${global.browserName}] [${screenSize}]`;
+	eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 } );
 
 test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
@@ -63,6 +74,25 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				editorPage.enterPostImage( fileDetails );
 				return editorPage.waitUntilImageInserted( fileDetails );
 			} );
+
+			if ( process.env.VISDIFF ) {
+				test.it( 'Open all sidebar sections for screenshot', function() {
+					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+					postEditorSidebarComponent.expandStatusSection();
+					postEditorSidebarComponent.expandFeaturedImage();
+					postEditorSidebarComponent.expandSharingSection();
+					postEditorSidebarComponent.expandMoreOptions();
+					eyesHelper.eyesScreenshot( driver, eyes, 'Page Editor - New Page' );
+				} );
+
+				test.it( 'Close all sidebar sections', function() {
+					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+					postEditorSidebarComponent.closeStatusSection();
+					postEditorSidebarComponent.closeFeaturedImage();
+					postEditorSidebarComponent.closeSharingSection();
+					postEditorSidebarComponent.closeMoreOptions();
+				} );
+			}
 
 			test.it( 'Can disable sharing buttons', function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
@@ -471,4 +501,101 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 			} );
 		} );
 	} );
+
+	test.describe( 'Edit a Page: @parallel', function() {
+		this.bailSuite( true );
+
+		test.it( 'Delete Cookies and Local Storage', function() {
+			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.describe( 'Publish a New Page', function() {
+			const originalPageTitle = dataHelper.randomPhrase();
+			const updatedPageTitle = dataHelper.randomPhrase();
+			const pageQuote = 'What we need today are universal values based not on faith but on scientific findings, common experience and common sense.\n— Dalai Lama\n';
+
+			test.it( 'Can log in', function() {
+				this.loginFlow = new LoginFlow( driver );
+				return this.loginFlow.loginAndStartNewPage();
+			} );
+
+			test.it( 'Can enter page title and content', function() {
+				this.editorPage = new EditorPage( driver );
+				this.editorPage.enterTitle( originalPageTitle );
+				this.editorPage.enterContent( pageQuote );
+				return this.editorPage.errorDisplayed().then( ( errorShown ) => {
+					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+				} );
+			} );
+
+			test.it( 'Can publish the page', function() {
+				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				this.postEditorToolbarComponent.ensureSaved();
+				this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
+				return this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
+			} );
+
+			test.describe( 'Edit the page via pages', function() {
+				test.it( 'Can view the page list', function() {
+					this.navbarComponent = new NavbarComponent( driver );
+					this.navbarComponent.clickMySites();
+					this.sidebarComponent = new SidebarComponent( driver );
+					this.sidebarComponent.selectPages();
+					this.pagesPage = new PagesPage( driver );
+					this.pagesPage.waitForPages();
+					eyesHelper.eyesScreenshot( driver, eyes, 'Site Pages List' );
+				} );
+
+				test.it( 'Can see and edit our new page', function() {
+					this.pagesPage.isPageDisplayed( originalPageTitle ).then( ( displayed ) => {
+						if ( displayed === false ) {
+							slackNotifier.warn( 'Could not locate the page on site pages page, retrying the pages menu option again' );
+							this.sidebarComponent = new SidebarComponent( driver );
+							this.sidebarComponent.selectPages();
+							this.pagesPage = new PagesPage( driver );
+							return this.pagesPage.waitForPages();
+						}
+					} );
+					this.pagesPage.isPageDisplayed( originalPageTitle ).then( ( displayed ) => {
+						assert.equal( displayed, true, `The page titled '${originalPageTitle}' is not displayed in the list of pages` );
+					} );
+					this.pagesPage.editPageWithTitle( originalPageTitle );
+					this.editorPage = new EditorPage( driver );
+				} );
+
+				test.it( 'Can see the page title', function() {
+					this.editorPage.waitForTitle();
+					this.editorPage.titleShown().then( ( titleShown ) => {
+						assert.equal( titleShown, originalPageTitle, 'The page title shown was unexpected' );
+					} );
+				} );
+
+				test.it( 'Can set the new title and save it', function() {
+					this.editorPage.enterTitle( updatedPageTitle );
+					this.editorPage.errorDisplayed().then( ( errorShown ) => {
+						assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+					} );
+					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					this.postEditorToolbarComponent.ensureSaved();
+					this.postEditorToolbarComponent.publishAndViewContent();
+				} );
+
+				test.describe( 'Can view the page with the new title', function() {
+					test.it( 'Can view the page', function() {
+						return this.viewPagePage = new ViewPagePage( driver );
+					} );
+
+					test.it( 'Can see correct page title', function() {
+						this.viewPagePage.pageTitle().then( function( actualPageTitle ) {
+							assert.equal( actualPageTitle.toLowerCase(), updatedPageTitle.toLowerCase(), 'The published page title is not correct' );
+						} );
+					} );
+				} );
+			} );
+		} );
+	} );
+} );
+
+test.after( function() {
+	eyesHelper.eyesClose( eyes );
 } );
