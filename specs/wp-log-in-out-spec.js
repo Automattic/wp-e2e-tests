@@ -48,7 +48,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, f
 		test.describe( 'Can Log In', function() {
 			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
-				loginFlow.login( eyes );
+				loginFlow.login( { screenshot: true } );
 			} );
 
 			test.it( 'Can see Reader Page after logging in', function() {
