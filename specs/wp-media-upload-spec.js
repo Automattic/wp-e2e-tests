@@ -25,7 +25,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Editor: Media Upload (${screenSize}) @parallel @jetpack`, function() {
+test.describe( `[${host}] Editor: Media Upload (${screenSize}) @parallel @jetpack @visdiff`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.before( function() {

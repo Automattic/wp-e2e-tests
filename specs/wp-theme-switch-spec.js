@@ -41,7 +41,7 @@ test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
 		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 	} );
 
-	test.describe( 'Switching Themes @parallel @jetpack', function() {
+	test.describe( 'Switching Themes @parallel @jetpack @visdiff', function() {
 		test.it( 'Delete Cookies and Login', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			let loginFlow = new LoginFlow( driver );

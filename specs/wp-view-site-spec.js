@@ -26,7 +26,7 @@ if ( httpsHost ) {
 		driver = driverManager.startBrowser();
 	} );
 
-	test.describe( `[${host}] View site from sidebar: (${screenSize}) @parallel @jetpack`, function() {
+	test.describe( `[${host}] View site from sidebar: (${screenSize}) @parallel @jetpack @visdiff`, function() {
 		this.timeout( mochaTimeOut );
 		this.bailSuite( true );
 

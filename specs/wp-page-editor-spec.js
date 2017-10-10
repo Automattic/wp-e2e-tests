@@ -43,7 +43,7 @@ test.before( function() {
 test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Public Pages: @parallel @jetpack', function() {
+	test.describe( 'Public Pages: @parallel @jetpack @visdiff', function() {
 		this.bailSuite( true );
 		let fileDetails;
 
@@ -502,7 +502,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 		} );
 	} );
 
-	test.describe( 'Edit a Page: @parallel', function() {
+	test.describe( 'Edit a Page: @parallel @visdiff', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', function() {

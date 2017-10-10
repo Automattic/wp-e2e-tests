@@ -1,0 +1,16 @@
+{
+  "mocha_tests": [
+    "specs"
+  ],
+  "mocha_opts": "test/mocha.opts",
+  "mocha_args": "-R spec-xunit-reporter",
+  "max_test_attempts": 2,
+  "max_workers": 3,
+  "suiteTag": "visdiff",
+  "sauce": false,
+  "browser": "chrome",
+  "framework": "testarmada-magellan-mocha-plugin",
+  "reporters": [
+	  "./lib/reporter/magellan-reporter.js"
+  ]
+}

@@ -10,7 +10,6 @@ import ReaderSearchPage from '../lib/pages/reader-search-page.js';
 
 import NavbarComponent from '../lib/components/navbar-component.js';
 import NotificationsComponent from '../lib/components/notifications-component.js';
-import ReaderSidebarComponent from '../lib/components/reader-sidebar-component.js';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper.js';
@@ -29,7 +28,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( 'Reader: (' + screenSize + ') @parallel', function() {
+test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 
