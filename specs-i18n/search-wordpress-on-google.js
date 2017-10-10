@@ -21,7 +21,7 @@ test.before( function() {
 } );
 
 test.afterEach( function() {
-	this.sleep( 15000 );
+	this.timeout( 15000 );
 } );
 
 function doGoogleAdSearch( search_params ) {
