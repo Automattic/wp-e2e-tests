@@ -96,7 +96,8 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
       ;;
     i)
       NODE_CONFIG_ARGS+=$I18N_CONFIG
-      LOCALES="en,pt-BR,es,ja,fr,he"
+      LOCALES="en"
+      # LOCALES="en,pt-BR,es,ja,fr,he"
       export SCREENSHOTDIR="screenshots-i18n"
       MAGELLAN_CONFIG="magellan-i18n-nux.json"
       ;;
@@ -218,7 +219,7 @@ else # Not using multiple CircleCI containers, just queue up the tests in sequen
         for config in "${MAGELLAN_CONFIGS[@]}"; do
           if [ "$config" != "" ]; then
             CMD="env BROWSERSIZE=$size BROWSERLOCALE=$locale $MAGELLAN --mocha_args='$MOCHA_ARGS' --config='$config' --max_workers=$WORKERS"
-  
+
             eval $CMD
             RETURN+=$?
           fi
