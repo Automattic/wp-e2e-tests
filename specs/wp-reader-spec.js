@@ -57,7 +57,9 @@ test.describe( 'Reader: (' + screenSize + ') @parallel', function() {
 
 			test.describe( 'Delete the new comment', function() {
 				test.before( function() {
-					driverManager.clearCookiesAndDeleteLocalStorage( driver );
+					driverManager.clearCookiesAndDeleteLocalStorage( driver ).then( () => {
+						driver.get( config.get( 'calypsoBaseURL' ) );
+					} );
 				} );
 
 				test.it( 'Can log in as test site owner', function() {
