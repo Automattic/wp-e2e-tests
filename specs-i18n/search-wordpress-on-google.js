@@ -25,6 +25,9 @@ test.afterEach( function() {
 } );
 
 function doGoogleAdSearch( search_params ) {
+	if ( locale === 'tr' ) {
+		this.skip( 'Currently no advertising in this locale' );
+	}
 	var description = 'Search for "' + search_params.query + '" on Google from ' +
 		search_params.originating_location +
 		( search_params.originating_location_english
