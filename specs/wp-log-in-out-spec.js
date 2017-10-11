@@ -145,7 +145,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 	}
 } );
 
-test.describe( `[${host}] User Agent: (${screenSize}) @parallel @jetpack @visdiff`, function() {
+test.describe( `[${host}] User Agent: (${screenSize}) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
