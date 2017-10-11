@@ -271,6 +271,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 		test.it( 'We can set the sandbox cookie for payments', function() {
 			this.WPHomePage = new WPHomePage( driver, { visit: true, culture: locale } );
+			eyesHelper.eyesScreenshot( driver, eyes, 'Logged Out Homepage' );
 			return this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 		} );
 

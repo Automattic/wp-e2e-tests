@@ -155,7 +155,6 @@ test.describe( `[${host}] User Agent: (${screenSize}) @parallel @jetpack @visdif
 
 	test.it( 'Can see the correct user agent set', function() {
 		this.wpHomePage = new WPHomePage( driver, { visit: true } );
-		eyesHelper.eyesScreenshot( driver, eyes, 'Logged Out Homepage' );
 		driver.executeScript( 'return navigator.userAgent;' ).then( ( userAgent ) => {
 			assert( userAgent.match( 'wp-e2e-tests' ), `User Agent does not contain 'wp-e2e-tests'.  [${userAgent}]` );
 		} );
