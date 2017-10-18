@@ -12,6 +12,7 @@ import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page';
 import StatsPage from '../lib/pages/stats-page';
 import WPAdminJetpackPage from '../lib/pages/wp-admin/wp-admin-jetpack-page';
 import JetpackPlanSalesPage from '../lib/pages/jetpack-plans-sales-page';
+import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 
 import ReaderPage from '../lib/pages/reader-page.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
@@ -81,6 +82,76 @@ test.describe( `[${host}] Jetpack Plans: (${screenSize}) @jetpack`, function() {
 		test.it( 'Can then see secure payment component', () => {
 			const securePaymentComponent = new SecurePaymentComponent( driver );
 			securePaymentComponent.displayed().then( ( displayed ) => {
+				assert.equal( displayed, true, 'Could not see the secure payment component' );
+			} );
+		} );
+
+		// Remove all items from basket for clean up
+		test.after( () => {
+			this.readerPage = new ReaderPage( driver, true );
+
+			this.navbarComponent = new NavbarComponent( driver );
+			this.navbarComponent.clickMySites();
+
+			this.statsPage = new StatsPage( driver, true );
+
+			this.sideBarComponent = new SidebarComponent( driver );
+			this.sideBarComponent.selectPlan();
+
+			this.domainsPage = new PlansPage( driver );
+			this.shoppingCartWidgetComponent = new ShoppingCartWidgetComponent( driver );
+			this.shoppingCartWidgetComponent.empty();
+		} );
+	} );
+
+	test.describe( 'Purchase Premium Plan Logged Out:', function() {
+		this.bailSuite( true );
+
+		test.before( function() {
+			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.it( 'Can log into site', () => {
+			const loginFlow = new LoginFlow( driver, 'jetpackUser' + 'DIRECT' );
+			return loginFlow.login( { jetpackDIRECT: true } );
+		} );
+
+		test.it( 'Can open Jetpack dashboard', () => {
+			this.wpAdminSidebar = new WPAdminSidebar( driver );
+			return this.wpAdminSidebar.selectJetpack();
+		} );
+
+		test.it( 'Can find and click Upgrade nudge button', () => {
+			this.jetpackDashboard = new WPAdminJetpackPage( driver );
+			// The nudge buttons are loaded after the page, and there's no good loaded status indicator to key off of
+			return driver.sleep( 3000 ).then( () => {
+				return this.jetpackDashboard.clickUpgradeNudge();
+			} );
+		} );
+
+		test.it( 'Can click the Proceed button', () => {
+			this.jetpackPlanSalesPage = new JetpackPlanSalesPage( driver );
+			// The upgrade buttons are loaded after the page, and there's no good loaded status indicator to key off of
+			return driver.sleep( 3000 ).then( () => {
+				return this.jetpackPlanSalesPage.clickPurchaseButton();
+			} );
+		} );
+
+		test.it( 'Can click the purchase premium button', () => {
+			this.pickAPlanPage = new PickAPlanPage( driver );
+			return this.pickAPlanPage.selectPremiumPlan();
+		} );
+
+		test.it( 'Can log in to WordPress.com', () => {
+			this.jetpackAuthorizePage = new JetpackAuthorizePage( driver );
+			this.jetpackAuthorizePage.chooseSignIn;
+			const loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
+			return loginFlow.loginUsingExistingForm();
+		} );
+
+		test.it( 'Can then see secure payment component', () => {
+			const securePaymentComponent = new SecurePaymentComponent( driver );
+			securePaymentComponent.displayed().then( displayed => {
 				assert.equal( displayed, true, 'Could not see the secure payment component' );
 			} );
 		} );
