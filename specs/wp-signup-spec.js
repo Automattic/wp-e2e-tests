@@ -1,5 +1,4 @@
 import test from 'selenium-webdriver/testing';
-import webdriver from 'selenium-webdriver';
 import config from 'config';
 import assert from 'assert';
 
@@ -37,7 +36,6 @@ const locale = driverManager.currentLocale();
 const calypsoBaseURL = config.get( 'calypsoBaseURL' );
 
 var driver;
-var until = webdriver.until;
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -82,114 +80,99 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 				this.designTypeChoicePage.selectFirstDesignType();
 			} );
 
-			test.describe( `Step ${stepNum}: Themes`, function() {
+			test.describe( `Step ${stepNum}: Domains`, function() {
 				stepNum++;
 
-				test.it( 'Can see the choose a theme page', function() {
-					this.chooseAThemePage = new ChooseAThemePage( driver );
-					return this.chooseAThemePage.displayed().then( ( displayed ) => {
-						return assert.equal( displayed, true, 'The choose a theme start page is not displayed' );
+				test.it( 'Can then see the domains page ', function() {
+					this.findADomainComponent = new FindADomainComponent( driver );
+					return this.findADomainComponent.displayed().then( ( displayed ) => {
+						return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
 					} );
 				} );
 
-				test.it( 'Can select the first theme', function() {
-					this.chooseAThemePage.selectFirstTheme();
+				test.it( 'Can search for a blog name, can see and select a free .wordpress address in the results', function() {
+					this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+					this.findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
+					this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
+						assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
+						newBlogAddress = actualAddress;
+					} );
+					return this.findADomainComponent.selectFreeAddress();
 				} );
 
-				test.describe( `Step ${stepNum}: Domains`, function() {
+				test.describe( `Step ${stepNum}: Plans`, function() {
 					stepNum++;
 
-					test.it( 'Can then see the domains page ', function() {
-						this.findADomainComponent = new FindADomainComponent( driver );
-						return this.findADomainComponent.displayed().then( ( displayed ) => {
-							return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
+					test.it( 'Can then see the plans page', function() {
+						this.pickAPlanPage = new PickAPlanPage( driver );
+						return this.pickAPlanPage.displayed().then( ( displayed ) => {
+							return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
 						} );
 					} );
 
-					test.it( 'Can search for a blog name, can see and select a free .wordpress address in the results', function() {
-						this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-						this.findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
-						this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
-							assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
-							newBlogAddress = actualAddress;
-						} );
-						return this.findADomainComponent.selectFreeAddress();
+					test.it( 'Can select the free plan', function() {
+						return this.pickAPlanPage.selectFreePlan();
 					} );
 
-					test.describe( `Step ${stepNum}: Plans`, function() {
+					test.describe( `Step ${stepNum}: Account`, function() {
 						stepNum++;
 
-						test.it( 'Can then see the plans page', function() {
-							this.pickAPlanPage = new PickAPlanPage( driver );
-							return this.pickAPlanPage.displayed().then( ( displayed ) => {
-								return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
+						test.it( 'Can then see the account page', function() {
+							this.createYourAccountPage = new CreateYourAccountPage( driver );
+							return this.createYourAccountPage.displayed().then( ( displayed ) => {
+								return assert.equal( displayed, true, 'The create account page is not displayed' );
 							} );
 						} );
 
-						test.it( 'Can select the free plan', function() {
-							return this.pickAPlanPage.selectFreePlan();
+						test.it( 'Can then enter account details', function() {
+							return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
 						} );
 
-						test.describe( `Step ${stepNum}: Account`, function() {
+						test.describe( `Step ${stepNum}: Sign Up Processing`, function() {
 							stepNum++;
 
-							test.it( 'Can then see the account page', function() {
-								this.createYourAccountPage = new CreateYourAccountPage( driver );
-								return this.createYourAccountPage.displayed().then( ( displayed ) => {
-									return assert.equal( displayed, true, 'The create account page is not displayed' );
+							test.it( 'Can then see the sign up processing page', function() {
+								this.signupProcessingPage = new SignupProcessingPage( driver );
+								return this.signupProcessingPage.displayed().then( ( displayed ) => {
+									return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
 								} );
 							} );
 
-							test.it( 'Can then enter account details', function() {
-								return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
+							test.it( 'The sign up processing page will finish and show a \'Continue\' button', function() {
+								return this.signupProcessingPage.waitForContinueButtonToBeEnabled();
 							} );
 
-							test.describe( `Step ${stepNum}: Sign Up Processing`, function() {
+							test.it( 'Clicking the \'Continue\' button continues the process', function() {
+								return this.signupProcessingPage.continueAlong();
+							} );
+
+							test.describe( `Step ${stepNum}: View Site/Trampoline`, function() {
 								stepNum++;
 
-								test.it( 'Can then see the sign up processing page', function() {
-									this.signupProcessingPage = new SignupProcessingPage( driver );
-									return this.signupProcessingPage.displayed().then( ( displayed ) => {
-										return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
+								test.it( 'We are on the view blog page, can see trampoline, our URL and title', function() {
+									return this.viewBlogPage = new ViewBlogPage( driver );
+								} );
+
+								test.it( 'Can see the trampoline welcome message displayed', function() {
+									this.viewBlogPage.waitForTrampolineWelcomeMessage();
+									return this.viewBlogPage.isTrampolineWelcomeDisplayed().then( ( displayed ) => {
+										return assert.equal( displayed, true, 'The trampoline welcome message is not displayed' );
 									} );
 								} );
 
-								test.it( 'The sign up processing page will finish and show a \'Continue\' button', function() {
-									return this.signupProcessingPage.waitForContinueButtonToBeEnabled();
-								} );
-
-								test.it( 'Clicking the \'Continue\' button continues the process', function() {
-									return this.signupProcessingPage.continueAlong();
-								} );
-
-								test.describe( `Step ${stepNum}: View Site/Trampoline`, function() {
-									stepNum++;
-
-									test.it( 'We are on the view blog page, can see trampoline, our URL and title', function() {
-										return this.viewBlogPage = new ViewBlogPage( driver );
+								test.it( 'Can see the correct blog URL displayed', function() {
+									return this.viewBlogPage.urlDisplayed().then( ( url ) => {
+										return assert.equal( url, 'https://' + newBlogAddress + '/', 'The displayed URL on the view blog page is not as expected' );
 									} );
+								} );
 
-									test.it( 'Can see the trampoline welcome message displayed', function() {
-										this.viewBlogPage.waitForTrampolineWelcomeMessage();
-										return this.viewBlogPage.isTrampolineWelcomeDisplayed().then( ( displayed ) => {
-											return assert.equal( displayed, true, 'The trampoline welcome message is not displayed' );
+								if ( locale === 'en' ) {
+									test.it( 'Can see the correct blog title displayed', function() {
+										return this.viewBlogPage.title().then( ( title ) => {
+											return assert.equal( title, 'Site Title', 'The expected blog title is not displaying correctly' );
 										} );
 									} );
-
-									test.it( 'Can see the correct blog URL displayed', function() {
-										return this.viewBlogPage.urlDisplayed().then( ( url ) => {
-											return assert.equal( url, 'https://' + newBlogAddress + '/', 'The displayed URL on the view blog page is not as expected' );
-										} );
-									} );
-
-									if ( locale === 'en' ) {
-										test.it( 'Can see the correct blog title displayed', function() {
-											return this.viewBlogPage.title().then( ( title ) => {
-												return assert.equal( title, 'Site Title', 'The expected blog title is not displaying correctly' );
-											} );
-										} );
-									}
-								} );
+								}
 							} );
 						} );
 					} );
@@ -234,121 +217,106 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 				return this.designTypeChoicePage.selectFirstDesignType();
 			} );
 
-			test.describe( `Step ${stepNum}: Themes`, function() {
+			test.describe( `Step ${stepNum}: Domains`, function() {
 				stepNum++;
 
-				test.it( 'Can see the choose a theme page as the starting page', function() {
-					this.chooseAThemePage = new ChooseAThemePage( driver );
-					return this.chooseAThemePage.displayed().then( ( displayed ) => {
-						return assert.equal( displayed, true, 'The choose a theme start page is not displayed' );
+				test.it( 'Can then see the domains page ', function() {
+					this.findADomainComponent = new FindADomainComponent( driver );
+					return this.findADomainComponent.displayed().then( ( displayed ) => {
+						return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
 					} );
 				} );
 
-				test.it( 'Can select the first theme', function() {
-					return this.chooseAThemePage.selectFirstTheme();
+				test.it( 'Can search for a blog name, can see and select a free WordPress.com blog address in results', function() {
+					this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+					this.findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
+					this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
+						assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
+						selectedBlogAddress = actualAddress;
+					} );
+
+					return this.findADomainComponent.selectFreeAddress();
 				} );
 
-				test.describe( `Step ${stepNum}: Domains`, function() {
+				test.it( 'Verify OAuth error not present', function() {
+					const self = this;
+					return driverHelper.getErrorMessageIfPresent( driver ).then( ( errorMsg ) => {
+						if ( errorMsg !== undefined ) {
+							SlackNotifier.warn( `WARNING: Error message [${errorMsg}] encountered on Find Domain page!` );
+							return self.findADomainComponent.selectFreeAddress();
+						}
+					} );
+				} );
+
+				test.describe( `Step ${stepNum}: Plans`, function() {
 					stepNum++;
 
-					test.it( 'Can then see the domains page ', function() {
-						this.findADomainComponent = new FindADomainComponent( driver );
-						return this.findADomainComponent.displayed().then( ( displayed ) => {
-							return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
+					test.it( 'Can then see the plans page', function() {
+						this.pickAPlanPage = new PickAPlanPage( driver );
+						return this.pickAPlanPage.displayed().then( ( displayed ) => {
+							return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
 						} );
 					} );
 
-					test.it( 'Can search for a blog name, can see and select a free WordPress.com blog address in results', function() {
-						this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-						this.findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
-						this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
-							assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
-							selectedBlogAddress = actualAddress;
-						} );
-
-						return this.findADomainComponent.selectFreeAddress();
+					test.it( 'Can select the premium plan', function() {
+						return this.pickAPlanPage.selectPremiumPlan();
 					} );
 
-					test.it( 'Verify OAuth error not present', function() {
-						const self = this;
-						return driverHelper.getErrorMessageIfPresent( driver ).then( ( errorMsg ) => {
-							if ( errorMsg !== undefined ) {
-								SlackNotifier.warn( `WARNING: Error message [${errorMsg}] encountered on Find Domain page!` );
-								return self.findADomainComponent.selectFreeAddress();
-							}
-						} );
-					} );
-
-					test.describe( `Step ${stepNum}: Plans`, function() {
+					test.describe( `Step ${stepNum}: Account`, function() {
 						stepNum++;
 
-						test.it( 'Can then see the plans page', function() {
-							this.pickAPlanPage = new PickAPlanPage( driver );
-							return this.pickAPlanPage.displayed().then( ( displayed ) => {
-								return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
+						test.it( 'Can then enter account details', function() {
+							this.createYourAccountPage = new CreateYourAccountPage( driver );
+							this.createYourAccountPage.displayed().then( ( displayed ) => {
+								assert.equal( displayed, true, 'The create account page is not displayed' );
 							} );
+							return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
 						} );
 
-						test.it( 'Can select the premium plan', function() {
-							return this.pickAPlanPage.selectPremiumPlan();
-						} );
-
-						test.describe( `Step ${stepNum}: Account`, function() {
+						test.describe( `Step ${stepNum}: Processing`, function() {
 							stepNum++;
 
-							test.it( 'Can then enter account details', function() {
-								this.createYourAccountPage = new CreateYourAccountPage( driver );
-								this.createYourAccountPage.displayed().then( ( displayed ) => {
-									assert.equal( displayed, true, 'The create account page is not displayed' );
-								} );
-								return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
+							test.it( 'Can then see the sign up processing page which will automatically move along', function() {
+								this.signupProcessingPage = new SignupProcessingPage( driver );
+								return this.signupProcessingPage.waitToDisappear();
 							} );
 
-							test.describe( `Step ${stepNum}: Processing`, function() {
+							test.it( 'Verify login screen not present', () => {
+								return driver.getCurrentUrl().then( ( url ) => {
+									if ( ! url.match( /checkout/ ) ) {
+										let baseURL = config.get( 'calypsoBaseURL' );
+										let newUrl = `${baseURL}/checkout/${selectedBlogAddress}`;
+										SlackNotifier.warn( `WARNING: Signup process sent me to ${url} instead of ${newUrl}` );
+										return driver.get( decodeURIComponent( newUrl ) );
+									}
+
+									return true;
+								} );
+							} );
+
+							test.describe( `Step ${stepNum}: Secure Payment Page`, function() {
 								stepNum++;
 
-								test.it( 'Can then see the sign up processing page which will automatically move along', function() {
-									this.signupProcessingPage = new SignupProcessingPage( driver );
-									return this.signupProcessingPage.waitToDisappear();
-								} );
-
-								test.it( 'Verify login screen not present', () => {
-									return driver.getCurrentUrl().then( ( url ) => {
-										if ( ! url.match( /checkout/ ) ) {
-											let baseURL = config.get( 'calypsoBaseURL' );
-											let newUrl = `${baseURL}/checkout/${selectedBlogAddress}`;
-											SlackNotifier.warn( `WARNING: Signup process sent me to ${url} instead of ${newUrl}` );
-											return driver.get( decodeURIComponent( newUrl ) );
-										}
-
-										return true;
+								test.it( 'Can then see the secure payment page', function() {
+									this.securePaymentComponent = new SecurePaymentComponent( driver );
+									return this.securePaymentComponent.displayed().then( ( displayed ) => {
+										return assert.equal( displayed, true, 'The secure payment page is not displayed' );
 									} );
 								} );
 
-								test.describe( `Step ${stepNum}: Secure Payment Page`, function() {
+								test.it( 'Can enter and submit test payment details', function() {
+									this.securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+									this.securePaymentComponent.submitPaymentDetails();
+									return this.securePaymentComponent.waitForPageToDisappear();
+								} );
+
+								test.describe( `Step ${stepNum}: Checkout Thank You Page`, function() {
 									stepNum++;
 
-									test.it( 'Can then see the secure payment page', function() {
-										this.securePaymentComponent = new SecurePaymentComponent( driver );
-										return this.securePaymentComponent.displayed().then( ( displayed ) => {
-											return assert.equal( displayed, true, 'The secure payment page is not displayed' );
-										} );
-									} );
-
-									test.it( 'Can enter and submit test payment details', function() {
-										this.securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
-										this.securePaymentComponent.submitPaymentDetails();
-										return this.securePaymentComponent.waitForPageToDisappear();
-									} );
-
-									test.describe( `Step ${stepNum}: Checkout Thank You Page`, function() {
-										stepNum++;
-
-										test.it( 'Can see the secure check out thank you page', function() {
-											this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
-											return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
-												return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
-											} );
+									test.it( 'Can see the secure check out thank you page', function() {
+										this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
+										return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
+											return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
 										} );
 									} );
 								} );
