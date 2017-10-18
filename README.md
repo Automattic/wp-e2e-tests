@@ -134,7 +134,11 @@ The `run.sh` script takes the following parameters, which can be combined to exe
 
 ### To run headlessly
 
-By default the tests start their own Selenium server in the background, which in turn launches a Chrome browser on your desktop where you can watch the tests execute.  This can be a bit of a headache if you're trying to do other work while the tests are running, as the browser may occasionally steal focus back (although that's mostly been resolved).  The easiest way to run "headlessly" without a visible window is to run a separate Selenium server via Docker.  There are lots of options for this on Docker Hub, but I recommend [this one](https://hub.docker.com/r/selenium/standalone-chrome-debug/), as it also allows you to VNC into the container if you do want to view the results.  Just drop the "-debug" from these steps if you don't need that feature.
+By default the tests start their own Selenium server in the background, which in turn launches a Chrome browser on your desktop where you can watch the tests execute.  This can be a bit of a headache if you're trying to do other work while the tests are running, as the browser may occasionally steal focus back (although that's mostly been resolved).
+
+The easiest way to run "headlessly" without a visible window is to add the HEADLESS environment variable which will run Chrome with the --headless flag.
+  
+Another way is to run a separate Selenium server via Docker.  There are lots of options for this on Docker Hub, but I recommend [this one](https://hub.docker.com/r/selenium/standalone-chrome-debug/), as it also allows you to VNC into the container if you do want to view the results.  Just drop the "-debug" from these steps if you don't need that feature.
 
 1. If you haven't already, [install Docker](https://docs.docker.com/engine/installation/)
 1. `export SELENIUM_REMOTE_URL=http://localhost:4444/wd/hub`
@@ -210,6 +214,7 @@ A full list of config values are:
 | Name | Description | Example | Required | Store in file? |
 | ---- | ----------- | ------- | -------- | ------------------- |
 | EYESDEBUG | If this is set, no connection is opened to Applitools, only local screenshots are taken | 1 | No | **NO** |
+| HEADLESS | If this is set, Chrome will run in headless mode| 1 | No | **NO** |
 | MAGELLANDEBUG | If this is set, the full mocha output is printed while running Magellan | 1 | No | **NO** |
 | SAUCEDEBUG | If this is set, on test failure a breakpoint will be set in SauceLabs, enabling you to continue interacting with the browser for troubleshooting | 1 | No | **NO** |
 
