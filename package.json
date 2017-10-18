@@ -35,7 +35,7 @@
     "node-slack-upload": "1.2.1",
     "random-qoutes-generator": "0.0.1",
     "sanitize-filename": "1.6.0",
-    "selenium-webdriver": "3.3.0",
+    "selenium-webdriver": "3.6.0",
     "serverpilot": "0.1.2",
     "slack-notify": "0.1.4",
     "testarmada-magellan":"8.8.6",
