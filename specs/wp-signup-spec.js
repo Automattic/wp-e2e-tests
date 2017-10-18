@@ -846,7 +846,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 														this.editor.enterContent( blogPostQuote + '\n' );
 
 														this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-														this.postEditorToolbarComponent.ensureSaved();
+														this.postEditorToolbarComponent.ensureSaved( false );
 
 														return this.editor.publishEnabled().then( ( enabled ) => {
 															return assert.equal( enabled, true, 'Publish button is enabled after account activation' );
