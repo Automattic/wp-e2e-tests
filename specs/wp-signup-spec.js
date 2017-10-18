@@ -71,7 +71,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			stepNum++;
 
 			test.it( 'Can see the design type choice page', function() {
-				this.startPage = new StartPage( driver, { visit: true } );
+				this.startPage = new StartPage( driver, { visit: true, culture: locale } );
 				this.designTypeChoicePage = new DesignTypeChoicePage( driver );
 				return this.designTypeChoicePage.displayed().then( ( displayed ) => {
 					return assert.equal( displayed, true, 'The design type choice page is not displayed' );
@@ -182,11 +182,13 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 										} );
 									} );
 
-									test.it( 'Can see the correct blog title displayed', function() {
-										return this.viewBlogPage.title().then( ( title ) => {
-											return assert.equal( title, 'Site Title', 'The expected blog title is not displaying correctly' );
+									if ( locale === 'en' ) {
+										test.it( 'Can see the correct blog title displayed', function() {
+											return this.viewBlogPage.title().then( ( title ) => {
+												return assert.equal( title, 'Site Title', 'The expected blog title is not displaying correctly' );
+											} );
 										} );
-									} )
+									}
 								} );
 							} );
 						} );
@@ -377,7 +379,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		} );
 
 		test.it( 'We can set the sandbox cookie for payments', function() {
-			this.WPHomePage = new WPHomePage( driver, { visit: true } );
+			this.WPHomePage = new WPHomePage( driver, { visit: true, culture: locale } );
 			return this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 		} );
 
@@ -385,7 +387,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			stepNum++;
 
 			test.it( 'Can see the design type choice page', function() {
-				this.startPage = new StartPage( driver, { visit: true, flow: 'premium' } );
+				this.startPage = new StartPage( driver, { visit: true, culture: locale, flow: 'premium' } );
 				this.designTypeChoicePage = new DesignTypeChoicePage( driver );
 				return this.designTypeChoicePage.displayed().then( ( displayed ) => {
 					return assert.equal( displayed, true, 'The design type choice page is not displayed' );
@@ -666,7 +668,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			stepNum++;
 
 			test.it( 'When we visit the start URL we see the survey page', function() {
-				this.startPage = new StartPage( driver, { visit: true, flow: 'surveystep' } );
+				this.startPage = new StartPage( driver, { visit: true, culture: locale, flow: 'surveystep' } );
 				this.surveyPage = new SurveyPage( driver );
 				return this.surveyPage.displayed().then( ( displayed ) => {
 					return assert.equal( displayed, true, 'The survey starting page is not displayed' );
@@ -791,11 +793,13 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 											} );
 										} );
 
-										test.it( 'Can see the correct blog title displayed', function() {
-											return this.viewBlogPage.title().then( ( title ) => {
-												return assert.equal( title, 'Site Title', 'The expected blog title is not displaying correctly' );
+										if ( locale === 'en' ) {
+											test.it( 'Can see the correct blog title displayed', function() {
+												return this.viewBlogPage.title().then( ( title ) => {
+													return assert.equal( title, 'Site Title', 'The expected blog title is not displaying correctly' );
+												} );
 											} );
-										} );
+										}
 
 										test.describe( `Step ${stepNum}: Can not publish until email is confirmed`, function() {
 											stepNum++;

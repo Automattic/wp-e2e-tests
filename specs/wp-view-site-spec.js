@@ -61,15 +61,17 @@ if ( httpsHost ) {
 				} );
 			} );
 
-			test.it( 'Can close site view', function() {
-				return this.siteViewComponent.close( driver );
-			} );
-
-			test.it( 'Can see sidebar again', function() {
-				return this.sidebarComponent.displayed().then( ( displayed ) => {
-					assert( displayed, 'The sidebar was not displayed' );
+			if ( screenSize === 'mobile' ) {
+				test.it( 'Can close site view', function() {
+					return this.siteViewComponent.close( driver );
 				} );
-			} );
+
+				test.it( 'Can see sidebar again', function() {
+					return this.sidebarComponent.displayed().then( ( displayed ) => {
+						assert( displayed, 'The sidebar was not displayed' );
+					} );
+				} );
+			}
 		} );
 	} );
 }

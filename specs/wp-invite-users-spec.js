@@ -48,7 +48,6 @@ if ( process.env.DISABLE_EMAIL === 'true' ) {
 
 testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 	this.timeout( mochaTimeOut );
-	const usePublishConfirmation = config.get( 'usePublishConfirmation' );
 
 	test.describe( 'Inviting New User as an Editor: @parallel @jetpack', function() {
 		this.bailSuite( true );
@@ -108,11 +107,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 						let links = emails[0].html.links;
 						for ( let link of links ) {
 							if ( link.href.includes( 'accept-invite' ) ) {
-								acceptInviteURL = link.href;
-								acceptInviteURL = acceptInviteURL.replace( 'https://wordpress.com', calypsoBaseUrl );
-								if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) === 'true' ) {
-									acceptInviteURL = acceptInviteURL + '?branch=' + config.get( 'branchName' );
-								}
+								acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 							}
 						}
 						assert.notEqual( acceptInviteURL, '', 'Could not locate the accept invite URL in the invite email' );
@@ -144,8 +139,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 
 						test.it( 'Can enter new username and password and sign up', function() {
 							this.acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
-							this.acceptInvitePage.waitUntilNotVisible();
-							return this.acceptInvitePage.ensureWeAreLoggedIn( newUserName, password );
+							return this.acceptInvitePage.waitUntilNotVisible();
 						} );
 
 						test.describe( 'User has been added as Editor', function() {
@@ -227,7 +221,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 		} );
 	} );
 
-	test.describe( 'Inviting New User as a Follower: @parallel @jetpack', function() {
+	test.xdescribe( 'Inviting New User as a Follower: @parallel @jetpack', function() {
 		this.bailSuite( true );
 		const inviteInboxId = config.get( 'inviteInboxId' );
 		const newUserName = 'e2eflowtestingfollower' + new Date().getTime().toString();
@@ -278,11 +272,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 						let links = emails[0].html.links;
 						for ( let link of links ) {
 							if ( link.href.includes( 'accept-invite' ) ) {
-								acceptInviteURL = link.href;
-								acceptInviteURL = acceptInviteURL.replace( 'https://wordpress.com', calypsoBaseUrl );
-								if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) === 'true' ) {
-									acceptInviteURL = acceptInviteURL + '?branch=' + config.get( 'branchName' );
-								}
+								acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 							}
 						}
 						assert.notEqual( acceptInviteURL, '', 'Could not locate the accept invite URL in the invite email' );
@@ -314,8 +304,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 
 						test.it( 'Can enter new username and password and sign up', function() {
 							this.acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
-							this.acceptInvitePage.waitUntilNotVisible();
-							this.acceptInvitePage.ensureWeAreLoggedIn( newUserName, password );
+							return this.acceptInvitePage.waitUntilNotVisible();
 						} );
 
 						test.describe( 'User has been added as a Follower', function() {
@@ -444,11 +433,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 							let links = emails[0].html.links;
 							for ( let link of links ) {
 								if ( link.href.includes( 'accept-invite' ) ) {
-									acceptInviteURL = link.href;
-									acceptInviteURL = acceptInviteURL.replace( 'https://wordpress.com', calypsoBaseUrl );
-									if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) === 'true' ) {
-										acceptInviteURL = acceptInviteURL + '?branch=' + config.get( 'branchName' );
-									}
+									acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 								}
 							}
 							assert.notEqual( acceptInviteURL, '', 'Could not locate the accept invite URL in the invite email' );
@@ -480,8 +465,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 
 							test.it( 'Can enter new username and password and sign up', function() {
 								this.acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
-								this.acceptInvitePage.waitUntilNotVisible();
-								this.acceptInvitePage.ensureWeAreLoggedIn( newUserName, password );
+								return this.acceptInvitePage.waitUntilNotVisible();
 							} );
 
 							test.describe( 'User has been added as a Viewer', function() {
@@ -617,11 +601,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 							let links = emails[0].html.links;
 							for ( let link of links ) {
 								if ( link.href.includes( 'accept-invite' ) ) {
-									acceptInviteURL = link.href;
-									acceptInviteURL = acceptInviteURL.replace( 'https://wordpress.com', calypsoBaseUrl );
-									if ( config.has( 'liveBranch' ) && config.get( 'liveBranch' ) === 'true' ) {
-										acceptInviteURL = acceptInviteURL + '?branch=' + config.get( 'branchName' );
-									}
+									acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 								}
 							}
 							assert.notEqual( acceptInviteURL, '', 'Could not locate the accept invite URL in the invite email' );
@@ -653,8 +633,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 
 							test.it( 'Can enter new username and password and sign up', function() {
 								this.acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
-								this.acceptInvitePage.waitUntilNotVisible();
-								this.acceptInvitePage.ensureWeAreLoggedIn( newUserName, password );
+								return this.acceptInvitePage.waitUntilNotVisible();
 							} );
 
 							test.describe( 'User has been added as Contributor - Can edit but not publish a post', function() {
@@ -753,7 +732,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 											test.it( 'New user can publish the post as an author', function() {
 												this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 												this.postEditorToolbarComponent.ensureSaved();
-												return this.postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
+												return this.postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 											} );
 										} );
 									} );
