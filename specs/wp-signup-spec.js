@@ -7,6 +7,7 @@ import * as dataHelper from '../lib/data-helper.js';
 import * as driverHelper from '../lib/driver-helper.js';
 
 import WPHomePage from '../lib/pages/wp-home-page.js';
+import ChooseAThemePage from '../lib/pages/signup/choose-a-theme-page.js';
 import StartPage from '../lib/pages/signup/start-page.js';
 import SurveyPage from '../lib/pages/signup/survey-page.js';
 import DesignTypeChoicePage from '../lib/pages/signup/design-type-choice-page.js';
