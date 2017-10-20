@@ -863,7 +863,6 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 						assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 					} );
 					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					this.postEditorToolbarComponent.ensureSaved();
 					this.postEditorToolbarComponent.publishAndViewContent();
 				} );
 

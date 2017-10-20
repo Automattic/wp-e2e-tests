@@ -8,8 +8,8 @@ WORKDIR /wp-e2e-tests
 RUN	mkdir /wp-e2e-tests-canary /wp-e2e-tests-jetpack /wp-e2e-tests-visdiff /wp-e2e-tests-ie11 /wp-e2e-tests-woocommerce
 
 # Version Numbers
-ENV CHROMEDRIVER_VERSION 2.30
-ENV CHROME_VERSION 59.0.3071.86
+ENV CHROMEDRIVER_VERSION 2.33
+ENV CHROME_VERSION 61.0.3163.79
 ENV NVM_VERSION 0.33.2
 
 # Install dependencies
