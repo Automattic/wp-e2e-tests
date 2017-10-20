@@ -208,6 +208,9 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			test.it( 'Can see the design type choice page', function() {
 				this.startPage = new StartPage( driver, { visit: true, culture: locale } );
 				this.designTypeChoicePage = new DesignTypeChoicePage( driver );
+				driver.getCurrentUrl().then( ( u ) => {
+					SlackNotifier.warn( 'Debug URL:::' + u );
+				} );
 				return this.designTypeChoicePage.displayed().then( ( displayed ) => {
 					return assert.equal( displayed, true, 'The design type choice page is not displayed' );
 				} );
