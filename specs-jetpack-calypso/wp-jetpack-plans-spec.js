@@ -1,3 +1,4 @@
+
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 import assert from 'assert';
@@ -142,9 +143,15 @@ test.describe( `[${host}] Jetpack Plans: (${screenSize}) @jetpack`, function() {
 			return this.pickAPlanPage.selectPremiumPlan();
 		} );
 
+		test.it( 'Can see the authorize page', () => {
+			return this.jetpackAuthorizePage = new JetpackAuthorizePage( driver );
+			this.jetpackAuthorizePage.displayed().then( displayed => {
+				assert.equal( displayed, true, 'Could not see the authorize page' );
+			} );
+		} );
+
 		test.it( 'Can log in to WordPress.com', () => {
-			this.jetpackAuthorizePage = new JetpackAuthorizePage( driver );
-			this.jetpackAuthorizePage.chooseSignIn;
+			this.jetpackAuthorizePage.chooseSignIn();
 			const loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
 			return loginFlow.loginUsingExistingForm();
 		} );
