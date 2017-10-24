@@ -18,6 +18,9 @@ import CheckOutPage from '../lib/pages/signup/checkout-page';
 import CheckOutThankyouPage from '../lib/pages/signup/checkout-thankyou-page.js';
 import ViewBlogPage from '../lib/pages/signup/view-blog-page.js';
 import EditorPage from '../lib/pages/editor-page.js';
+import LoginPage from '../lib/pages/login-page';
+import MagicLoginPage from '../lib/pages/magic-login-page';
+import ReaderPage from '../lib/pages/reader-page';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
@@ -35,7 +38,7 @@ const host = dataHelper.getJetpackHost();
 const locale = driverManager.currentLocale();
 const calypsoBaseURL = config.get( 'calypsoBaseURL' );
 
-var driver;
+let driver;
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -51,7 +54,7 @@ if ( process.env.DISABLE_EMAIL === 'true' ) {
 testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Sign up for a free site @parallel', function() {
+	test.describe( 'Sign up for a free site and log in via a magic link @parallel @email', function() {
 		this.bailSuite( true );
 		let stepNum = 1;
 
@@ -60,6 +63,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
+		let magicLoginLink;
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
 			return driverManager.ensureNotLoggedIn( driver );
@@ -173,6 +177,55 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 										} );
 									} );
 								}
+
+								test.describe( `Step ${stepNum}: Log out and request magic link`, function() {
+									stepNum++;
+
+									// Ensure logged out
+									test.before( function() {
+										return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+									} );
+
+									test.it( 'Request a magic link', function() {
+										this.loginPage = new LoginPage( driver, true );
+										return this.loginPage.requestMagicLink( emailAddress );
+									} );
+
+									test.describe( `Step ${stepNum}: Can see email containing magic link`, function() {
+										stepNum++;
+
+										test.before( function() {
+											return this.emailClient = new EmailClient( signupInboxId );
+										} );
+
+										test.it( 'Can see a the magic link email', function() {
+											return this.emailClient.pollEmailsByRecipient( emailAddress ).then( function( emails ) {
+												assert.equal( emails.length, 2, 'The number of newly registered emails is not equal to 2 (activation and magic link)' );
+												for ( let email of emails ) {
+													if ( email.subject.indexOf( 'WordPress.com' ) > -1 ) {
+														magicLoginLink = email.html.links[0].href;
+													}
+												}
+												assert( magicLoginLink !== undefined, 'Could not locate the magic login link email link' );
+												return true;
+											} );
+										} );
+
+										test.describe( `Step ${stepNum}: Visit the magic link and we should be logged in`, function() {
+											stepNum++;
+
+											test.it( 'Visit the magic link and we\'re logged in', function() {
+												driver.get( magicLoginLink );
+												this.magicLoginPage = new MagicLoginPage( driver );
+												this.magicLoginPage.finishLogin();
+												let readerPage = new ReaderPage( driver );
+												return readerPage.displayed().then( function( displayed ) {
+													return assert.equal( displayed, true, 'The reader page is not displayed after log in' );
+												} );
+											} );
+										} );
+									} );
+								} );
 							} );
 						} );
 					} );
