@@ -34,14 +34,14 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 			return this.wporgCreator.waitForWpadmin();
 		} );
 
-		test.it( 'Can get password', () => {
-			this.wporgCreator.getPassword().then( password => {
-				this.password = password;
+		test.it( 'Can get URL', () => {
+			this.wporgCreator.getUrl().then( url => {
+				this.url = url;
 			} );
 		} );
 
-		test.it( 'Has password', () => {
-			console.log( 'password', this.password );
+		test.it( 'Has URL', () => {
+			console.log( 'url', this.url );
 		} );
 	} );
 } );
