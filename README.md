@@ -127,14 +127,24 @@ The `run.sh` script takes the following parameters, which can be combined to exe
 -i		  - Execute i18n screenshot tests, not compatible with -g flag
 -U		  - Execute the i18n screenshot upload script in scripts/
 -v		  - Execute the visdiff tests in specs-visdiff/
--x		  - Execute the tests from the context of xvfb-run
+-x		  - Execute the tests using the --headless flag in Chrome
 -u [baseUrl]	  - Override the calypsoBaseURL config
 -h		  - This help listing
 ```
 
 ### To run headlessly
 
-By default the tests start their own Selenium server in the background, which in turn launches a Chrome browser on your desktop where you can watch the tests execute.  This can be a bit of a headache if you're trying to do other work while the tests are running, as the browser may occasionally steal focus back (although that's mostly been resolved).  The easiest way to run "headlessly" without a visible window is to run a separate Selenium server via Docker.  There are lots of options for this on Docker Hub, but I recommend [this one](https://hub.docker.com/r/selenium/standalone-chrome-debug/), as it also allows you to VNC into the container if you do want to view the results.  Just drop the "-debug" from these steps if you don't need that feature.
+By default the tests start their own Selenium server in the background, which in turn launches a Chrome browser on your desktop where you can watch the tests execute.  This can be a bit of a headache if you're trying to do other work while the tests are running, as the browser may occasionally steal focus back (although that's mostly been resolved).
+
+The easiest way to run "headlessly" without a visible window is to add the `-x` flag when running `run.sh` or using the `HEADLESS=1` environment variable which will run Chrome with the --headless flag.
+1. `./run.sh -g -x` 
+
+or 
+1. `export HEADLESS=1`
+1. `./node_modules/.bin/mocha specs/wp-log-in-out-spec.js`
+
+  
+Another way is to run a separate Selenium server via Docker.  There are lots of options for this on Docker Hub, but I recommend [this one](https://hub.docker.com/r/selenium/standalone-chrome-debug/), as it also allows you to VNC into the container if you do want to view the results.  Just drop the "-debug" from these steps if you don't need that feature.
 
 1. If you haven't already, [install Docker](https://docs.docker.com/engine/installation/)
 1. `export SELENIUM_REMOTE_URL=http://localhost:4444/wd/hub`
