@@ -38,9 +38,7 @@ test.describe( `[${host}] Themes: (${screenSize}) @parallel @jetpack`, function(
 		test.describe( 'Can switch free themes', function() {
 			test.it( 'Can select a different free theme', function() {
 				this.themesPage = new ThemesPage( driver );
-				if ( host === 'WPCOM' ) {
-					this.themesPage.showOnlyFreeThemes();
-				}
+				this.themesPage.showOnlyFreeThemes();
 				this.themesPage.searchFor( 'Twenty F' );
 				this.themesPage.waitForThemeStartingWith( 'Twenty F' );
 				return this.themesPage.selectNewThemeStartingWith( 'Twenty F' );
