@@ -659,7 +659,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 									this.navbarComponent.dismissGuidedTours();
 									this.navbarComponent.clickCreateNewPost();
 									this.editorPage = new EditorPage( driver );
-									this.driver.getCurrentUrl().then( ( urlDisplayed ) => {
+									driver.getCurrentUrl().then( ( urlDisplayed ) => {
 										return this.editorPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
 									} );
 									this.editorPage.enterTitle( reviewPostTitle );
