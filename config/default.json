@@ -56,7 +56,7 @@
     }
   },
   "httpsHosts": [ "WPCOM", "PRESSABLE" ],
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupSurveyStep", "presaleChatButton", "businessPlanDescriptionAT", "newSiteWithJetpack", "postPublishConfirmation", "readerIntroIllustration", "paymentShowPaypalLogo", "jetpackConnectPlansCopyChanges", "postSignupUpgradeScreen", "skipThemesSelectionModal", "recommendShortestDomain" ],
+  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupSurveyStep", "presaleChatButton", "businessPlanDescriptionAT", "newSiteWithJetpack", "postPublishConfirmation", "readerIntroIllustration", "paymentShowPaypalLogo", "jetpackConnectPlansCopyChanges", "postSignupUpgradeScreen", "skipThemesSelectionModal", "recommendShortestDomain", "checkoutPaymentMethodTabs" ],
   "overrideABTests": [
 	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
 	[ "postPublishConfirmation_20170801", "showPublishConfirmation" ],
