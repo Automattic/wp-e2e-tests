@@ -1,5 +1,4 @@
 {
-  "authURL": "https://wordpress.com/wp-login.php",
   "calypsoBaseURL": "https://wordpress.com",
   "explicitWaitMS": 20000,
   "emailWaitMS": 60000,
@@ -56,10 +55,11 @@
         "version": "11.103"
     }
   },
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupSurveyStep", "presaleChatButton", "savingsInCheckoutSummary", "businessPlanDescriptionAT", "newSiteWithJetpack", "signupPlansCopyChanges", "postPublishPreview" ],
+  "httpsHosts": [ "WPCOM", "PRESSABLE" ],
+  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupSurveyStep", "presaleChatButton", "businessPlanDescriptionAT", "newSiteWithJetpack", "postPublishConfirmation", "readerIntroIllustration", "paymentShowPaypalLogo", "jetpackConnectPlansCopyChanges", "postSignupUpgradeScreen", "skipThemesSelectionModal", "recommendShortestDomain" ],
   "overrideABTests": [
 	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
-	[ "signupPlansCopyChanges_20170623", "original" ],
-	[ "postPublishPreview_20170627", "noShowPostPublishPreview" ]
+	[ "postPublishConfirmation_20170801", "showPublishConfirmation" ],
+	[ "skipThemesSelectionModal_20170830", "show" ]
   ]
 }

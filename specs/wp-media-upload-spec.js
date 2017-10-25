@@ -4,6 +4,7 @@ import config from 'config';
 import LoginFlow from '../lib/flows/login-flow.js';
 
 import EditorPage from '../lib/pages/editor-page.js';
+import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as mediaHelper from '../lib/media-helper.js';
@@ -89,33 +90,78 @@ test.describe( `[${host}] Editor: Media Upload (${screenSize}) @parallel @jetpac
 				} );
 			} );
 
-			// Skip this test on Jetpack sites due to https://github.com/Automattic/jetpack/issues/7159
-			if ( host === 'WPCOM' ) {
-				test.describe( 'Can upload an mp3', function() {
-					let fileDetails;
+			test.describe( 'Can upload an mp3', function() {
+				let fileDetails;
 
-					test.it( 'Create mp3 for upload', function() {
-						mediaHelper.getMP3FileWithFilename( 'new.mp3' ).then( function( details ) {
-							fileDetails = details;
-						} );
-					} );
-
-					test.it( 'Can upload an mp3', function() {
-						editorPage.uploadMedia( fileDetails );
-					} );
-
-					test.it( 'Can delete mp3', function() {
-						editorPage.deleteMedia();
-					} );
-
-					test.after( function() {
-						editorPage.dismissMediaModal();
-						if ( fileDetails ) {
-							mediaHelper.deleteFile( fileDetails ).then( function() {} );
-						}
+				test.it( 'Create mp3 for upload', function() {
+					mediaHelper.getMP3FileWithFilename( 'new.mp3' ).then( function( details ) {
+						fileDetails = details;
 					} );
 				} );
-			}
+
+				test.it( 'Can upload an mp3', function() {
+					editorPage.uploadMedia( fileDetails );
+				} );
+
+				test.it( 'Can delete mp3', function() {
+					editorPage.deleteMedia();
+				} );
+
+				test.after( function() {
+					editorPage.dismissMediaModal();
+					if ( fileDetails ) {
+						mediaHelper.deleteFile( fileDetails ).then( function() {} );
+					}
+				} );
+			} );
+
+			test.describe( 'Can upload Featured image', () => {
+				let fileDetails;
+				let editorSidebar;
+
+				test.it( 'Create image file for upload', function() {
+					mediaHelper.createFile().then( function( details ) {
+						fileDetails = details;
+					} );
+				} );
+
+				test.it( 'Can open Featured Image upload modal', function() {
+					editorSidebar = new PostEditorSidebarComponent( driver );
+					editorSidebar.expandFeaturedImage();
+					editorSidebar.openFeaturedImageDialog();
+				} );
+
+				test.it( 'Can set Featured Image', function() {
+					editorPage.sendFile( fileDetails.file );
+					editorPage.saveImage( fileDetails.imageName );
+					// Will wait until image is actually shows up on editor page
+					editorPage.waitUntilFeaturedImageInserted();
+				} );
+
+				test.it( 'Can remove Featured Image', function() {
+					editorSidebar.removeFeaturedImage();
+					editorSidebar.closeFeaturedImage();
+				} );
+
+				test.it( 'Can delete uploaded image', function() {
+					editorSidebar.expandFeaturedImage();
+					editorSidebar.openFeaturedImageDialog();
+					editorPage.selectImageByNumber( 0 );
+					editorPage.deleteMedia();
+				} );
+
+				test.after( () => {
+					editorPage.dismissMediaModal();
+					if ( fileDetails ) {
+						mediaHelper.deleteFile( fileDetails ).then( function() {} );
+					}
+					editorSidebar.closeFeaturedImage();
+				} );
+			} );
+			// FIXME: Workaround of https://github.com/Automattic/wp-calypso/issues/17701
+			test.after( () => {
+				editorPage.cleanDirtyState();
+			} );
 		} );
 	} );
 } );

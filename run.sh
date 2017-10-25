@@ -13,6 +13,17 @@ BRANCH=""
 RETURN=0
 CLEAN=0
 GREP=""
+UPLOAD=0
+
+# On CI, use nvm to define NodeJS version if possible
+if [ "$CI" == "true" ]; then
+  if  [ -d $HOME/.nvm ]; then
+    export NVM_DIR="$HOME/.nvm"
+  fi
+
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  nvm install
+fi
 
 # Function to join arrays into a string
 function joinStr { local IFS="$1"; shift; echo "$*"; }
@@ -39,20 +50,22 @@ usage () {
 -c		  - Exit with status code 0 regardless of test results
 -m [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
 -f		  - Tell visdiffs to fail the tests rather than just send an alert
--i		  - Execute i18n screenshot tests, not compatible with -g flag
+-i		  - Execute i18n NUX screenshot tests, not compatible with -g flag
+-I		  - Execute tests in specs-i18n/ directory
+-U      - Execute the i18n screenshot upload script in scripts/
 -v		  - Execute the visdiff tests in specs-visdiff/
 -x		  - Execute the tests from the context of xvfb-run
 -u [baseUrl]	  - Override the calypsoBaseURL config
 -h		  - This help listing
 EOF
-  exit 0
+  exit 1
 }
 
 if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":a:Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
+while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
   case $opt in
     a)
       WORKERS=$OPTARG
@@ -85,7 +98,16 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fivxu:h" opt; do
       NODE_CONFIG_ARGS+=$I18N_CONFIG
       LOCALES="en,pt-BR,es,ja,fr,he"
       export SCREENSHOTDIR="screenshots-i18n"
+      MAGELLAN_CONFIG="magellan-i18n-nux.json"
+      ;;
+    I)
+      SCREENSIZES=desktop
+      NODE_CONFIG_ARGS+=$I18N_CONFIG
+      LOCALES="en,es,pt-br,de,fr,he,ja,it,nl,ru,tr,id,zh-cn,zh-tw,ko,ar,sv"
       MAGELLAN_CONFIG="magellan-i18n.json"
+      ;;
+    U)
+      UPLOAD=1
       ;;
     w)
       NODE_CONFIG_ARGS+=$IE11_CONFIG
@@ -170,20 +192,24 @@ if [ $PARALLEL == 1 ]; then
 
   if [ $CIRCLE_NODE_INDEX == $MOBILE ]; then
       echo "Executing tests at mobile screen width"
-      CMD="env BROWSERSIZE=mobile $MAGELLAN --mocha_args='$MOCHA_ARGS' --max_workers=$WORKERS"
+      CMD="env BROWSERSIZE=mobile $MAGELLAN --config=$MAGELLAN_CONFIGS --mocha_args='$MOCHA_ARGS' --max_workers=$WORKERS"
 
       eval $CMD
       RETURN+=$?
   fi
   if [ $CIRCLE_NODE_INDEX == $DESKTOP ]; then
       echo "Executing tests at desktop screen width"
-      CMD="env BROWSERSIZE=desktop $MAGELLAN --mocha_args='$MOCHA_ARGS' --max_workers=$WORKERS"
+      CMD="env BROWSERSIZE=desktop $MAGELLAN --config=$MAGELLAN_CONFIGS --mocha_args='$MOCHA_ARGS' --max_workers=$WORKERS"
 
       eval $CMD
       RETURN+=$?
   fi
 else # Not using multiple CircleCI containers, just queue up the tests in sequence
   if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
+    if [ $UPLOAD == 1 ]; then
+      # Clear out screenshots-i18n/ directory
+      rm -f ${SCREENSHOTDIR}/*
+    fi
     IFS=, read -r -a SCREENSIZE_ARRAY <<< "$SCREENSIZES"
     IFS=, read -r -a LOCALE_ARRAY <<< "$LOCALES"
     for size in ${SCREENSIZE_ARRAY[@]}; do
@@ -191,7 +217,7 @@ else # Not using multiple CircleCI containers, just queue up the tests in sequen
         for config in "${MAGELLAN_CONFIGS[@]}"; do
           if [ "$config" != "" ]; then
             CMD="env BROWSERSIZE=$size BROWSERLOCALE=$locale $MAGELLAN --mocha_args='$MOCHA_ARGS' --config='$config' --max_workers=$WORKERS"
-  
+
             eval $CMD
             RETURN+=$?
           fi
@@ -199,6 +225,14 @@ else # Not using multiple CircleCI containers, just queue up the tests in sequen
       done
     done
   fi
+fi
+
+if [ $UPLOAD == 1 ]; then
+  echo "Uploading i18n tests screenshots:"
+  CMD="node ./scripts/i18n-screenshots-upload.js $LOCALES"
+
+  eval $CMD
+  RETURN+=$?
 fi
 
 if [ $CLEAN == 1 ]; then

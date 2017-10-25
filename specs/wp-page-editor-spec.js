@@ -20,6 +20,7 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
+const httpsHost = config.get( 'httpsHosts' ).indexOf( host ) !== -1;
 
 var driver;
 
@@ -70,7 +71,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				postEditorSidebarComponent.closeSharingSection();
 			} );
 
-			if ( host === 'WPCOM' ) {
+			if ( httpsHost ) {
 				test.describe( 'Preview', function() {
 					test.it( 'Can launch page preview', function() {
 						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
@@ -105,7 +106,11 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				test.describe( 'Publish and Preview Published Content', function() {
 					test.it( 'Can publish and preview published content', function() {
 						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-						this.postEditorToolbarComponent.publishAndPreviewPublished();
+						if ( httpsHost ) {
+							this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
+						} else {
+							this.postEditorToolbarComponent.publishAndPreviewPublished( { useConfirmStep: true } );
+						}
 						return this.pagePreviewComponent = new PagePreviewComponent( driver );
 					} );
 
@@ -128,14 +133,19 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 					} );
 
 					test.it( 'Can close page preview', function() {
-						this.pagePreviewComponent.close();
+						if ( httpsHost ) {
+							return this.pagePreviewComponent.edit();
+						}
+
+						// else Jetpack
+						return this.pagePreviewComponent.close();
 					} );
 				} );
 			} else { // Jetpack tests
 				test.describe( 'Publish Content', function() {
 					test.it( 'Can publish content', function() {
 						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-						this.postEditorToolbarComponent.publishPost();
+						return this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 					} );
 				} );
 			}
@@ -182,6 +192,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 
 	test.describe( 'Private Pages: @parallel @jetpack', function() {
 		this.bailSuite( true );
+
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
@@ -290,7 +301,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 			test.describe( 'Publish and View', function() {
 				test.it( 'Can publish and view content', function() {
 					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					postEditorToolbarComponent.publishAndViewContent();
+					postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 				} );
 
 				test.describe( 'As a logged in user', function() {

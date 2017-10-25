@@ -21,7 +21,10 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
   - [Config Values](#config-values)
   - [Standalone Environment Variables](#standalone-environment-variables)
   - [CircleCI Environment Variables](#circleci-environment-variables)
-- [Ad Blocker](#ad-blocker)
+  - [Jetpack Tests on CircleCI](#jetpack-tests-on-circleci)
+- [NodeJS Version](#nodejs-version)
+- [Git Pre-Commit Hook](#git-pre-commit-hook)
+- [Launch Logged-In Window](#launch-logged-in-window)
 
 
 ## Pre-requisites
@@ -122,6 +125,7 @@ The `run.sh` script takes the following parameters, which can be combined to exe
 -m [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
 -f		  - Tell visdiffs to fail the tests rather than just send an alert
 -i		  - Execute i18n screenshot tests, not compatible with -g flag
+-U		  - Execute the i18n screenshot upload script in scripts/
 -v		  - Execute the visdiff tests in specs-visdiff/
 -x		  - Execute the tests from the context of xvfb-run
 -u [baseUrl]	  - Override the calypsoBaseURL config
@@ -159,7 +163,6 @@ A full list of config values are:
 
 | Name | Description | Example | Required | Store in file? |
 | ---- | ----------- | ------- | -------- | ------------------- |
-| authURL | The page where you authenticate to use calypso - this **should not** include the redirect | https://wordpress.com/wp-login.php | Yes | Yes |
 | calypsoBaseURL | The home page for calypso | https://wordpress.com | Yes | Yes |
 | explicitWaitMS | The explicit wait time in milliseconds to wait for an element to appear - for example a widget loading data via an API | 10000 | Yes | Yes |
 | mochaTimeoutMS | This is the maximum total time in milliseconds a single mocha end to end test can take to finish - otherwise it will time out. | 120000 | Yes | Yes |
@@ -198,6 +201,8 @@ A full list of config values are:
 | emailPrefix | A string to stick on the beginning of the e-mail addresses used for invites and signups | username | No | **NO** |
 | testAccounts | A JSON object with username/password pairs assigned to keynames for easy retrieval.  The necessary accounts can be found in the config/local.example.json file.  | {"defaultUser": ["username1","password1"], "multiSiteUser": ["username2","password2"] } | No | **NO** |
 | highlightElements | Boolean to indicate whether to visually highlight elements being interacted with on the page | true | No | Yes |
+| restApiApplication | A JSON object with your [WordPress REST API app](https://developer.wordpress.com/apps/) client ID, redirect URI, and client secret | {"client_id": "YOUR_CLIENT_ID", "redirect_uri": "YOUR_REDIRECT_URI", "client_secret": "YOUR CLIENT_SECRET"} | Yes (for REST API scripts only) | **NO** |
+| spConfig | A JSON object with your [ServerPilot API](serverpilot.io) client ID, API key, and System User ID | {"clientId": "YOUR_CLIENT_ID", "apiKey": "YOUR_API_KEY", "sysuserid": "YOUR_SYSUSERID"} | Yes (for Jetpack on CI scripts only) | **NO** |
 
 ### Standalone Environment Variables
 
@@ -216,6 +221,19 @@ These environment variables are intended for use inside CircleCI, to control whi
 | DISABLE_EMAIL | Setting this to `true` will cause the Invite and Signup tests to be skipped | false | No |
 | SKIP_TEST_REGEX | The value of this variable will be used in the `-i -g *****` parameter, to skip any tests that match the given RegEx.  List multiple keywords separated by a `|` (i.e. `Invite|Domain|Theme`) | `Empty String` | No |
 
-## Ad Blocker
-To combat timeout issues with ads (both those from WordPress.com and any that may appear on any user sites that may load), we've included the uBlock Chrome extension.  Source code for that can be found [here](https://github.com/gorhill/uBlock/).  We're currently using release 1.11.5b1.  To manually add sites to be blocked, append them the [filters.txt](/ublock/assets/ublock/filters.txt) file
+### Jetpack Tests on CircleCI
+The scripts in the `scripts/jetpack` directory are designed to build/configure a Jetpack site via the ServerPilot API on a DigitalOcean droplet.  Once you've built a droplet and connected it to ServerPilot (and configured your keys in the `spConfig` object), build the site via `./scripts/jetpack/wp-serverpilot-init.js`.  There are also scripts in that directory for installing/activating/connecting/disconnecting Jetpack, and deleting the site.
 
+### NodeJS Version
+The node version should be defined in the `.nvmrc` file for use with the [nvm](https://github.com/creationix/nvm) project.  When changing the version a new Docker container should be built/pushed to Docker Hub for use on CircleCI 2.0
+
+### Git Pre-Commit Hook
+The file `/scripts/git-pre-commit-circleci-validate` will run `circleci validate` against the CircleCI config file prior to every commit.  This prevents the constant back-and-forth when making updates only to find that they fail immediately on CI.  Instructions in the file direct how to install the hook in your local Git environment (it won't run without this).
+
+### Launch Logged-In Window
+To facilitate manual testing, the [launch-wpcom-login.js](/scripts/launch-wpcom-login.js) file in `/scripts` will launch a Chrome browser window to WordPress.com and log in with the account definition given on the command line.  The only config requirement for this is that the `local-${NODE_ENV}.json` file needs to have the `testAccounts` object defined.  If no account is given on the command line, `defaultUser` will be used.
+
+Example:
+```bash
+./node_modules/.bin/babel-node scripts/launch-wpcom-login.js multiSiteUser
+```

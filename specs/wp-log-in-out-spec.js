@@ -10,6 +10,7 @@ import ProfilePage from '../lib/pages/profile-page';
 import WPHomePage from '../lib/pages/wp-home-page';
 
 import NavbarComponent from '../lib/components/navbar-component.js';
+import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component'
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
@@ -25,7 +26,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Authentication: (${screenSize}) @parallel`, function() {
+test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -48,6 +49,21 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel`, function()
 			} );
 		} );
 
+		// Test Jetpack SSO
+		if ( host !== 'WPCOM' ) {
+			test.describe( 'Can Log via Jetpack SSO', function() {
+				test.it( 'Can log into site via Jetpack SSO', () => {
+					let loginFlow = new LoginFlow( driver );
+					return loginFlow.login( { jetpackSSO: true } );
+				} );
+
+				test.it( 'Can return to Reader', () => {
+					let readerPage = new ReaderPage( driver, true );
+					return readerPage.displayed();
+				} );
+			} );
+		}
+
 		test.describe( 'Can Log Out', function() {
 			test.it( 'Can view profile to log out', function() {
 				let navbarComponent = new NavbarComponent( driver );
@@ -60,18 +76,16 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel`, function()
 			} );
 
 			test.it( 'Can see wordpress.com home when after logging out', function() {
-				driver.getCurrentUrl().then( function( url ) {
-					if ( url.endsWith( '/?apppromo' ) ) {
-						url = url.replace( '/?apppromo', '' );
-					}
-					assert.equal( url, 'https://wordpress.com', 'The home page url was incorrect after signing out' );
+				const loggedOutMasterbarComponent = new LoggedOutMasterbarComponent( driver );
+				loggedOutMasterbarComponent.displayed().then( ( displayed ) => {
+					assert( displayed, 'The logged out masterbar isn\'t displayed after logging out' );
 				} );
 			} );
 		} );
 	} );
 } );
 
-test.describe( `[${host}] User Agent: (${screenSize}) @parallel`, function() {
+test.describe( `[${host}] User Agent: (${screenSize}) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 

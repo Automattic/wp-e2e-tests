@@ -4,14 +4,14 @@ jobs:
     parallelism: 2
     working_directory: /wp-e2e-tests
     docker:
-      - image: hoverduck/wp-e2e-tests:0.0.2
+      - image: automattic/wp-e2e-tests:0.0.7
         environment:
                 NODE_ENV: test
     steps:
       - checkout
       - restore_cache:
           key: << checksum "package.json" >>
-      - run: npm install
+      - run: source $HOME/.nvm/nvm.sh && npm install
       - save_cache:
           paths:
             - /wp-e2e-tests/node_modules

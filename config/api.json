@@ -1,0 +1,106 @@
+{
+  "wp": {
+    "oauth2": {
+      "authorize": {
+        "schema": "https",
+        "method": ["GET"]
+      },
+      "token-info": {
+        "schema": "https",
+        "method": ["GET"]
+      },
+      "token": {
+        "schema": "https",
+        "method": ["POST"]
+      }
+    },
+    "insights": {
+      "schema": "https",
+      "method": ["GET"]
+    },
+    "batch": {
+      "schema": "https",
+      "method": ["GET"]
+    },
+    "me": {
+      "schema": "https",
+      "method": ["GET"],
+      "sites": {
+        "schema": "https",
+        "method": ["GET"]
+      },
+      "settings": {
+        "schema": "https",
+        "method": ["GET", "POST"]
+      },
+      "billing-history": {
+        "schema": "https",
+        "method": ["GET"]
+      },
+      "two-step": {
+        "schema": "https",
+        "method": ["GET"]
+      },
+      "likes": {
+        "schema": "https",
+        "method": ["GET"]
+      },
+      "posts": {
+        "schema": "https",
+        "method": ["GET"]
+      }
+    },
+    "sites": {
+      "${site}": {
+        "schema": "https",
+        "method": ["GET"],
+        "users": {
+          "schema": "https",
+          "method": ["GET"]
+        },
+        "comments": {
+          "schema": "https",
+          "method": ["GET"]
+        },
+        "tags": {
+          "schema": "https",
+          "method": ["GET"]
+        },
+        "categories": {
+          "schema": "https",
+          "method": ["GET"]
+        },
+        "follows": {
+          "schema": "https",
+          "method": ["GET"]
+        },
+        "sharing-buttons": {
+          "schema": "https",
+          "method": ["GET"]
+        },
+        "posts": {
+          "schema": "https",
+          "method": ["GET"],
+          "new": {
+            "schema": "https",
+            "method": ["POST"]
+          },
+          "${post_ID}": {
+            "delete": {
+              "schema": "https",
+              "method": ["POST"]
+            }
+          }
+        },
+        "media": {
+          "schema": "https",
+          "method": ["GET"],
+          "new": {
+            "schema": "https",
+            "method": ["POST"]
+          }
+        }
+      }
+    }
+  }
+}
