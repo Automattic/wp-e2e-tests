@@ -70,9 +70,9 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 					this.sidebarComponent.selectSiteSwitcher();
 					this.sidebarComponent.searchForSite( 'ninja' );
 					this.sidebarComponent.selectSettings();
-					this.settingsPage = new SettingsPage( driver );
-					this.settingsPage.manageConnection();
-					this.settingsPage.disconnectSite().then( removeSites() );
+					const settingsPage = new SettingsPage( driver );
+					settingsPage.manageConnection();
+					settingsPage.disconnectSite().then( removeSites() );
 				} );
 			};
 
@@ -94,10 +94,10 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 			const siteSlug = this.url.replace( /^https?:\/\//, '' );
 			console.log( siteSlug );
 			return driver.getCurrentUrl().then( url => {
-				if ( url.includes( this.url ) ) {
+				if ( url.includes( siteSlug ) ) {
 					return done();
 				}
-				done( 'Route does not include site slug ' + url );
+				done( `Route ${ url } does not include site slug ${ siteSlug }` );
 			} );
 		} );
 	} );
