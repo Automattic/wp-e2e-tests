@@ -4,6 +4,7 @@ import config from 'config';
 import assert from 'assert';
 
 import * as driverManager from '../lib/driver-manager';
+import * as driverHelper from '../lib/driver-helper';
 import * as dataHelper from '../lib/data-helper';
 import { By } from 'selenium-webdriver';
 
@@ -60,19 +61,35 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 
 		test.it( 'Can disconnect existing jetpack sites', done => {
 			const siteSwitcherSelector = By.css( '.current-site__switch-sites' );
+			const siteSelector = By.css( '.site-selector .site a[aria-label*="ninja"]' );
 
 			const removeSites = () => {
-				driver.findElements( siteSwitcherSelector ).then( found => {
-					if ( ! found.length ) {
+				driverHelper.isElementPresent( driver, siteSwitcherSelector ).then( foundSwitcher => {
+					if ( ! foundSwitcher ) {
 						// only one site left
 						return done();
 					}
 					this.sidebarComponent.selectSiteSwitcher();
-					this.sidebarComponent.searchForSite( 'ninja' );
-					this.sidebarComponent.selectSettings();
-					const settingsPage = new SettingsPage( driver );
-					settingsPage.manageConnection();
-					settingsPage.disconnectSite().then( removeSites() );
+
+					driverHelper.isElementPresent( driver, siteSelector ).then( foundSite => {
+						if ( ! foundSite ) {
+							// no jp sites left
+							driverHelper.clickWhenClickable( driver, By.css( '.site' ) );
+							// Refresh to put the site selector back into a sane state
+							// where it knows there is only one site. Can probably
+							// make the 'add site' stuff below more robust instead.
+							driver.navigate().refresh();
+							return done();
+						}
+
+						this.sidebarComponent.searchForSite( 'ninja' );
+						this.sidebarComponent.selectSettings();
+						const settingsPage = new SettingsPage( driver );
+						settingsPage.manageConnection();
+						settingsPage.disconnectSite();
+						driverHelper.waitTillPresentAndDisplayed( driver, By.css( '.is-success' ) );
+						removeSites();
+					} );
 				} );
 			};
 
