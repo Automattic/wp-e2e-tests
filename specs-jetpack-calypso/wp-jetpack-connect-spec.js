@@ -35,7 +35,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 
 		test.it( 'Can create wporg site', () => {
 			this.wporgCreator = new WporgCreatorPage( driver );
-			return this.wporgCreator.waitForWpadmin();
+			this.wporgCreator.waitForWpadmin();
 		} );
 
 		test.it( 'Can get URL', () => {
@@ -71,6 +71,17 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		test.it( 'Can click the free plan button', () => {
 			this.pickAPlanPage = new PickAPlanPage( driver );
 			return this.pickAPlanPage.selectFreePlanJetpack();
+		} );
+
+		test.it( 'Has site URL in route', done => {
+			const siteSlug = this.url.replace( /^https?:\/\//, '' );
+			console.log( siteSlug );
+			return driver.getCurrentUrl().then( url => {
+				if ( url.includes( this.url ) ) {
+					return done();
+				}
+				done( 'Route does not include site slug ' + url );
+			} );
 		} );
 	} );
 } );
