@@ -61,6 +61,7 @@
 	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
 	[ "postPublishConfirmation_20170801", "showPublishConfirmation" ],
 	[ "skipThemesSelectionModal_20170830", "show" ],
-	[ "gsuiteUpsell_20171025", "hide" ]
+	[ "gsuiteUpsell_20171025", "hide" ],
+    [ "newSiteWithJetpack_20170419", "showNewJetpackSite" ]
   ]
 }

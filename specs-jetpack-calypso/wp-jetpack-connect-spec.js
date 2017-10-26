@@ -6,6 +6,8 @@ import assert from 'assert';
 import * as driverManager from '../lib/driver-manager';
 import * as dataHelper from '../lib/data-helper';
 
+import AddNewSitePage from '../lib/pages/add-new-site-page';
+import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page';
 import WporgCreatorPage from '../lib/pages/wporg-creator-page';
 import LoginFlow from '../lib/flows/login-flow';
 import SidebarComponent from '../lib/components/sidebar-component';
@@ -42,14 +44,33 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 			} );
 		} );
 
-		test.it( 'Can add new site', () => {
-			const loginFlow = new LoginFlow( driver );
+		test.it( 'Can log in', () => {
+			const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
 			loginFlow.loginAndSelectMySite();
 
-			const sidebarComponent = new SidebarComponent( driver );
-			sidebarComponent.addNewSite( driver );
+			this.sidebarComponent = new SidebarComponent( driver );
 
-			// some A/B test in play here?
+			// ensure we are in A/B variant that allows adding jp site from single-site account
+			driver.getCurrentUrl().then( urlDisplayed => {
+				this.sidebarComponent.setABTestControlGroupsInLocalStorage( urlDisplayed );
+			} );
+		} );
+
+		/*
+		test.it( 'Can disconnect existing jetpack sites', () => {
+			this.sideBarComponent.selectSiteSwitcher();
+			this.sideBarComponent.searchForSite( 'ninja' );
+		}
+*/
+		test.it( 'Can add new site', () => {
+			this.sidebarComponent.addNewSite( driver );
+			const addNewSitePage = new AddNewSitePage( driver );
+			addNewSitePage.addSiteUrl( this.url );
+		} );
+
+		test.it( 'Can click the free plan button', () => {
+			this.pickAPlanPage = new PickAPlanPage( driver );
+			return this.pickAPlanPage.selectFreePlanJetpack();
 		} );
 	} );
 } );
