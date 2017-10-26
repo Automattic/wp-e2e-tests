@@ -5,9 +5,11 @@ import assert from 'assert';
 
 import * as driverManager from '../lib/driver-manager';
 import * as dataHelper from '../lib/data-helper';
+import { By } from 'selenium-webdriver';
 
 import AddNewSitePage from '../lib/pages/add-new-site-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page';
+import SettingsPage from '../lib/pages/settings-page';
 import WporgCreatorPage from '../lib/pages/wporg-creator-page';
 import LoginFlow from '../lib/flows/login-flow';
 import SidebarComponent from '../lib/components/sidebar-component';
@@ -56,12 +58,27 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 			} );
 		} );
 
-		/*
-		test.it( 'Can disconnect existing jetpack sites', () => {
-			this.sideBarComponent.selectSiteSwitcher();
-			this.sideBarComponent.searchForSite( 'ninja' );
-		}
-*/
+		test.it( 'Can disconnect existing jetpack sites', done => {
+			const siteSwitcherSelector = By.css( '.current-site__switch-sites' );
+
+			const removeSites = () => {
+				driver.findElements( siteSwitcherSelector ).then( found => {
+					if ( ! found.length ) {
+						// only one site left
+						return done();
+					}
+					this.sidebarComponent.selectSiteSwitcher();
+					this.sidebarComponent.searchForSite( 'ninja' );
+					this.sidebarComponent.selectSettings();
+					this.settingsPage = new SettingsPage( driver );
+					this.settingsPage.manageConnection();
+					this.settingsPage.disconnectSite().then( removeSites() );
+				} );
+			};
+
+			removeSites();
+		} );
+
 		test.it( 'Can add new site', () => {
 			this.sidebarComponent.addNewSite( driver );
 			const addNewSitePage = new AddNewSitePage( driver );
