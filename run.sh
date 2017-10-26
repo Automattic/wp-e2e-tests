@@ -149,7 +149,8 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
       NODE_CONFIG_ARGS+=("\"failVisdiffs\":\"true\"")
       ;;
     x)
-      NODE_CONFIG_ARGS+=("\"headless\":\"true\"")
+#      NODE_CONFIG_ARGS+=("\"headless\":\"true\"")
+       MAGELLAN="xvfb-run $MAGELLAN"
       ;;
     u)
       NODE_CONFIG_ARGS+=("\"calypsoBaseURL\":\"$OPTARG\"")
