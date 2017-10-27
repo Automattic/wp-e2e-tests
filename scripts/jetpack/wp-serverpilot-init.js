@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 const config = require( 'config' );
-const fs = require( 'fs-extra' );
 const ServerPilot = require( 'serverpilot' );
 
 const spConfig = config.get( 'spConfig' );
@@ -34,9 +33,9 @@ sp.createApp( serverOptions, function( err, data ) {
 		console.log( err );
 		throw err;
 	}
-	waitForServerPilotAction( data.actionid, function( err ) {
+	waitForServerPilotAction( data.actionid, function( actionErr ) {
 		if ( err !== null ) {
-			console.log( err );
+			console.log( actionErr );
 			throw err;
 		}
 		console.log( `Site created - http://${serverPrefix}.wp-e2e-tests.pw - ID ${data.data.id}` );
