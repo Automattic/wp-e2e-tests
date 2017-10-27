@@ -50,16 +50,11 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		test.it( 'Can log in', () => {
 			const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
 			loginFlow.loginAndSelectMySite();
-
-			this.sidebarComponent = new SidebarComponent( driver );
-
-			// ensure we are in A/B variant that allows adding jp site from single-site account
-			driver.getCurrentUrl().then( urlDisplayed => {
-				this.sidebarComponent.setABTestControlGroupsInLocalStorage( urlDisplayed );
-			} );
 		} );
 
 		test.it( 'Can disconnect existing jetpack sites', () => {
+			this.sidebarComponent = new SidebarComponent( driver );
+
 			const removeSites = () => {
 				this.sidebarComponent.selectJetpackSite().then( foundSite => {
 					if ( ! foundSite ) {
