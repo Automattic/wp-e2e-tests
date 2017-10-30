@@ -11,6 +11,7 @@ import ChooseAThemePage from '../lib/pages/signup/choose-a-theme-page.js';
 import StartPage from '../lib/pages/signup/start-page.js';
 import SurveyPage from '../lib/pages/signup/survey-page.js';
 import DesignTypeChoicePage from '../lib/pages/signup/design-type-choice-page.js';
+import DomainFirstPage from '../lib/pages/signup/domain-first-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page.js';
 import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.js';
 import SignupProcessingPage from '../lib/pages/signup/signup-processing-page.js';
@@ -503,6 +504,114 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 											return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
 										} );
 									} );
+								} );
+							} );
+						} );
+					} );
+				} );
+			} );
+		} );
+	} );
+
+	test.describe( 'Sign up for a domain only purchase coming in from wordpress.com/domains @parallel', function() {
+		this.bailSuite( true );
+		let stepNum = 1;
+		const siteName = dataHelper.getNewBlogName();
+		const expectedDomainName = `${siteName}.live`;
+		const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
+		const password = config.get( 'passwordForNewTestSignUps' );
+		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
+		const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
+		const firstName = 'End to End';
+		const lastName = 'Testing';
+		const phoneNumber = '0422 888 888';
+		const countryCode = 'AU';
+		const address = '888 Queen Street';
+		const city = 'Brisbane';
+		const stateCode = 'QLD';
+		const postalCode = '4000';
+
+		test.it( 'Ensure we are not logged in as anyone', function() {
+			return driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		test.it( 'We can visit set the sandbox cookie for payments', function() {
+			this.WPHomePage = new WPHomePage( driver, { visit: true, culture: locale } );
+			return this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+		} );
+
+		test.describe( `Step ${stepNum}: WordPress.com/domains page`, function() {
+			stepNum++;
+
+			test.it( 'Can visit the domains start page', function() {
+				this.startPage = new StartPage( driver, { visit: true, culture: locale, flow: 'domain-first', domainFirst: true, domainFirstDomain: expectedDomainName } );
+			} );
+
+			test.it( 'Can select domain only from the domain first choice page', function() {
+				this.domainFirstChoicePage = new DomainFirstPage( driver );
+				return this.domainFirstChoicePage.chooseJustBuyTheDomain();
+			} );
+
+			test.describe( `Step ${stepNum}: Account`, function() {
+				stepNum++;
+
+				test.it( 'Can then enter account details', function() {
+					this.createYourAccountPage = new CreateYourAccountPage( driver );
+					this.createYourAccountPage.displayed().then( ( displayed ) => {
+						assert.equal( displayed, true, 'The create account page is not displayed' );
+					} );
+					return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, siteName, password );
+				} );
+
+				test.describe( `Step ${stepNum}: Processing`, function() {
+					stepNum++;
+
+					test.it( 'Can then see the sign up processing page which will finish automatically move along', function() {
+						this.signupProcessingPage = new SignupProcessingPage( driver );
+						return this.signupProcessingPage.waitToDisappear();
+					} );
+
+					test.describe( `Step ${stepNum}: Secure Payment Page`, function() {
+						stepNum++;
+
+						test.it( 'Can see checkout page', () => {
+							this.checkOutPage = new CheckOutPage( driver );
+							this.checkOutPage.displayed().then( ( displayed ) => {
+								assert.equal( displayed, true, 'Could not see the check out page' );
+							} );
+						} );
+
+						test.it( 'Can choose domain privacy option', () => {
+							this.checkOutPage = new CheckOutPage( driver );
+							this.checkOutPage.selectAddPrivacyProtectionCheckbox();
+						} );
+
+						test.it( 'Can enter domain registrar details', () => {
+							this.checkOutPage = new CheckOutPage( driver );
+							this.checkOutPage.enterRegistarDetails( firstName, lastName, emailAddress, phoneNumber, countryCode, address, city, stateCode, postalCode );
+							this.checkOutPage.submitForm();
+						} );
+
+						test.it( 'Can then see the secure payment page', function() {
+							this.securePaymentComponent = new SecurePaymentComponent( driver );
+							return this.securePaymentComponent.displayed().then( ( displayed ) => {
+								return assert.equal( displayed, true, 'The secure payment page is not displayed' );
+							} );
+						} );
+
+						test.it( 'Can enter and submit test payment details', function() {
+							this.securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+							this.securePaymentComponent.submitPaymentDetails();
+							return this.securePaymentComponent.waitForPageToDisappear();
+						} );
+
+						test.describe( `Step ${stepNum}: Checkout Thank You Page`, function() {
+							stepNum++;
+
+							test.it( 'Can see the secure check out thank you page', function() {
+								this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
+								return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
+									return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
 								} );
 							} );
 						} );
