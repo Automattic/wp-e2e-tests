@@ -602,6 +602,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 						test.it( 'Can enter and submit test payment details', function() {
 							this.securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
 							this.securePaymentComponent.submitPaymentDetails();
+							this.securePaymentComponent.waitForCreditCardPaymentProcessing();
 							return this.securePaymentComponent.waitForPageToDisappear();
 						} );
 
