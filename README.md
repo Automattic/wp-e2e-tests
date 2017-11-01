@@ -16,7 +16,7 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
     - [CircleCI Environment Variables](docs/config.md#circleci-environment-variables)
 - [Running tests](#running-tests)   
   - [How to run tests](docs/running-tests.md)
-    - [To run all the specs](docs/running-tests.md#to-run-all-the-specs-in-default-browser-sizes---mobile-and-desktop)
+    - [To run all the specs](docs/running-tests.md#to-run-all-the-specs-in-parallel-default-browser-sizes---mobile-and-desktop)
     - [To run an individual spec](docs/running-tests.md#to-run-an-individual-spec)
     - [To run with different modes](docs/running-tests.md#to-run-with-different-modes)
     - [To run a specific suite of specs](docs/running-tests.md#to-run-a-specific-suite-of-specs)

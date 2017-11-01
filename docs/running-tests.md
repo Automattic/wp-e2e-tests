@@ -1,7 +1,7 @@
 # Run tests
 
 ## Table of Contents
-  - [To run all the specs](#to-run-all-the-specs-in-default-browser-sizes---mobile-and-desktop)
+  - [To run all the specs](#to-run-all-the-specs-in-parallel-default-browser-sizes---mobile-and-desktop)
   - [To run an individual spec](#to-run-an-individual-spec)
   - [To run with different modes](#to-run-with-different-modes)
   - [To run a specific suite of specs](#to-run-a-specific-suite-of-specs)
