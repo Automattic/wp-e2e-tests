@@ -622,12 +622,12 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		} );
 	} );
 
-	test.describe( 'Partially sign up for a site on a business paid plan w/ domain name coming in via /create as business flow @parallel @canary', function() {
+	test.describe( 'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow @parallel @canary', function() {
 		this.bailSuite( true );
 		let stepNum = 1;
 
 		const siteName = dataHelper.getNewBlogName();
-		const expectedDomainName = `${siteName}.com`;
+		const expectedDomainName = `${siteName}.live`;
 		const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
@@ -691,7 +691,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 					} );
 
 					test.it( 'Can search for a blog name, can see and select a paid .com address in results', function() {
-						this.findADomainComponent.searchForBlogNameAndWaitForResults( siteName );
+						this.findADomainComponent.searchForBlogNameAndWaitForResults( expectedDomainName );
 						return this.findADomainComponent.selectDotComAddress( expectedDomainName );
 					} );
 
@@ -767,7 +767,21 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 								test.it( 'Can enter and submit test payment details', function() {
 									this.securePaymentComponent = new SecurePaymentComponent( driver );
-									return this.securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+									this.securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+									this.securePaymentComponent.submitPaymentDetails();
+									this.securePaymentComponent.waitForCreditCardPaymentProcessing();
+									return this.securePaymentComponent.waitForPageToDisappear();
+								} );
+
+								test.describe( `Step ${stepNum}: Checkout Thank You Page`, function() {
+									stepNum++;
+
+									test.it( 'Can see the secure check out thank you page', function() {
+										this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
+										return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
+											return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
+										} );
+									} );
 								} );
 							} );
 						} );
