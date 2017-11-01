@@ -82,7 +82,6 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		} );
 
 		test.it( 'Can click the free plan button', () => {
-			PickAPlanPage.waitForPage( driver );
 			this.pickAPlanPage = new PickAPlanPage( driver );
 			return this.pickAPlanPage.selectFreePlanJetpack();
 		} );
