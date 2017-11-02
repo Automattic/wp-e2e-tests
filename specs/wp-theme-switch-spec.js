@@ -9,13 +9,16 @@ import LoginFlow from '../lib/flows/login-flow.js';
 import ThemesPage from '../lib/pages/themes-page.js';
 import ThemePreviewPage from '../lib/pages/theme-preview-page.js';
 import ThemeDetailPage from '../lib/pages/theme-detail-page.js';
+import ViewSitePage from '../lib/pages/view-site-page';
 import ThemeDialogComponent from '../lib/components/theme-dialog-component.js';
+import SidebarComponent from '../lib/components/sidebar-component';
 import * as dataHelper from '../lib/data-helper';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
+const httpsHost = config.get( 'httpsHosts' ).indexOf( host ) !== -1;
 
 var driver;
 
@@ -24,11 +27,11 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Themes: (${screenSize}) @parallel @jetpack`, function() {
+test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
-	test.describe( 'Switching Themes:', function() {
+	test.describe( 'Switching Themes @parallel @jetpack', function() {
 		test.it( 'Delete Cookies and Login', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			let loginFlow = new LoginFlow( driver );
@@ -60,6 +63,49 @@ test.describe( `[${host}] Themes: (${screenSize}) @parallel @jetpack`, function(
 				this.themeDetailPage = new ThemeDetailPage( driver );
 				this.themeDetailPage.displayed().then( function( displayed ) {
 					assert.equal( displayed, true, 'Could not see the theme detail page after activating a new theme' );
+				} );
+			} );
+		} );
+	} );
+} );
+
+test.describe( `[${host}] Activating Themes: (${screenSize}) @parallel @jetpack`, function() {
+	this.timeout( mochaTimeOut );
+	this.bailSuite( true );
+	let siteAddress;
+
+	test.describe( 'Activating Themes:', function() {
+		test.it( 'Delete Cookies and Login', function() {
+			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			let loginFlow = new LoginFlow( driver );
+			return loginFlow.loginAndSelectThemes();
+		} );
+
+		test.it( 'Can capture the site\'s address from the sidebar', function() {
+			let sidebarComponent = new SidebarComponent( driver );
+			sidebarComponent.getCurrentSiteDomain().then( ( domain ) => {
+				siteAddress = domain;
+			} );
+		} );
+
+		test.describe( 'Can switch free themes', function() {
+			test.it( 'Can activate a different free theme', function() {
+				let themesPage = new ThemesPage( driver );
+				themesPage.showOnlyFreeThemes();
+				themesPage.searchFor( 'Twenty F' );
+				themesPage.waitForThemeStartingWith( 'Twenty F' );
+				themesPage.clickNewThemeMoreButton();
+				themesPage.popOverMenuDisplayed().then( ( displayed ) => assert( displayed, true, 'Popover menu not displayed' ) );
+				return themesPage.clickPopoverItem( 'Activate' );
+			} );
+
+			test.it( 'Can see the theme thanks dialog and view the site from this dialog', function() {
+				let themeDialogComponent = new ThemeDialogComponent( driver );
+				themeDialogComponent.viewSite();
+				let viewSitePage = new ViewSitePage( driver );
+				viewSitePage.urlDisplayed().then( ( urlDisplayed ) => {
+					const protocol = httpsHost ? 'https://' : 'http://';
+					assert( urlDisplayed, protocol + siteAddress, `The url displayed '${ urlDisplayed }' is not equal to the expected address of '${ protocol + siteAddress }'` );
 				} );
 			} );
 		} );
