@@ -19,6 +19,7 @@
     "bluecat": "^1.1.6",
     "chai": "^3.4.1",
     "config": "1.16.0",
+    "chromedriver": "2.33.2",
     "creditcard-generator": "0.0.7",
     "esformatter-braces": "^1.2.1",
     "esformatter-collapse-objects-a8c": "^0.1.0",

@@ -8,7 +8,6 @@ WORKDIR /wp-e2e-tests
 RUN	mkdir /wp-e2e-tests-canary /wp-e2e-tests-jetpack /wp-e2e-tests-visdiff /wp-e2e-tests-ie11 /wp-e2e-tests-woocommerce
 
 # Version Numbers
-ENV CHROMEDRIVER_VERSION 2.33
 ENV CHROME_VERSION 61.0.3163.79
 ENV NVM_VERSION 0.33.2
 
@@ -24,14 +23,6 @@ RUN     apt-get -y update && apt-get -y install \
 	  fonts-ipafont-gothic xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic \
 	  xvfb \
 	  sudo
-
-# Install Chrome WebDriver
-RUN mkdir -p /opt/chromedriver-$CHROMEDRIVER_VERSION && \
-    curl -sS -o /tmp/chromedriver_linux64.zip http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip && \
-    unzip -qq /tmp/chromedriver_linux64.zip -d /opt/chromedriver-$CHROMEDRIVER_VERSION && \
-    rm /tmp/chromedriver_linux64.zip && \
-    chmod +x /opt/chromedriver-$CHROMEDRIVER_VERSION/chromedriver && \
-    ln -fs /opt/chromedriver-$CHROMEDRIVER_VERSION/chromedriver /usr/local/bin/chromedriver
 
 # Install Google Chrome
 RUN wget http://www.slimjetbrowser.com/chrome/lnx/chrome64_$CHROME_VERSION.deb && \
