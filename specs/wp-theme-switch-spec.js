@@ -6,11 +6,13 @@ import * as driverManager from '../lib/driver-manager.js';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
+import ReaderPage from '../lib/pages/reader-page';
 import ThemesPage from '../lib/pages/themes-page.js';
 import ThemePreviewPage from '../lib/pages/theme-preview-page.js';
 import ThemeDetailPage from '../lib/pages/theme-detail-page.js';
 import ViewSitePage from '../lib/pages/view-site-page';
 import ThemeDialogComponent from '../lib/components/theme-dialog-component.js';
+import NavbarComponent from '../lib/components/navbar-component';
 import SidebarComponent from '../lib/components/sidebar-component';
 import * as dataHelper from '../lib/data-helper';
 
@@ -78,14 +80,23 @@ test.describe( `[${host}] Activating Themes: (${screenSize}) @parallel @jetpack`
 		test.it( 'Delete Cookies and Login', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			let loginFlow = new LoginFlow( driver );
-			return loginFlow.loginAndSelectThemes();
+			loginFlow.login();
+			let readerPage = new ReaderPage( this.driver, true );
+			return readerPage.waitForPage();
 		} );
 
-		test.it( 'Can capture the site\'s address from the sidebar', function() {
+		test.it( 'Can capture the site\'s address from the sidebar and select themes', function() {
+			let navbarComponent = new NavbarComponent( this.driver );
+			navbarComponent.clickMySites();
 			let sidebarComponent = new SidebarComponent( driver );
-			sidebarComponent.getCurrentSiteDomain().then( ( domain ) => {
+			return sidebarComponent.getCurrentSiteDomain().then( ( domain ) => {
 				siteAddress = domain;
 			} );
+		} );
+
+		test.it( 'Can select themes', function() {
+			let sidebarComponent = new SidebarComponent( driver );
+			return sidebarComponent.selectThemes();
 		} );
 
 		test.describe( 'Can switch free themes', function() {
@@ -105,7 +116,8 @@ test.describe( `[${host}] Activating Themes: (${screenSize}) @parallel @jetpack`
 				let viewSitePage = new ViewSitePage( driver );
 				viewSitePage.urlDisplayed().then( ( urlDisplayed ) => {
 					const protocol = httpsHost ? 'https://' : 'http://';
-					assert( urlDisplayed, protocol + siteAddress, `The url displayed '${ urlDisplayed }' is not equal to the expected address of '${ protocol + siteAddress }'` );
+					const expectedSiteAddress = `${ protocol }${ siteAddress }/`;
+					assert.equal( urlDisplayed, expectedSiteAddress, `The url displayed '${ urlDisplayed }' is not equal to the expected address of '${ expectedSiteAddress }'` );
 				} );
 			} );
 		} );
