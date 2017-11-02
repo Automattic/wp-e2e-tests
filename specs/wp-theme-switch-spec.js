@@ -115,8 +115,7 @@ test.describe( `[${host}] Activating Themes: (${screenSize}) @parallel @jetpack`
 				themeDialogComponent.viewSite();
 				let viewSitePage = new ViewSitePage( driver );
 				viewSitePage.urlDisplayed().then( ( urlDisplayed ) => {
-					const protocol = httpsHost ? 'https://' : 'http://';
-					const expectedSiteAddress = `${ protocol }${ siteAddress }/`;
+					const expectedSiteAddress = `${ httpsHost ? 'https://' : 'http://' }${ siteAddress }/`;
 					assert.equal( urlDisplayed, expectedSiteAddress, `The url displayed '${ urlDisplayed }' is not equal to the expected address of '${ expectedSiteAddress }'` );
 				} );
 			} );
