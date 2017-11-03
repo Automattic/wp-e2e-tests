@@ -7,7 +7,7 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
 ## Table of contents
 
 - [Pre-requisites](#pre-requisites)
-  - [Install NodeJS and ChromeDriver](#install-nodejs)
+  - [Install NodeJS](#install-nodejs)
   - [Install dependencies](#install-dependencies)
   - [Configuration](docs/config.md#configuration)
     - [Test Configuration](docs/config.md#test-configuration)
