@@ -6,13 +6,11 @@ import * as driverManager from '../lib/driver-manager.js';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
-import ReaderPage from '../lib/pages/reader-page';
 import ThemesPage from '../lib/pages/themes-page.js';
 import ThemePreviewPage from '../lib/pages/theme-preview-page.js';
 import ThemeDetailPage from '../lib/pages/theme-detail-page.js';
 import ViewSitePage from '../lib/pages/view-site-page';
 import ThemeDialogComponent from '../lib/components/theme-dialog-component.js';
-import NavbarComponent from '../lib/components/navbar-component';
 import SidebarComponent from '../lib/components/sidebar-component';
 import * as dataHelper from '../lib/data-helper';
 
@@ -74,28 +72,27 @@ test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
 test.describe( `[${host}] Activating Themes: (${screenSize}) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
-	let siteAddress;
+	let siteAddress, sidebarComponent;
 
 	test.describe( 'Activating Themes:', function() {
-		test.it( 'Delete Cookies and Login', function() {
+		// Ensure logged out
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
-			let loginFlow = new LoginFlow( driver );
-			loginFlow.login();
-			let readerPage = new ReaderPage( this.driver, true );
-			return readerPage.waitForPage();
 		} );
 
-		test.it( 'Can capture the site\'s address from the sidebar and select themes', function() {
-			let navbarComponent = new NavbarComponent( this.driver );
-			navbarComponent.clickMySites();
-			let sidebarComponent = new SidebarComponent( driver );
+		test.it( 'Login', function() {
+			let loginFlow = new LoginFlow( driver );
+			return loginFlow.loginAndSelectMySite();
+		} );
+
+		test.it( 'Can capture the site\'s address from the sidebar', function() {
+			sidebarComponent = new SidebarComponent( driver );
 			return sidebarComponent.getCurrentSiteDomain().then( ( domain ) => {
 				siteAddress = domain;
 			} );
 		} );
 
-		test.it( 'Can select themes', function() {
-			let sidebarComponent = new SidebarComponent( driver );
+		test.it( 'Can open Themes menu', function() {
 			return sidebarComponent.selectThemes();
 		} );
 
