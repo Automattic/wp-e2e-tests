@@ -6,13 +6,11 @@ import * as driverManager from '../lib/driver-manager.js';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
-import ReaderPage from '../lib/pages/reader-page';
 import ThemesPage from '../lib/pages/themes-page.js';
 import ThemePreviewPage from '../lib/pages/theme-preview-page.js';
 import ThemeDetailPage from '../lib/pages/theme-detail-page.js';
 import ViewSitePage from '../lib/pages/view-site-page';
 import ThemeDialogComponent from '../lib/components/theme-dialog-component.js';
-import NavbarComponent from '../lib/components/navbar-component';
 import SidebarComponent from '../lib/components/sidebar-component';
 import * as dataHelper from '../lib/data-helper';
 
@@ -74,7 +72,7 @@ test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
 test.describe( `[${host}] Activating Themes: (${screenSize}) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
-	let siteAddress;
+	let siteAddress, sidebarComponent;
 
 	test.describe( 'Activating Themes:', function() {
 		// Ensure logged out
@@ -82,16 +80,20 @@ test.describe( `[${host}] Activating Themes: (${screenSize}) @parallel @jetpack`
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.it( 'Login and select Themes', function() {
+		test.it( 'Login', function() {
 			let loginFlow = new LoginFlow( driver );
-			return loginFlow.loginAndSelectThemes();
+			return loginFlow.loginAndSelectMySite();
 		} );
 
 		test.it( 'Can capture the site\'s address from the sidebar', function() {
-			let sidebarComponent = new SidebarComponent( driver );
+			sidebarComponent = new SidebarComponent( driver );
 			return sidebarComponent.getCurrentSiteDomain().then( ( domain ) => {
 				siteAddress = domain;
 			} );
+		} );
+
+		test.it( 'Can open Themes menu', function() {
+			return sidebarComponent.selectThemes();
 		} );
 
 		test.describe( 'Can switch free themes', function() {
