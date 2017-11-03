@@ -7,7 +7,7 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
 ## Table of contents
 
 - [Pre-requisites](#pre-requisites)
-  - [Install NodeJS and ChromeDriver](#install-nodejs-and-chromedriver)
+  - [Install NodeJS and ChromeDriver](#install-nodejs)
   - [Install dependencies](#install-dependencies)
   - [Configuration](docs/config.md#configuration)
     - [Test Configuration](docs/config.md#test-configuration)
@@ -32,10 +32,12 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
 ## Pre-requisites
 
 
-### Install NodeJS and ChromeDriver
+### Install NodeJS
 
 ```
-brew install node chromedriver
+brew install node #MacOS
+
+Or use [nvm](https://github.com/creationix/nvm) (Recommended)
 ```
 
 ### Install dependencies
