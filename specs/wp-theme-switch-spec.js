@@ -77,26 +77,21 @@ test.describe( `[${host}] Activating Themes: (${screenSize}) @parallel @jetpack`
 	let siteAddress;
 
 	test.describe( 'Activating Themes:', function() {
-		test.it( 'Delete Cookies and Login', function() {
+		// Ensure logged out
+		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
-			let loginFlow = new LoginFlow( driver );
-			loginFlow.login();
-			let readerPage = new ReaderPage( this.driver, true );
-			return readerPage.waitForPage();
 		} );
 
-		test.it( 'Can capture the site\'s address from the sidebar and select themes', function() {
-			let navbarComponent = new NavbarComponent( this.driver );
-			navbarComponent.clickMySites();
+		test.it( 'Login and select Themes', function() {
+			let loginFlow = new LoginFlow( driver );
+			return loginFlow.loginAndSelectThemes();
+		} );
+
+		test.it( 'Can capture the site\'s address from the sidebar', function() {
 			let sidebarComponent = new SidebarComponent( driver );
 			return sidebarComponent.getCurrentSiteDomain().then( ( domain ) => {
 				siteAddress = domain;
 			} );
-		} );
-
-		test.it( 'Can select themes', function() {
-			let sidebarComponent = new SidebarComponent( driver );
-			return sidebarComponent.selectThemes();
 		} );
 
 		test.describe( 'Can switch free themes', function() {
