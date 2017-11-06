@@ -71,12 +71,17 @@ SetupTeardown.prototype = {
 				source $HOME/.nvm/nvm.sh && ./scripts/jetpack/wp-serverpilot-delete.js
 			fi`;
 
-		this.consoleExecutor(
-			jpDeactivate,
-			() => this.consoleExecutor(
-				spDelete,
-				() => deferred.resolve()
-		) )
+		shell.exec( jpDeactivate );
+		shell.exec( spDelete,
+			() => deferred.resolve()
+		);
+
+		// this.consoleExecutor(
+		// 	jpDeactivate,
+		// 	() => this.consoleExecutor(
+		// 		spDelete,
+		// 		() => deferred.resolve()
+		// ) )
 
 		return deferred.promise;
 	}
