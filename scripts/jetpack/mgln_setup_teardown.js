@@ -12,7 +12,9 @@ SetupTeardown.prototype = {
 				return;
 			};
 			console.log( `stdout: ${stdout}` );
-			console.log( `stderr: ${stderr}` );
+			if ( stderr ) {
+				console.log( `stderr: ${stderr}` );
+			};
 
 			if ( callbackFunction ) {
 				return callbackFunction( stdout, stderr );
@@ -22,35 +24,44 @@ SetupTeardown.prototype = {
 
 	initialize: function() {
 		var deferred = Q.defer();
-
-		// do asynchronous setup stuff here. Resolve (or reject) promise when ready.
-		// doAsyncStuff( function() {
-		// 	deferred.resolve();
-		// } );
-
-		console.log('====================================');
-		this.consoleExecutor( 'pwd', () => deferred.resolve() );
-		console.log('====================================');
+		this.consoleExecutor(
+			'source $HOME/.nvm/nvm.sh && ./scripts/jetpack/wp-serverpilot-delete.js && ./scripts/jetpack/wp-serverpilot-init.js',
+			() => this.consoleExecutor(
+				'scp -o "StrictHostKeyChecking no" scripts/jetpack/git-jetpack.sh serverpilot@wp-e2e-tests.pw:~serverpilot/git-jetpack.sh',
+				() => this.consoleExecutor(
+					'ssh -o "StrictHostKeyChecking no" serverpilot@wp-e2e-tests.pw ~serverpilot/git-jetpack.sh wordpress-${CIRCLE_SHA1:0:20}',
+					() => this.consoleExecutor(
+						'source $HOME/.nvm/nvm.sh && xvfb-run ./node_modules/.bin/mocha scripts/jetpack/wp-jetpack-activate.js',
+						() => deferred.resolve()
+		) ) ) );
 
 		return deferred.promise;
 	},
 
 	flush: function() {
-		var deferred = Q.defer();
+		const deferred = Q.defer();
+		// name: Run Jetpack deactivation spec
+		const jpDeactivate =
+			`if [ "$E2E_DEBUG" == "true" ]; then
+				echo "Skipping deactivation step for DEBUG purposes"
+			else
+			source $HOME/.nvm/nvm.sh && xvfb-run ./node_modules/.bin/mocha scripts/jetpack/wp-jetpack-deactivate.js
+			fi`;
 
-		// do asynchronous teardown stuff here. Resolve (or reject) promise when ready.
+		// name: Delete site from Digital Ocean via ServerPilot
+		const spDelete =
+			`if [ "$E2E_DEBUG" == "true" ]; then
+				echo "Skipping delete step for DEBUG purposes"
+			else
+				source $HOME/.nvm/nvm.sh && ./scripts/jetpack/wp-serverpilot-delete.js
+			fi`;
 
 		this.consoleExecutor(
-			// 'source $HOME/.nvm/nvm.sh && xvfb-run ./node_modules/.bin/mocha scripts/jetpack/wp-jetpack-deactivate.js',
-			'./node_modules/.bin/mocha scripts/jetpack/wp-jetpack-deactivate.js',
+			jpDeactivate,
 			() => this.consoleExecutor(
-				// 'source $HOME/.nvm/nvm.sh && ./scripts/jetpack/wp-serverpilot-delete.js',
-				'./scripts/jetpack/wp-serverpilot-delete.js',
+				spDelete,
 				() => deferred.resolve()
 		) )
-
-		// command: source $HOME/.nvm/nvm.sh && xvfb-run ./node_modules/.bin/mocha scripts/jetpack/wp-jetpack-deactivate.js
-		// command: source $HOME/.nvm/nvm.sh && ./scripts/jetpack/wp-serverpilot-delete.js
 
 		return deferred.promise;
 	}
