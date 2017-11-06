@@ -4,7 +4,7 @@ jobs:
     parallelism: 2
     working_directory: /wp-e2e-tests
     docker:
-      - image: automattic/wp-e2e-tests:0.0.7
+      - image: automattic/wp-e2e-tests:0.0.8
         environment:
                 NODE_ENV: test
     steps:
