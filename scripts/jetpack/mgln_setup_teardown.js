@@ -1,5 +1,7 @@
 const Q = require( 'q' );
 const exec = require( 'child_process' ).exec;
+const shell = require( 'shelljs' );
+
 
 const SetupTeardown = function() {};
 
@@ -9,7 +11,8 @@ SetupTeardown.prototype = {
 		return exec( shellCommand, ( error, stdout, stderr ) => {
 			if ( error ) {
 				console.error( `exec error: ${error}` );
-				return;
+				console.error( `${error.code}` );
+				return 1;
 			};
 			console.log( `stdout: ${stdout}` );
 			if ( stderr ) {
@@ -24,20 +27,28 @@ SetupTeardown.prototype = {
 
 	initialize: function() {
 		var deferred = Q.defer();
-		this.consoleExecutor(
-			'source $HOME/.nvm/nvm.sh',
-			() => this.consoleExecutor(
-				'./scripts/jetpack/wp-serverpilot-delete.js',
-				() => this.consoleExecutor(
-				'./scripts/jetpack/wp-serverpilot-init.js',
-				() => this.consoleExecutor(
-					'scp -o "StrictHostKeyChecking no" scripts/jetpack/git-jetpack.sh serverpilot@wp-e2e-tests.pw:~serverpilot/git-jetpack.sh',
-					() => this.consoleExecutor(
-					'ssh -o "StrictHostKeyChecking no" serverpilot@wp-e2e-tests.pw ~serverpilot/git-jetpack.sh wordpress-${CIRCLE_SHA1:0:20}',
-					() => this.consoleExecutor(
-						'xvfb-run ./node_modules/.bin/mocha scripts/jetpack/wp-jetpack-activate.js',
-						() => deferred.resolve()
-		) ) ) ) ) );
+		// this.consoleExecutor(
+		// 	'source $HOME/.nvm/nvm.sh',
+		// 	() => this.consoleExecutor(
+		// 		'./scripts/jetpack/wp-serverpilot-delete.js',
+		// 		() => this.consoleExecutor(
+		// 		'./scripts/jetpack/wp-serverpilot-init.js',
+		// 		() => this.consoleExecutor(
+		// 			'scp -o "StrictHostKeyChecking no" scripts/jetpack/git-jetpack.sh serverpilot@wp-e2e-tests.pw:~serverpilot/git-jetpack.sh',
+		// 			() => this.consoleExecutor(
+		// 			'ssh -o "StrictHostKeyChecking no" serverpilot@wp-e2e-tests.pw ~serverpilot/git-jetpack.sh wordpress-${CIRCLE_SHA1:0:20}',
+		// 			() => this.consoleExecutor(
+		// 				'xvfb-run ./node_modules/.bin/mocha scripts/jetpack/wp-jetpack-activate.js',
+		// 				() => deferred.resolve()
+		// ) ) ) ) ) );
+
+		shell.exec( 'source $HOME/.nvm/nvm.sh && ./scripts/jetpack/wp-serverpilot-delete.js' );
+		shell.exec( './scripts/jetpack/wp-serverpilot-init.js' );
+		shell.exec( 'scp -o "StrictHostKeyChecking no" scripts/jetpack/git-jetpack.sh serverpilot@wp-e2e-tests.pw:~serverpilot/git-jetpack.sh' );
+		shell.exec( 'ssh -o "StrictHostKeyChecking no" serverpilot@wp-e2e-tests.pw ~serverpilot/git-jetpack.sh wordpress-${CIRCLE_SHA1:0:20}' );
+		shell.exec( 'xvfb-run ./node_modules/.bin/mocha scripts/jetpack/wp-jetpack-activate.js',
+			() => deferred.resolve()
+		);
 
 		return deferred.promise;
 	},
