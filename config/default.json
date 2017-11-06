@@ -56,10 +56,11 @@
     }
   },
   "httpsHosts": [ "WPCOM", "PRESSABLE" ],
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupSurveyStep", "presaleChatButton", "businessPlanDescriptionAT", "newSiteWithJetpack", "postPublishConfirmation", "readerIntroIllustration", "paymentShowPaypalLogo", "jetpackConnectPlansCopyChanges", "postSignupUpgradeScreen", "skipThemesSelectionModal", "recommendShortestDomain", "checkoutPaymentMethodTabs", "unlimitedThemeNudge" ],
+  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupSurveyStep", "presaleChatButton", "businessPlanDescriptionAT", "newSiteWithJetpack", "postPublishConfirmation", "readerIntroIllustration", "paymentShowPaypalLogo", "jetpackConnectPlansCopyChanges", "postSignupUpgradeScreen", "skipThemesSelectionModal", "recommendShortestDomain", "checkoutPaymentMethodTabs", "unlimitedThemeNudge", "gsuiteUpsell" ],
   "overrideABTests": [
 	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
 	[ "postPublishConfirmation_20170801", "showPublishConfirmation" ],
-	[ "skipThemesSelectionModal_20170830", "show" ]
+	[ "skipThemesSelectionModal_20170830", "show" ],
+	[ "gsuiteUpsell_20171025", "hide" ]
   ]
 }
