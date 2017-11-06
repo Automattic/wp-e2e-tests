@@ -25,15 +25,17 @@ SetupTeardown.prototype = {
 	initialize: function() {
 		var deferred = Q.defer();
 		this.consoleExecutor(
-			'source $HOME/.nvm/nvm.sh && ./scripts/jetpack/wp-serverpilot-delete.js && ./scripts/jetpack/wp-serverpilot-init.js',
+			'source $HOME/.nvm/nvm.sh && ./scripts/jetpack/wp-serverpilot-delete.js',
 			() => this.consoleExecutor(
-				'scp -o "StrictHostKeyChecking no" scripts/jetpack/git-jetpack.sh serverpilot@wp-e2e-tests.pw:~serverpilot/git-jetpack.sh',
+				'source $HOME/.nvm/nvm.sh && ./scripts/jetpack/wp-serverpilot-init.js',
 				() => this.consoleExecutor(
+					'scp -o "StrictHostKeyChecking no" scripts/jetpack/git-jetpack.sh serverpilot@wp-e2e-tests.pw:~serverpilot/git-jetpack.sh',
+					() => this.consoleExecutor(
 					'ssh -o "StrictHostKeyChecking no" serverpilot@wp-e2e-tests.pw ~serverpilot/git-jetpack.sh wordpress-${CIRCLE_SHA1:0:20}',
 					() => this.consoleExecutor(
 						'source $HOME/.nvm/nvm.sh && xvfb-run ./node_modules/.bin/mocha scripts/jetpack/wp-jetpack-activate.js',
 						() => deferred.resolve()
-		) ) ) );
+		) ) ) ) );
 
 		return deferred.promise;
 	},
