@@ -22,10 +22,14 @@ import EditorPage from '../lib/pages/editor-page.js';
 import LoginPage from '../lib/pages/login-page';
 import MagicLoginPage from '../lib/pages/magic-login-page';
 import ReaderPage from '../lib/pages/reader-page';
+import DomainOnlySettingsPage from '../lib/pages/domain-only-settings-page';
+import DomainDetailsPage from '../lib/pages/domain-details-page';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
+import NavBarComponent from '../lib/components/navbar-component';
+import SideBarComponent from '../lib/components/sidebar-component';
 
 import * as SlackNotifier from '../lib/slack-notifier';
 
@@ -609,10 +613,38 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 						test.describe( `Step ${stepNum}: Checkout Thank You Page`, function() {
 							stepNum++;
 
-							test.it( 'Can see the secure check out thank you page', function() {
-								this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
-								return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
-									return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
+							test.it( 'Can see the secure check out thank you page and click "go to my domain" button to see the domain only settings page', function() {
+								this.checkOutThankyouPage = new CheckOutThankyouPage( driver );
+								this.checkOutThankyouPage.goToMyDomain();
+								this.domainOnlySettingsPage = new DomainOnlySettingsPage( driver );
+								this.domainOnlySettingsPage.manageDomain();
+								this.domainDetailsPage = new DomainDetailsPage( driver );
+								this.domainDetailsPage.displayed().then( ( displayed ) => {
+									assert.equal( displayed, true, 'The domain details page is not displayed' );
+								} );
+							} );
+
+							test.describe( `Step ${stepNum}: View Calypso Menus`, function() {
+								stepNum++;
+
+								// Open the sidebar
+								test.before( function() {
+									let navBarComponent = new NavBarComponent( driver );
+									navBarComponent.clickMySites();
+								} );
+
+								test.it( 'We should only one option', function() {
+									let sideBarComponent = new SideBarComponent( driver );
+									return sideBarComponent.numberOfMenuItems().then( ( numberMenuItems ) => {
+										assert.equal( numberMenuItems, 1, 'There is not a single menu item for a domain only site' );
+									} );
+								} );
+
+								test.it( 'We should see the Settings option', function() {
+									let sideBarComponent = new SideBarComponent( driver );
+									return sideBarComponent.settingsOptionExists().then( ( exists ) => {
+										assert( exists, 'The settings menu option does not exist' );
+									} );
 								} );
 							} );
 						} );
