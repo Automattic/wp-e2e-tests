@@ -62,6 +62,7 @@
     "domainsCheckoutLocalizedAddresses",
     "gsuiteUpsell",
     "jetpackConnectPlansCopyChanges",
+    "jetpackHidePlanIconsOnMobile",
     "multiDomainRegistrationV1",
     "newSiteWithJetpack",
     "paymentShowPaypalLogo",
