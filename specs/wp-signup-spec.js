@@ -823,6 +823,180 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		} );
 	} );
 
+	test.xdescribe( 'Sign up for an atomic store site @parallel @canary', function() {
+		this.bailSuite( true );
+		let stepNum = 1;
+
+		const siteName = dataHelper.getNewBlogName();
+		const expectedDomainName = `${siteName}-store.live`;
+		const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
+		const password = config.get( 'passwordForNewTestSignUps' );
+		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
+		const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
+		const firstName = 'End to End';
+		const lastName = 'Testing';
+		const phoneNumber = '0422 888 888';
+		const countryCode = 'AU';
+		const address = '888 Queen Street';
+		const city = 'Brisbane';
+		const stateCode = 'QLD';
+		const postalCode = '4000';
+
+		test.it( 'Ensure we are not logged in as anyone', function() {
+			return driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		test.it( 'We can set the sandbox cookie for payments', function() {
+			this.WPHomePage = new WPHomePage( driver, { visit: true, culture: locale } );
+			this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+		} );
+
+		test.describe( `Step ${stepNum}: Design Type Choice`, function() {
+			stepNum++;
+
+			test.it( 'Can see the design type choice page', function() {
+				this.startPage = new StartPage( driver, { visit: true, culture: locale, atomicStore: true } );
+
+				this.designTypeChoicePage = new DesignTypeChoicePage( driver );
+				return this.designTypeChoicePage.displayed().then( ( displayed ) => {
+					return assert.equal( displayed, true, 'The design type choice page is not displayed' );
+				} );
+			} );
+
+			test.it( 'Can select the store design type', function() {
+				this.designTypeChoicePage.selectStore();
+			} );
+
+			test.describe( `Step ${stepNum}: Themes`, function() {
+				stepNum++;
+
+				test.it( 'Can see the choose a theme page', function() {
+					this.chooseAThemePage = new ChooseAThemePage( driver );
+					return this.chooseAThemePage.displayed().then( ( displayed ) => {
+						return assert.equal( displayed, true, 'The choose a theme start page is not displayed' );
+					} );
+				} );
+
+				test.it( 'Can select the first theme', function() {
+					return this.chooseAThemePage.selectFirstTheme();
+				} );
+
+				test.describe( `Step ${stepNum}: Domains`, function() {
+					stepNum++;
+
+					test.it( 'Can then see the domains page ', function() {
+						this.findADomainComponent = new FindADomainComponent( driver );
+						return this.findADomainComponent.displayed().then( ( displayed ) => {
+							return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
+						} );
+					} );
+
+					test.it( 'Can search for a blog name, can see and select a paid .com address in results', function() {
+						this.findADomainComponent.searchForBlogNameAndWaitForResults( expectedDomainName );
+						return this.findADomainComponent.selectDotComAddress( expectedDomainName );
+					} );
+
+					test.it( 'Verify OAuth error not present', function() {
+						const self = this;
+						return driverHelper.getErrorMessageIfPresent( driver ).then( ( errorMsg ) => {
+							if ( errorMsg !== undefined ) {
+								SlackNotifier.warn( `WARNING: Error message [${errorMsg}] encountered on Find Domain page!` );
+								return self.findADomainComponent.selectDotComAddress( expectedDomainName );
+							}
+						} );
+					} );
+
+					test.describe( `Step ${stepNum}: Plans`, function() {
+						stepNum++;
+
+						test.it( 'Can then see the plans page showing only Business', function() {
+							this.pickAPlanPage = new PickAPlanPage( driver );
+							this.pickAPlanPage.displayed().then( ( displayed ) => {
+								return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
+							} );
+							return this.pickAPlanPage.showsOnlyOnePlan().then( ( onlyOnePlan ) => {
+								return assert( onlyOnePlan, 'Can\'t see only one plan' );
+							} );
+						} );
+
+						test.it( 'Can select the Business plan', function() {
+							return this.pickAPlanPage.selectBusinessPlan();
+						} );
+
+						test.describe( `Step ${stepNum}: Account`, function() {
+							stepNum++;
+
+							test.it( 'Can then enter account details', function() {
+								this.createYourAccountPage = new CreateYourAccountPage( driver );
+								this.createYourAccountPage.displayed().then( ( displayed ) => {
+									assert.equal( displayed, true, 'The create account page is not displayed' );
+								} );
+								return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, siteName, password );
+							} );
+
+							test.describe( `Step ${stepNum}: Processing`, function() {
+								stepNum++;
+
+								test.it( 'Can then see the sign up processing page which will finish automatically move along', function() {
+									this.signupProcessingPage = new SignupProcessingPage( driver );
+									return this.signupProcessingPage.waitToDisappear();
+								} );
+
+								test.describe( `Step ${stepNum}: Secure Payment Page`, function() {
+									stepNum++;
+
+									test.it( 'Can see checkout page', () => {
+										this.checkOutPage = new CheckOutPage( driver );
+										this.checkOutPage.displayed().then( ( displayed ) => {
+											assert.equal( displayed, true, 'Could not see the check out page' );
+										} );
+									} );
+
+									test.it( 'Can choose domain privacy option', () => {
+										this.checkOutPage = new CheckOutPage( driver );
+										this.checkOutPage.selectAddPrivacyProtectionCheckbox();
+									} );
+
+									test.it( 'Can enter domain registrar details', () => {
+										this.checkOutPage = new CheckOutPage( driver );
+										this.checkOutPage.enterRegistarDetails( firstName, lastName, emailAddress, phoneNumber, countryCode, address, city, stateCode, postalCode );
+										this.checkOutPage.submitForm();
+									} );
+
+									test.it( 'Can then see secure payment component', () => {
+										this.securePaymentComponent = new SecurePaymentComponent( driver );
+										this.securePaymentComponent.displayed().then( ( displayed ) => {
+											assert.equal( displayed, true, 'Could not see the secure payment component' );
+										} );
+									} );
+
+									test.it( 'Can enter and submit test payment details', function() {
+										this.securePaymentComponent = new SecurePaymentComponent( driver );
+										this.securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+										this.securePaymentComponent.submitPaymentDetails();
+										this.securePaymentComponent.waitForCreditCardPaymentProcessing();
+										return this.securePaymentComponent.waitForPageToDisappear();
+									} );
+
+									test.describe( `Step ${stepNum}: Checkout Thank You Page`, function() {
+										stepNum++;
+
+										test.it( 'Can see the secure check out thank you page', function() {
+											this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
+											return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
+												return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
+											} );
+										} );
+									} );
+								} );
+							} );
+						} );
+					} );
+				} );
+			} );
+		} );
+	} );
+
 	test.describe( 'Sign up for a Survey Step free site @parallel', function() {
 		this.bailSuite( true );
 		let stepNum = 1;
