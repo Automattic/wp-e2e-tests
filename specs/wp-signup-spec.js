@@ -823,7 +823,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		} );
 	} );
 
-	test.describe( 'Sign up for an atomic store site @parallel @canary', function() {
+	test.xdescribe( 'Sign up for an atomic store site @parallel @canary', function() {
 		this.bailSuite( true );
 		let stepNum = 1;
 
