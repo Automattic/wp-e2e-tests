@@ -37,6 +37,7 @@ A full list of config values are:
 | Name | Description | Example | Required | Store in file? |
 | ---- | ----------- | ------- | -------- | ------------------- |
 | calypsoBaseURL | The home page for calypso | https://wordpress.com | Yes | Yes |
+| calypsoDocker | A boolean indicating whether the tests will be run against a local Calypso Docker instance (required to ensure login works) | true | No | Yes |
 | explicitWaitMS | The explicit wait time in milliseconds to wait for an element to appear - for example a widget loading data via an API | 10000 | Yes | Yes |
 | mochaTimeoutMS | This is the maximum total time in milliseconds a single mocha end to end test can take to finish - otherwise it will time out. | 120000 | Yes | Yes |
 | mochaDevDocsTimeoutMS | A unique timeout value for visual diff tests on the /devdocs pages | 1000000 | Yes (visdiff testing only) | Yes |
