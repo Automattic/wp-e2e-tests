@@ -88,7 +88,6 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 
 		test.it( 'Has site URL in route', done => {
 			const siteSlug = this.url.replace( /^https?:\/\//, '' );
-			console.log( siteSlug );
 			return driver.getCurrentUrl().then( url => {
 				if ( url.includes( siteSlug ) ) {
 					return done();
