@@ -99,7 +99,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		} );
 	} );
 
-	test.describe.only( 'Connect From wp-admin:', function() {
+	test.describe( 'Connect From wp-admin:', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
