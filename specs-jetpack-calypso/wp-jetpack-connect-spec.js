@@ -1,11 +1,9 @@
 /** @format */
 import test from 'selenium-webdriver/testing';
 import config from 'config';
-import assert from 'assert';
 
 import * as driverManager from '../lib/driver-manager';
 import * as driverHelper from '../lib/driver-helper';
-import * as dataHelper from '../lib/data-helper';
 import { By } from 'selenium-webdriver';
 
 import AddNewSitePage from '../lib/pages/add-new-site-page';
