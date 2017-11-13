@@ -73,7 +73,8 @@
     "recommendShortestDomain",
     "signupSurveyStep",
     "skipThemesSelectionModal",
-    "unlimitedThemeNudge"
+    "unlimitedThemeNudge",
+    "condensedPostList"
   ],
   "overrideABTests": [
 	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
