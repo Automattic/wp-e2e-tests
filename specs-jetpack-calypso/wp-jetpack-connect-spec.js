@@ -1,17 +1,19 @@
 /** @format */
 import test from 'selenium-webdriver/testing';
 import config from 'config';
-import assert from 'assert';
 
 import * as driverManager from '../lib/driver-manager';
 import * as driverHelper from '../lib/driver-helper';
-import * as dataHelper from '../lib/data-helper';
 import { By } from 'selenium-webdriver';
 
 import AddNewSitePage from '../lib/pages/add-new-site-page';
+import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.js';
+import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page';
 import SettingsPage from '../lib/pages/settings-page';
 import WporgCreatorPage from '../lib/pages/wporg-creator-page';
+import WPAdminJetpackPage from '../lib/pages/wp-admin/wp-admin-jetpack-page.js';
+import WPAdminSidebar from '../lib/pages/wp-admin/wp-admin-sidebar.js';
 import LoginFlow from '../lib/flows/login-flow';
 import SidebarComponent from '../lib/components/sidebar-component';
 
@@ -94,6 +96,59 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 				}
 				done( `Route ${ url } does not include site slug ${ siteSlug }` );
 			} );
+		} );
+	} );
+
+	test.describe( 'Connect From wp-admin:', function() {
+		this.bailSuite( true );
+
+		test.before( function() {
+			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.it( 'Can create a WP.org site', () => {
+			this.wporgCreator = new WporgCreatorPage( driver );
+			this.wporgCreator.waitForWpadmin();
+		} );
+
+		test.it( 'Can get URL of WP.org site', () => {
+			this.wporgCreator.getUrl().then( url => {
+				this.url = url;
+			} );
+		} );
+
+		test.it( 'Can navigate to the Jetpack dashboard', () => {
+			this.wpAdminSidebar = new WPAdminSidebar( driver );
+			return this.wpAdminSidebar.selectJetpack();
+		} );
+
+		test.it( 'Can click the Connect Jetpack button', () => {
+			this.wpAdminJetpack = new WPAdminJetpackPage( driver );
+			return this.wpAdminJetpack.connectWordPressCom();
+		} );
+
+		test.it( 'Can click the login link in the account creation page', () => {
+			this.createAccountPage = new CreateYourAccountPage( driver )
+			return this.createAccountPage.clickLoginLink();
+		} );
+
+		test.it( 'Can login into WordPress.com', () => {
+			const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
+			return loginFlow.loginUsingExistingForm();
+		} );
+
+		test.it( 'Can approve connection on the authorization page', () => {
+			this.jetpackAuthorizePage = new JetpackAuthorizePage( driver )
+			return this.jetpackAuthorizePage.approveConnection();
+		} );
+
+		test.it( 'Can click the free plan button', () => {
+			this.pickAPlanPage = new PickAPlanPage( driver );
+			return this.pickAPlanPage.selectFreePlanJetpack();
+		} );
+
+		test.it( 'Is redirected back to the Jetpack dashboard with Jumpstart displayed', () => {
+			return this.wpAdminJetpack.jumpstartDisplayed();
 		} );
 	} );
 } );
