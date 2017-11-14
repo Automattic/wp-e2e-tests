@@ -235,11 +235,6 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 			return this.wpAdminPluginsPage.connectJetpackAfterActivation();
 		} );
 
-		test.it( 'Can approve connection on the authorization page', () => {
-			this.jetpackAuthorizePage = new JetpackAuthorizePage( driver )
-			return this.jetpackAuthorizePage.approveConnection();
-		} );
-
 		test.it( 'Can click the free plan button', () => {
 			this.pickAPlanPage = new PickAPlanPage( driver );
 			return this.pickAPlanPage.selectFreePlanJetpack();
