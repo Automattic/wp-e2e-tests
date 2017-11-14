@@ -168,7 +168,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		} );
 
 		test.it( 'Can create wporg site', () => {
-			this.wporgCreator = new WporgCreatorPage( driver, 'poopy.life' );
+			this.wporgCreator = new WporgCreatorPage( driver, 'noJetpack' );
 			this.wporgCreator.waitForWpadmin();
 		} );
 
