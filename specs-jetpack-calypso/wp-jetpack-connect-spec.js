@@ -65,6 +65,10 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 						// make the 'add site' stuff below more robust instead.
 						return driver.navigate().refresh();
 					}
+					// Wait until Custom Post Type links are present to avoid sidebar positions
+					// changing when attempting to click 'Settings'
+					driverHelper.waitTillPresentAndDisplayed( driver, By.linkText( 'Feedback' ) );
+
 					this.sidebarComponent.selectSettings();
 					const settingsPage = new SettingsPage( driver );
 					settingsPage.manageConnection();
@@ -128,7 +132,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		} );
 
 		test.it( 'Can click the login link in the account creation page', () => {
-			this.createAccountPage = new CreateYourAccountPage( driver )
+			this.createAccountPage = new CreateYourAccountPage( driver );
 			return this.createAccountPage.clickLoginLink();
 		} );
 
@@ -138,7 +142,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		} );
 
 		test.it( 'Can approve connection on the authorization page', () => {
-			this.jetpackAuthorizePage = new JetpackAuthorizePage( driver )
+			this.jetpackAuthorizePage = new JetpackAuthorizePage( driver );
 			return this.jetpackAuthorizePage.approveConnection();
 		} );
 
