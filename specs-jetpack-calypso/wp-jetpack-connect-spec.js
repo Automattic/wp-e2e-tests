@@ -183,34 +183,10 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 			loginFlow.loginAndSelectMySite();
 		} );
 
-		test.it( 'Can disconnect existing jetpack sites', () => {
-			this.sidebarComponent = new SidebarComponent( driver );
-
-			const removeSites = () => {
-				this.sidebarComponent.selectJetpackSite().then( foundSite => {
-					if ( ! foundSite ) {
-						// Refresh to put the site selector back into a sane state
-						// where it knows there is only one site. Can probably
-						// make the 'add site' stuff below more robust instead.
-						return driver.navigate().refresh();
-					}
-					this.sidebarComponent.selectSettings();
-					const settingsPage = new SettingsPage( driver );
-					settingsPage.manageConnection();
-					settingsPage.disconnectSite();
-					driverHelper.waitTillPresentAndDisplayed( driver, By.css( '.is-success' ) );
-					removeSites();
-				} );
-			};
-
-			removeSites();
-		} );
-
 		test.it( 'Can add new site', () => {
 			this.sidebarComponent = new SidebarComponent( driver );
-			this.sidebarComponent.selectJetpackSite();
+			this.sidebarComponent.selectSiteSwitcher();
 			this.sidebarComponent.addNewSite();
-
 			const addNewSitePage = new AddNewSitePage( driver );
 			addNewSitePage.addSiteUrl( this.url );
 		} );
