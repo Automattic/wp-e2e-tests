@@ -160,7 +160,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		} );
 	} );
 
-	test.describe.only( 'Connect From Calypso, when Jetpack not installed:', function() {
+	test.describe( 'Connect From Calypso, when Jetpack not installed:', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
