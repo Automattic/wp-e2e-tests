@@ -88,7 +88,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		test.it( 'Can add new site', () => {
 			this.sidebarComponent.addNewSite( driver );
 			const addNewSitePage = new AddNewSitePage( driver );
-			addNewSitePage.addSiteUrl( this.url );
+			return addNewSitePage.addSiteUrl( this.url );
 		} );
 
 		test.it( 'Can click the free plan button', () => {
@@ -180,15 +180,15 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 
 		test.it( 'Can log in', () => {
 			const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
-			loginFlow.loginAndSelectMySite();
+			return loginFlow.loginAndSelectMySite();
 		} );
 
 		test.it( 'Can add new site', () => {
 			this.sidebarComponent = new SidebarComponent( driver );
 			this.sidebarComponent.selectSiteSwitcher();
-			this.sidebarComponent.addNewSite();
+			this.sidebarComponent.addNewSiteWhenMultiple();
 			const addNewSitePage = new AddNewSitePage( driver );
-			addNewSitePage.addSiteUrl( this.url );
+			return addNewSitePage.addSiteUrl( this.url );
 		} );
 
 		test.it( 'Can click Install Jetpack button in the instructions page', () => {
