@@ -185,8 +185,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 
 		test.it( 'Can add new site', () => {
 			this.sidebarComponent = new SidebarComponent( driver );
-			this.sidebarComponent.selectSiteSwitcher();
-			this.sidebarComponent.addNewSiteWhenMultiple();
+			this.sidebarComponent.addNewSite();
 			const addNewSitePage = new AddNewSitePage( driver );
 			return addNewSitePage.addSiteUrl( this.url );
 		} );
