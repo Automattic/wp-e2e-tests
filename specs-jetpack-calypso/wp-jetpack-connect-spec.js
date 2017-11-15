@@ -39,7 +39,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		this.bailSuite( true );
 
 		test.before( function() {
-			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.it( 'Can create wporg site', () => {
@@ -111,7 +111,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		this.bailSuite( true );
 
 		test.before( function() {
-			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.it( 'Can create a WP.org site', () => {
@@ -164,7 +164,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		this.bailSuite( true );
 
 		test.before( function() {
-			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.it( 'Can create wporg site', () => {
