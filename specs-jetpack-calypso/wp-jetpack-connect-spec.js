@@ -9,8 +9,12 @@ import { By } from 'selenium-webdriver';
 import AddNewSitePage from '../lib/pages/add-new-site-page';
 import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.js';
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
+import JetpackConnectInstallPage from '../lib/pages/jetpack-connect-install-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page';
 import SettingsPage from '../lib/pages/settings-page';
+import WPAdminPluginsPage from '../lib/pages/wp-admin/wp-admin-plugins-page.js';
+import WPAdminPluginPopup from '../lib/pages/wp-admin/wp-admin-plugin-popup';
+import WPAdminUpdatesPage from '../lib/pages/wp-admin/wp-admin-updates-page';
 import WporgCreatorPage from '../lib/pages/wporg-creator-page';
 import WPAdminJetpackPage from '../lib/pages/wp-admin/wp-admin-jetpack-page.js';
 import WPAdminSidebar from '../lib/pages/wp-admin/wp-admin-sidebar.js';
@@ -35,7 +39,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		this.bailSuite( true );
 
 		test.before( function() {
-			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.it( 'Can create wporg site', () => {
@@ -84,7 +88,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		test.it( 'Can add new site', () => {
 			this.sidebarComponent.addNewSite( driver );
 			const addNewSitePage = new AddNewSitePage( driver );
-			addNewSitePage.addSiteUrl( this.url );
+			return addNewSitePage.addSiteUrl( this.url );
 		} );
 
 		test.it( 'Can click the free plan button', () => {
@@ -107,7 +111,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		this.bailSuite( true );
 
 		test.before( function() {
-			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.it( 'Can create a WP.org site', () => {
@@ -153,6 +157,62 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 
 		test.it( 'Is redirected back to the Jetpack dashboard with Jumpstart displayed', () => {
 			return this.wpAdminJetpack.jumpstartDisplayed();
+		} );
+	} );
+
+	test.describe( 'Connect From Calypso, when Jetpack not installed:', function() {
+		this.bailSuite( true );
+
+		test.before( function() {
+			return driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		test.it( 'Can create wporg site', () => {
+			this.wporgCreator = new WporgCreatorPage( driver, 'noJetpack' );
+			this.wporgCreator.waitForWpadmin();
+		} );
+
+		test.it( 'Can get URL', () => {
+			this.wporgCreator.getUrl().then( url => {
+				this.url = url;
+			} );
+		} );
+
+		test.it( 'Can log in', () => {
+			const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
+			return loginFlow.loginAndSelectMySite();
+		} );
+
+		test.it( 'Can add new site', () => {
+			this.sidebarComponent = new SidebarComponent( driver );
+			this.sidebarComponent.addNewSite();
+			const addNewSitePage = new AddNewSitePage( driver );
+			return addNewSitePage.addSiteUrl( this.url );
+		} );
+
+		test.it( 'Can click Install Jetpack button in the instructions page', () => {
+			this.jetpackConnectInstall = new JetpackConnectInstallPage( driver );
+			return this.jetpackConnectInstall.clickInstallButton();
+		} );
+
+		test.it( 'Can click the install button in the wp-admin plugin iframe', () => {
+			const wpAdminPluginPopup = new WPAdminPluginPopup( driver );
+			return wpAdminPluginPopup.installPlugin();
+		} );
+
+		test.it( 'Can click the plugin Activate button in the wp-admin updates page', () => {
+			const wpAdminUpdatesPage = new WPAdminUpdatesPage( driver );
+			return wpAdminUpdatesPage.activatePlugin();
+		} );
+
+		test.it( 'Can click the Connect Jetpack button', () => {
+			this.wpAdminPluginsPage = new WPAdminPluginsPage( driver );
+			return this.wpAdminPluginsPage.connectJetpackAfterActivation();
+		} );
+
+		test.it( 'Can click the free plan button', () => {
+			this.pickAPlanPage = new PickAPlanPage( driver );
+			return this.pickAPlanPage.selectFreePlanJetpack();
 		} );
 	} );
 } );
