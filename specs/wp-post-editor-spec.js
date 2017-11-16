@@ -971,7 +971,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 		} );
 	} );
 
-	test.describe.only( 'Revert a post to draft: @parallel @jetpack', function() {
+	test.describe( 'Revert a post to draft: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
