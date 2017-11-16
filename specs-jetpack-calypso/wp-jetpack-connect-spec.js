@@ -35,6 +35,45 @@ test.before( function() {
 test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
+	test.describe( 'Disconnect expired sites:', function() {
+		this.bailSuite( true );
+
+		test.before( function() {
+			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.it( 'Can log in', () => {
+			const loginFlow = new LoginFlow( driver, 'JetpackUserPOOPY' );
+			loginFlow.loginAndSelectMySite();
+		} );
+
+		test.it( 'Can disconnect any expired sites', () => {
+			this.sidebarComponent = new SidebarComponent( driver );
+
+			const removeSites = () => {
+				this.sidebarComponent.removeBrokenSite().then( removed => {
+					if ( ! removed ) {
+						// no sites left to remove
+						return;
+					}
+					// seems like it is not waiting for this
+					driverHelper.waitTillPresentAndDisplayed(
+						driver,
+						By.css( '.notice.is-success.is-dismissable' )
+					);
+					driverHelper.clickWhenClickable(
+						driver,
+						By.css( '.notice.is-dismissable .notice__dismiss' )
+					);
+					console.log( 'going to remove sites again' );
+					removeSites();
+				} );
+			};
+
+			removeSites();
+		} );
+	} );
+
 	test.describe( 'Connect From Calypso:', function() {
 		this.bailSuite( true );
 
