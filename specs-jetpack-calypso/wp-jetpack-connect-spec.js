@@ -43,7 +43,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		} );
 
 		test.it( 'Can log in', () => {
-			const loginFlow = new LoginFlow( driver, 'JetpackUserPOOPY' );
+			const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
 			loginFlow.loginAndSelectMySite();
 		} );
 
