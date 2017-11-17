@@ -74,7 +74,8 @@
     "signupSurveyStep",
     "skipThemesSelectionModal",
     "unlimitedThemeNudge",
-    "condensedPostList"
+    "condensedPostList",
+    "buttonsColorOnPostSignup"
   ],
   "overrideABTests": [
 	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
