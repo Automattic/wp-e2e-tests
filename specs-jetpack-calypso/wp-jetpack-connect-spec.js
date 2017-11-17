@@ -65,7 +65,6 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 						driver,
 						By.css( '.notice.is-dismissable .notice__dismiss' )
 					);
-					console.log( 'going to remove sites again' );
 					removeSites();
 				} );
 			};
