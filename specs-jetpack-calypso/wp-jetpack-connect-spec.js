@@ -35,6 +35,44 @@ test.before( function() {
 test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
+	test.describe( 'Disconnect expired sites:', function() {
+		this.bailSuite( true );
+
+		test.before( function() {
+			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.it( 'Can log in', () => {
+			const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
+			loginFlow.loginAndSelectMySite();
+		} );
+
+		test.it( 'Can disconnect any expired sites', () => {
+			this.sidebarComponent = new SidebarComponent( driver );
+
+			const removeSites = () => {
+				this.sidebarComponent.removeBrokenSite().then( removed => {
+					if ( ! removed ) {
+						// no sites left to remove
+						return;
+					}
+					// seems like it is not waiting for this
+					driverHelper.waitTillPresentAndDisplayed(
+						driver,
+						By.css( '.notice.is-success.is-dismissable' )
+					);
+					driverHelper.clickWhenClickable(
+						driver,
+						By.css( '.notice.is-dismissable .notice__dismiss' )
+					);
+					removeSites();
+				} );
+			};
+
+			removeSites();
+		} );
+	} );
+
 	test.describe( 'Connect From Calypso:', function() {
 		this.bailSuite( true );
 
@@ -58,35 +96,9 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 			loginFlow.loginAndSelectMySite();
 		} );
 
-		test.it( 'Can disconnect existing jetpack sites', () => {
-			this.sidebarComponent = new SidebarComponent( driver );
-
-			const removeSites = () => {
-				this.sidebarComponent.selectJetpackSite().then( foundSite => {
-					if ( ! foundSite ) {
-						// Refresh to put the site selector back into a sane state
-						// where it knows there is only one site. Can probably
-						// make the 'add site' stuff below more robust instead.
-						return driver.navigate().refresh();
-					}
-					// Wait until Custom Post Type links are present to avoid sidebar positions
-					// changing when attempting to click 'Settings'
-					driverHelper.waitTillPresentAndDisplayed( driver, By.linkText( 'Feedback' ) );
-
-					this.sidebarComponent.selectSettings();
-					const settingsPage = new SettingsPage( driver );
-					settingsPage.manageConnection();
-					settingsPage.disconnectSite();
-					driverHelper.waitTillPresentAndDisplayed( driver, By.css( '.is-success' ) );
-					removeSites();
-				} );
-			};
-
-			removeSites();
-		} );
-
 		test.it( 'Can add new site', () => {
-			this.sidebarComponent.addNewSite( driver );
+			const sidebarComponent = new SidebarComponent( driver );
+			sidebarComponent.addNewSite( driver );
 			const addNewSitePage = new AddNewSitePage( driver );
 			return addNewSitePage.addSiteUrl( this.url );
 		} );
