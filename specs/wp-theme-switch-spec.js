@@ -58,7 +58,7 @@ test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
 
 			test.it( 'Can see the theme thanks dialog and go back to the theme details page', function() {
 				this.themeDialogComponent = new ThemeDialogComponent( driver );
-				this.themeDialogComponent.goBackToThemes();
+				this.themeDialogComponent.goToThemeDetail();
 				this.themeDetailPage = new ThemeDetailPage( driver );
 				this.themeDetailPage.displayed().then( function( displayed ) {
 					assert.equal( displayed, true, 'Could not see the theme detail page after activating a new theme' );
