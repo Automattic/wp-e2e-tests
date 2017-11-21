@@ -5,6 +5,7 @@ import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper';
 
+import ThemeDetailPage from '../lib/pages/theme-detail-page.js';
 import ThemesPage from '../lib/pages/themes-page.js';
 import CustomizerPage from '../lib/pages/customizer-page.js';
 
@@ -152,10 +153,12 @@ test.describe( `[${host}] Themes: All sites (${screenSize})`, function() {
 				test.describe( 'Successful activation dialog', function() {
 					test.it( 'should show the successful activation dialog', function() {
 						const themeDialogComponent = new ThemeDialogComponent( this.driver );
-						return themeDialogComponent.goBackToThemes();
+						return themeDialogComponent.goToThemeDetail();
 					} );
 
 					test.it( 'should show the correct theme in the current theme bar', function() {
+						this.themeDetailPage = new ThemeDetailPage( this.driver );
+						this.themeDetailPage.goBackToAllThemes();
 						this.currentThemeComponent = new CurrentThemeComponent( this.driver );
 						return this.currentThemeComponent.getThemeName().then( ( name ) => {
 							return assert.equal( name, this.currentThemeName );
