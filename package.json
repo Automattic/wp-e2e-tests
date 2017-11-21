@@ -16,7 +16,7 @@
   "dependencies": {
     "asana-phrase": "0.0.8",
     "babel-runtime": "^6.3.19",
-    "bluecat": "^1.1.6",
+	"bluecat": "^1.1.6",
     "chai": "^3.4.1",
     "config": "1.16.0",
     "chromedriver": "2.33.2",
@@ -43,6 +43,7 @@
     "testarmada-magellan-mocha-plugin":"hoverduck/magellan-mocha-plugin#40a619c",
     "parallel-mocha": "~0.0.7",
     "saucelabs": "^1.2.0",
+	"wpcom": "5.4.0",
     "grunt": "0.4.5",
     "grunt-shell": "^1.1.2",
     "grunt-concurrent": "^2.3.0",
