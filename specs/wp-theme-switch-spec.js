@@ -12,6 +12,8 @@ import ThemePreviewPage from '../lib/pages/theme-preview-page.js';
 import ThemeDetailPage from '../lib/pages/theme-detail-page.js';
 import ThemeDialogComponent from '../lib/components/theme-dialog-component.js';
 import SidebarComponent from '../lib/components/sidebar-component';
+import WPAdminCustomizerPage from '../lib/pages/wp-admin/wp-admin-customizer-page.js';
+import WPAdminLogonPage from '../lib/pages/wp-admin/wp-admin-logon-page.js';
 import * as dataHelper from '../lib/data-helper';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
@@ -99,14 +101,31 @@ test.describe( `[${host}] Activating Themes: (${screenSize}) @parallel @jetpack`
 				return themesPage.clickPopoverItem( 'Activate' );
 			} );
 
-			test.it( 'Can see the theme thanks dialog and customize the site from this dialog', function() {
+			test.it( 'Can see the theme thanks dialog', function() {
 				let themeDialogComponent = new ThemeDialogComponent( driver );
 				themeDialogComponent.customizeSite();
-				let customizerPage = new CustomizerPage( driver );
-				return customizerPage.displayed().then( ( displayed ) => {
-					assert( displayed, 'The customizer page was not displayed' );
-				} );
 			} );
+
+			if ( host === 'WPCOM' ) {
+				test.it( 'Can customize the site from the theme thanks dialog', function() {
+					let customizerPage = new CustomizerPage( driver );
+					return customizerPage.displayed().then( ( displayed ) => {
+						assert( displayed, 'The customizer page was not displayed' );
+					} );
+				} );
+			} else {
+				test.it( 'Can log in via Jetpack SSO', function() {
+					let wpAdminLogonPage = new WPAdminLogonPage( driver );
+					return wpAdminLogonPage.logonSSO();
+				} );
+
+				test.it( 'Can customize the site from the theme thanks dialog', function() {
+					let wpAdminCustomizerPage = new WPAdminCustomizerPage( driver );
+					return wpAdminCustomizerPage.displayed().then( ( displayed ) => {
+						assert( displayed, 'The customizer page was not displayed' );
+					} );
+				} );
+			}
 		} );
 	} );
 } );
