@@ -5,6 +5,7 @@ import * as driverManager from '../lib/driver-manager.js';
 
 import localization_data from '../localization-data.json';
 import GoogleFlow from '../lib/flows/google-flow.js';
+import GoogleSearchPage from '../lib/pages/external/google-search.js';
 import LandingPage from '../lib/pages/landing-page.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
@@ -20,19 +21,19 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.afterEach( function() {
-	this.timeout( 45000 );
+test.after( function( done ) {
+	// Wait between tests to not overload Google
+	var wait_seconds = 45;
+	this.timeout( ( wait_seconds + 2 ) * 1e3 );
+	setTimeout( done, wait_seconds * 1e3);
 } );
 
 function doGoogleAdSearch( search_params ) {
 	if ( locale === 'tr' ) {
 		this.skip( 'Currently no advertising in this locale' );
 	}
-	var description = 'Search for "' + search_params.query + '" on Google from ' +
-		search_params.originating_location +
-		( search_params.originating_location_english
-			? ' (' + search_params.originating_location_english + ')'
-			: '' );
+	var description = 'Search for "' + search_params.query + '" on ' + search_params.domain + ' from ' +
+		search_params.comment_location;
 
 	test.describe( description + ' @i18n', function() {
 		this.timeout( mochaTimeOut );
@@ -45,9 +46,9 @@ function doGoogleAdSearch( search_params ) {
 		test.it( `Google search contains our ad`, function() {
 			const googleFlow = new GoogleFlow( driver, 'desktop' );
 			const that = this;
-			return googleFlow.search( search_params, test_data ).then( searchPage => {
-				that.searchPage = searchPage;
-			} )
+			googleFlow.search( search_params, test_data ).then( searchPage => {
+				that.searchPage = new GoogleSearchPage( driver, 'https://' + test_data.wpcom_base_url );
+			})
 		} );
 
 		test.it( `Our landing page exists`, function() {

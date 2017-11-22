@@ -8,9 +8,10 @@
 
 		"google_searches": [
 			{
+				"url": "www.google.com.ar",
 				"query": "wordpress",
-				"originating_location": "القاهرة, محافظة القاهرة, مصر",
-				"originating_location_english": "Cairo, Cairo Governorate, Egypt"
+				"location": 1005390,
+				"comment_location": "Cairo, Egypt"
 			}
 		]
 	},
@@ -25,8 +26,10 @@
 
 		"google_searches": [
 			{
+				"domain": "www.google.de",
 				"query": "wordpress",
-				"originating_location": "Berlin, Berlin, Germany"
+				"location": 20226,
+				"comment_location": "Berlin, Germany"
 			}
 		]
 	},
@@ -41,8 +44,16 @@
 
 		"google_searches": [
 			{
+				"domain": "www.google.com",
 				"query": "wordpress",
-				"originating_location": "Brooklyn, New York, United States"
+				"location": 1022762,
+				"comment_location": "Brooklyn, USA"
+			},
+			{
+				"domain": "www.google.co.uk",
+				"query": "wordpress",
+				"location": 1006886,
+				"comment_location": "London, UK"
 			}
 		]
 	},
@@ -57,8 +68,10 @@
 
 		"google_searches": [
 			{
+				"domain": "www.google.es",
 				"query": "wordpress",
-				"originating_location": "Madrid, Community of Madrid, Spain"
+				"location": 1005493,
+				"comment_location": "Madrid, Spain"
 			}
 		]
 	},
@@ -68,13 +81,15 @@
 		"language": "Français",
 		"currency_symbol": "€",
 		"nux_landing_page_string": "Étape",
-		"wpcom_landing_page_string": "Connexion",
+		"wpcom_landing_page_string": "Se Connecter",
 		"wpcom_base_url": "fr.wordpress.com",
 
 		"google_searches": [
 			{
+				"domain": "www.google.fr",
 				"query": "wordpress",
-				"originating_location": "Paris, Ile-de-France, France"
+				"location": 1006094,
+				"comment_location": "Paris, France"
 			}
 		]
 	},
@@ -88,9 +103,10 @@
 
 		"google_searches": [
 			{
+				"domain": "www.google.co.il",
 				"query": "wordpress",
-				"originating_location": "ירושלים, מחוז ירושלים, ישראל",
-				"originating_location_english": "Jerusalem, Jerusalem District, Israel"
+				"location": 1007978,
+				"comment_location": "Jerusalem, Israel"
 			}
 		]
 	},
@@ -105,8 +121,10 @@
 
 		"google_searches": [
 			{
+				"domain": "www.google.co.id",
 				"query": "wordpress",
-				"originating_location": "Jakarta, Special Capital Region of Jakarta, Indonesia"
+				"location": 1007716,
+				"comment_location": "Jakarta, Indonesia"
 			}
 		]
 	},
@@ -121,8 +139,10 @@
 
 		"google_searches": [
 			{
+				"domain": "www.google.it",
 				"query": "wordpress",
-				"originating_location": "Rome, Lazio, Italy"
+				"location": 1008736,
+				"comment_location": "Rome, Italy"
 			}
 		]
 	},
@@ -137,8 +157,10 @@
 
 		"google_searches": [
 			{
+				"domain": "www.google.co.jp",
 				"query": "wordpress",
-				"originating_location": "Tokyo, Japan"
+				"location": 1009317,
+				"comment_location": "Tokyo, Japan"
 			}
 		]
 	},
@@ -153,8 +175,10 @@
 
 		"google_searches": [
 			{
+				"domain": "www.google.co.kr",
 				"query": "wordpress",
-				"originating_location": "Seoul, Seoul, South Korea"
+				"location": 1009871,
+				"comment_location": "Seoul, South Korea"
 			}
 		]
 	},
@@ -169,8 +193,10 @@
 
 		"google_searches": [
 			{
+				"domain": "www.google.nl",
 				"query": "wordpress",
-				"originating_location": "Amsterdam, North Holland, Netherlands"
+				"location": 1010543,
+				"comment_location": "Amsterdam, Netherlands"
 			}
 		]
 	},
@@ -185,8 +211,10 @@
 
 		"google_searches": [
 			{
+				"domain": "www.google.com.br",
 				"query": "wordpress",
-				"originating_location": "Rio de Janeiro, Rio de Janeiro, Brasil"
+				"location": 1001655,
+				"comment_location": "Rio de Janeiro, Brasil"
 			}
 		]
 	},
@@ -201,8 +229,10 @@
 
 		"google_searches": [
 			{
+				"domain": "www.google.ru",
 				"query": "wordpress",
-				"originating_location": "Moscow, Moscow, Russia"
+				"location": 1011969,
+				"comment_location": "Moscow, Russia"
 			}
 		]
 	},
@@ -217,8 +247,10 @@
 
 		"google_searches": [
 			{
+				"domain": "www.google.se",
 				"query": "wordpress",
-				"originating_location": "Stockholm, Stockholms län, Sverige"
+				"location": 1012228,
+				"comment_location": "Stockholm, Sverige"
 			}
 		]
 	},
@@ -233,8 +265,10 @@
 
 		"google_searches": [
 			{
+				"domain": "www.google.com.tr",
 				"query": "wordpress",
-				"originating_location": "Istanbul, Istanbul, Turkey"
+				"location": 1012782,
+				"comment_location": "Istanbul, Turkey"
 			}
 		]
 	},
@@ -249,8 +283,10 @@
 
 		"google_searches": [
 			{
+				"domain": "www.google.com",
 				"query": "wordpress",
-				"originating_location": "Beijing, Beijing, China"
+				"location": 1003334,
+				"comment_location": "Beijing, Beijing, China"
 			}
 		]
 	},
@@ -265,10 +301,10 @@
 
 		"google_searches": [
 			{
+				"domain": "www.google.com.tw",
 				"query": "wordpress",
-
-				"originating_location": "台北市, 台灣",
-				"originating_location_english": "Taipei City, Taiwan"
+				"location": 9040379,
+				"originating_location_english": "Taipei, Taiwan"
 			}
 		]
 	}
