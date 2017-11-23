@@ -35,7 +35,7 @@ function doGoogleAdSearch( search_params ) {
 	var description = 'Search for "' + search_params.query + '" on ' + search_params.domain + ' from ' +
 		search_params.comment_location;
 
-	test.describe( description + ' @i18n', function() {
+	test.describe( description + ' @i18n (' + locale + ')', function() {
 		this.timeout( mochaTimeOut );
 
 		test.beforeEach( function() {
