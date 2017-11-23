@@ -102,6 +102,7 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
       ;;
     I)
       SCREENSIZES=desktop
+      WORKERS=1 # We need to be careful to take it slow with Google
       NODE_CONFIG_ARGS+=$I18N_CONFIG
       LOCALES="en,es,pt-br,de,fr,he,ja,it,nl,ru,tr,id,zh-cn,zh-tw,ko,ar,sv"
       MAGELLAN_CONFIG="magellan-i18n.json"
