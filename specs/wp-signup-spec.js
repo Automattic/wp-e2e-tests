@@ -11,6 +11,7 @@ import ChooseAThemePage from '../lib/pages/signup/choose-a-theme-page.js';
 import StartPage from '../lib/pages/signup/start-page.js';
 import SurveyPage from '../lib/pages/signup/survey-page.js';
 import DesignTypeChoicePage from '../lib/pages/signup/design-type-choice-page.js';
+import DomainFirstPage from '../lib/pages/signup/domain-first-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page.js';
 import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.js';
 import SignupProcessingPage from '../lib/pages/signup/signup-processing-page.js';
@@ -21,10 +22,14 @@ import EditorPage from '../lib/pages/editor-page.js';
 import LoginPage from '../lib/pages/login-page';
 import MagicLoginPage from '../lib/pages/magic-login-page';
 import ReaderPage from '../lib/pages/reader-page';
+import DomainOnlySettingsPage from '../lib/pages/domain-only-settings-page';
+import DomainDetailsPage from '../lib/pages/domain-details-page';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
+import NavBarComponent from '../lib/components/navbar-component';
+import SideBarComponent from '../lib/components/sidebar-component';
 
 import * as SlackNotifier from '../lib/slack-notifier';
 
@@ -512,12 +517,149 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		} );
 	} );
 
-	test.describe( 'Partially sign up for a site on a business paid plan w/ domain name coming in via /create as business flow @parallel @canary', function() {
+	test.describe( 'Sign up for a domain only purchase coming in from wordpress.com/domains @parallel', function() {
+		this.bailSuite( true );
+		let stepNum = 1;
+		const siteName = dataHelper.getNewBlogName();
+		const expectedDomainName = `${siteName}.live`;
+		const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
+		const password = config.get( 'passwordForNewTestSignUps' );
+		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
+		const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
+		const firstName = 'End to End';
+		const lastName = 'Testing';
+		const phoneNumber = '0422 888 888';
+		const countryCode = 'AU';
+		const address = '888 Queen Street';
+		const city = 'Brisbane';
+		const stateCode = 'QLD';
+		const postalCode = '4000';
+
+		test.it( 'Ensure we are not logged in as anyone', function() {
+			return driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		test.it( 'We can visit set the sandbox cookie for payments', function() {
+			this.WPHomePage = new WPHomePage( driver, { visit: true, culture: locale } );
+			return this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+		} );
+
+		test.describe( `Step ${stepNum}: WordPress.com/domains page`, function() {
+			stepNum++;
+
+			test.it( 'Can visit the domains start page', function() {
+				this.startPage = new StartPage( driver, { visit: true, culture: locale, flow: 'domain-first', domainFirst: true, domainFirstDomain: expectedDomainName } );
+			} );
+
+			test.it( 'Can select domain only from the domain first choice page', function() {
+				this.domainFirstChoicePage = new DomainFirstPage( driver );
+				return this.domainFirstChoicePage.chooseJustBuyTheDomain();
+			} );
+
+			test.describe( `Step ${stepNum}: Account`, function() {
+				stepNum++;
+
+				test.it( 'Can then enter account details', function() {
+					this.createYourAccountPage = new CreateYourAccountPage( driver );
+					this.createYourAccountPage.displayed().then( ( displayed ) => {
+						assert.equal( displayed, true, 'The create account page is not displayed' );
+					} );
+					return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, siteName, password );
+				} );
+
+				test.describe( `Step ${stepNum}: Processing`, function() {
+					stepNum++;
+
+					test.it( 'Can then see the sign up processing page which will finish automatically move along', function() {
+						this.signupProcessingPage = new SignupProcessingPage( driver );
+						return this.signupProcessingPage.waitToDisappear();
+					} );
+
+					test.describe( `Step ${stepNum}: Secure Payment Page`, function() {
+						stepNum++;
+
+						test.it( 'Can see checkout page', () => {
+							this.checkOutPage = new CheckOutPage( driver );
+							this.checkOutPage.displayed().then( ( displayed ) => {
+								assert.equal( displayed, true, 'Could not see the check out page' );
+							} );
+						} );
+
+						test.it( 'Can choose domain privacy option', () => {
+							this.checkOutPage = new CheckOutPage( driver );
+							this.checkOutPage.selectAddPrivacyProtectionCheckbox();
+						} );
+
+						test.it( 'Can enter domain registrar details', () => {
+							this.checkOutPage = new CheckOutPage( driver );
+							this.checkOutPage.enterRegistarDetails( firstName, lastName, emailAddress, phoneNumber, countryCode, address, city, stateCode, postalCode );
+							this.checkOutPage.submitForm();
+						} );
+
+						test.it( 'Can then see the secure payment page', function() {
+							this.securePaymentComponent = new SecurePaymentComponent( driver );
+							return this.securePaymentComponent.displayed().then( ( displayed ) => {
+								return assert.equal( displayed, true, 'The secure payment page is not displayed' );
+							} );
+						} );
+
+						test.it( 'Can enter and submit test payment details', function() {
+							this.securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+							this.securePaymentComponent.submitPaymentDetails();
+							this.securePaymentComponent.waitForCreditCardPaymentProcessing();
+							return this.securePaymentComponent.waitForPageToDisappear();
+						} );
+
+						test.describe( `Step ${stepNum}: Checkout Thank You Page`, function() {
+							stepNum++;
+
+							test.it( 'Can see the secure check out thank you page and click "go to my domain" button to see the domain only settings page', function() {
+								this.checkOutThankyouPage = new CheckOutThankyouPage( driver );
+								this.checkOutThankyouPage.goToMyDomain();
+								this.domainOnlySettingsPage = new DomainOnlySettingsPage( driver );
+								this.domainOnlySettingsPage.manageDomain();
+								this.domainDetailsPage = new DomainDetailsPage( driver );
+								this.domainDetailsPage.displayed().then( ( displayed ) => {
+									assert.equal( displayed, true, 'The domain details page is not displayed' );
+								} );
+							} );
+
+							test.describe( `Step ${stepNum}: View Calypso Menus`, function() {
+								stepNum++;
+
+								// Open the sidebar
+								test.before( function() {
+									let navBarComponent = new NavBarComponent( driver );
+									navBarComponent.clickMySites();
+								} );
+
+								test.it( 'We should only one option', function() {
+									let sideBarComponent = new SideBarComponent( driver );
+									return sideBarComponent.numberOfMenuItems().then( ( numberMenuItems ) => {
+										assert.equal( numberMenuItems, 1, 'There is not a single menu item for a domain only site' );
+									} );
+								} );
+
+								test.it( 'We should see the Settings option', function() {
+									let sideBarComponent = new SideBarComponent( driver );
+									return sideBarComponent.settingsOptionExists().then( ( exists ) => {
+										assert( exists, 'The settings menu option does not exist' );
+									} );
+								} );
+							} );
+						} );
+					} );
+				} );
+			} );
+		} );
+	} );
+
+	test.describe( 'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow @parallel @canary', function() {
 		this.bailSuite( true );
 		let stepNum = 1;
 
 		const siteName = dataHelper.getNewBlogName();
-		const expectedDomainName = `${siteName}.com`;
+		const expectedDomainName = `${siteName}.live`;
 		const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
@@ -581,7 +723,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 					} );
 
 					test.it( 'Can search for a blog name, can see and select a paid .com address in results', function() {
-						this.findADomainComponent.searchForBlogNameAndWaitForResults( siteName );
+						this.findADomainComponent.searchForBlogNameAndWaitForResults( expectedDomainName );
 						return this.findADomainComponent.selectDotComAddress( expectedDomainName );
 					} );
 
@@ -657,7 +799,21 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 								test.it( 'Can enter and submit test payment details', function() {
 									this.securePaymentComponent = new SecurePaymentComponent( driver );
-									return this.securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+									this.securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+									this.securePaymentComponent.submitPaymentDetails();
+									this.securePaymentComponent.waitForCreditCardPaymentProcessing();
+									return this.securePaymentComponent.waitForPageToDisappear();
+								} );
+
+								test.describe( `Step ${stepNum}: Checkout Thank You Page`, function() {
+									stepNum++;
+
+									test.it( 'Can see the secure check out thank you page', function() {
+										this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
+										return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
+											return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
+										} );
+									} );
 								} );
 							} );
 						} );

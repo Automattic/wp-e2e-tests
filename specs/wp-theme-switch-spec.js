@@ -6,10 +6,14 @@ import * as driverManager from '../lib/driver-manager.js';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
+import CustomizerPage from '../lib/pages/customizer-page';
 import ThemesPage from '../lib/pages/themes-page.js';
 import ThemePreviewPage from '../lib/pages/theme-preview-page.js';
 import ThemeDetailPage from '../lib/pages/theme-detail-page.js';
 import ThemeDialogComponent from '../lib/components/theme-dialog-component.js';
+import SidebarComponent from '../lib/components/sidebar-component';
+import WPAdminCustomizerPage from '../lib/pages/wp-admin/wp-admin-customizer-page.js';
+import WPAdminLogonPage from '../lib/pages/wp-admin/wp-admin-logon-page.js';
 import * as dataHelper from '../lib/data-helper';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
@@ -24,11 +28,11 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Themes: (${screenSize}) @parallel @jetpack`, function() {
+test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
-	test.describe( 'Switching Themes:', function() {
+	test.describe( 'Switching Themes @parallel @jetpack', function() {
 		test.it( 'Delete Cookies and Login', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			let loginFlow = new LoginFlow( driver );
@@ -56,12 +60,72 @@ test.describe( `[${host}] Themes: (${screenSize}) @parallel @jetpack`, function(
 
 			test.it( 'Can see the theme thanks dialog and go back to the theme details page', function() {
 				this.themeDialogComponent = new ThemeDialogComponent( driver );
-				this.themeDialogComponent.goBackToThemes();
+				this.themeDialogComponent.goToThemeDetail();
 				this.themeDetailPage = new ThemeDetailPage( driver );
 				this.themeDetailPage.displayed().then( function( displayed ) {
 					assert.equal( displayed, true, 'Could not see the theme detail page after activating a new theme' );
 				} );
 			} );
+		} );
+	} );
+} );
+
+test.describe( `[${host}] Activating Themes: (${screenSize}) @parallel @jetpack`, function() {
+	this.timeout( mochaTimeOut );
+	this.bailSuite( true );
+
+	test.describe( 'Activating Themes:', function() {
+		// Ensure logged out
+		test.before( function() {
+			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.it( 'Login', function() {
+			let loginFlow = new LoginFlow( driver );
+			return loginFlow.loginAndSelectMySite();
+		} );
+
+		test.it( 'Can open Themes menu', function() {
+			let sidebarComponent = new SidebarComponent( driver );
+			return sidebarComponent.selectThemes();
+		} );
+
+		test.describe( 'Can switch free themes', function() {
+			test.it( 'Can activate a different free theme', function() {
+				let themesPage = new ThemesPage( driver );
+				themesPage.showOnlyFreeThemes();
+				themesPage.searchFor( 'Twenty F' );
+				themesPage.waitForThemeStartingWith( 'Twenty F' );
+				themesPage.clickNewThemeMoreButton();
+				themesPage.popOverMenuDisplayed().then( ( displayed ) => assert( displayed, true, 'Popover menu not displayed' ) );
+				return themesPage.clickPopoverItem( 'Activate' );
+			} );
+
+			test.it( 'Can see the theme thanks dialog', function() {
+				let themeDialogComponent = new ThemeDialogComponent( driver );
+				themeDialogComponent.customizeSite();
+			} );
+
+			if ( host === 'WPCOM' ) {
+				test.it( 'Can customize the site from the theme thanks dialog', function() {
+					let customizerPage = new CustomizerPage( driver );
+					return customizerPage.displayed().then( ( displayed ) => {
+						assert( displayed, 'The customizer page was not displayed' );
+					} );
+				} );
+			} else {
+				test.it( 'Can log in via Jetpack SSO', function() {
+					let wpAdminLogonPage = new WPAdminLogonPage( driver );
+					return wpAdminLogonPage.logonSSO();
+				} );
+
+				test.it( 'Can customize the site from the theme thanks dialog', function() {
+					let wpAdminCustomizerPage = new WPAdminCustomizerPage( driver );
+					return wpAdminCustomizerPage.displayed().then( ( displayed ) => {
+						assert( displayed, 'The customizer page was not displayed' );
+					} );
+				} );
+			}
 		} );
 	} );
 } );

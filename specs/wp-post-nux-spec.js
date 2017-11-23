@@ -252,9 +252,13 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 										return this.customizerPage.closeOpenSection();
 									} );
 
-									test.describe( 'Closing the customizer', function() {
-										return test.it( 'Close the customizer', function() {
-											return this.customizerPage.close();
+									test.describe( 'Discard changes', function() {
+										test.it( 'Open publish settings', function() {
+											return this.customizerPage.openPublishSettings();
+										} );
+
+										test.it( 'Click Discard Changes', function() {
+											return this.customizerPage.clickDiscardChanges();
 										} );
 									} );
 								} );
