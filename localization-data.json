@@ -304,7 +304,7 @@
 				"domain": "www.google.com.tw",
 				"query": "wordpress",
 				"location": 9040379,
-				"originating_location_english": "Taipei, Taiwan"
+				"comment_location": "Taipei, Taiwan"
 			}
 		]
 	}
