@@ -387,19 +387,19 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			} );
 
 			test.it( 'Can confirm scheduling post and see correct publish date', function() {
-				let editorConfirmationSidebarComponent = new EditorConfirmationSidebarComponent( this.driver );
+				let editorConfirmationSidebarComponent = new EditorConfirmationSidebarComponent( driver );
 				editorConfirmationSidebarComponent.publishDateShown().then( ( publishDateShown ) => {
 					assert.equal( publishDateShown, publishDate, 'The publish date shown is not the expected publish date' );
 				} );
 				editorConfirmationSidebarComponent.confirmAndPublish();
 				if ( httpsHost ) {
-					let previewComponent = new PostPreviewComponent( this.driver );
+					let previewComponent = new PostPreviewComponent( driver );
 					previewComponent.edit();
 				} else {
-					let postEditorToolbarComponent = new PostEditorToolbarComponent( this.driver );
+					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 					postEditorToolbarComponent.waitForSuccessViewPostNotice();
 				}
-				let postEditorPage = new EditorPage( this.driver );
+				let postEditorPage = new EditorPage( driver );
 				return postEditorPage.postIsScheduled().then( ( isScheduled ) => {
 					assert( isScheduled, 'The newly scheduled post is not showing in the editor as scheduled' );
 				} );
