@@ -23,7 +23,7 @@ test.before( function() {
 
 test.after( function( done ) {
 	// Wait between tests to not overload Google
-	var wait_seconds = 45;
+	var wait_seconds = 10;
 	this.timeout( ( wait_seconds + 2 ) * 1e3 );
 	setTimeout( done, wait_seconds * 1e3);
 } );
@@ -46,9 +46,9 @@ function doGoogleAdSearch( search_params ) {
 		test.it( `Google search contains our ad`, function() {
 			const googleFlow = new GoogleFlow( driver, 'desktop' );
 			const that = this;
-			googleFlow.search( search_params, test_data ).then( searchPage => {
+			googleFlow.search( search_params, test_data ).then( searchPageUrl => {
 				that.searchPage = new GoogleSearchPage( driver, 'https://' + test_data.wpcom_base_url );
-			})
+			});
 		} );
 
 		test.it( `Our landing page exists`, function() {
@@ -56,7 +56,7 @@ function doGoogleAdSearch( search_params ) {
 			if ( ! this.searchPage ) {
 				this.skip( 'Depends on previous test passing' );
 			}
-			this.searchPage.getAdUrl().then( function( url ) {
+			this.searchPage.getAdUrl().then( url => {
 				that.landingPage = new LandingPage( driver, url );
 			} );
 		} );
