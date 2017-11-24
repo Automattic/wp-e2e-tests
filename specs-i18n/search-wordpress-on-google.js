@@ -29,9 +29,6 @@ test.after( function( done ) {
 } );
 
 function doGoogleAdSearch( search_params ) {
-	if ( locale === 'tr' ) {
-		this.skip( 'Currently no advertising in this locale' );
-	}
 	var description = 'Search for "' + search_params.query + '" on ' + search_params.domain + ' from ' +
 		search_params.comment_location;
 
@@ -44,18 +41,26 @@ function doGoogleAdSearch( search_params ) {
 		} );
 
 		test.it( `Google search contains our ad`, function() {
+			if ( locale === 'tr' || locale === 'ar' || locale === 'zh-tw' ) {
+				this.skip( 'Currently no advertising in this locale' );
+			}
+
 			const googleFlow = new GoogleFlow( driver, 'desktop' );
 			const that = this;
 			googleFlow.search( search_params, test_data ).then( searchPageUrl => {
-				that.searchPage = new GoogleSearchPage( driver, 'https://' + test_data.wpcom_base_url );
+				const searchPage = new GoogleSearchPage( driver, 'https://' + test_data.wpcom_base_url );
+				if ( this.searchPage.adExists() ) {
+					that.searchPage = searchPage;
+				}
 			});
 		} );
 
 		test.it( `Our landing page exists`, function() {
-			const that = this;
 			if ( ! this.searchPage ) {
 				this.skip( 'Depends on previous test passing' );
 			}
+
+			const that = this;
 			this.searchPage.getAdUrl().then( url => {
 				that.landingPage = new LandingPage( driver, url );
 			} );
@@ -65,6 +70,7 @@ function doGoogleAdSearch( search_params ) {
 			if ( ! this.landingPage ) {
 				this.skip( 'Depends on previous test passing' );
 			}
+
 			this.landingPage.checkLocalizedString( test_data.wpcom_landing_page_string );
 		} );
 	} );

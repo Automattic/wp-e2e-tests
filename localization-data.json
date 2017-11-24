@@ -8,7 +8,7 @@
 
 		"google_searches": [
 			{
-				"url": "www.google.com.ar",
+				"domain": "www.google.com.ar",
 				"query": "wordpress",
 				"location": 1005390,
 				"comment_location": "Cairo, Egypt"
