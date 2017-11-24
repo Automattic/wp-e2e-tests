@@ -205,7 +205,8 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 										test.it( 'Can see a the magic link email', function() {
 											return this.emailClient.pollEmailsByRecipient( emailAddress ).then( function( emails ) {
-												assert.equal( emails.length, 2, 'The number of newly registered emails is not equal to 2 (activation and magic link)' );
+												//Disabled due to a/b test on activation email. See https://github.com/Automattic/wp-e2e-tests/issues/819
+												//assert.equal( emails.length, 2, 'The number of newly registered emails is not equal to 2 (activation and magic link)' );
 												for ( let email of emails ) {
 													if ( email.subject.indexOf( 'WordPress.com' ) > -1 ) {
 														magicLoginLink = email.html.links[0].href;
