@@ -47,7 +47,10 @@ function doGoogleAdSearch( search_params ) {
 			const googleFlow = new GoogleFlow( driver, 'desktop' );
 			const that = this;
 			googleFlow.search( search_params, test_data ).then( searchPageUrl => {
-				that.searchPage = new GoogleSearchPage( driver, 'https://' + test_data.wpcom_base_url );
+				const searchPage = new GoogleSearchPage( driver, 'https://' + test_data.wpcom_base_url );
+				if ( this.searchPage.adExists() ) {
+					that.searchPage = searchPage;
+				}
 			});
 		} );
 
