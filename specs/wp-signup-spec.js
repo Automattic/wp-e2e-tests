@@ -205,7 +205,8 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 										test.it( 'Can see a the magic link email', function() {
 											return this.emailClient.pollEmailsByRecipient( emailAddress ).then( function( emails ) {
-												assert.equal( emails.length, 2, 'The number of newly registered emails is not equal to 2 (activation and magic link)' );
+												//Disabled due to a/b test on activation email. See https://github.com/Automattic/wp-e2e-tests/issues/819
+												//assert.equal( emails.length, 2, 'The number of newly registered emails is not equal to 2 (activation and magic link)' );
 												for ( let email of emails ) {
 													if ( email.subject.indexOf( 'WordPress.com' ) > -1 ) {
 														magicLoginLink = email.html.links[0].href;
@@ -832,7 +833,6 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
-		let inboxEmails = null;
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
 			return driverManager.ensureNotLoggedIn( driver );
@@ -992,49 +992,6 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 												return this.editor.publishEnabled().then( ( enabled ) => {
 													return assert.equal( enabled, false, 'Publish button is not enabled when activation link has not been clicked' );
-												} );
-											} );
-
-											test.describe( `Step ${stepNum}: Can activate my account from an email`, function() {
-												stepNum++;
-
-												test.before( function() {
-													return this.emailClient = new EmailClient( signupInboxId );
-												} );
-
-												test.it( 'Can see a single activation message', function() {
-													return this.emailClient.pollEmailsByRecipient( emailAddress ).then( function( emails ) {
-														inboxEmails = emails;
-														return assert.equal( emails.length, 1, 'The number of invite emails is not equal to 1' );
-													} );
-												} );
-
-												test.describe( `Step ${stepNum}: Can publish when email is confirmed`, function() {
-													stepNum++;
-
-													test.it( 'Can not see a disabled publish button', function() {
-														const blogPostTitle = dataHelper.randomPhrase();
-														const blogPostQuote = dataHelper.randomPhrase();
-														driver.get( inboxEmails[0].html.links[0].href );
-														driver.get( calypsoBaseURL + '/post/' + newBlogAddress );
-
-														this.editor = new EditorPage( driver );
-														this.editor.enterTitle( blogPostTitle );
-														this.editor.enterContent( blogPostQuote + '\n' );
-
-														this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-														this.postEditorToolbarComponent.ensureSaved( { clickSave: false } );
-
-														return this.editor.publishEnabled().then( ( enabled ) => {
-															return assert.equal( enabled, true, 'Publish button is enabled after account activation' );
-														} );
-													} );
-
-													test.it( 'Can not see email verification required message', function() {
-														return this.editor.emailVerificationNoticeDisplayed().then( ( displayed ) => {
-															return assert.equal( displayed, false, 'Email Verification Notice is displayed when activation link has been clicked' );
-														} );
-													} );
 												} );
 											} );
 										} );
