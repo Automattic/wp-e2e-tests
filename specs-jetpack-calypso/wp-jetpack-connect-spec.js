@@ -32,10 +32,10 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
+test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Disconnect expired sites:', function() {
+	test.describe( 'Disconnect expired sites: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -73,7 +73,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		} );
 	} );
 
-	test.describe( 'Connect From Calypso:', function() {
+	test.describe( 'Connect From Calypso: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -119,7 +119,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		} );
 	} );
 
-	test.describe( 'Connect From wp-admin:', function() {
+	test.describe( 'Connect From wp-admin: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
