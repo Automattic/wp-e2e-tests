@@ -9,6 +9,7 @@ import TwitterFeedPage from '../lib/pages/twitter-feed-page.js';
 import ViewPostPage from '../lib/pages/view-post-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
 import PostsPage from '../lib/pages/posts-page.js';
+import ReaderPage from '../lib/pages/reader-page';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
@@ -825,6 +826,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 
 			test.describe( 'Edit the post via posts', function() {
 				test.it( 'Can view the posts list', function() {
+					this.readerPage = new ReaderPage( driver, true );
 					this.navbarComponent = new NavbarComponent( driver );
 					this.navbarComponent.clickMySites();
 					this.sidebarComponent = new SidebarComponent( driver );
