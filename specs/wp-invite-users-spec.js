@@ -33,7 +33,7 @@ const screenSize = driverManager.currentScreenSize();
 const calypsoBaseUrl = config.get( 'calypsoBaseURL' );
 const host = dataHelper.getJetpackHost();
 
-var driver;
+let driver;
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -659,11 +659,11 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 									this.navbarComponent.dismissGuidedTours();
 									this.navbarComponent.clickCreateNewPost();
 									this.editorPage = new EditorPage( driver );
-									this.driver.getCurrentUrl().then( ( urlDisplayed ) => {
+									driver.getCurrentUrl().then( ( urlDisplayed ) => {
 										return this.editorPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
 									} );
 									this.editorPage.enterTitle( reviewPostTitle );
-									this.editorPage.enterContent( postQuote );
+									return this.editorPage.enterContent( postQuote );
 								} );
 
 								test.it( 'New user can submit the new post for review as pending status', function() {
@@ -722,7 +722,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 												this.navbarComponent = new NavbarComponent( driver );
 												this.navbarComponent.clickCreateNewPost();
 												this.editorPage = new EditorPage( driver );
-												this.driver.getCurrentUrl().then( ( urlDisplayed ) => {
+												driver.getCurrentUrl().then( ( urlDisplayed ) => {
 													return this.editorPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
 												} );
 												this.editorPage.enterTitle( publishPostTitle );
