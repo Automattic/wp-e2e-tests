@@ -9,7 +9,6 @@ import * as driverHelper from '../lib/driver-helper.js';
 import WPHomePage from '../lib/pages/wp-home-page.js';
 import ChooseAThemePage from '../lib/pages/signup/choose-a-theme-page.js';
 import StartPage from '../lib/pages/signup/start-page.js';
-import SurveyPage from '../lib/pages/signup/survey-page.js';
 import DesignTypeChoicePage from '../lib/pages/signup/design-type-choice-page.js';
 import DomainFirstPage from '../lib/pages/signup/domain-first-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page.js';
@@ -18,7 +17,7 @@ import SignupProcessingPage from '../lib/pages/signup/signup-processing-page.js'
 import CheckOutPage from '../lib/pages/signup/checkout-page';
 import CheckOutThankyouPage from '../lib/pages/signup/checkout-thankyou-page.js';
 import ViewBlogPage from '../lib/pages/signup/view-blog-page.js';
-import EditorPage from '../lib/pages/editor-page.js';
+// import EditorPage from '../lib/pages/editor-page.js';
 import LoginPage from '../lib/pages/login-page';
 import MagicLoginPage from '../lib/pages/magic-login-page';
 import ReaderPage from '../lib/pages/reader-page';
@@ -27,7 +26,7 @@ import DomainDetailsPage from '../lib/pages/domain-details-page';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
-import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
+// import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
 import NavBarComponent from '../lib/components/navbar-component';
 import SideBarComponent from '../lib/components/sidebar-component';
 
@@ -41,7 +40,6 @@ const screenSize = driverManager.currentScreenSize();
 const signupInboxId = config.get( 'signupInboxId' );
 const host = dataHelper.getJetpackHost();
 const locale = driverManager.currentLocale();
-const calypsoBaseURL = config.get( 'calypsoBaseURL' );
 
 let driver;
 
@@ -813,187 +811,6 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 										this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
 										return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
 											return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
-										} );
-									} );
-								} );
-							} );
-						} );
-					} );
-				} );
-			} );
-		} );
-	} );
-
-	test.describe( 'Sign up for a Survey Step free site @parallel', function() {
-		this.bailSuite( true );
-		let stepNum = 1;
-
-		const blogName = dataHelper.getNewBlogName();
-		let newBlogAddress = '';
-		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
-		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-		const password = config.get( 'passwordForNewTestSignUps' );
-
-		test.it( 'Ensure we are not logged in as anyone', function() {
-			return driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		test.describe( `Step ${stepNum}: Survey`, function() {
-			stepNum++;
-
-			test.it( 'When we visit the start URL we see the survey page', function() {
-				this.startPage = new StartPage( driver, { visit: true, culture: locale, flow: 'surveystep' } );
-				this.surveyPage = new SurveyPage( driver );
-				return this.surveyPage.displayed().then( ( displayed ) => {
-					return assert.equal( displayed, true, 'The survey starting page is not displayed' );
-				} );
-			} );
-
-			test.it( 'Can select the first survey option', function() {
-				return this.surveyPage.selectOtherSurveyOption( 'e2e Automated Testing' );
-			} );
-
-			test.describe( `Step ${stepNum}: Design Type Choice`, function() {
-				stepNum++;
-
-				test.it( 'Can see the design type choice page', function() {
-					this.designTypeChoicePage = new DesignTypeChoicePage( driver );
-					return this.designTypeChoicePage.displayed().then( ( displayed ) => {
-						return assert.equal( displayed, true, 'The design type choice page is not displayed' );
-					} );
-				} );
-
-				test.it( 'Can select the first design type', function() {
-					return this.designTypeChoicePage.selectFirstDesignType();
-				} );
-
-				test.describe( `Step ${stepNum}: Themes`, function() {
-					stepNum++;
-
-					test.it( 'Can see the choose a theme page', function() {
-						this.chooseAThemePage = new ChooseAThemePage( driver );
-						return this.chooseAThemePage.displayed().then( ( displayed ) => {
-							return assert.equal( displayed, true, 'The choose a theme start page is not displayed' );
-						} );
-					} );
-
-					test.it( 'Can select the first theme', function() {
-						return this.chooseAThemePage.selectFirstTheme();
-					} );
-
-					test.describe( `Step ${stepNum}: Domains`, function() {
-						stepNum++;
-
-						test.it( 'Can then see the domains page ', function() {
-							this.findADomainComponent = new FindADomainComponent( driver );
-							return this.findADomainComponent.displayed().then( ( displayed ) => {
-								return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
-							} );
-						} );
-
-						test.it( 'Can search for a blog name, can see and select a free .wordpress address in the results', function() {
-							this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-							this.findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
-							this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
-								assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
-								newBlogAddress = actualAddress;
-							} );
-							return this.findADomainComponent.selectFreeAddress();
-						} );
-
-						test.describe( `Step ${stepNum}: Plans`, function() {
-							stepNum++;
-
-							test.it( 'Can then see the plans page', function() {
-								this.pickAPlanPage = new PickAPlanPage( driver );
-								return this.pickAPlanPage.displayed().then( ( displayed ) => {
-									return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
-								} );
-							} );
-
-							test.it( 'Can select the free plan', function() {
-								return this.pickAPlanPage.selectFreePlan();
-							} );
-
-							test.describe( `Step ${stepNum}: Account`, function() {
-								stepNum++;
-
-								test.it( 'Can then see the account page', function() {
-									this.createYourAccountPage = new CreateYourAccountPage( driver );
-									return this.createYourAccountPage.displayed().then( ( displayed ) => {
-										return assert.equal( displayed, true, 'The create account page is not displayed' );
-									} );
-								} );
-
-								test.it( 'Can then enter account details', function() {
-									return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
-								} );
-
-								test.describe( `Step ${stepNum}: Sign Up Processing`, function() {
-									stepNum++;
-
-									test.it( 'Can then see the sign up processing page', function() {
-										this.signupProcessingPage = new SignupProcessingPage( driver );
-										return this.signupProcessingPage.displayed().then( ( displayed ) => {
-											return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
-										} );
-									} );
-
-									test.it( 'The sign up processing page will finish and show a \'Continue\' button', function() {
-										return this.signupProcessingPage.waitForContinueButtonToBeEnabled();
-									} );
-
-									test.it( 'Clicking the \'Continue\' button continues the process', function() {
-										return this.signupProcessingPage.continueAlong();
-									} );
-
-									test.describe( `Step ${stepNum}: View Site/Trampoline`, function() {
-										stepNum++;
-
-										test.it( 'We are on the view blog page, can see trampoline, our URL and title', function() {
-											return this.viewBlogPage = new ViewBlogPage( driver );
-										} );
-
-										test.it( 'Can see the trampoline welcome message displayed', function() {
-											this.viewBlogPage.waitForTrampolineWelcomeMessage();
-											return this.viewBlogPage.isTrampolineWelcomeDisplayed().then( ( displayed ) => {
-												return assert.equal( displayed, true, 'The trampoline welcome message is not displayed' );
-											} );
-										} );
-
-										test.it( 'Can see the correct blog URL displayed', function() {
-											return this.viewBlogPage.urlDisplayed().then( ( url ) => {
-												return assert.equal( url, 'https://' + newBlogAddress + '/', 'The displayed URL on the view blog page is not as expected' );
-											} );
-										} );
-
-										if ( locale === 'en' ) {
-											test.it( 'Can see the correct blog title displayed', function() {
-												return this.viewBlogPage.title().then( ( title ) => {
-													return assert.equal( title, 'Site Title', 'The expected blog title is not displaying correctly' );
-												} );
-											} );
-										}
-
-										test.describe( `Step ${stepNum}: Can not publish until email is confirmed`, function() {
-											stepNum++;
-
-											test.it( 'Can see a disabled publish button', function() {
-												const blogPostTitle = dataHelper.randomPhrase();
-												const blogPostQuote = dataHelper.randomPhrase();
-												driver.get( calypsoBaseURL + '/post/' + newBlogAddress );
-
-												this.editor = new EditorPage( driver );
-												this.editor.enterTitle( blogPostTitle );
-												this.editor.enterContent( blogPostQuote + '\n' );
-
-												this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-												this.postEditorToolbarComponent.ensureSaved();
-
-												return this.editor.publishEnabled().then( ( enabled ) => {
-													return assert.equal( enabled, false, 'Publish button is not enabled when activation link has not been clicked' );
-												} );
-											} );
 										} );
 									} );
 								} );
