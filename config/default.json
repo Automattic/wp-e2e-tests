@@ -65,7 +65,8 @@
     "skipThemesSelectionModal",
     "unlimitedThemeNudge",
     "condensedPostList",
-    "buttonsColorOnPostSignup"
+    "buttonsColorOnPostSignup",
+	"jetpackHidePlanIconsForAllDevices"
   ],
   "overrideABTests": [
 	[ "skipThemesSelectionModal_20170830", "show" ],
