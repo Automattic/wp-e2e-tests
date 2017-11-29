@@ -656,15 +656,15 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 								test.describe( `Step ${stepNum}: Cancel the domain via purchases`, function() {
 									stepNum++;
 
-									test.it( 'Cancel the domaiun', function() {
-										let navBarComponent = new NavBarComponent( driver );
-										navBarComponent.clickProfileLink();
+									test.it( 'Cancel the domain', function() {
+										let sideBarComponent = new SideBarComponent( driver );
+										sideBarComponent.selectSettings();
 
-										let profilePage = new ProfilePage( driver );
-										profilePage.chooseManagePurchases();
+										let domainOnlySettingsPage = new DomainOnlySettingsPage( driver );
+										domainOnlySettingsPage.manageDomain();
 
-										let purchasesPage = new PurchasesPage( driver );
-										purchasesPage.selectDomain( expectedDomainName );
+										let domainDetailsPage = new DomainDetailsPage( driver );
+										domainDetailsPage.viewPaymentSettings();
 
 										let managePurchasePage = new ManagePurchasePage( driver );
 										managePurchasePage.domainDisplayed().then( ( domainDisplayed ) => {
@@ -679,6 +679,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 										cancelDomainPage.completeSurveyAndConfirm();
 										cancelDomainPage.waitToDisappear();
 
+										let purchasesPage = new PurchasesPage( driver );
 										purchasesPage.waitForAndDismissSuccessMessage();
 										return purchasesPage.isEmpty().then( ( empty ) => {
 											return assert( empty, 'The purchases page is not empty after cancelling the domain' );
@@ -865,6 +866,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 											profilePage.chooseManagePurchases();
 
 											let purchasesPage = new PurchasesPage( driver );
+											purchasesPage.dismissGuidedTour();
 											purchasesPage.selectBusinessPlan( driver );
 
 											let managePurchasePage = new ManagePurchasePage( driver );
