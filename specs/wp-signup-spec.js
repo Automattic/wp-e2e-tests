@@ -23,6 +23,11 @@ import MagicLoginPage from '../lib/pages/magic-login-page';
 import ReaderPage from '../lib/pages/reader-page';
 import DomainOnlySettingsPage from '../lib/pages/domain-only-settings-page';
 import DomainDetailsPage from '../lib/pages/domain-details-page';
+import ProfilePage from '../lib/pages/profile-page';
+import PurchasesPage from '../lib/pages/purchases-page';
+import ManagePurchasePage from '../lib/pages/manage-purchase-page';
+import CancelPurchasePage from '../lib/pages/cancel-purchase-page';
+import CancelDomainPage from '../lib/pages/cancel-domain-page';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
@@ -645,6 +650,40 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 										assert( exists, 'The settings menu option does not exist' );
 									} );
 								} );
+
+								test.describe( `Step ${stepNum}: Cancel the domain via purchases`, function() {
+									stepNum++;
+
+									test.it( 'Cancel the domain', function() {
+										let sideBarComponent = new SideBarComponent( driver );
+										sideBarComponent.selectSettings();
+
+										let domainOnlySettingsPage = new DomainOnlySettingsPage( driver );
+										domainOnlySettingsPage.manageDomain();
+
+										let domainDetailsPage = new DomainDetailsPage( driver );
+										domainDetailsPage.viewPaymentSettings();
+
+										let managePurchasePage = new ManagePurchasePage( driver );
+										managePurchasePage.domainDisplayed().then( ( domainDisplayed ) => {
+											assert.equal( domainDisplayed, expectedDomainName, 'The domain displayed on the manage purchase page is unexpected' );
+										} );
+										managePurchasePage.chooseCancelAndRefund();
+
+										let cancelPurchasePage = new CancelPurchasePage( driver );
+										cancelPurchasePage.clickCancelPurchase();
+
+										let cancelDomainPage = new CancelDomainPage( driver );
+										cancelDomainPage.completeSurveyAndConfirm();
+										cancelDomainPage.waitToDisappear();
+
+										let purchasesPage = new PurchasesPage( driver );
+										purchasesPage.waitForAndDismissSuccessMessage();
+										return purchasesPage.isEmpty().then( ( empty ) => {
+											return assert( empty, 'The purchases page is not empty after cancelling the domain' );
+										} );
+									} );
+								} );
 							} );
 						} );
 					} );
@@ -811,6 +850,46 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 										this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
 										return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
 											return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
+										} );
+									} );
+
+									test.describe( `Step ${stepNum}: Cancel the domain via purchases`, function() {
+										stepNum++;
+
+										test.it( 'Cancel the domaiun', function() {
+											let navBarComponent = new NavBarComponent( driver );
+											navBarComponent.clickProfileLink();
+
+											let profilePage = new ProfilePage( driver );
+											profilePage.chooseManagePurchases();
+
+											let purchasesPage = new PurchasesPage( driver );
+											purchasesPage.dismissGuidedTour();
+											purchasesPage.selectBusinessPlan( driver );
+
+											let managePurchasePage = new ManagePurchasePage( driver );
+											managePurchasePage.chooseCancelAndRefund();
+
+											let cancelPurchasePage = new CancelPurchasePage( driver );
+											cancelPurchasePage.clickCancelPurchase();
+											cancelPurchasePage.completeCancellationSurvey();
+											cancelPurchasePage.waitToDisappear();
+											purchasesPage.waitForAndDismissSuccessMessage();
+
+											purchasesPage.selectDomainInPlan( );
+
+											managePurchasePage = new ManagePurchasePage( driver );
+											managePurchasePage.domainDisplayed().then( ( domainDisplayed ) => {
+												assert.equal( domainDisplayed, expectedDomainName, 'The domain displayed on the manage purchase page is unexpected' );
+											} );
+											managePurchasePage.chooseRemovePurchase();
+											managePurchasePage.removeNow();
+											managePurchasePage.waitTillRemoveNoLongerShown();
+
+											purchasesPage.waitForAndDismissSuccessMessage();
+											return purchasesPage.isEmpty().then( ( empty ) => {
+												return assert( empty, 'The purchases page is not empty after cancelling the domain' );
+											} );
 										} );
 									} );
 								} );
