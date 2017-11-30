@@ -872,7 +872,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 											let cancelPurchasePage = new CancelPurchasePage( driver );
 											cancelPurchasePage.clickCancelPurchase();
-											cancelPurchasePage.cancelNowOnSurveyPopup();
+											cancelPurchasePage.completeCancellationSurvey();
 											cancelPurchasePage.waitToDisappear();
 											purchasesPage.waitForAndDismissSuccessMessage();
 
