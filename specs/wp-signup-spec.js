@@ -243,7 +243,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		} );
 	} );
 
-	test.describe( 'Sign up for a site on a premium paid plan through main flow @parallel @canary', function() {
+	test.describe( 'Sign up for a site on a premium paid plan through main flow @parallel', function() {
 		this.bailSuite( true );
 		let stepNum = 1;
 
@@ -901,7 +901,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		} );
 	} );
 
-	test.describe( 'Partially sign up for a site on a business paid plan w/ domain name through main flow @parallel @canary', function() {
+	test.describe( 'Partially sign up for a site on a business paid plan w/ domain name through main flow @parallel', function() {
 		this.bailSuite( true );
 		let stepNum = 1;
 
@@ -1038,6 +1038,136 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 									this.securePaymentComponent = new SecurePaymentComponent( driver );
 									return this.securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
 								} );
+							} );
+						} );
+					} );
+				} );
+			} );
+		} );
+	} );
+
+	test.describe( 'Basic sign up for a free site @parallel @email @canary', function() {
+		this.bailSuite( true );
+		let stepNum = 1;
+
+		const blogName = dataHelper.getNewBlogName();
+		let newBlogAddress = '';
+		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
+		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
+		const password = config.get( 'passwordForNewTestSignUps' );
+
+		test.it( 'Ensure we are not logged in as anyone', function() {
+			return driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		test.describe( `Step ${stepNum}: Design Type Choice`, function() {
+			stepNum++;
+
+			test.it( 'Can see the design type choice page', function() {
+				this.startPage = new StartPage( driver, { visit: true, culture: locale } );
+				this.designTypeChoicePage = new DesignTypeChoicePage( driver );
+				return this.designTypeChoicePage.displayed().then( ( displayed ) => {
+					return assert.equal( displayed, true, 'The design type choice page is not displayed' );
+				} );
+			} );
+
+			test.it( 'Can select the first design type', function() {
+				this.designTypeChoicePage.selectFirstDesignType();
+			} );
+
+			test.describe( `Step ${stepNum}: Domains`, function() {
+				stepNum++;
+
+				test.it( 'Can then see the domains page ', function() {
+					this.findADomainComponent = new FindADomainComponent( driver );
+					return this.findADomainComponent.displayed().then( ( displayed ) => {
+						return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
+					} );
+				} );
+
+				test.it( 'Can search for a blog name, can see and select a free .wordpress address in the results', function() {
+					this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+					this.findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
+					this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
+						assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
+						newBlogAddress = actualAddress;
+					} );
+					return this.findADomainComponent.selectFreeAddress();
+				} );
+
+				test.describe( `Step ${stepNum}: Plans`, function() {
+					stepNum++;
+
+					test.it( 'Can then see the plans page', function() {
+						this.pickAPlanPage = new PickAPlanPage( driver );
+						return this.pickAPlanPage.displayed().then( ( displayed ) => {
+							return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
+						} );
+					} );
+
+					test.it( 'Can select the free plan', function() {
+						return this.pickAPlanPage.selectFreePlan();
+					} );
+
+					test.describe( `Step ${stepNum}: Account`, function() {
+						stepNum++;
+
+						test.it( 'Can then see the account page', function() {
+							this.createYourAccountPage = new CreateYourAccountPage( driver );
+							return this.createYourAccountPage.displayed().then( ( displayed ) => {
+								return assert.equal( displayed, true, 'The create account page is not displayed' );
+							} );
+						} );
+
+						test.it( 'Can then enter account details', function() {
+							return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
+						} );
+
+						test.describe( `Step ${stepNum}: Sign Up Processing`, function() {
+							stepNum++;
+
+							test.it( 'Can then see the sign up processing page', function() {
+								this.signupProcessingPage = new SignupProcessingPage( driver );
+								return this.signupProcessingPage.displayed().then( ( displayed ) => {
+									return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
+								} );
+							} );
+
+							test.it( 'The sign up processing page will finish and show a \'Continue\' button', function() {
+								return this.signupProcessingPage.waitForContinueButtonToBeEnabled();
+							} );
+
+							test.it( 'Clicking the \'Continue\' button continues the process', function() {
+								return this.signupProcessingPage.continueAlong();
+							} );
+
+							test.describe( `Step ${stepNum}: View Site/Trampoline`, function() {
+								stepNum++;
+
+								test.it( 'We are on the view blog page, can see trampoline, our URL and title', function() {
+									return this.viewBlogPage = new ViewBlogPage( driver );
+								} );
+
+								test.it( 'Can see the trampoline welcome message displayed', function() {
+									this.viewBlogPage.waitForTrampolineWelcomeMessage();
+									return this.viewBlogPage.isTrampolineWelcomeDisplayed().then( ( displayed ) => {
+										return assert.equal( displayed, true, 'The trampoline welcome message is not displayed' );
+									} );
+								} );
+
+								test.it( 'Can see the correct blog URL displayed', function() {
+									return this.viewBlogPage.urlDisplayed().then( ( url ) => {
+										return assert.equal( url, 'https://' + newBlogAddress + '/', 'The displayed URL on the view blog page is not as expected' );
+									} );
+								} );
+
+								if ( locale === 'en' ) {
+									test.it( 'Can see the correct blog title displayed', function() {
+										return this.viewBlogPage.title().then( ( title ) => {
+											return assert.equal( title, 'Site Title', 'The expected blog title is not displaying correctly' );
+										} );
+									} );
+								}
 							} );
 						} );
 					} );
