@@ -66,11 +66,14 @@
     "unlimitedThemeNudge",
     "condensedPostList",
     "buttonsColorOnPostSignup",
-	"jetpackHidePlanIconsForAllDevices"
+    "jetpackHidePlanIconsForAllDevices",
+    "signupSiteSegmentStep"
   ],
   "overrideABTests": [
 	[ "skipThemesSelectionModal_20170830", "show" ],
 	[ "gsuiteUpsell_20171025", "hide" ],
-	[ "domainsCheckoutLocalizedAddresses_20171025", "showDefaultAddressFormat" ]
+	[ "domainsCheckoutLocalizedAddresses_20171025", "showDefaultAddressFormat" ],
+	[ "signupSiteSegmentStep_20170329", "control" ]
+
   ]
 }
