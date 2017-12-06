@@ -859,13 +859,14 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 					} );
 				} );
 
-				test.it( 'Can set the new title and save it', function() {
+				test.it( 'Can set the new title and update it, and link to the updated post', function() {
 					this.editorPage.enterTitle( updatedBlogPostTitle );
 					this.editorPage.errorDisplayed().then( ( errorShown ) => {
 						assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 					} );
 					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					this.postEditorToolbarComponent.publishAndViewContent();
+					this.postEditorToolbarComponent.publishThePost();
+					return this.postEditorToolbarComponent.waitForSuccessAndViewPost();
 				} );
 
 				test.describe( 'Can view the post with the new title', function() {
