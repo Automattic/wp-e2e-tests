@@ -243,7 +243,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		} );
 	} );
 
-	test.describe( 'Sign up for a site on a premium paid plan through main flow @parallel', function() {
+	test.describe( 'Sign up for a site on a premium paid plan through main flow @canary @parallel', function() {
 		this.bailSuite( true );
 		let stepNum = 1;
 
@@ -901,7 +901,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		} );
 	} );
 
-	test.describe( 'Partially sign up for a site on a business paid plan w/ domain name through main flow @parallel', function() {
+	test.describe( 'Partially sign up for a site on a business paid plan w/ domain name through main flow @canary @parallel', function() {
 		this.bailSuite( true );
 		let stepNum = 1;
 
@@ -1046,7 +1046,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		} );
 	} );
 
-	test.describe( 'Basic sign up for a free site @parallel @email @canary', function() {
+	test.describe( 'Basic sign up for a free site @parallel @email', function() {
 		this.bailSuite( true );
 		let stepNum = 1;
 
