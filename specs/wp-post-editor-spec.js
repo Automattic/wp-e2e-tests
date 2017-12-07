@@ -86,30 +86,32 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 
 					test.it( 'Can add a new category', function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						postEditorSidebarComponent.addNewCategory( newCategoryName );
-						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
-							assert( ! subtitle.match( /Uncategorized/ ), 'Post still marked Uncategorized after adding new category BEFORE SAVE' );
-						} );
-						postEditorToolbarComponent.ensureSaved();
-						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
-							assert( ! subtitle.match( /Uncategorized/ ), 'Post still marked Uncategorized after adding new category AFTER SAVE' );
-						} );
 					} );
 
 					test.it( 'Can add a new tag', function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						postEditorSidebarComponent.addNewTag( newTagName );
-						postEditorToolbarComponent.ensureSaved();
-						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
-							assert( subtitle.match( `#${newTagName}` ), `New tag #${newTagName} not applied` );
-						} );
 					} );
 
 					test.it( 'Close categories and tags', function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 						postEditorSidebarComponent.closeCategoriesAndTags();
+					} );
+
+					test.it( 'Verify categories and tags present after save', function() {
+						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+
+						postEditorSidebarComponent.hideComponentIfNecessary();
+						postEditorToolbarComponent.ensureSaved();
+						postEditorSidebarComponent.displayComponentIfNecessary()
+						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
+							assert( ! subtitle.match( /Uncategorized/ ), 'Post still marked Uncategorized after adding new category AFTER SAVE' );
+						} );
+						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
+							assert( subtitle.match( `#${newTagName}` ), `New tag #${newTagName} not applied` );
+						} );
 					} );
 
 					test.describe( 'Publicize Options', function() {
@@ -147,6 +149,9 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 						test.describe( 'Preview (https only)', function() {
 							if ( httpsHost ) {
 								test.it( 'Can launch post preview', function() {
+									let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+									postEditorSidebarComponent.hideComponentIfNecessary();
+
 									this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 									this.postEditorToolbarComponent.ensureSaved();
 									this.postEditorToolbarComponent.launchPreview();
@@ -240,7 +245,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 							} else { // Jetpack tests
 								test.it( 'Can publish content', function() {
 									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-									postEditorToolbarComponent.publishThePost(  { useConfirmStep: true } );
+									postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 								} );
 							}
 
