@@ -607,14 +607,14 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 							} );
 						} );
 
-						test.xit( 'Can enter and submit test payment details', function() {
+						test.it( 'Can enter and submit test payment details', function() {
 							this.securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
 							this.securePaymentComponent.submitPaymentDetails();
 							this.securePaymentComponent.waitForCreditCardPaymentProcessing();
 							return this.securePaymentComponent.waitForPageToDisappear();
 						} );
 
-						test.xdescribe( `Step ${stepNum}: Checkout Thank You Page`, function() {
+						test.describe( `Step ${stepNum}: Checkout Thank You Page`, function() {
 							stepNum++;
 
 							test.it( 'Can see the secure check out thank you page and click "go to my domain" button to see the domain only settings page', function() {
