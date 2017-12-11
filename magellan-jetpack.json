@@ -13,5 +13,6 @@
   "framework": "testarmada-magellan-mocha-plugin",
   "reporters": [
 	  "./lib/reporter/magellan-reporter.js"
-  ]
+	],
+	"setup_teardown": "./scripts/jetpack/mgln_setup_teardown.js"
 }
