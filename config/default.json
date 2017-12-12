@@ -64,7 +64,6 @@
     "presaleChatButton",
     "skipThemesSelectionModal",
     "unlimitedThemeNudge",
-    "condensedPostList",
     "jetpackHidePlanIconsForAllDevices",
     "signupSiteSegmentStep",
     "checklistThankYouForFreeUser",
@@ -77,6 +76,5 @@
 	[ "signupSiteSegmentStep_20170329", "control" ],
 	[ "checklistThankYouForFreeUser_20171204", "hide" ],
 	[ "checklistThankYouForPaidUser_20171204", "hide" ]
-
   ]
 }
