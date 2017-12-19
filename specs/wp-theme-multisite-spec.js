@@ -5,6 +5,7 @@ import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper';
 
+import ThemeDetailPage from '../lib/pages/theme-detail-page.js';
 import ThemesPage from '../lib/pages/themes-page.js';
 import CustomizerPage from '../lib/pages/customizer-page.js';
 
@@ -20,9 +21,11 @@ const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
 
+let driver;
+
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
-	this.driver = driverManager.startBrowser();
+	driver = driverManager.startBrowser();
 } );
 
 test.describe( `[${host}] Themes: All sites (${screenSize})`, function() {
@@ -34,17 +37,17 @@ test.describe( `[${host}] Themes: All sites (${screenSize})`, function() {
 			this.themeSearchName = 'twenty';
 			this.expectedTheme = 'Twenty F';
 
-			driverManager.clearCookiesAndDeleteLocalStorage( this.driver );
+			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 
-			this.loginFlow = new LoginFlow( this.driver, 'multiSiteUser' );
+			this.loginFlow = new LoginFlow( driver, 'multiSiteUser' );
 			this.loginFlow.loginAndSelectAllSites();
 
-			this.sidebarComponent = new SidebarComponent( this.driver );
+			this.sidebarComponent = new SidebarComponent( driver );
 			this.sidebarComponent.selectThemes();
 		} );
 
 		test.it( 'can search for free themes', function() {
-			this.themesPage = new ThemesPage( this.driver );
+			this.themesPage = new ThemesPage( driver );
 			this.themesPage.showOnlyFreeThemes();
 			this.themesPage.searchFor( this.themeSearchName );
 
@@ -63,7 +66,7 @@ test.describe( `[${host}] Themes: All sites (${screenSize})`, function() {
 			test.describe( 'when "Try & Customize" is clicked', function() {
 				test.it( 'click try and customize popover', function() {
 					this.themesPage.clickPopoverItem( 'Try & Customize' );
-					this.siteSelector = new SiteSelectorComponent( this.driver );
+					this.siteSelector = new SiteSelectorComponent( driver );
 				} );
 
 				test.it( 'should show the site selector', function() {
@@ -79,8 +82,8 @@ test.describe( `[${host}] Themes: All sites (${screenSize})`, function() {
 					} );
 
 					test.it( 'should open the customizer with the selected site and theme', function( done ) {
-						this.customizerPage = new CustomizerPage( this.driver );
-						this.driver.getCurrentUrl().then( ( url ) => {
+						this.customizerPage = new CustomizerPage( driver );
+						driver.getCurrentUrl().then( ( url ) => {
 							assert.include( url, this.siteSelector.selectedSiteDomain, 'Wrong site domain' );
 							assert.include( url, this.themeSearchName, 'Wrong theme' );
 							done();
@@ -103,17 +106,17 @@ test.describe( `[${host}] Themes: All sites (${screenSize})`, function() {
 			this.themeSearchName = 'twenty';
 			this.expectedTheme = 'Twenty F';
 
-			driverManager.clearCookiesAndDeleteLocalStorage( this.driver );
+			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 
-			this.loginFlow = new LoginFlow( this.driver, 'multiSiteUser' );
+			this.loginFlow = new LoginFlow( driver, 'multiSiteUser' );
 			this.loginFlow.loginAndSelectAllSites();
 
-			this.sidebarComponent = new SidebarComponent( this.driver );
+			this.sidebarComponent = new SidebarComponent( driver );
 			this.sidebarComponent.selectThemes();
 		} );
 
 		test.it( 'can search for free themes', function() {
-			this.themesPage = new ThemesPage( this.driver );
+			this.themesPage = new ThemesPage( driver );
 			this.themesPage.showOnlyFreeThemes();
 			this.themesPage.searchFor( this.themeSearchName );
 			this.themesPage.waitForThemeStartingWith( this.expectedTheme );
@@ -135,7 +138,7 @@ test.describe( `[${host}] Themes: All sites (${screenSize})`, function() {
 			test.describe( 'when Activate is clicked', function() {
 				test.it( 'can click activate', function() {
 					this.themesPage.clickPopoverItem( 'Activate' );
-					return this.siteSelector = new SiteSelectorComponent( this.driver );
+					return this.siteSelector = new SiteSelectorComponent( driver );
 				} );
 
 				test.it( 'shows the site selector', function() {
@@ -151,12 +154,14 @@ test.describe( `[${host}] Themes: All sites (${screenSize})`, function() {
 
 				test.describe( 'Successful activation dialog', function() {
 					test.it( 'should show the successful activation dialog', function() {
-						const themeDialogComponent = new ThemeDialogComponent( this.driver );
-						return themeDialogComponent.goBackToThemes();
+						const themeDialogComponent = new ThemeDialogComponent( driver );
+						return themeDialogComponent.goToThemeDetail();
 					} );
 
 					test.it( 'should show the correct theme in the current theme bar', function() {
-						this.currentThemeComponent = new CurrentThemeComponent( this.driver );
+						this.themeDetailPage = new ThemeDetailPage( driver );
+						this.themeDetailPage.goBackToAllThemes();
+						this.currentThemeComponent = new CurrentThemeComponent( driver );
 						return this.currentThemeComponent.getThemeName().then( ( name ) => {
 							return assert.equal( name, this.currentThemeName );
 						} );
