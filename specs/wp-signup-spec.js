@@ -675,13 +675,13 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 										let cancelDomainPage = new CancelDomainPage( driver );
 										cancelDomainPage.completeSurveyAndConfirm();
-										return cancelDomainPage.waitToDisappear();
+										cancelDomainPage.waitToDisappear();
 
-//										let purchasesPage = new PurchasesPage( driver );
-//										purchasesPage.waitForAndDismissSuccessMessage();
-//										return purchasesPage.isEmpty().then( ( empty ) => {
-//											return assert( empty, 'The purchases page is not empty after cancelling the domain' );
-//										} );
+										let purchasesPage = new PurchasesPage( driver );
+										purchasesPage.waitForAndDismissSuccessMessage();
+										return purchasesPage.isEmpty().then( ( empty ) => {
+											return assert( empty, 'The purchases page is not empty after cancelling the domain' );
+										} );
 									} );
 								} );
 							} );
