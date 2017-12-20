@@ -45,7 +45,6 @@
     "selenium-webdriver": "3.6.0",
     "serverpilot": "0.1.2",
     "slack-notify": "0.1.4",
-    "spec-xunit-reporter": "file:spec-xunit-reporter-0.0.1.tgz",
     "testarmada-magellan": "8.8.6",
     "testarmada-magellan-mocha-plugin": "hoverduck/magellan-mocha-plugin#40a619c",
     "xml2json-command": "^0.0.3",
