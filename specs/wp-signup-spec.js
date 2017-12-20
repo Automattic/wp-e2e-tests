@@ -9,7 +9,7 @@ import * as driverHelper from '../lib/driver-helper.js';
 import WPHomePage from '../lib/pages/wp-home-page.js';
 import ChooseAThemePage from '../lib/pages/signup/choose-a-theme-page.js';
 import StartPage from '../lib/pages/signup/start-page.js';
-import DesignTypeChoicePage from '../lib/pages/signup/design-type-choice-page.js';
+import AboutPage from '../lib/pages/signup/about-page.js';
 import DomainFirstPage from '../lib/pages/signup/domain-first-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page.js';
 import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.js';
@@ -77,19 +77,19 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.describe( `Step ${stepNum}: Design Type Choice`, function() {
+		test.describe( `Step ${stepNum}: About Page`, function() {
 			stepNum++;
 
-			test.it( 'Can see the design type choice page', function() {
+			test.it( 'Can see the about page', function() {
 				this.startPage = new StartPage( driver, { visit: true, culture: locale } );
-				this.designTypeChoicePage = new DesignTypeChoicePage( driver );
-				return this.designTypeChoicePage.displayed().then( ( displayed ) => {
-					return assert.equal( displayed, true, 'The design type choice page is not displayed' );
+				this.aboutPage = new AboutPage( driver );
+				return this.aboutPage.displayed().then( ( displayed ) => {
+					return assert.equal( displayed, true, 'The about page is not displayed' );
 				} );
 			} );
 
-			test.it( 'Can select the first design type', function() {
-				this.designTypeChoicePage.selectFirstDesignType();
+			test.it( 'Can accept defaults for about page', function() {
+				this.aboutPage.submitForm();
 			} );
 
 			test.describe( `Step ${stepNum}: Domains`, function() {
@@ -264,19 +264,19 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			return this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 		} );
 
-		test.describe( `Step ${stepNum}: Design Type Choice`, function() {
+		test.describe( `Step ${stepNum}: About Page`, function() {
 			stepNum++;
 
-			test.it( 'Can see the design type choice page', function() {
+			test.it( 'Can see the about page', function() {
 				this.startPage = new StartPage( driver, { visit: true, culture: locale } );
-				this.designTypeChoicePage = new DesignTypeChoicePage( driver );
-				return this.designTypeChoicePage.displayed().then( ( displayed ) => {
-					return assert.equal( displayed, true, 'The design type choice page is not displayed' );
+				this.aboutPage = new AboutPage( driver );
+				return this.aboutPage.displayed().then( ( displayed ) => {
+					return assert.equal( displayed, true, 'The about page is not displayed' );
 				} );
 			} );
 
-			test.it( 'Can select the first design type', function() {
-				return this.designTypeChoicePage.selectFirstDesignType();
+			test.it( 'Can accept defaults for about page', function() {
+				this.aboutPage.submitForm();
 			} );
 
 			test.describe( `Step ${stepNum}: Domains`, function() {
@@ -410,19 +410,19 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			return this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 		} );
 
-		test.describe( `Step ${stepNum}: Design Type Choice`, function() {
+		test.describe( `Step ${stepNum}: About Page`, function() {
 			stepNum++;
 
-			test.it( 'Can see the design type choice page', function() {
-				this.startPage = new StartPage( driver, { visit: true, culture: locale, flow: 'premium' } );
-				this.designTypeChoicePage = new DesignTypeChoicePage( driver );
-				return this.designTypeChoicePage.displayed().then( ( displayed ) => {
-					return assert.equal( displayed, true, 'The design type choice page is not displayed' );
+			test.it( 'Can see the about page', function() {
+				this.startPage = new StartPage( driver, { visit: true, culture: locale } );
+				this.aboutPage = new AboutPage( driver );
+				return this.aboutPage.displayed().then( ( displayed ) => {
+					return assert.equal( displayed, true, 'The about page is not displayed' );
 				} );
 			} );
 
-			test.it( 'Can select the first design type', function() {
-				return this.designTypeChoicePage.selectFirstDesignType();
+			test.it( 'Can accept defaults for about page', function() {
+				this.aboutPage.submitForm();
 			} );
 
 			test.describe( `Step ${stepNum}: Themes`, function() {
@@ -720,20 +720,19 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 		} );
 
-		test.describe( `Step ${stepNum}: Design Type Choice`, function() {
+		test.describe( `Step ${stepNum}: About Page`, function() {
 			stepNum++;
 
-			test.it( 'Can see the design type choice page', function() {
-				this.startPage = new StartPage( driver, { visit: true, culture: locale, flow: 'business' } );
-
-				this.designTypeChoicePage = new DesignTypeChoicePage( driver );
-				return this.designTypeChoicePage.displayed().then( ( displayed ) => {
-					return assert.equal( displayed, true, 'The design type choice page is not displayed' );
+			test.it( 'Can see the about page', function() {
+				this.startPage = new StartPage( driver, { visit: true, culture: locale } );
+				this.aboutPage = new AboutPage( driver );
+				return this.aboutPage.displayed().then( ( displayed ) => {
+					return assert.equal( displayed, true, 'The about page is not displayed' );
 				} );
 			} );
 
-			test.it( 'Can select the first design type', function() {
-				this.designTypeChoicePage.selectFirstDesignType();
+			test.it( 'Can accept defaults for about page', function() {
+				this.aboutPage.submitForm();
 			} );
 
 			test.describe( `Step ${stepNum}: Themes`, function() {
@@ -929,20 +928,19 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 		} );
 
-		test.describe( `Step ${stepNum}: Design Type Choice`, function() {
+		test.describe( `Step ${stepNum}: About Page`, function() {
 			stepNum++;
 
-			test.it( 'Can see the design type choice page', function() {
+			test.it( 'Can see the about page', function() {
 				this.startPage = new StartPage( driver, { visit: true, culture: locale } );
-
-				this.designTypeChoicePage = new DesignTypeChoicePage( driver );
-				return this.designTypeChoicePage.displayed().then( ( displayed ) => {
-					return assert.equal( displayed, true, 'The design type choice page is not displayed' );
+				this.aboutPage = new AboutPage( driver );
+				return this.aboutPage.displayed().then( ( displayed ) => {
+					return assert.equal( displayed, true, 'The about page is not displayed' );
 				} );
 			} );
 
-			test.it( 'Can select the first design type', function() {
-				this.designTypeChoicePage.selectFirstDesignType();
+			test.it( 'Can accept defaults for about page', function() {
+				this.aboutPage.submitForm();
 			} );
 
 			test.describe( `Step ${stepNum}: Domains`, function() {
@@ -1060,19 +1058,19 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.describe( `Step ${stepNum}: Design Type Choice`, function() {
+		test.describe( `Step ${stepNum}: About Page`, function() {
 			stepNum++;
 
-			test.it( 'Can see the design type choice page', function() {
+			test.it( 'Can see the about page', function() {
 				this.startPage = new StartPage( driver, { visit: true, culture: locale } );
-				this.designTypeChoicePage = new DesignTypeChoicePage( driver );
-				return this.designTypeChoicePage.displayed().then( ( displayed ) => {
-					return assert.equal( displayed, true, 'The design type choice page is not displayed' );
+				this.aboutPage = new AboutPage( driver );
+				return this.aboutPage.displayed().then( ( displayed ) => {
+					return assert.equal( displayed, true, 'The about page is not displayed' );
 				} );
 			} );
 
-			test.it( 'Can select the first design type', function() {
-				this.designTypeChoicePage.selectFirstDesignType();
+			test.it( 'Can accept defaults for about page', function() {
+				this.aboutPage.submitForm();
 			} );
 
 			test.describe( `Step ${stepNum}: Domains`, function() {
