@@ -414,7 +414,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			stepNum++;
 
 			test.it( 'Can see the about page', function() {
-				this.startPage = new StartPage( driver, { visit: true, culture: locale } );
+				this.startPage = new StartPage( driver, { visit: true, culture: locale, flow: 'premium' } );
 				this.aboutPage = new AboutPage( driver );
 				return this.aboutPage.displayed().then( ( displayed ) => {
 					return assert.equal( displayed, true, 'The about page is not displayed' );
@@ -724,7 +724,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			stepNum++;
 
 			test.it( 'Can see the about page', function() {
-				this.startPage = new StartPage( driver, { visit: true, culture: locale } );
+				this.startPage = new StartPage( driver, { visit: true, culture: locale, flow: 'business' } );
 				this.aboutPage = new AboutPage( driver );
 				return this.aboutPage.displayed().then( ( displayed ) => {
 					return assert.equal( displayed, true, 'The about page is not displayed' );
