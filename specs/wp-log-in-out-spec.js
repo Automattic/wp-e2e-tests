@@ -53,8 +53,8 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, f
 
 		let passwordlessUser;
 		if ( passwordlessUser = config.get( 'testAccounts' )[ 'passwordlessUser' ] ) {
-			test.describe.only( 'Can Log in without a password', function() {
-				test.describe( 'Can enter the passwordless flow by entering the email of an account which does not have a password defined', function() {
+			test.describe( 'Can Log in on a passwordless account', function() {
+				test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
 					let magicLoginLink;
 					test.before( function () {
 						this.emailClient = new EmailClient( config.get( 'passwordlessInboxId' ) );
