@@ -5,9 +5,11 @@ import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper';
 
+import EmailClient from '../lib/email-client.js';
 import ReaderPage from '../lib/pages/reader-page';
 import ProfilePage from '../lib/pages/profile-page';
 import WPHomePage from '../lib/pages/wp-home-page';
+import MagicLoginPage from '../lib/pages/magic-login-page';
 
 import NavbarComponent from '../lib/components/navbar-component.js';
 import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component'
@@ -48,6 +50,40 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, f
 				} );
 			} );
 		} );
+
+		let passwordlessUser;
+		if ( passwordlessUser = config.get( 'testAccounts' )[ 'passwordlessUser' ] ) {
+			test.describe.only( 'Can Log in without a password', function() {
+				test.describe( 'Can enter the passwordless flow by entering the email of an account which does not have a password defined', function() {
+					let magicLoginLink;
+					test.before( function () {
+						this.emailClient = new EmailClient( config.get( 'passwordlessInboxId' ) );
+						let loginFlow = new LoginFlow( driver, 'passwordlessUser' );
+						return loginFlow.login();
+					} );
+
+					test.it( 'Visit the magic link to log in', function() {
+						return this.emailClient.getNewEmailsByRecipient( passwordlessUser[0] ).then( function( emails ) {
+							assert.equal( emails.length, 1, 'The number of magic link emails is not equal to 1' );
+							magicLoginLink = emails[0].html.links[0].href;
+							assert( magicLoginLink !== undefined, 'Could not locate the magic login link email link' );
+						} );
+					} );
+
+					test.describe( 'Can use the magic link to log in', function() {
+						test.it( 'Visit the magic link and we\'re logged in', function() {
+							driver.get( magicLoginLink );
+							this.magicLoginPage = new MagicLoginPage( driver );
+							this.magicLoginPage.finishLogin();
+							let readerPage = new ReaderPage( driver );
+							return readerPage.displayed().then( function( displayed ) {
+								return assert.equal( displayed, true, 'The reader page is not displayed after log in' );
+							} );
+						} );
+					} );
+				} );
+			} );
+		}
 
 		// Test Jetpack SSO
 		if ( host !== 'WPCOM' ) {
