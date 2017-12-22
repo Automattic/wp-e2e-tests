@@ -59,7 +59,7 @@
   "knownABTestKeys": [
     "businessPlanDescriptionAT",
     "domainsCheckoutLocalizedAddresses",
-    "gsuiteUpsellTake2",
+    "gsuiteUpsellV2",
     "multiDomainRegistrationV1",
     "presaleChatButton",
     "skipThemesSelectionModal",
@@ -71,7 +71,7 @@
   ],
   "overrideABTests": [
 	[ "skipThemesSelectionModal_20170830", "show" ],
-	[ "gsuiteUpsellTake2_20171225", "original" ],
+	[ "gsuiteUpsellV2_20171225", "original" ],
 	[ "domainsCheckoutLocalizedAddresses_20171025", "showDefaultAddressFormat" ],
 	[ "signupSiteSegmentStep_20170329", "variant" ],
 	[ "checklistThankYouForFreeUser_20171204", "hide" ],
