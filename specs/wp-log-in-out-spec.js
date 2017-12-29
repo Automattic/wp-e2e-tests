@@ -88,41 +88,43 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, f
 		} );
 	} );
 
-	test.describe( 'Can Log in on a passwordless account', function() {
-		test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
-			let magicLoginLink, loginFlow;
-			test.before( function () {
-				loginFlow = new LoginFlow( driver, [ 'passwordless' ] );
-				this.emailClient = new EmailClient( get( loginFlow.account, 'mailosaur.inboxId' ) );
-				return loginFlow.login();
-			} );
-
-			test.it( 'Can find the magic link in the email received', function() {
-				return this.emailClient.getNewEmailsByRecipient( loginFlow.account.email ).then( function( emails ) {
-					for ( let email of emails ) {
-						if ( email.subject.indexOf( 'WordPress.com' ) > -1 ) {
-							magicLoginLink = email.html.links[0].href;
-							break;
-						}
-					}
-					assert( magicLoginLink !== undefined, 'Could not locate the magic login link email link' );
-					return true;
+	if ( dataHelper.hasAccountWithFeatures( 'passwordless' ) ) {
+		test.describe( 'Can Log in on a passwordless account', function() {
+			test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
+				let magicLoginLink, loginFlow;
+				test.before( function () {
+					loginFlow = new LoginFlow( driver, [ 'passwordless' ] );
+					this.emailClient = new EmailClient( get( loginFlow.account, 'mailosaur.inboxId' ) );
+					return loginFlow.login();
 				} );
-			} );
 
-			test.describe( 'Can use the magic link to log in', function() {
-				test.it( 'Visit the magic link and we\'re logged in', function() {
-					driver.get( magicLoginLink );
-					this.magicLoginPage = new MagicLoginPage( driver );
-					this.magicLoginPage.finishLogin();
-					let readerPage = new ReaderPage( driver );
-					return readerPage.displayed().then( function( displayed ) {
-						return assert.equal( displayed, true, 'The reader page is not displayed after log in' );
+				test.it( 'Can find the magic link in the email received', function() {
+					return this.emailClient.getNewEmailsByRecipient( loginFlow.account.email ).then( function( emails ) {
+						for ( let email of emails ) {
+							if ( email.subject.indexOf( 'WordPress.com' ) > -1 ) {
+								magicLoginLink = email.html.links[0].href;
+								break;
+							}
+						}
+						assert( magicLoginLink !== undefined, 'Could not locate the magic login link email link' );
+						return true;
+					} );
+				} );
+
+				test.describe( 'Can use the magic link to log in', function() {
+					test.it( 'Visit the magic link and we\'re logged in', function() {
+						driver.get( magicLoginLink );
+						this.magicLoginPage = new MagicLoginPage( driver );
+						this.magicLoginPage.finishLogin();
+						let readerPage = new ReaderPage( driver );
+						return readerPage.displayed().then( function( displayed ) {
+							return assert.equal( displayed, true, 'The reader page is not displayed after log in' );
+						} );
 					} );
 				} );
 			} );
 		} );
-	} );
+	}
 } );
 
 
