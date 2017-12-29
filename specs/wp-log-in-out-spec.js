@@ -1,5 +1,6 @@
 import assert from 'assert';
 import test from 'selenium-webdriver/testing';
+import { get } from 'lodash';
 
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
@@ -32,10 +33,11 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, f
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
+	test.beforeEach( function() {
+		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	} );
+
 	test.describe( 'Logging In and Out:', function() {
-		test.before( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
-		} );
 
 		test.describe( 'Can Log In', function() {
 			test.it( 'Can log in', function() {
@@ -50,40 +52,6 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, f
 				} );
 			} );
 		} );
-
-		let passwordlessUser;
-		if ( passwordlessUser = config.get( 'testAccounts' )[ 'passwordlessUser' ] ) {
-			test.describe( 'Can Log in on a passwordless account', function() {
-				test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
-					let magicLoginLink;
-					test.before( function () {
-						this.emailClient = new EmailClient( config.get( 'passwordlessInboxId' ) );
-						let loginFlow = new LoginFlow( driver, 'passwordlessUser' );
-						return loginFlow.login();
-					} );
-
-					test.it( 'Visit the magic link to log in', function() {
-						return this.emailClient.getNewEmailsByRecipient( passwordlessUser[0] ).then( function( emails ) {
-							assert.equal( emails.length, 1, 'The number of magic link emails is not equal to 1' );
-							magicLoginLink = emails[0].html.links[0].href;
-							assert( magicLoginLink !== undefined, 'Could not locate the magic login link email link' );
-						} );
-					} );
-
-					test.describe( 'Can use the magic link to log in', function() {
-						test.it( 'Visit the magic link and we\'re logged in', function() {
-							driver.get( magicLoginLink );
-							this.magicLoginPage = new MagicLoginPage( driver );
-							this.magicLoginPage.finishLogin();
-							let readerPage = new ReaderPage( driver );
-							return readerPage.displayed().then( function( displayed ) {
-								return assert.equal( displayed, true, 'The reader page is not displayed after log in' );
-							} );
-						} );
-					} );
-				} );
-			} );
-		}
 
 		// Test Jetpack SSO
 		if ( host !== 'WPCOM' ) {
@@ -119,7 +87,44 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, f
 			} );
 		} );
 	} );
+
+	test.describe( 'Can Log in on a passwordless account', function() {
+		test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
+			let magicLoginLink, loginFlow;
+			test.before( function () {
+				loginFlow = new LoginFlow( driver, [ 'passwordless' ] );
+				this.emailClient = new EmailClient( get( loginFlow.account, 'mailosaur.inboxId' ) );
+				return loginFlow.login();
+			} );
+
+			test.it( 'Can find the magic link in the email received', function() {
+				return this.emailClient.getNewEmailsByRecipient( loginFlow.account.email ).then( function( emails ) {
+					for ( let email of emails ) {
+						if ( email.subject.indexOf( 'WordPress.com' ) > -1 ) {
+							magicLoginLink = email.html.links[0].href;
+							break;
+						}
+					}
+					assert( magicLoginLink !== undefined, 'Could not locate the magic login link email link' );
+					return true;
+				} );
+			} );
+
+			test.describe( 'Can use the magic link to log in', function() {
+				test.it( 'Visit the magic link and we\'re logged in', function() {
+					driver.get( magicLoginLink );
+					this.magicLoginPage = new MagicLoginPage( driver );
+					this.magicLoginPage.finishLogin();
+					let readerPage = new ReaderPage( driver );
+					return readerPage.displayed().then( function( displayed ) {
+						return assert.equal( displayed, true, 'The reader page is not displayed after log in' );
+					} );
+				} );
+			} );
+		} );
+	} );
 } );
+
 
 test.describe( `[${host}] User Agent: (${screenSize}) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
