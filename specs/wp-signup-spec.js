@@ -39,7 +39,7 @@ import * as SlackNotifier from '../lib/slack-notifier';
 
 import EmailClient from '../lib/email-client.js';
 import ThemesPage from '../lib/pages/themes-page';
-import ThemePage from '../lib/pages/theme-page';
+import ThemeDetailPage from '../lib/pages/theme-detail-page';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -1193,22 +1193,22 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			stepNum++;
 
 			test.it( 'Can see the themes page', function() {
-				this.themesPage = new ThemesPage( driver, true )
+				this.themesPage = new ThemesPage( driver, true );
 				return this.themesPage.displayed().then( ( displayed ) => {
 					return assert.equal( displayed, true, 'The about page is not displayed' );
 				} );
 			} );
 
 			test.it( 'Can select premium theme', function() {
-				this.name = ''
-				this.themesPage.showOnlyPremiumThemes()
-				this.themesPage.getFirstThemeName().then( name => this.name = name )
+				this.name = '';
+				this.themesPage.showOnlyPremiumThemes();
+				this.themesPage.getFirstThemeName().then( name => this.name = name );
 				return this.themesPage.selectNewTheme();
 			} );
 
 			test.it( 'Can pick theme design', function() {
-				this.themePage = new ThemePage( driver )
-				return this.themePage.pickThisDesign()
+				this.themePage = new ThemeDetailPage( driver );
+				return this.themePage.pickThisDesign();
 			} );
 
 			test.describe( `Step ${stepNum}: Domains`, function() {
@@ -1286,10 +1286,10 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 									} );
 								} );
 
-								test.it( 'Can enter and submit test payment details', function() {
+								test.it( 'Can ensure that theme is added into Cart', function() {
 									return this.securePaymentComponent.getProductsNames().then( ( arry ) => {
-										assert( arry[0].search( this.name ), `First product in cart is not ${this.name}` )
-									} )
+										assert( arry[0].search( this.name ), `First product in cart is not ${this.name}` );
+									} );
 								} );
 							} );
 						} );
