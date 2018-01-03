@@ -330,7 +330,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 					test.it( 'Can then see the plans page', function() {
 						this.pickAPlanPage = new PickAPlanPage( driver );
 						return this.pickAPlanPage.displayed().then( ( displayed ) => {
-							yesHelper.eyesScreenshot( driver, eyes, 'Plans Page' );
+							eyesHelper.eyesScreenshot( driver, eyes, 'Plans Page' );
 							return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
 						} );
 					} );

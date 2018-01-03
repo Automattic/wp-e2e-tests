@@ -8,6 +8,7 @@ import EditorPage from '../lib/pages/editor-page.js';
 import ViewPagePage from '../lib/pages/view-page-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
 import PagesPage from '../lib/pages/pages-page.js';
+import ReaderPage from '../lib/pages/reader-page';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
@@ -537,6 +538,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 
 			test.describe( 'Edit the page via pages', function() {
 				test.it( 'Can view the page list', function() {
+					this.readerPage = new ReaderPage( driver, true );
 					this.navbarComponent = new NavbarComponent( driver );
 					this.navbarComponent.clickMySites();
 					this.sidebarComponent = new SidebarComponent( driver );
@@ -570,14 +572,14 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 					} );
 				} );
 
-				test.it( 'Can set the new title and save it', function() {
+				test.it( 'Can set the new title and update it', function() {
 					this.editorPage.enterTitle( updatedPageTitle );
 					this.editorPage.errorDisplayed().then( ( errorShown ) => {
 						assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 					} );
 					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					this.postEditorToolbarComponent.ensureSaved();
-					this.postEditorToolbarComponent.publishAndViewContent();
+					this.postEditorToolbarComponent.publishThePost();
+					return this.postEditorToolbarComponent.waitForSuccessAndViewPost();
 				} );
 
 				test.describe( 'Can view the page with the new title', function() {
