@@ -95,10 +95,10 @@ test.describe( `[${host}] Notifications: (${screenSize}) @parallel @visdiff`, fu
 						const expectedContent = `${this.commentingUser} commented on ${this.commentedPostTitle}\n${this.comment}`;
 						this.navBarComponent = new NavbarComponent( driver );
 						this.navBarComponent.openNotifications();
-						eyesHelper.eyesScreenshot( driver, eyes, 'Notifications List' );
 						this.notificationsComponent = new NotificationsComponent( driver );
 						this.notificationsComponent.selectComments();
 						return this.notificationsComponent.allCommentsContent().then( ( content ) => {
+							eyesHelper.eyesScreenshot( driver, eyes, 'Notifications List' );
 							assert.equal( content.includes( expectedContent ), true, `The actual notifications content '${content}' does not contain expected content '${expectedContent}'` );
 						} );
 					} );

@@ -60,7 +60,6 @@ test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
 
 			test.it( 'Can see theme details page and open the live demo', function() {
 				this.themeDetailPage = new ThemeDetailPage( driver );
-				eyesHelper.eyesScreenshot( driver, eyes, 'Theme Details Page' );
 				return this.themeDetailPage.openLiveDemo();
 			} );
 
@@ -74,6 +73,7 @@ test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
 				this.themeDialogComponent.goToThemeDetail();
 				this.themeDetailPage = new ThemeDetailPage( driver );
 				this.themeDetailPage.displayed().then( function( displayed ) {
+					eyesHelper.eyesScreenshot( driver, eyes, 'Theme Details Page' );
 					assert.equal( displayed, true, 'Could not see the theme detail page after activating a new theme' );
 				} );
 			} );
