@@ -49,9 +49,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 		test.describe( 'Leave a comment on the latest post in the Reader', function() {
 			test.it( 'Can see the Reader stream', function() {
 				this.readerPage = new ReaderPage( driver );
-				return this.readerPage.waitForPage().then( () => {
-					eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
-				} );
+				return this.readerPage.waitForPage();
 			} );
 
 			test.it( 'The latest post is on the expected test site', function() {
@@ -79,6 +77,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 				} );
 
 				test.it( 'Can delete the new comment (and wait for UNDO grace period so it is actually deleted)', function() {
+					eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
 					this.navBarComponent = new NavbarComponent( driver );
 					this.navBarComponent.openNotifications();
 					this.notificationsComponent = new NotificationsComponent( driver );
