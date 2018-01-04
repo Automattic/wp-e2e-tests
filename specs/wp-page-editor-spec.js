@@ -81,6 +81,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					postEditorSidebarComponent.expandStatusSection();
 					postEditorSidebarComponent.expandFeaturedImage();
+					postEditorSidebarComponent.expandPageOptions();
 					postEditorSidebarComponent.expandSharingSection();
 					postEditorSidebarComponent.expandMoreOptions();
 					eyesHelper.eyesScreenshot( driver, eyes, 'Page Editor - New Page' );
@@ -90,6 +91,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					postEditorSidebarComponent.closeStatusSection();
 					postEditorSidebarComponent.closeFeaturedImage();
+					postEditorSidebarComponent.closePageOptions();
 					postEditorSidebarComponent.closeSharingSection();
 					postEditorSidebarComponent.closeMoreOptions();
 				} );
