@@ -100,14 +100,9 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, f
 
 				test.it( 'Can find the magic link in the email received', function() {
 					return emailClient.pollEmailsByRecipient( loginFlow.account.email ).then( function( emails ) {
-						for ( let email of emails ) {
-							if ( email.subject.indexOf( 'WordPress.com' ) > -1 ) {
-								magicLinkEmail = email;
-								magicLoginLink = email.html.links[0].href;
-								break;
-							}
-						}
+						magicLinkEmail = emails.find( email => email.subject.indexOf( 'WordPress.com' ) > -1 );
 						assert( magicLinkEmail !== undefined, 'Could not find the magic login email' );
+						magicLoginLink = magicLinkEmail.html.links[0].href;
 						assert( magicLoginLink !== undefined, 'Could not locate the magic login link in the email' );
 						return true;
 					} );
