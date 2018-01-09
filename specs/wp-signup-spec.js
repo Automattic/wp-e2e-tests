@@ -1176,7 +1176,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		} );
 	} );
 
-	test.describe( 'Sign up while purchasing premium theme @parallel @email @canary', function() {
+	test.describe( 'Sign up while purchasing premium theme @parallel @email', function() {
 		this.bailSuite( true );
 		let stepNum = 1;
 
