@@ -67,7 +67,8 @@
     "jetpackHidePlanIconsForAllDevices",
     "signupSiteSegmentStep",
     "checklistThankYouForFreeUser",
-    "checklistThankYouForPaidUser"
+    "checklistThankYouForPaidUser",
+    "paymentMethodsOnPlans"
   ],
   "overrideABTests": [
 	[ "skipThemesSelectionModal_20170830", "show" ],
