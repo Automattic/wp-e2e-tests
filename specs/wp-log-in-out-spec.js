@@ -98,7 +98,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 		} );
 	} );
 
-	if ( dataHelper.hasAccountWithFeatures( 'passwordless' ) ) {
+	if ( dataHelper.hasAccountWithFeatures( '+passwordless -2fa' ) ) {
 		test.describe( 'Can Log in on a passwordless account', function() {
 			test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
 				let magicLoginLink, loginFlow, magicLinkEmail, emailClient;
