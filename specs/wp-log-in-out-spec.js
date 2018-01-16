@@ -101,6 +101,43 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 		} );
 	} );
 
+	if ( dataHelper.hasAccountWithFeatures( '+2fa-sms -passwordless' ) ) {
+		test.describe.only( 'Can Log in on a 2fa account', function() {
+			let loginFlow, twoFALoginPage, twoFACode;
+			test.before( function( done ) {
+				loginFlow = new LoginFlow( driver, [ '+2fa-sms', '-passwordless' ] );
+				// make sure we listen for SMS before we trigger any
+				const xmppClient = listenForSMS( loginFlow.account );
+				xmppClient.once( 'online', () => {
+					// send sms now!
+					loginFlow.login();
+					twoFALoginPage = new LoginPage( driver );
+					twoFALoginPage.use2FAMethod( 'sms' );
+				} );
+				xmppClient.on( 'e2e-sms', sms => {
+					console.log( 'received sms', sms );
+					const twoFACodeMatches = sms.body.match( /^\d+/ );
+					twoFACode = twoFACodeMatches && twoFACodeMatches[0];
+					if ( twoFACode ) {
+						xmppClient.stop().then( () => done() );
+					}
+				} );
+			} );
+
+			test.it( 'Should be on the /log-in/sms page', function() {
+				return twoFALoginPage.displayed().then( function( displayed ) {
+					return driver.getCurrentUrl().then( ( urlDisplayed ) => {
+						assert( urlDisplayed.indexOf( '/log-in/sms' ) !== -1, 'The 2fa sms page is not displayed after log in' );
+					} );
+				} );
+			} );
+
+			test.it( 'Enter the 2fa code and we\'re logged in', function() {
+				return twoFALoginPage.enter2FACode( twoFACode );
+			} );
+		} );
+	}
+
 	if ( dataHelper.hasAccountWithFeatures( '+passwordless -2fa' ) ) {
 		test.describe( 'Can Log in on a passwordless account', function() {
 			test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
@@ -223,7 +260,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 	}
 
 	if ( dataHelper.hasAccountWithFeatures( '+passwordless +2fa-otp' ) ) {
-		test.describe.only( 'Can Log in on a passwordless account', function() {
+		test.describe( 'Can Log in on a passwordless account', function() {
 			test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
 				let magicLoginLink, loginFlow, magicLinkEmail, emailClient;
 				test.before( function () {
