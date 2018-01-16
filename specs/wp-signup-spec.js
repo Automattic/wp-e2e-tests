@@ -17,7 +17,6 @@ import SignupProcessingPage from '../lib/pages/signup/signup-processing-page.js'
 import CheckOutPage from '../lib/pages/signup/checkout-page';
 import CheckOutThankyouPage from '../lib/pages/signup/checkout-thankyou-page.js';
 import ViewBlogPage from '../lib/pages/signup/view-blog-page.js';
-// import EditorPage from '../lib/pages/editor-page.js';
 import LoginPage from '../lib/pages/login-page';
 import MagicLoginPage from '../lib/pages/magic-login-page';
 import ReaderPage from '../lib/pages/reader-page';
@@ -677,13 +676,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 										let cancelDomainPage = new CancelDomainPage( driver );
 										cancelDomainPage.completeSurveyAndConfirm();
-										cancelDomainPage.waitToDisappear();
-
-										let purchasesPage = new PurchasesPage( driver );
-										purchasesPage.waitForAndDismissSuccessMessage();
-										return purchasesPage.isEmpty().then( ( empty ) => {
-											return assert( empty, 'The purchases page is not empty after cancelling the domain' );
-										} );
+										return cancelDomainPage.waitToDisappear();
 									} );
 								} );
 							} );
@@ -885,12 +878,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 											} );
 											managePurchasePage.chooseRemovePurchase();
 											managePurchasePage.removeNow();
-											managePurchasePage.waitTillRemoveNoLongerShown();
-
-											purchasesPage.waitForAndDismissSuccessMessage();
-											return purchasesPage.isEmpty().then( ( empty ) => {
-												return assert( empty, 'The purchases page is not empty after cancelling the domain' );
-											} );
+											return managePurchasePage.waitTillRemoveNoLongerShown();
 										} );
 									} );
 								} );
