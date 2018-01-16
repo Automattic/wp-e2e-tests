@@ -102,7 +102,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 	} );
 
 	if ( dataHelper.hasAccountWithFeatures( '+2fa-sms -passwordless' ) ) {
-		test.describe.only( 'Can Log in on a 2fa account', function() {
+		test.describe( 'Can Log in on a 2fa account', function() {
 			let loginFlow, twoFALoginPage, twoFACode;
 			test.before( function( done ) {
 				loginFlow = new LoginFlow( driver, [ '+2fa-sms', '-passwordless' ] );
@@ -133,6 +133,34 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 			} );
 
 			test.it( 'Enter the 2fa code and we\'re logged in', function() {
+				return twoFALoginPage.enter2FACode( twoFACode );
+			} );
+		} );
+	}
+
+	if ( dataHelper.hasAccountWithFeatures( '+2fa-otp -passwordless' ) ) {
+		test.describe.only( 'Can Log in on a 2fa account', function() {
+			let loginFlow, twoFALoginPage;
+			test.before( function() {
+				loginFlow = new LoginFlow( driver, [ '+2fa-otp', '-passwordless' ] );
+				loginFlow.login();
+				twoFALoginPage = new LoginPage( driver );
+				return twoFALoginPage.use2FAMethod( 'otp' );
+			} );
+
+			test.it( 'Should be on the /log-in/authenticator page', function() {
+				return twoFALoginPage.displayed().then( function( displayed ) {
+					return driver.getCurrentUrl().then( ( urlDisplayed ) => {
+						assert( urlDisplayed.indexOf( '/log-in/authenticator' ) !== -1, 'The 2fa authenticator page is not displayed after log in' );
+					} );
+				} );
+			} );
+
+			test.it( 'Enter the 2fa code and we\'re logged in', function() {
+				const twoFACode = speakeasy.totp( {
+					secret: loginFlow.account['2faOTPsecret'],
+					encoding: 'base32'
+				} );
 				return twoFALoginPage.enter2FACode( twoFACode );
 			} );
 		} );
