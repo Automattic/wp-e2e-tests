@@ -115,7 +115,6 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 					twoFALoginPage.use2FAMethod( 'sms' );
 				} );
 				xmppClient.on( 'e2e-sms', sms => {
-					console.log( 'received sms', sms );
 					const twoFACodeMatches = sms.body.match( /^\d+/ );
 					twoFACode = twoFACodeMatches && twoFACodeMatches[0];
 					if ( twoFACode ) {
@@ -249,7 +248,6 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 							twoFALoginPage.use2FAMethod( 'sms' );
 						} );
 						xmppClient.on( 'e2e-sms', sms => {
-							console.log( 'received sms', sms );
 							const twoFACodeMatches = sms.body.match( /^\d+/ );
 							twoFACode = twoFACodeMatches && twoFACodeMatches[0];
 							if ( twoFACode ) {
