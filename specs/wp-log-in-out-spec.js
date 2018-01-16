@@ -139,7 +139,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 	}
 
 	if ( dataHelper.hasAccountWithFeatures( '+2fa-otp -passwordless' ) ) {
-		test.describe.only( 'Can Log in on a 2fa account', function() {
+		test.describe( 'Can Log in on a 2fa account', function() {
 			let loginFlow, twoFALoginPage;
 			test.before( function() {
 				loginFlow = new LoginFlow( driver, [ '+2fa-otp', '-passwordless' ] );
