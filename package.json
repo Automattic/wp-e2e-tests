@@ -51,6 +51,7 @@
     "testarmada-magellan-mocha-plugin": "hoverduck/magellan-mocha-plugin#40a619c",
     "wpcom": "5.4.0",
     "xml2json-command": "^0.0.3",
+    "xmpp.js": "^0.3.0",
     "xunit-viewer": "5.0.3"
   },
   "devDependencies": {
