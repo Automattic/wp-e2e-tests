@@ -47,6 +47,7 @@
     "selenium-webdriver": "3.6.0",
     "serverpilot": "0.1.2",
     "slack-notify": "0.1.4",
+    "speakeasy": "^2.0.0",
     "testarmada-magellan": "8.8.6",
     "testarmada-magellan-mocha-plugin": "hoverduck/magellan-mocha-plugin#40a619c",
     "wpcom": "5.4.0",
