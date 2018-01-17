@@ -58,30 +58,24 @@
   "httpsHosts": [ "WPCOM", "PRESSABLE" ],
   "knownABTestKeys": [
     "businessPlanDescriptionAT",
-    "checkoutPaymentMethodTabs",
     "domainsCheckoutLocalizedAddresses",
-    "gsuiteUpsell",
-    "jetpackConnectPlansCopyChanges",
-    "jetpackHidePlanIconsOnMobile",
+    "gsuiteUpsellV2",
     "multiDomainRegistrationV1",
-    "newSiteWithJetpack",
-    "paymentShowPaypalLogo",
-    "postPublishConfirmation",
-    "postSignupUpgradeScreen",
     "presaleChatButton",
-    "readerIntroIllustration",
-    "recommendShortestDomain",
-    "signupSurveyStep",
     "skipThemesSelectionModal",
     "unlimitedThemeNudge",
-    "condensedPostList",
-    "buttonsColorOnPostSignup"
+    "jetpackHidePlanIconsForAllDevices",
+    "signupSiteSegmentStep",
+    "checklistThankYouForFreeUser",
+    "checklistThankYouForPaidUser",
+    "paymentMethodsOnPlans"
   ],
   "overrideABTests": [
-	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
-	[ "postPublishConfirmation_20170801", "showPublishConfirmation" ],
-	[ "skipThemesSelectionModal_20170830", "show" ],
-	[ "gsuiteUpsell_20171025", "hide" ],
-	[ "domainsCheckoutLocalizedAddresses_20171025", "showDefaultAddressFormat" ]
+    [ "skipThemesSelectionModal_20170830", "show" ],
+    [ "gsuiteUpsellV2_20171225", "original" ],
+    [ "domainsCheckoutLocalizedAddresses_20171025", "showDefaultAddressFormat" ],
+    [ "signupSiteSegmentStep_20170329", "variant" ],
+    [ "checklistThankYouForFreeUser_20171204", "hide" ],
+    [ "checklistThankYouForPaidUser_20171204", "hide" ]
   ]
 }

@@ -9,6 +9,7 @@ import TwitterFeedPage from '../lib/pages/twitter-feed-page.js';
 import ViewPostPage from '../lib/pages/view-post-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
 import PostsPage from '../lib/pages/posts-page.js';
+import ReaderPage from '../lib/pages/reader-page';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
@@ -85,30 +86,32 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 
 					test.it( 'Can add a new category', function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						postEditorSidebarComponent.addNewCategory( newCategoryName );
-						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
-							assert( ! subtitle.match( /Uncategorized/ ), 'Post still marked Uncategorized after adding new category BEFORE SAVE' );
-						} );
-						postEditorToolbarComponent.ensureSaved();
-						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
-							assert( ! subtitle.match( /Uncategorized/ ), 'Post still marked Uncategorized after adding new category AFTER SAVE' );
-						} );
 					} );
 
 					test.it( 'Can add a new tag', function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						postEditorSidebarComponent.addNewTag( newTagName );
-						postEditorToolbarComponent.ensureSaved();
-						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
-							assert( subtitle.match( `#${newTagName}` ), `New tag #${newTagName} not applied` );
-						} );
 					} );
 
 					test.it( 'Close categories and tags', function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 						postEditorSidebarComponent.closeCategoriesAndTags();
+					} );
+
+					test.it( 'Verify categories and tags present after save', function() {
+						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+
+						postEditorSidebarComponent.hideComponentIfNecessary();
+						postEditorToolbarComponent.ensureSaved();
+						postEditorSidebarComponent.displayComponentIfNecessary()
+						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
+							assert( ! subtitle.match( /Uncategorized/ ), 'Post still marked Uncategorized after adding new category AFTER SAVE' );
+						} );
+						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
+							assert( subtitle.match( `#${newTagName}` ), `New tag #${newTagName} not applied` );
+						} );
 					} );
 
 					test.describe( 'Publicize Options', function() {
@@ -146,6 +149,9 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 						test.describe( 'Preview (https only)', function() {
 							if ( httpsHost ) {
 								test.it( 'Can launch post preview', function() {
+									let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+									postEditorSidebarComponent.hideComponentIfNecessary();
+
 									this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 									this.postEditorToolbarComponent.ensureSaved();
 									this.postEditorToolbarComponent.launchPreview();
@@ -239,7 +245,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 							} else { // Jetpack tests
 								test.it( 'Can publish content', function() {
 									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-									postEditorToolbarComponent.publishThePost(  { useConfirmStep: true } );
+									postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 								} );
 							}
 
@@ -825,45 +831,38 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 
 			test.describe( 'Edit the post via posts', function() {
 				test.it( 'Can view the posts list', function() {
+					this.readerPage = new ReaderPage( driver, true );
 					this.navbarComponent = new NavbarComponent( driver );
 					this.navbarComponent.clickMySites();
 					this.sidebarComponent = new SidebarComponent( driver );
 					this.sidebarComponent.selectPosts();
-					this.postsPage = new PostsPage( driver );
-					this.postsPage.waitForPosts();
+					return this.postsPage = new PostsPage( driver );
 				} );
 
 				test.it( 'Can see and edit our new post', function() {
-					this.postsPage.isPostDisplayed( originalBlogPostTitle ).then( ( displayed ) => {
-						if ( displayed === false ) {
-							slackNotifier.warn( 'Could not locate the post on posts page, retrying the posts menu option again' );
-							this.sidebarComponent = new SidebarComponent( driver );
-							this.sidebarComponent.selectPosts();
-							this.postsPage = new PostsPage( driver );
-							return this.postsPage.waitForPosts();
-						}
-					} );
+					this.postsPage.waitForPostTitled( originalBlogPostTitle );
 					this.postsPage.isPostDisplayed( originalBlogPostTitle ).then( ( displayed ) => {
 						assert.equal( displayed, true, `The blog post titled '${originalBlogPostTitle}' is not displayed in the list of posts` );
 					} );
 					this.postsPage.editPostWithTitle( originalBlogPostTitle );
-					this.editorPage = new EditorPage( driver );
+					return this.editorPage = new EditorPage( driver );
 				} );
 
 				test.it( 'Can see the post title', function() {
 					this.editorPage.waitForTitle();
-					this.editorPage.titleShown().then( ( titleShown ) => {
+					return this.editorPage.titleShown().then( ( titleShown ) => {
 						assert.equal( titleShown, originalBlogPostTitle, 'The blog post title shown was unexpected' );
 					} );
 				} );
 
-				test.it( 'Can set the new title and save it', function() {
+				test.it( 'Can set the new title and update it, and link to the updated post', function() {
 					this.editorPage.enterTitle( updatedBlogPostTitle );
 					this.editorPage.errorDisplayed().then( ( errorShown ) => {
 						assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 					} );
 					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					this.postEditorToolbarComponent.publishAndViewContent();
+					this.postEditorToolbarComponent.publishThePost();
+					return this.postEditorToolbarComponent.waitForSuccessAndViewPost();
 				} );
 
 				test.describe( 'Can view the post with the new title', function() {
@@ -872,7 +871,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 					} );
 
 					test.it( 'Can see correct post title', function() {
-						this.viewPostPage.postTitle().then( function( postTitle ) {
+						return this.viewPostPage.postTitle().then( function( postTitle ) {
 							assert.equal( postTitle.toLowerCase(), updatedBlogPostTitle.toLowerCase(), 'The published blog post title is not correct' );
 						} );
 					} );
