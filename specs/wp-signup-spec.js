@@ -401,10 +401,6 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 											eyesHelper.eyesScreenshot( driver, eyes, 'Checkout Thank You Page' );
 											return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
 										} );
-
-										test.after( function() {
-											eyesHelper.eyesClose( eyes );
-										} );
 									} );
 								} );
 							} );
@@ -412,6 +408,10 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 					} );
 				} );
 			} );
+		} );
+
+		test.after( function() {
+			eyesHelper.eyesClose( eyes );
 		} );
 	} );
 
