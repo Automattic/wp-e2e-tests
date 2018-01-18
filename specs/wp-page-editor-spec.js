@@ -45,6 +45,10 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 		let fileDetails;
 
 		test.before( function() {
+			let testEnvironment = 'WordPress.com';
+			let testName = `Page Editor - Public Page [${global.browserName}] [${screenSize}]`;
+			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
+
 			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -220,6 +224,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 		} );
 
 		test.after( function() {
+			eyesHelper.eyesClose( eyes );
 			if ( fileDetails ) {
 				mediaHelper.deleteFile( fileDetails ).then( function() {} );
 			}
@@ -511,6 +516,12 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 	test.describe( 'Edit a Page: @parallel @visdiff', function() {
 		this.bailSuite( true );
 
+		test.before( function() {
+			let testEnvironment = 'WordPress.com';
+			let testName = `Edit a Page [${global.browserName}] [${screenSize}]`;
+			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
+		} );
+
 		test.it( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
@@ -600,9 +611,9 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				} );
 			} );
 		} );
-	} );
-} );
 
-test.after( function() {
-	eyesHelper.eyesClose( eyes );
+		test.after( function() {
+			eyesHelper.eyesClose( eyes );
+		} );
+	} );
 } );
