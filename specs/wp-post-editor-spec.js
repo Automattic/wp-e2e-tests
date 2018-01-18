@@ -20,7 +20,6 @@ import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-co
 import * as driverManager from '../lib/driver-manager';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
-import * as slackNotifier from '../lib/slack-notifier';
 import * as eyesHelper from '../lib/eyes-helper.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
@@ -36,10 +35,6 @@ let eyes = eyesHelper.eyesSetup( true );
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
-
-	let testEnvironment = 'WordPress.com';
-	let testName = `Blog Posts [${global.browserName}] [${screenSize}]`;
-	eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 } );
 
 test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
@@ -51,6 +46,10 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+
+			let testEnvironment = 'WordPress.com';
+			let testName = `Post Editor - Public Post [${global.browserName}] [${screenSize}]`;
+			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 		} );
 
 		// Create image file for upload
@@ -83,6 +82,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 					editorPage.errorDisplayed().then( ( errorShown ) => {
 						assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 					} );
+					eyesHelper.eyesScreenshot( driver, eyes, 'Post Editor' );
 				} );
 
 				if ( process.env.VISDIFF ) {
@@ -94,7 +94,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 						postEditorSidebarComponent.expandSharingSection();
 						postEditorSidebarComponent.expandPostFormat();
 						postEditorSidebarComponent.expandMoreOptions();
-						eyesHelper.eyesScreenshot( driver, eyes, 'Post Editor - New Post' );
+						eyesHelper.eyesScreenshot( driver, eyes, 'Post Editor Settings' );
 					} );
 
 					test.it( 'Close all sidebar sections', function() {
@@ -332,6 +332,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 		} );
 
 		test.after( function() {
+			eyesHelper.eyesClose( eyes );
 			if ( fileDetails ) {
 				mediaHelper.deleteFile( fileDetails ).then( function() {} );
 			}
@@ -829,6 +830,12 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 	test.describe( 'Edit a Post: @parallel @jetpack @visdiff', function() {
 		this.bailSuite( true );
 
+		test.before( function() {
+			let testEnvironment = 'WordPress.com';
+			let testName = `Edit a Post [${global.browserName}] [${screenSize}]`;
+			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
+		} );
+
 		test.it( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
@@ -910,6 +917,10 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				} );
 			} );
 		} );
+
+		test.after( function() {
+			eyesHelper.eyesClose( eyes );
+		} );
 	} );
 
 	test.describe( 'Insert a contact form: @parallel @jetpack', function() {
@@ -960,6 +971,12 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 	test.describe( 'Insert a payment button: @parallel @visdiff', function() {
 		this.bailSuite( true );
 
+		test.before( function() {
+			let testEnvironment = 'WordPress.com';
+			let testName = `Post Editor - Payment Button [${global.browserName}] [${screenSize}]`;
+			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
+		} );
+
 		test.it( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
@@ -999,6 +1016,10 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 					assert.equal( displayed, true, 'The published post does not contain the payment button' );
 				} );
 			} );
+		} );
+
+		test.after( function() {
+			eyesHelper.eyesClose( eyes );
 		} );
 	} );
 
@@ -1058,8 +1079,4 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			} );
 		} );
 	} );
-} );
-
-test.after( function() {
-	eyesHelper.eyesClose( eyes );
 } );

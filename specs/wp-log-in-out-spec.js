@@ -30,10 +30,6 @@ let eyes = eyesHelper.eyesSetup( true );
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
-
-	let testEnvironment = 'WordPress.com';
-	let testName = `Log In and Out [${global.browserName}] [${screenSize}]`;
-	eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 } );
 
 test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @visdiff`, function() {
@@ -45,6 +41,12 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 	} );
 
 	test.describe( 'Logging In and Out:', function() {
+		test.before( function() {
+			let testEnvironment = 'WordPress.com';
+			let testName = `Log In and Out [${global.browserName}] [${screenSize}]`;
+			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
+		} );
+
 		test.describe( 'Can Log In', function() {
 			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
@@ -92,6 +94,10 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 					assert( displayed, 'The logged out masterbar isn\'t displayed after logging out' );
 				} );
 			} );
+		} );
+
+		test.after( function() {
+			eyesHelper.eyesClose( eyes );
 		} );
 	} );
 
@@ -159,8 +165,4 @@ test.describe( `[${host}] User Agent: (${screenSize}) @parallel @jetpack`, funct
 			assert( userAgent.match( 'wp-e2e-tests' ), `User Agent does not contain 'wp-e2e-tests'.  [${userAgent}]` );
 		} );
 	} );
-} );
-
-test.after( function() {
-	eyesHelper.eyesClose( eyes );
 } );

@@ -35,10 +35,6 @@ let eyes = eyesHelper.eyesSetup( true );
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
-
-	let testEnvironment = 'WordPress.com';
-	let testName = `Site Pages [${global.browserName}] [${screenSize}]`;
-	eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 } );
 
 test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
@@ -73,7 +69,11 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				editorPage.enterTitle( pageTitle );
 				editorPage.enterContent( pageQuote + '\n' );
 				editorPage.enterPostImage( fileDetails );
-				return editorPage.waitUntilImageInserted( fileDetails );
+				editorPage.waitUntilImageInserted( fileDetails );
+				editorPage.errorDisplayed().then( ( errorShown ) => {
+					assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+				} );
+				eyesHelper.eyesScreenshot( driver, eyes, 'Page Editor' );
 			} );
 
 			if ( process.env.VISDIFF ) {
@@ -84,7 +84,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 					postEditorSidebarComponent.expandPageOptions();
 					postEditorSidebarComponent.expandSharingSection();
 					postEditorSidebarComponent.expandMoreOptions();
-					eyesHelper.eyesScreenshot( driver, eyes, 'Page Editor - New Page' );
+					eyesHelper.eyesScreenshot( driver, eyes, 'Page Editor Settings' );
 				} );
 
 				test.it( 'Close all sidebar sections', function() {
@@ -107,6 +107,9 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 			if ( httpsHost ) {
 				test.describe( 'Preview', function() {
 					test.it( 'Can launch page preview', function() {
+						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						postEditorSidebarComponent.hideComponentIfNecessary();
+
 						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						postEditorToolbarComponent.ensureSaved();
 						postEditorToolbarComponent.launchPreview();
