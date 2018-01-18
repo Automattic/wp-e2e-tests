@@ -40,17 +40,17 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
-	test.describe( 'Logging In and Out:', function() {
-		test.before( function() {
-			let testEnvironment = 'WordPress.com';
-			let testName = `Log In and Out [${global.browserName}] [${screenSize}]`;
-			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
-		} );
+	test.before( function() {
+		let testEnvironment = 'WordPress.com';
+		let testName = `Log In and Out [${global.browserName}] [${screenSize}]`;
+		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
+	} );
 
+	test.describe( 'Logging In and Out:', function() {
 		test.describe( 'Can Log In', function() {
 			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
-				loginFlow.login( { screenshot: true } );
+				loginFlow.login( { screenshot: true }, eyes );
 			} );
 
 			test.it( 'Can see Reader Page after logging in', function() {
@@ -95,10 +95,10 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 				} );
 			} );
 		} );
+	} );
 
-		test.after( function() {
-			eyesHelper.eyesClose( eyes );
-		} );
+	test.after( function() {
+		eyesHelper.eyesClose( eyes );
 	} );
 
 	if ( dataHelper.hasAccountWithFeatures( 'passwordless' ) ) {
