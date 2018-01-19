@@ -88,12 +88,12 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				if ( process.env.VISDIFF ) {
 					test.it( 'Open all sidebar sections for screenshot', function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.expandStatusSection();
-						postEditorSidebarComponent.expandCategoriesAndTags();
-						postEditorSidebarComponent.expandFeaturedImage();
-						postEditorSidebarComponent.expandSharingSection();
-						postEditorSidebarComponent.expandPostFormat();
 						postEditorSidebarComponent.expandMoreOptions();
+						postEditorSidebarComponent.expandPostFormat();
+						postEditorSidebarComponent.expandSharingSection();
+						postEditorSidebarComponent.expandFeaturedImage();
+						postEditorSidebarComponent.expandCategoriesAndTags();
+						postEditorSidebarComponent.expandStatusSection();
 						eyesHelper.eyesScreenshot( driver, eyes, 'Post Editor Settings' );
 					} );
 

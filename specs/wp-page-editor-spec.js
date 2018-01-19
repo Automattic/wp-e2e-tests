@@ -83,11 +83,11 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 			if ( process.env.VISDIFF ) {
 				test.it( 'Open all sidebar sections for screenshot', function() {
 					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.expandStatusSection();
-					postEditorSidebarComponent.expandFeaturedImage();
-					postEditorSidebarComponent.expandPageOptions();
-					postEditorSidebarComponent.expandSharingSection();
 					postEditorSidebarComponent.expandMoreOptions();
+					postEditorSidebarComponent.expandSharingSection();
+					postEditorSidebarComponent.expandPageOptions();
+					postEditorSidebarComponent.expandFeaturedImage();
+					postEditorSidebarComponent.expandStatusSection();
 					eyesHelper.eyesScreenshot( driver, eyes, 'Page Editor Settings' );
 				} );
 
@@ -513,7 +513,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 		} );
 	} );
 
-	test.describe( 'Edit a Page: @parallel @visdiff', function() {
+	test.describe( 'Edit a Page: @visdiff', function() {
 		this.bailSuite( true );
 
 		test.before( function() {

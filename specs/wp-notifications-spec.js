@@ -43,7 +43,7 @@ test.describe( `[${host}] Notifications: (${screenSize}) @parallel @visdiff`, fu
 
 	test.describe( 'Log in as commenting user', function() {
 		test.it( 'Can log in as commenting user', function() {
-			this.commentingUser = 'e2eflowtestingcommenter';
+			this.commentingUser = dataHelper.getAccountConfig( 'commentingUser' )[0];
 			this.loginFlow = new LoginFlow( driver, 'commentingUser' );
 			return this.loginFlow.login();
 		} );
