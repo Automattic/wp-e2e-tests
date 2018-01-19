@@ -77,10 +77,15 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				editorPage.errorDisplayed().then( ( errorShown ) => {
 					assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 				} );
-				eyesHelper.eyesScreenshot( driver, eyes, 'Page Editor' );
 			} );
 
 			if ( process.env.VISDIFF ) {
+				test.it( 'Close sidebar for editor screenshot', function() {
+					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+					postEditorSidebarComponent.hideComponentIfNecessary();
+					eyesHelper.eyesScreenshot( driver, eyes, 'Page Editor' );
+				} );
+
 				test.it( 'Open all sidebar sections for screenshot', function() {
 					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					postEditorSidebarComponent.expandMoreOptions();

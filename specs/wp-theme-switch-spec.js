@@ -85,7 +85,7 @@ test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
 	} );
 } );
 
-test.describe( `[${host}] Activating Themes: (${screenSize}) @parallel @jetpack`, function() {
+test.describe( `[${host}] Activating Themes: (${screenSize}) @parallel @jetpack @visdiff`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 

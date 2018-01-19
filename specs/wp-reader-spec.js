@@ -21,7 +21,7 @@ const screenSize = driverManager.currentScreenSize();
 
 let driver;
 
-let eyes = eyesHelper.eyesSetup( false );
+let eyes = eyesHelper.eyesSetup( true );
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
