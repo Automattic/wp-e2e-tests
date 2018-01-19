@@ -40,7 +40,7 @@ You can run tests in different modes by setting an environment variable `BROWSER
 
 Eg:
 
-`env BROWSERSIZE=tablet ./node_modules/.bin/mocha specs
+`env BROWSERSIZE=tablet ./node_modules/.bin/mocha specs`
 
 Or you can use the -s option on the run.sh script:
 
@@ -62,13 +62,12 @@ The `run.sh` script takes the following parameters, which can be combined to exe
 -W		  - Execute WooCommerce tests in the specs-woocommerce/ directory (desktop and mobile)
 -H [host]	  - Specify an alternate host for Jetpack tests
 -w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
--l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration
+-l [config]	  - Execute the tests via Sauce Labs with the given configuration
 -c		  - Exit with status code 0 regardless of test results
--m [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
 -f		  - Tell visdiffs to fail the tests rather than just send an alert
 -i		  - Execute i18n screenshot tests, not compatible with -g flag
 -U		  - Execute the i18n screenshot upload script in scripts/
--v		  - Execute the visdiff tests in specs-visdiff/
+-v		  - Execute the integrated visdiff tests
 -x		  - Execute the tests using the --headless flag in Chrome
 -u [baseUrl]	  - Override the calypsoBaseURL config
 -h		  - This help listing
