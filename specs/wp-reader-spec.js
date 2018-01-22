@@ -6,7 +6,6 @@ import LoginFlow from '../lib/flows/login-flow.js';
 
 import ReaderPage from '../lib/pages/reader-page.js';
 import ReaderManagePage from '../lib/pages/reader-manage-page.js';
-import ReaderSearchPage from '../lib/pages/reader-search-page.js';
 
 import NavbarComponent from '../lib/components/navbar-component.js';
 import NotificationsComponent from '../lib/components/notifications-component.js';
@@ -93,14 +92,6 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 						this.readerManagePage.waitForSites();
 						eyesHelper.eyesScreenshot( driver, eyes, 'Manage Followed Sites' );
 					} );
-
-					test.describe( 'Reader Search', function() {
-						test.it( 'Can see the Search page', function() {
-							this.readerSearchPage = new ReaderSearchPage( driver, true );
-							this.readerSearchPage.waitForRecommendations();
-							eyesHelper.eyesScreenshot( driver, eyes, 'Search with Recommended Sites' );
-						} );
-					} )
 				} );
 			} );
 		} );
