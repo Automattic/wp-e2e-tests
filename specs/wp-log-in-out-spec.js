@@ -108,13 +108,13 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 				loginFlow = new LoginFlow( driver, [ '+2fa-sms', '-passwordless' ] );
 				// make sure we listen for SMS before we trigger any
 				const xmppClient = listenForSMS( loginFlow.account );
-				xmppClient.once( 'online', () => {
+				xmppClient.once( 'e2e:ready', () => {
 					// send sms now!
 					loginFlow.login();
 					twoFALoginPage = new LoginPage( driver );
 					twoFALoginPage.use2FAMethod( 'sms' );
 				} );
-				xmppClient.on( 'e2e-sms', sms => {
+				xmppClient.on( 'e2e:sms', sms => {
 					const twoFACodeMatches = sms.body.match( /^\d+/ );
 					twoFACode = twoFACodeMatches && twoFACodeMatches[0];
 					if ( twoFACode ) {
@@ -241,13 +241,13 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 						magicLoginPage = new MagicLoginPage( driver );
 						// make sure we listen for SMS before we trigger any
 						const xmppClient = listenForSMS( loginFlow.account );
-						xmppClient.once( 'online', () => {
+						xmppClient.once( 'e2e:ready', () => {
 							// send sms now!
 							magicLoginPage.finishLogin();
 							twoFALoginPage = new LoginPage( driver );
 							twoFALoginPage.use2FAMethod( 'sms' );
 						} );
-						xmppClient.on( 'e2e-sms', sms => {
+						xmppClient.on( 'e2e:sms', sms => {
 							const twoFACodeMatches = sms.body.match( /^\d+/ );
 							twoFACode = twoFACodeMatches && twoFACodeMatches[0];
 							if ( twoFACode ) {
