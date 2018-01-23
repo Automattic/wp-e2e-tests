@@ -24,7 +24,7 @@ const host = dataHelper.getJetpackHost();
 
 var driver;
 
-let eyes = eyesHelper.eyesSetup( true );
+let eyes = eyesHelper.eyesSetup( false );
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );

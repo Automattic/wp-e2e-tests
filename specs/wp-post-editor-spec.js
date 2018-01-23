@@ -41,15 +41,11 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Public Posts: @parallel @jetpack @visdiff', function() {
+	test.describe( 'Public Posts: @parallel @jetpack', function() {
 		let fileDetails;
 
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
-
-			let testEnvironment = 'WordPress.com';
-			let testName = `Post Editor - Public Post [${global.browserName}] [${screenSize}]`;
-			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 		} );
 
 		// Create image file for upload
@@ -83,35 +79,6 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 						assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 					} );
 				} );
-
-				if ( process.env.VISDIFF ) {
-					test.it( 'Close sidebar for editor screenshot', function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.hideComponentIfNecessary();
-						eyesHelper.eyesScreenshot( driver, eyes, 'Post Editor' );
-					} );
-
-					test.it( 'Open all sidebar sections for screenshot', function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.expandMoreOptions();
-						postEditorSidebarComponent.expandPostFormat();
-						postEditorSidebarComponent.expandSharingSection();
-						postEditorSidebarComponent.expandFeaturedImage();
-						postEditorSidebarComponent.expandCategoriesAndTags();
-						postEditorSidebarComponent.expandStatusSection();
-						eyesHelper.eyesScreenshot( driver, eyes, 'Post Editor Settings' );
-					} );
-
-					test.it( 'Close all sidebar sections', function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.closeStatusSection();
-						postEditorSidebarComponent.closeCategoriesAndTags();
-						postEditorSidebarComponent.closeFeaturedImage();
-						postEditorSidebarComponent.closeSharingSection();
-						postEditorSidebarComponent.closePostFormat();
-						postEditorSidebarComponent.closeMoreOptions();
-					} );
-				}
 
 				test.describe( 'Categories and Tags', function() {
 					test.it( 'Expand Categories and Tags', function() {
@@ -337,7 +304,6 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 		} );
 
 		test.after( function() {
-			eyesHelper.eyesClose( eyes );
 			if ( fileDetails ) {
 				mediaHelper.deleteFile( fileDetails ).then( function() {} );
 			}

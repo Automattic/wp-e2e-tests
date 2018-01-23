@@ -9,7 +9,6 @@ import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-co
 import * as driverManager from '../lib/driver-manager.js';
 import * as mediaHelper from '../lib/media-helper.js';
 import * as dataHelper from '../lib/data-helper';
-import * as eyesHelper from '../lib/eyes-helper.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -18,21 +17,13 @@ const host = dataHelper.getJetpackHost();
 
 var driver;
 
-let eyes = eyesHelper.eyesSetup( true );
-
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Editor: Media Upload (${screenSize}) @parallel @jetpack @visdiff`, function() {
+test.describe( `[${host}] Editor: Media Upload (${screenSize}) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
-
-	test.before( function() {
-		let testEnvironment = 'WordPress.com';
-		let testName = `Editor Media Upload [${global.browserName}] [${screenSize}]`;
-		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
-	} );
 
 	test.describe( 'Image Upload:', function() {
 		this.bailSuite( true );
@@ -60,16 +51,6 @@ test.describe( `[${host}] Editor: Media Upload (${screenSize}) @parallel @jetpac
 
 				test.it( 'Can upload an image', function() {
 					editorPage.uploadMedia( fileDetails );
-					eyesHelper.eyesScreenshot( driver, eyes, 'Editor Media Modal' );
-				} );
-
-				test.it( 'Can edit an image', function() {
-					editorPage.openImageDetails();
-					editorPage.selectEditImage();
-					editorPage.waitForImageEditor();
-					eyesHelper.eyesScreenshot( driver, eyes, 'Image Editor Media Modal' );
-					editorPage.dismissImageEditor();
-					editorPage.dismissImageDetails();
 				} );
 
 				test.it( 'Can delete image', function() {
@@ -182,9 +163,5 @@ test.describe( `[${host}] Editor: Media Upload (${screenSize}) @parallel @jetpac
 				editorPage.cleanDirtyState();
 			} );
 		} );
-	} );
-
-	test.after( function() {
-		eyesHelper.eyesClose( eyes );
 	} );
 } );

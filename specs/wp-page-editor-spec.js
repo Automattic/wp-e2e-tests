@@ -15,7 +15,6 @@ import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-co
 import * as driverManager from '../lib/driver-manager.js';
 import * as mediaHelper from '../lib/media-helper.js';
 import * as dataHelper from '../lib/data-helper.js';
-import * as eyesHelper from '../lib/eyes-helper.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -25,8 +24,6 @@ const httpsHost = config.get( 'httpsHosts' ).indexOf( host ) !== -1;
 
 var driver;
 
-let eyes = eyesHelper.eyesSetup( true );
-
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
@@ -35,15 +32,11 @@ test.before( function() {
 test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Public Pages: @parallel @jetpack @visdiff', function() {
+	test.describe( 'Public Pages: @parallel @jetpack', function() {
 		this.bailSuite( true );
 		let fileDetails;
 
 		test.before( function() {
-			let testEnvironment = 'WordPress.com';
-			let testName = `Page Editor - Public Page [${global.browserName}] [${screenSize}]`;
-			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
-
 			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
@@ -73,33 +66,6 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 					assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 				} );
 			} );
-
-			if ( process.env.VISDIFF ) {
-				test.it( 'Close sidebar for editor screenshot', function() {
-					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.hideComponentIfNecessary();
-					eyesHelper.eyesScreenshot( driver, eyes, 'Page Editor' );
-				} );
-
-				test.it( 'Open all sidebar sections for screenshot', function() {
-					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.expandMoreOptions();
-					postEditorSidebarComponent.expandSharingSection();
-					postEditorSidebarComponent.expandPageOptions();
-					postEditorSidebarComponent.expandFeaturedImage();
-					postEditorSidebarComponent.expandStatusSection();
-					eyesHelper.eyesScreenshot( driver, eyes, 'Page Editor Settings' );
-				} );
-
-				test.it( 'Close all sidebar sections', function() {
-					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.closeStatusSection();
-					postEditorSidebarComponent.closeFeaturedImage();
-					postEditorSidebarComponent.closePageOptions();
-					postEditorSidebarComponent.closeSharingSection();
-					postEditorSidebarComponent.closeMoreOptions();
-				} );
-			}
 
 			test.it( 'Can disable sharing buttons', function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
@@ -224,7 +190,6 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 		} );
 
 		test.after( function() {
-			eyesHelper.eyesClose( eyes );
 			if ( fileDetails ) {
 				mediaHelper.deleteFile( fileDetails ).then( function() {} );
 			}
