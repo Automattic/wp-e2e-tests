@@ -32,15 +32,13 @@ test.describe( `Calypso Visual Diff (${screenSize})`, function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 
-	test.before( function() {
-		let testEnvironment = 'WordPress.com';
-		let testName = `My Sites [${global.browserName}] [${screenSize}]`;
-		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
-	} );
-
 	test.describe( 'Site Pages: @visdiff', function() {
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+
+			let testEnvironment = 'WordPress.com';
+			let testName = `Site Pages [${global.browserName}] [${screenSize}]`;
+			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 		} );
 
 		test.it( 'Log in as visdiff user', function() {
@@ -90,11 +88,19 @@ test.describe( `Calypso Visual Diff (${screenSize})`, function() {
 			this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 			return this.postEditorToolbarComponent.closeEditor();
 		} );
+
+		test.after( function() {
+			eyesHelper.eyesClose( eyes );
+		} );
 	} );
 
 	test.describe( 'Blog Posts: @visdiff', function() {
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+
+			let testEnvironment = 'WordPress.com';
+			let testName = `Blog Posts [${global.browserName}] [${screenSize}]`;
+			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 		} );
 
 		test.it( 'Log in as visdiff user', function() {
@@ -166,11 +172,19 @@ test.describe( `Calypso Visual Diff (${screenSize})`, function() {
 			this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 			return this.postEditorToolbarComponent.closeEditor();
 		} );
+
+		test.after( function() {
+			eyesHelper.eyesClose( eyes );
+		} );
 	} );
 
 	test.describe( 'Comments: @visdiff', function() {
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+
+			let testEnvironment = 'WordPress.com';
+			let testName = `Comments [${global.browserName}] [${screenSize}]`;
+			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 		} );
 
 		test.it( 'Log in as visdiff user', function() {
@@ -189,9 +203,9 @@ test.describe( `Calypso Visual Diff (${screenSize})`, function() {
 			this.commentsPage.waitForComments();
 			eyesHelper.eyesScreenshot( driver, eyes, 'Comments List' );
 		} );
-	} );
 
-	test.after( function() {
-		eyesHelper.eyesClose( eyes );
+		test.after( function() {
+			eyesHelper.eyesClose( eyes );
+		} );
 	} );
 } );
