@@ -832,14 +832,8 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 		} );
 	} );
 
-	test.describe( 'Edit a Post: @parallel @jetpack @visdiff', function() {
+	test.describe( 'Edit a Post: @parallel @jetpack', function() {
 		this.bailSuite( true );
-
-		test.before( function() {
-			let testEnvironment = 'WordPress.com';
-			let testName = `Edit a Post [${global.browserName}] [${screenSize}]`;
-			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
-		} );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
@@ -885,7 +879,6 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				test.it( 'Can see and edit our new post', function() {
 					this.postsPage.waitForPostTitled( originalBlogPostTitle );
 					this.postsPage.isPostDisplayed( originalBlogPostTitle ).then( ( displayed ) => {
-						eyesHelper.eyesScreenshot( driver, eyes, 'Blog Posts List' );
 						assert.equal( displayed, true, `The blog post titled '${originalBlogPostTitle}' is not displayed in the list of posts` );
 					} );
 					this.postsPage.editPostWithTitle( originalBlogPostTitle );
@@ -921,10 +914,6 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 					} );
 				} );
 			} );
-		} );
-
-		test.after( function() {
-			eyesHelper.eyesClose( eyes );
 		} );
 	} );
 
