@@ -116,8 +116,9 @@ The scripts in the `scripts/jetpack` directory are designed to build/configure a
 
 To locally run Jetpack CI tests against dynamicaly created sites (as they runs in CI) do the following:
 
-1. create new dynamic site via: `$ ./scripts/jetpack/wp-serverpilot-init.js`
 1. `export CIRCLE_SHA1=#{some_random_long_lowercased_string}`
 1. `export JETPACKHOST=CI`
-1. login(using jetpackUserCI creds) to your new shiny site and install JetPack there.
+1. create new dynamic site via: `$ ./scripts/jetpack/wp-serverpilot-init.js`
+1. login (using jetpackUserCI creds) to your new shiny site and install Jetack (Do not activate!)
+1. run activate script: `$ ./node_modules/.bin/mocha scripts/jetpack/wp-jetpack-activate.js`
 1. run magelan tests: `./node_modules/.bin/magellan --config=./magellan-jetpack.json --test=path/to/test.js`
