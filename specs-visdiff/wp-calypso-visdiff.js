@@ -195,9 +195,3 @@ test.describe( `Calypso Visual Diff (${screenSize})`, function() {
 		eyesHelper.eyesClose( eyes );
 	} );
 } );
-
-test.after( function() {
-	if ( ! process.env.EYESDEBUG ) {
-		eyes.abortIfNotClosed();
-	}
-} );
