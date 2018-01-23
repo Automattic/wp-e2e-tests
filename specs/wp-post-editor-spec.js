@@ -837,30 +837,21 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 					this.navbarComponent.clickMySites();
 					this.sidebarComponent = new SidebarComponent( driver, siteName );
 					this.sidebarComponent.selectPosts();
-					this.postsPage = new PostsPage( driver );
-					this.postsPage.waitForPosts();
+					return this.postsPage = new PostsPage( driver );
 				} );
 
 				test.it( 'Can see and edit our new post', function() {
-					this.postsPage.isPostDisplayed( originalBlogPostTitle ).then( ( displayed ) => {
-						if ( displayed === false ) {
-							slackNotifier.warn( 'Could not locate the post on posts page, retrying the posts menu option again' );
-							this.sidebarComponent = new SidebarComponent( driver, siteName );
-							this.sidebarComponent.selectPosts();
-							this.postsPage = new PostsPage( driver );
-							return this.postsPage.waitForPosts();
-						}
-					} );
+					this.postsPage.waitForPostTitled( originalBlogPostTitle );
 					this.postsPage.isPostDisplayed( originalBlogPostTitle ).then( ( displayed ) => {
 						assert.equal( displayed, true, `The blog post titled '${originalBlogPostTitle}' is not displayed in the list of posts` );
 					} );
 					this.postsPage.editPostWithTitle( originalBlogPostTitle );
-					this.editorPage = new EditorPage( driver );
+					return this.editorPage = new EditorPage( driver );
 				} );
 
 				test.it( 'Can see the post title', function() {
 					this.editorPage.waitForTitle();
-					this.editorPage.titleShown().then( ( titleShown ) => {
+					return this.editorPage.titleShown().then( ( titleShown ) => {
 						assert.equal( titleShown, originalBlogPostTitle, 'The blog post title shown was unexpected' );
 					} );
 				} );
@@ -881,7 +872,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 					} );
 
 					test.it( 'Can see correct post title', function() {
-						this.viewPostPage.postTitle().then( function( postTitle ) {
+						return this.viewPostPage.postTitle().then( function( postTitle ) {
 							assert.equal( postTitle.toLowerCase(), updatedBlogPostTitle.toLowerCase(), 'The published blog post title is not correct' );
 						} );
 					} );

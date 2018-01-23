@@ -17,7 +17,6 @@ import SignupProcessingPage from '../lib/pages/signup/signup-processing-page.js'
 import CheckOutPage from '../lib/pages/signup/checkout-page';
 import CheckOutThankyouPage from '../lib/pages/signup/checkout-thankyou-page.js';
 import ViewBlogPage from '../lib/pages/signup/view-blog-page.js';
-// import EditorPage from '../lib/pages/editor-page.js';
 import LoginPage from '../lib/pages/login-page';
 import MagicLoginPage from '../lib/pages/magic-login-page';
 import ReaderPage from '../lib/pages/reader-page';
@@ -38,6 +37,8 @@ import SideBarComponent from '../lib/components/sidebar-component';
 import * as SlackNotifier from '../lib/slack-notifier';
 
 import EmailClient from '../lib/email-client.js';
+import ThemesPage from '../lib/pages/themes-page';
+import ThemeDetailPage from '../lib/pages/theme-detail-page';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -675,13 +676,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 										let cancelDomainPage = new CancelDomainPage( driver );
 										cancelDomainPage.completeSurveyAndConfirm();
-										cancelDomainPage.waitToDisappear();
-
-										let purchasesPage = new PurchasesPage( driver );
-										purchasesPage.waitForAndDismissSuccessMessage();
-										return purchasesPage.isEmpty().then( ( empty ) => {
-											return assert( empty, 'The purchases page is not empty after cancelling the domain' );
-										} );
+										return cancelDomainPage.waitToDisappear();
 									} );
 								} );
 							} );
@@ -883,12 +878,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 											} );
 											managePurchasePage.chooseRemovePurchase();
 											managePurchasePage.removeNow();
-											managePurchasePage.waitTillRemoveNoLongerShown();
-
-											purchasesPage.waitForAndDismissSuccessMessage();
-											return purchasesPage.isEmpty().then( ( empty ) => {
-												return assert( empty, 'The purchases page is not empty after cancelling the domain' );
-											} );
+											return managePurchasePage.waitTillRemoveNoLongerShown();
 										} );
 									} );
 								} );
@@ -1166,6 +1156,129 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 										} );
 									} );
 								}
+							} );
+						} );
+					} );
+				} );
+			} );
+		} );
+	} );
+
+	test.describe( 'Sign up while purchasing premium theme @parallel @email', function() {
+		this.bailSuite( true );
+		let stepNum = 1;
+
+		const blogName = dataHelper.getNewBlogName();
+		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
+		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
+		const password = config.get( 'passwordForNewTestSignUps' );
+
+		test.it( 'Ensure we are not logged in as anyone', function() {
+			return driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		test.describe( `Step ${stepNum}: Themes Page`, function() {
+			stepNum++;
+
+			test.it( 'Can see the themes page', function() {
+				this.themesPage = new ThemesPage( driver, true );
+				return this.themesPage.displayed().then( ( displayed ) => {
+					return assert.equal( displayed, true, 'The about page is not displayed' );
+				} );
+			} );
+
+			test.it( 'Can select premium theme', function() {
+				this.name = '';
+				this.themesPage.showOnlyPremiumThemes();
+				this.themesPage.getFirstThemeName().then( name => this.name = name );
+				return this.themesPage.selectNewTheme();
+			} );
+
+			test.it( 'Can pick theme design', function() {
+				this.themePage = new ThemeDetailPage( driver );
+				return this.themePage.pickThisDesign();
+			} );
+
+			test.describe( `Step ${stepNum}: Domains`, function() {
+				stepNum++;
+
+				test.it( 'Can then see the domains page ', function() {
+					this.findADomainComponent = new FindADomainComponent( driver );
+					return this.findADomainComponent.displayed().then( ( displayed ) => {
+						return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
+					} );
+				} );
+
+				test.it( 'Can search for a blog name, can see and select a free .wordpress address in the results', function() {
+					this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+					this.findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
+					this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
+						assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
+					} );
+					return this.findADomainComponent.selectFreeAddress();
+				} );
+
+				test.describe( `Step ${stepNum}: Plans`, function() {
+					stepNum++;
+
+					test.it( 'Can then see the plans page', function() {
+						this.pickAPlanPage = new PickAPlanPage( driver );
+						return this.pickAPlanPage.displayed().then( ( displayed ) => {
+							return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
+						} );
+					} );
+
+					test.it( 'Can select the free plan', function() {
+						return this.pickAPlanPage.selectFreePlan();
+					} );
+
+					test.describe( `Step ${stepNum}: Account`, function() {
+						stepNum++;
+
+						test.it( 'Can then see the account page', function() {
+							this.createYourAccountPage = new CreateYourAccountPage( driver );
+							return this.createYourAccountPage.displayed().then( ( displayed ) => {
+								return assert.equal( displayed, true, 'The create account page is not displayed' );
+							} );
+						} );
+
+						test.it( 'Can then enter account details', function() {
+							return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
+						} );
+
+						test.describe( `Step ${stepNum}: Sign Up Processing`, function() {
+							stepNum++;
+
+							test.it( 'Can then see the sign up processing page', function() {
+								this.signupProcessingPage = new SignupProcessingPage( driver );
+								return this.signupProcessingPage.displayed().then( ( displayed ) => {
+									return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
+								} );
+							} );
+
+							test.it( 'The sign up processing page will finish and show a \'Continue\' button', function() {
+								return this.signupProcessingPage.waitForContinueButtonToBeEnabled();
+							} );
+
+							test.it( 'Clicking the \'Continue\' button continues the process', function() {
+								return this.signupProcessingPage.continueAlong();
+							} );
+
+							test.describe( `Step ${stepNum}: Secure Payment Page`, function() {
+								stepNum++;
+
+								test.it( 'Can then see the secure payment page', function() {
+									this.securePaymentComponent = new SecurePaymentComponent( driver );
+									return this.securePaymentComponent.displayed().then( ( displayed ) => {
+										return assert.equal( displayed, true, 'The secure payment page is not displayed' );
+									} );
+								} );
+
+								test.it( 'Can ensure that theme is added into Cart', function() {
+									return this.securePaymentComponent.getProductsNames().then( ( arry ) => {
+										assert( arry[0].search( this.name ), `First product in cart is not ${this.name}` );
+									} );
+								} );
 							} );
 						} );
 					} );
