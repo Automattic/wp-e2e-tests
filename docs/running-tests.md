@@ -55,7 +55,7 @@ The `run.sh` script takes the following parameters, which can be combined to exe
 -a [workers]	  - Number of parallel workers in Magellan (defaults to 3)
 -R		  - Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
 -p 		  - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop)
--b [branch]	  - Run tests on given branch via https://dserve.a8c.com
+-b [branch]	  - Run tests on given branch via https://calypso.live
 -s		  - Screensizes in a comma-separated list (defaults to mobile,desktop)
 -g		  - Execute general tests in the specs/ directory
 -j 		  - Execute Jetpack tests in the specs-jetpack-calypso/ directory (desktop and mobile)
