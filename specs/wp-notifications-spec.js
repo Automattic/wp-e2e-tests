@@ -10,6 +10,7 @@ import LoginFlow from '../lib/flows/login-flow.js';
 
 import ViewSitePage from '../lib/pages/view-site-page.js';
 import ViewPostPage from '../lib/pages/view-post-page.js';
+import ReaderPage from '../lib/pages/reader-page';
 
 import NavbarComponent from '../lib/components/navbar-component.js';
 import NotificationsComponent from '../lib/components/notifications-component.js';
@@ -26,7 +27,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Notifications: (${screenSize}) @parallel`, function() {
+test.describe.only( `[${host}] Notifications: (${screenSize}) @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -72,7 +73,9 @@ test.describe( `[${host}] Notifications: (${screenSize}) @parallel`, function() 
 			test.describe( 'Log in as notifications user', function() {
 				test.it( 'Can log in as notifications user', function() {
 					this.loginFlow = new LoginFlow( driver, 'notificationsUser' );
-					return this.loginFlow.login();
+					this.loginFlow.login();
+					this.readerPage = new ReaderPage( driver );
+					return this.readerPage.waitForPage();
 				} );
 
 				test.describe( 'See the notification', function() {
