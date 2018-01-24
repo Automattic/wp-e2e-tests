@@ -33,6 +33,10 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, f
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
+	test.before( function() {
+		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	} );
+
 	test.describe( 'Logging In and Out:', function() {
 		test.describe( 'Can Log In', function() {
 			test.it( 'Can log in', function() {
@@ -84,10 +88,6 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, f
 	} );
 
 	if ( dataHelper.hasAccountWithFeatures( 'passwordless' ) ) {
-		test.beforeEach( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
-		} );
-
 		test.describe( 'Can Log in on a passwordless account', function() {
 			test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
 				let magicLoginLink, loginFlow, magicLinkEmail, emailClient;
