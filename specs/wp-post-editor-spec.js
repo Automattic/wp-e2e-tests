@@ -105,7 +105,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 
 						postEditorSidebarComponent.hideComponentIfNecessary();
 						postEditorToolbarComponent.ensureSaved();
-						postEditorSidebarComponent.displayComponentIfNecessary()
+						postEditorSidebarComponent.displayComponentIfNecessary();
 						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
 							assert( ! subtitle.match( /Uncategorized/ ), 'Post still marked Uncategorized after adding new category AFTER SAVE' );
 						} );
@@ -834,7 +834,8 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 					this.readerPage = new ReaderPage( driver, true );
 					this.navbarComponent = new NavbarComponent( driver );
 					this.navbarComponent.clickMySites();
-					this.sidebarComponent = new SidebarComponent( driver );
+					const jetpackSiteName = dataHelper.getJetpackSiteName();
+					this.sidebarComponent = new SidebarComponent( driver, jetpackSiteName );
 					this.sidebarComponent.selectPosts();
 					return this.postsPage = new PostsPage( driver );
 				} );
