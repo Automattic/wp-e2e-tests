@@ -27,6 +27,7 @@ const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
 const httpsHost = config.get( 'httpsHosts' ).indexOf( host ) !== -1;
+const siteName = dataHelper.getJetpackSiteName();
 
 let driver;
 
@@ -105,7 +106,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 
 						postEditorSidebarComponent.hideComponentIfNecessary();
 						postEditorToolbarComponent.ensureSaved();
-						postEditorSidebarComponent.displayComponentIfNecessary()
+						postEditorSidebarComponent.displayComponentIfNecessary();
 						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
 							assert( ! subtitle.match( /Uncategorized/ ), 'Post still marked Uncategorized after adding new category AFTER SAVE' );
 						} );
@@ -834,7 +835,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 					this.readerPage = new ReaderPage( driver, true );
 					this.navbarComponent = new NavbarComponent( driver );
 					this.navbarComponent.clickMySites();
-					this.sidebarComponent = new SidebarComponent( driver );
+					this.sidebarComponent = new SidebarComponent( driver, siteName );
 					this.sidebarComponent.selectPosts();
 					return this.postsPage = new PostsPage( driver );
 				} );
