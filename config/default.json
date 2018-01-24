@@ -77,6 +77,6 @@
     [ "signupSiteSegmentStep_20170329", "variant" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
-    [ "promoteYearlyJetpackPlanSavings_20180124", "promoteYearly" ]
+    [ "promoteYearlyJetpackPlanSavings_20180124", "original" ]
   ]
 }
