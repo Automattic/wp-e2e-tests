@@ -68,7 +68,8 @@
     "signupSiteSegmentStep",
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser",
-    "paymentMethodsOnPlans"
+    "paymentMethodsOnPlans",
+    "promoteYearlyJetpackPlanSavings"
   ],
   "overrideABTests": [
     [ "skipThemesSelectionModal_20170830", "show" ],
