@@ -111,3 +111,14 @@ We can also run the test suite (including Selenium) from within the context of a
 
 ## Jetpack Tests on CircleCI
 The scripts in the `scripts/jetpack` directory are designed to build/configure a Jetpack site via the ServerPilot API on a DigitalOcean droplet.  Once you've built a droplet and connected it to ServerPilot (and configured your keys in the `spConfig` object), build the site via `./scripts/jetpack/wp-serverpilot-init.js`.  There are also scripts in that directory for installing/activating/connecting/disconnecting Jetpack, and deleting the site.
+
+## Jetpack CI like tests localy
+
+To locally run Jetpack CI tests against dynamicaly created sites (as they runs in CI) do the following:
+
+1. `export CIRCLE_SHA1=#{some_random_long_lowercased_string}`
+1. `export JETPACKHOST=CI`
+1. create new dynamic site via: `$ ./scripts/jetpack/wp-serverpilot-init.js`
+1. login (using jetpackUserCI creds) to your new shiny site and install Jetack (Do not activate!)
+1. run activate script: `$ ./node_modules/.bin/mocha scripts/jetpack/wp-jetpack-activate.js`
+1. run magelan tests: `./node_modules/.bin/magellan --config=./magellan-jetpack.json --test=path/to/test.js`
