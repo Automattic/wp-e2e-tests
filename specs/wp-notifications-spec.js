@@ -5,6 +5,7 @@ import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 import * as slackNotifier from '../lib/slack-notifier';
 import * as dataHelper from '../lib/data-helper';
+import * as eyesHelper from '../lib/eyes-helper.js';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
@@ -21,22 +22,28 @@ const host = dataHelper.getJetpackHost();
 
 var driver;
 
+let eyes = eyesHelper.eyesSetup( false );
+
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Notifications: (${screenSize}) @parallel`, function() {
+test.describe( `[${host}] Notifications: (${screenSize}) @parallel @visdiff`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
 	test.before( function() {
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+
+		let testEnvironment = 'WordPress.com';
+		let testName = `Notifications [${global.browserName}] [${screenSize}]`;
+		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 	} );
 
 	test.describe( 'Log in as commenting user', function() {
 		test.it( 'Can log in as commenting user', function() {
-			this.commentingUser = 'e2eflowtestingcommenter';
+			this.commentingUser = dataHelper.getAccountConfig( 'commentingUser' )[0];
 			this.loginFlow = new LoginFlow( driver, 'commentingUser' );
 			return this.loginFlow.login();
 		} );
@@ -91,12 +98,14 @@ test.describe( `[${host}] Notifications: (${screenSize}) @parallel`, function() 
 						this.notificationsComponent = new NotificationsComponent( driver );
 						this.notificationsComponent.selectComments();
 						return this.notificationsComponent.allCommentsContent().then( ( content ) => {
+							eyesHelper.eyesScreenshot( driver, eyes, 'Notifications List' );
 							assert.equal( content.includes( expectedContent ), true, `The actual notifications content '${content}' does not contain expected content '${expectedContent}'` );
 						} );
 					} );
 
 					test.it( 'Can delete the comment (and wait for UNDO grace period so it is actually deleted)', function() {
 						this.notificationsComponent.selectCommentByText( this.comment );
+						eyesHelper.eyesScreenshot( driver, eyes, 'Single Comment Notification' );
 						this.notificationsComponent.trashComment();
 						this.notificationsComponent.waitForUndoMessage();
 						return this.notificationsComponent.waitForUndoMessageToDisappear();
@@ -104,5 +113,9 @@ test.describe( `[${host}] Notifications: (${screenSize}) @parallel`, function() 
 				} );
 			} );
 		} );
+	} );
+
+	test.after( function() {
+		eyesHelper.eyesClose( eyes );
 	} );
 } );

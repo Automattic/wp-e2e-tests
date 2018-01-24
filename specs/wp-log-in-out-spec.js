@@ -5,6 +5,7 @@ import { get } from 'lodash';
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper';
+import * as eyesHelper from '../lib/eyes-helper';
 
 import EmailClient from '../lib/email-client.js';
 import ReaderPage from '../lib/pages/reader-page';
@@ -24,12 +25,14 @@ const host = dataHelper.getJetpackHost();
 
 var driver;
 
+let eyes = eyesHelper.eyesSetup( true );
+
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, function() {
+test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @visdiff`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -37,11 +40,17 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, f
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
+	test.before( function() {
+		let testEnvironment = 'WordPress.com';
+		let testName = `Log In and Out [${global.browserName}] [${screenSize}]`;
+		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
+	} );
+
 	test.describe( 'Logging In and Out:', function() {
 		test.describe( 'Can Log In', function() {
 			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
-				loginFlow.login();
+				loginFlow.login( { screenshot: true }, eyes );
 			} );
 
 			test.it( 'Can see Reader Page after logging in', function() {
@@ -75,6 +84,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, f
 
 			test.it( 'Can logout from profile page', function() {
 				let profilePage = new ProfilePage( driver );
+				eyesHelper.eyesScreenshot( driver, eyes, 'Me Profile Page' );
 				profilePage.clickSignOut();
 			} );
 
@@ -85,6 +95,10 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack`, f
 				} );
 			} );
 		} );
+	} );
+
+	test.after( function() {
+		eyesHelper.eyesClose( eyes );
 	} );
 
 	if ( dataHelper.hasAccountWithFeatures( 'passwordless' ) ) {
