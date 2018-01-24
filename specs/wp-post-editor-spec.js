@@ -27,7 +27,6 @@ const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
 const httpsHost = config.get( 'httpsHosts' ).indexOf( host ) !== -1;
-const siteName = dataHelper.getJetpackSiteName();
 
 let driver;
 
@@ -835,7 +834,8 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 					this.readerPage = new ReaderPage( driver, true );
 					this.navbarComponent = new NavbarComponent( driver );
 					this.navbarComponent.clickMySites();
-					this.sidebarComponent = new SidebarComponent( driver, siteName );
+					const jetpackSiteName = dataHelper.getJetpackSiteName();
+					this.sidebarComponent = new SidebarComponent( driver, jetpackSiteName );
 					this.sidebarComponent.selectPosts();
 					return this.postsPage = new PostsPage( driver );
 				} );
