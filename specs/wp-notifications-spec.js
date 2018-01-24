@@ -27,7 +27,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe.only( `[${host}] Notifications: (${screenSize}) @parallel`, function() {
+test.describe( `[${host}] Notifications: (${screenSize}) @parallel`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
