@@ -53,7 +53,7 @@ usage () {
 -i		  - Execute i18n NUX screenshot tests, not compatible with -g flag
 -I		  - Execute tests in specs-i18n/ directory
 -U      - Execute the i18n screenshot upload script in scripts/
--v		  - Execute the visdiff tests in specs-visdiff/
+-v		  - Execute the visdiff tests via Sauce Labs
 -x		  - Execute the tests from the context of xvfb-run
 -u [baseUrl]	  - Override the calypsoBaseURL config
 -h		  - This help listing
@@ -120,7 +120,8 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
       continue
       ;;
     v)
-      MAGELLAN_CONFIG="magellan-visdiff.json" # File does not exist, visdiffs aren't using Magellan yet
+      export VISDIFF=1
+      MAGELLAN_CONFIG="magellan-visdiff.json"
       ;;
     m)
       BROWSERS=$(echo $OPTARG | sed 's/,/ /g')

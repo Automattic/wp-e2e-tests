@@ -61,7 +61,10 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				editorPage.enterTitle( pageTitle );
 				editorPage.enterContent( pageQuote + '\n' );
 				editorPage.enterPostImage( fileDetails );
-				return editorPage.waitUntilImageInserted( fileDetails );
+				editorPage.waitUntilImageInserted( fileDetails );
+				editorPage.errorDisplayed().then( ( errorShown ) => {
+					assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+				} );
 			} );
 
 			test.it( 'Can disable sharing buttons', function() {
@@ -74,6 +77,9 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 			if ( httpsHost ) {
 				test.describe( 'Preview', function() {
 					test.it( 'Can launch page preview', function() {
+						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						postEditorSidebarComponent.hideComponentIfNecessary();
+
 						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						postEditorToolbarComponent.ensureSaved();
 						postEditorToolbarComponent.launchPreview();

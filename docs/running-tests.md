@@ -40,7 +40,7 @@ You can run tests in different modes by setting an environment variable `BROWSER
 
 Eg:
 
-`env BROWSERSIZE=tablet ./node_modules/.bin/mocha specs
+`env BROWSERSIZE=tablet ./node_modules/.bin/mocha specs`
 
 Or you can use the -s option on the run.sh script:
 
@@ -62,13 +62,12 @@ The `run.sh` script takes the following parameters, which can be combined to exe
 -W		  - Execute WooCommerce tests in the specs-woocommerce/ directory (desktop and mobile)
 -H [host]	  - Specify an alternate host for Jetpack tests
 -w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
--l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration
+-l [config]	  - Execute the tests via Sauce Labs with the given configuration
 -c		  - Exit with status code 0 regardless of test results
--m [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
 -f		  - Tell visdiffs to fail the tests rather than just send an alert
 -i		  - Execute i18n screenshot tests, not compatible with -g flag
 -U		  - Execute the i18n screenshot upload script in scripts/
--v		  - Execute the visdiff tests in specs-visdiff/
+-v		  - Execute the integrated visdiff tests
 -x		  - Execute the tests using the --headless flag in Chrome
 -u [baseUrl]	  - Override the calypsoBaseURL config
 -h		  - This help listing
@@ -111,3 +110,14 @@ We can also run the test suite (including Selenium) from within the context of a
 
 ## Jetpack Tests on CircleCI
 The scripts in the `scripts/jetpack` directory are designed to build/configure a Jetpack site via the ServerPilot API on a DigitalOcean droplet.  Once you've built a droplet and connected it to ServerPilot (and configured your keys in the `spConfig` object), build the site via `./scripts/jetpack/wp-serverpilot-init.js`.  There are also scripts in that directory for installing/activating/connecting/disconnecting Jetpack, and deleting the site.
+
+## Jetpack CI like tests localy
+
+To locally run Jetpack CI tests against dynamicaly created sites (as they runs in CI) do the following:
+
+1. `export CIRCLE_SHA1=#{some_random_long_lowercased_string}`
+1. `export JETPACKHOST=CI`
+1. create new dynamic site via: `$ ./scripts/jetpack/wp-serverpilot-init.js`
+1. login (using jetpackUserCI creds) to your new shiny site and install Jetack (Do not activate!)
+1. run activate script: `$ ./node_modules/.bin/mocha scripts/jetpack/wp-jetpack-activate.js`
+1. run magelan tests: `./node_modules/.bin/magellan --config=./magellan-jetpack.json --test=path/to/test.js`

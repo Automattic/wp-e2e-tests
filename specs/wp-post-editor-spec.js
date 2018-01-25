@@ -20,7 +20,7 @@ import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-co
 import * as driverManager from '../lib/driver-manager';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
-import * as slackNotifier from '../lib/slack-notifier';
+import * as eyesHelper from '../lib/eyes-helper.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -29,6 +29,8 @@ const host = dataHelper.getJetpackHost();
 const httpsHost = config.get( 'httpsHosts' ).indexOf( host ) !== -1;
 
 let driver;
+
+let eyes = eyesHelper.eyesSetup( true );
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -105,7 +107,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 
 						postEditorSidebarComponent.hideComponentIfNecessary();
 						postEditorToolbarComponent.ensureSaved();
-						postEditorSidebarComponent.displayComponentIfNecessary()
+						postEditorSidebarComponent.displayComponentIfNecessary();
 						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
 							assert( ! subtitle.match( /Uncategorized/ ), 'Post still marked Uncategorized after adding new category AFTER SAVE' );
 						} );
@@ -834,7 +836,8 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 					this.readerPage = new ReaderPage( driver, true );
 					this.navbarComponent = new NavbarComponent( driver );
 					this.navbarComponent.clickMySites();
-					this.sidebarComponent = new SidebarComponent( driver );
+					const jetpackSiteName = dataHelper.getJetpackSiteName();
+					this.sidebarComponent = new SidebarComponent( driver, jetpackSiteName );
 					this.sidebarComponent.selectPosts();
 					return this.postsPage = new PostsPage( driver );
 				} );
@@ -925,8 +928,14 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 		} );
 	} );
 
-	test.describe( 'Insert a payment button: @parallel', function() {
+	test.describe( 'Insert a payment button: @parallel @visdiff', function() {
 		this.bailSuite( true );
+
+		test.before( function() {
+			let testEnvironment = 'WordPress.com';
+			let testName = `Post Editor - Payment Button [${global.browserName}] [${screenSize}]`;
+			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
+		} );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
@@ -943,7 +952,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can insert the payment button', function() {
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterTitle( originalBlogPostTitle );
-				this.editorPage.insertPaymentButton();
+				this.editorPage.insertPaymentButton( eyes );
 
 				return this.editorPage.errorDisplayed().then( ( errorShown ) => {
 					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
@@ -967,6 +976,10 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 					assert.equal( displayed, true, 'The published post does not contain the payment button' );
 				} );
 			} );
+		} );
+
+		test.after( function() {
+			eyesHelper.eyesClose( eyes );
 		} );
 	} );
 
