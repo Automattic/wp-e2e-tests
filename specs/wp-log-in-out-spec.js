@@ -84,6 +84,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 
 			test.it( 'Can logout from profile page', function() {
 				let profilePage = new ProfilePage( driver );
+				profilePage.waitForProfileLinks();
 				eyesHelper.eyesScreenshot( driver, eyes, 'Me Profile Page' );
 				profilePage.clickSignOut();
 			} );
