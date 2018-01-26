@@ -38,7 +38,7 @@ test.describe( `[${host}] Managing Domain Mapping: (${screenSize}) @parallel`, f
 	test.describe( 'Map a domain to an existing site', () => {
 		this.bailSuite( true );
 
-		const blogName = dataHelper.getNewBlogName();
+		const blogName = 'myawesomedomain.com';
 
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
