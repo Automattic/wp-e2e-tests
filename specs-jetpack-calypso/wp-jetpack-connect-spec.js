@@ -32,7 +32,7 @@ test.before( function() {
 } );
 
 test.describe( `Jetpack Connect: (${ screenSize })`, function() {
-	this.timeout( mochaTimeOut);
+	this.timeout( mochaTimeOut );
 
 	test.describe( 'Disconnect expired sites: @parallel @jetpack', function() {
 		this.bailSuite( true );
