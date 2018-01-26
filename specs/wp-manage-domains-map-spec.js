@@ -85,7 +85,6 @@ test.describe( `[${host}] Managing Domain Mapping: (${screenSize}) @parallel`, f
 				mapADomainPage.displayed().then( ( displayed ) => {
 					assert.equal( displayed, true, 'Could not see map a domain page' );
 				} );
-
 			} );
 
 			test.it( 'Can enter the domain name', () => {
