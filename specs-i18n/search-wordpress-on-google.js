@@ -25,7 +25,7 @@ test.after( function( done ) {
 	// Wait between tests to not overload Google
 	var wait_seconds = 10;
 	this.timeout( ( wait_seconds + 2 ) * 1e3 );
-	setTimeout( done, wait_seconds * 1e3);
+	setTimeout( done, wait_seconds * 1e3 );
 } );
 
 function doGoogleAdSearch( search_params ) {
@@ -40,22 +40,22 @@ function doGoogleAdSearch( search_params ) {
 			driverManager.deleteLocalStorage( driver );
 		} );
 
-		test.it( `Google search contains our ad`, function() {
+		test.it( 'Google search contains our ad', function() {
 			if ( locale === 'tr' || locale === 'ar' || locale === 'zh-tw' ) {
 				this.skip( 'Currently no advertising in this locale' );
 			}
 
 			const googleFlow = new GoogleFlow( driver, 'desktop' );
 			const that = this;
-			googleFlow.search( search_params, test_data ).then( searchPageUrl => {
+			googleFlow.search( search_params, test_data ).then( () => {
 				const searchPage = new GoogleSearchPage( driver, 'https://' + test_data.wpcom_base_url );
 				if ( searchPage.adExists() ) {
 					that.searchPage = searchPage;
 				}
-			});
+			} );
 		} );
 
-		test.it( `Our landing page exists`, function() {
+		test.it( 'Our landing page exists', function() {
 			if ( ! this.searchPage ) {
 				this.skip( 'Depends on previous test passing' );
 			}
@@ -66,7 +66,7 @@ function doGoogleAdSearch( search_params ) {
 			} );
 		} );
 
-		test.it( `Localized string found on landing page`, function() {
+		test.it( 'Localized string found on landing page', function() {
 			if ( ! this.landingPage ) {
 				this.skip( 'Depends on previous test passing' );
 			}

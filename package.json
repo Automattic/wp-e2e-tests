@@ -10,6 +10,7 @@
   "main": "greetings.js",
   "defaultTestArgs": "-g -s $BROWSERSIZE",
   "scripts": {
+	"lint": "eslint .",
     "postinstall": "npm pack ./lib/reporter && npm install ./spec-xunit-reporter-0.0.1.tgz --no-save",
     "test": "./run.sh ${TESTARGS:-$npm_package_defaultTestArgs}"
   },
