@@ -90,7 +90,8 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 					test.it( 'Can see the Manage page', function() {
 						this.readerManagePage = new ReaderManagePage( driver, true );
 						this.readerManagePage.waitForSites();
-						eyesHelper.eyesScreenshot( driver, eyes, 'Manage Followed Sites' );
+						eyesHelper.eyesScreenshot( driver, eyes, 'Manage - Recommended Sites', this.readerManagePage.recommendedSitesSection );
+						eyesHelper.eyesScreenshot( driver, eyes, 'Manage - Followed Sites', this.readerManagePage.followedSitesSection );
 					} );
 				} );
 			} );
