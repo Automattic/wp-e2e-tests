@@ -12,7 +12,9 @@ jobs:
       - restore_cache:
           key: << checksum "package.json" >>
       - run: source $HOME/.nvm/nvm.sh && npm install
-      - run: npm run lint
+      - run:
+      		name: Linting
+      		command: 'npm run lint'
       - save_cache:
           paths:
             - /wp-e2e-tests/node_modules
