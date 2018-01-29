@@ -33,7 +33,6 @@ service.run( function() {
 	// Oauth login
 	const token = oauth.login( service, account );
 
-
 	uploadImagesAndPost( WPcom( token.accessToken ) );
 } );
 
@@ -65,7 +64,7 @@ function uploadImagesAndPost( wpcom ) {
 								.then( data => {
 									// Add image info to array
 									return imageIDs[flow].push( data.media[0].ID );
-							} );
+								} );
 						} );
 					}, Promise.resolve() );
 				} );
@@ -111,6 +110,6 @@ function postImages( locale, imageIDs, site ) {
 			} ).catch( e => {
 				console.log( e );
 				reject();
-			} )
+			} );
 	} );
 }

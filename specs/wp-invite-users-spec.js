@@ -30,7 +30,6 @@ import EmailClient from '../lib/email-client.js';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
-const calypsoBaseUrl = config.get( 'calypsoBaseURL' );
 const host = dataHelper.getJetpackHost();
 
 let driver;
@@ -673,7 +672,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 									this.postEditorToolbarComponent.waitForIsPendingStatus();
 									this.postEditorToolbarComponent.statusIsPending().then( ( isPending ) => {
 										assert.equal( isPending, true, 'The post is not showing as pending' );
-									} )
+									} );
 								} );
 
 								test.describe( 'As the original user, can see new user added to site', function() {

@@ -11,7 +11,6 @@ import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 import JetpackConnectInstallPage from '../lib/pages/jetpack-connect-install-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page';
-import SettingsPage from '../lib/pages/settings-page';
 import WPAdminPluginsPage from '../lib/pages/wp-admin/wp-admin-plugins-page.js';
 import WPAdminPluginPopup from '../lib/pages/wp-admin/wp-admin-plugin-popup';
 import WPAdminUpdatesPage from '../lib/pages/wp-admin/wp-admin-updates-page';
