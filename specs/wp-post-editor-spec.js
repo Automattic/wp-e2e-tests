@@ -400,13 +400,8 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 					assert.equal( publishDateShown, publishDate, 'The publish date shown is not the expected publish date' );
 				} );
 				editorConfirmationSidebarComponent.confirmAndPublish();
-				if ( httpsHost ) {
-					let previewComponent = new PostPreviewComponent( driver );
-					previewComponent.edit();
-				} else {
-					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					postEditorToolbarComponent.waitForSuccessViewPostNotice();
-				}
+				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				postEditorToolbarComponent.waitForPostSucessNotice();
 				let postEditorPage = new EditorPage( driver );
 				return postEditorPage.postIsScheduled().then( ( isScheduled ) => {
 					assert( isScheduled, 'The newly scheduled post is not showing in the editor as scheduled' );
