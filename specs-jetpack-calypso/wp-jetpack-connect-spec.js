@@ -146,11 +146,6 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			return this.wpAdminJetpack.connectWordPressCom();
 		} );
 
-		test.it( 'Can click the login link in the account creation page', () => {
-			this.createAccountPage = new CreateYourAccountPage( driver );
-			return this.createAccountPage.clickLoginLink();
-		} );
-
 		test.it( 'Can login into WordPress.com', () => {
 			const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
 			return loginFlow.loginUsingExistingForm();
