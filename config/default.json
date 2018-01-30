@@ -68,7 +68,6 @@
     "signupSiteSegmentStep",
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser",
-    "paymentMethodsOnPlans",
     "promoteYearlyJetpackPlanSavings"
   ],
   "overrideABTests": [
