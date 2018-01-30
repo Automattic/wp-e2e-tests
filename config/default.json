@@ -65,7 +65,6 @@
     "skipThemesSelectionModal",
     "unlimitedThemeNudge",
     "jetpackHidePlanIconsForAllDevices",
-    "signupSiteSegmentStep",
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser",
     "promoteYearlyJetpackPlanSavings"
@@ -74,7 +73,6 @@
     [ "skipThemesSelectionModal_20170830", "show" ],
     [ "gsuiteUpsellV2_20171225", "original" ],
     [ "domainsCheckoutLocalizedAddresses_20171025", "showDefaultAddressFormat" ],
-    [ "signupSiteSegmentStep_20170329", "variant" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
     [ "promoteYearlyJetpackPlanSavings_20180124", "original" ]
