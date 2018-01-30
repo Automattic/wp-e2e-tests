@@ -7,7 +7,6 @@ import * as driverHelper from '../lib/driver-helper';
 import { By } from 'selenium-webdriver';
 
 import AddNewSitePage from '../lib/pages/add-new-site-page';
-import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.js';
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 import JetpackConnectInstallPage from '../lib/pages/jetpack-connect-install-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page';
