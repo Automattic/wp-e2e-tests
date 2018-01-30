@@ -124,7 +124,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 			} );
 
 			test.it( 'Should be on the /log-in/sms page', function() {
-				return twoFALoginPage.displayed().then( function( displayed ) {
+				return twoFALoginPage.displayed().then( function() {
 					return driver.getCurrentUrl().then( ( urlDisplayed ) => {
 						assert( urlDisplayed.indexOf( '/log-in/sms' ) !== -1, 'The 2fa sms page is not displayed after log in' );
 					} );
@@ -148,7 +148,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 			} );
 
 			test.it( 'Should be on the /log-in/authenticator page', function() {
-				return twoFALoginPage.displayed().then( function( displayed ) {
+				return twoFALoginPage.displayed().then( function() {
 					return driver.getCurrentUrl().then( ( urlDisplayed ) => {
 						assert( urlDisplayed.indexOf( '/log-in/authenticator' ) !== -1, 'The 2fa authenticator page is not displayed after log in' );
 					} );
@@ -169,7 +169,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 		test.describe( 'Can Log in on a passwordless account', function() {
 			test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
 				let magicLoginLink, loginFlow, magicLinkEmail, emailClient;
-				test.before( function () {
+				test.before( function() {
 					loginFlow = new LoginFlow( driver, [ '+passwordless', '-2fa' ] );
 					emailClient = new EmailClient( get( loginFlow.account, 'mailosaur.inboxId' ) );
 					return loginFlow.login();
@@ -218,8 +218,8 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 		test.describe( 'Can Log in on a passwordless account', function() {
 			test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
 				let magicLoginLink, loginFlow, magicLinkEmail, emailClient;
-				test.before( function () {
-					loginFlow = new LoginFlow( driver, [ '+passwordless',  '+2fa-sms' ] );
+				test.before( function() {
+					loginFlow = new LoginFlow( driver, [ '+passwordless', '+2fa-sms' ] );
 					emailClient = new EmailClient( get( loginFlow.account, 'mailosaur.inboxId' ) );
 					return loginFlow.login();
 				} );
@@ -257,7 +257,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 					} );
 
 					test.it( 'Should be on the /log-in/sms page', function() {
-						return twoFALoginPage.displayed().then( function( displayed ) {
+						return twoFALoginPage.displayed().then( function() {
 							return driver.getCurrentUrl().then( ( urlDisplayed ) => {
 								assert( urlDisplayed.indexOf( '/log-in/sms' ) !== -1, 'The 2fa sms page is not displayed after log in' );
 							} );
@@ -276,7 +276,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 					} );
 				} );
 
-				test.after( function () {
+				test.after( function() {
 					if ( loginFlow ) {
 						loginFlow.end();
 					}
@@ -289,8 +289,8 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 		test.describe( 'Can Log in on a passwordless account', function() {
 			test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
 				let magicLoginLink, loginFlow, magicLinkEmail, emailClient;
-				test.before( function () {
-					loginFlow = new LoginFlow( driver, [ '+passwordless',  '+2fa-otp' ] );
+				test.before( function() {
+					loginFlow = new LoginFlow( driver, [ '+passwordless', '+2fa-otp' ] );
 					emailClient = new EmailClient( get( loginFlow.account, 'mailosaur.inboxId' ) );
 					return loginFlow.login();
 				} );
@@ -316,7 +316,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 					} );
 
 					test.it( 'Should be on the /log-in/authenticator page', function() {
-						return twoFALoginPage.displayed().then( function( displayed ) {
+						return twoFALoginPage.displayed().then( function() {
 							return driver.getCurrentUrl().then( ( urlDisplayed ) => {
 								assert( urlDisplayed.indexOf( '/log-in/authenticator' ) !== -1, 'The 2fa authenticator page is not displayed after log in' );
 							} );
@@ -339,7 +339,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 					} );
 				} );
 
-				test.after( function () {
+				test.after( function() {
 					if ( loginFlow ) {
 						loginFlow.end();
 					}
