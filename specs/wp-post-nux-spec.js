@@ -199,7 +199,7 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 								this.customizerPage.menuDisplayedAsPrimary( newMenuName ).then( ( displayed ) => {
 									if ( displayed === false ) {
 										slackNotifier.warn( 'Could not see the new menu set in the customizer - trying again now' );
-										this.customizerPage.addNewMenuAndSetAsPrimary( newMenuName )
+										this.customizerPage.addNewMenuAndSetAsPrimary( newMenuName );
 									}
 								} );
 

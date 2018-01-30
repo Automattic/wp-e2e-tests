@@ -53,7 +53,7 @@ usage () {
 -i		  - Execute i18n NUX screenshot tests, not compatible with -g flag
 -I		  - Execute tests in specs-i18n/ directory
 -U      - Execute the i18n screenshot upload script in scripts/
--v		  - Execute the visdiff tests in specs-visdiff/
+-v		  - Execute the visdiff tests via Sauce Labs
 -x		  - Execute the tests from the context of xvfb-run
 -u [baseUrl]	  - Override the calypsoBaseURL config
 -h		  - This help listing
@@ -102,6 +102,7 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
       ;;
     I)
       SCREENSIZES=desktop
+      WORKERS=1 # We need to be careful to take it slow with Google
       NODE_CONFIG_ARGS+=$I18N_CONFIG
       LOCALES="en,es,pt-br,de,fr,he,ja,it,nl,ru,tr,id,zh-cn,zh-tw,ko,ar,sv"
       MAGELLAN_CONFIG="magellan-i18n.json"
@@ -119,7 +120,8 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
       continue
       ;;
     v)
-      MAGELLAN_CONFIG="magellan-visdiff.json" # File does not exist, visdiffs aren't using Magellan yet
+      export VISDIFF=1
+      MAGELLAN_CONFIG="magellan-visdiff.json"
       ;;
     m)
       BROWSERS=$(echo $OPTARG | sed 's/,/ /g')

@@ -1,10 +1,9 @@
 const config = require( 'config' );
 const bluecat = require( 'bluecat' );
+const WPcom = require( 'wpcom' );
 const path = require( 'path' );
-const expect = require( 'chai' ).expect;
 
 const oauth = require( '../lib/wpcom-api/oauth.js' );
-const posts = require( '../lib/wpcom-api/posts.js' );
 const media = require( '../lib/wpcom-api/media.js' );
 
 const api = bluecat.Api( 'wp' );
@@ -30,36 +29,58 @@ const imageFolder = path.join( __dirname, '/../screenshots-i18n/' );
 // Prepare the images for upload, grouping them by locale & flow
 const imageFormDataCollection = media.prepareUpload( locales, e2eFlows, imageFolder );
 
-// Start the API calls
 service.run( function() {
-	var imageIDs;
-	var imageFormData;
-	var niceFlowID;
-	var postFormData;
-	var postContent;
-	var r;
-	var postLink;
-
 	// Oauth login
-	oauth.login( service, account );
+	const token = oauth.login( service, account );
+
+	uploadImagesAndPost( WPcom( token.accessToken ) );
+} );
+
+// Start the API calls
+function uploadImagesAndPost( wpcom ) {
+	let imageIDs;
+	let imageFormData;
+	let site = wpcom.site( account[2] );
 
 	// Publish a post for each locale
-	for ( const locale of locales ) {
-		console.log( `- Uploading ${locale} screenshots` );
-
-		// Upload the media for all flows in the locale and capture their media IDs
+	return locales.reduce( function( localePromise, locale ) {
 		imageIDs = {};
-		for ( const flow of e2eFlows ) {
-			imageFormData = imageFormDataCollection[ locale ][ flow ];
-			imageIDs[ flow ] = [];
+		return localePromise.then( function() {
+			console.log( `- Uploading ${locale} screenshots` );
+			// Loop through flows
+			return e2eFlows.reduce( function( flowPromise, flow ) {
+				return flowPromise.then( function() {
+					imageFormData = imageFormDataCollection[locale][flow];
+					imageIDs[flow] = [];
 
-			for ( const formData of imageFormData ) {
-				r = media.upload( service, account[2], formData );
-				expect( r.data.statusCode ).to.equal( 200 );
+					// Loop through images
+					return imageFormData.reduce( function( imagePromise, formData ) {
+						return imagePromise.then( function() {
+							// Upload images
+							return site.media().addFiles( {
+								file: formData.media.path
+							} )
+								.timeout( 60000 )
+								.then( data => {
+									// Add image info to array
+									return imageIDs[flow].push( data.media[0].ID );
+								} );
+						} );
+					}, Promise.resolve() );
+				} );
+			}, Promise.resolve() );
 
-				imageIDs[ flow ].push( r.data.body.media[0].ID );
-			}
-		}
+			// After looping through all the flows and images, call the post function
+		} ).then( () => postImages( locale, imageIDs, site ) );
+	}, Promise.resolve() );
+}
+
+function postImages( locale, imageIDs, site ) {
+	return new Promise( function( resolve, reject ) {
+		let niceFlowID;
+		let postFormData;
+		let postContent;
+		let postLink;
 
 		// Prepare post content with one gallery per flow
 		const dateString = new Date().toDateString();
@@ -67,7 +88,7 @@ service.run( function() {
 		for ( const flowID in imageIDs ) {
 			if ( imageIDs.hasOwnProperty( flowID ) ) {
 				niceFlowID = flowID.charAt( 0 ).toUpperCase() + flowID.slice( 1 ).replace( /-/g, ' ' );
-				postContent += `<h2>${niceFlowID}</h2><p>[gallery ids="${imageIDs[ flowID ]}"]</p>`;
+				postContent += `<h2>${niceFlowID}</h2><p>[gallery ids="${imageIDs[flowID]}"]</p>`;
 			}
 		}
 
@@ -80,10 +101,15 @@ service.run( function() {
 		};
 
 		// Publish post
-		r = posts.publish( service, account[2], postFormData );
-		expect( r.data.statusCode ).to.equal( 200 );
-		postLink = r.data.body.URL;
-
-		console.log( ` - Successfully published ${locale} post: ${postLink}` );
-	}
-} );
+		site.post().add( postFormData )
+			.timeout( 60000 )
+			.then( data => {
+				postLink = data.URL;
+				console.log( ` - Successfully published ${locale} post: ${postLink}` );
+				resolve();
+			} ).catch( e => {
+				console.log( e );
+				reject();
+			} );
+	} );
+}

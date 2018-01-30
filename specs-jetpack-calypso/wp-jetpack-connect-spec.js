@@ -11,7 +11,6 @@ import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 import JetpackConnectInstallPage from '../lib/pages/jetpack-connect-install-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page';
-import SettingsPage from '../lib/pages/settings-page';
 import WPAdminPluginsPage from '../lib/pages/wp-admin/wp-admin-plugins-page.js';
 import WPAdminPluginPopup from '../lib/pages/wp-admin/wp-admin-plugin-popup';
 import WPAdminUpdatesPage from '../lib/pages/wp-admin/wp-admin-updates-page';
@@ -32,10 +31,10 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
+test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Disconnect expired sites:', function() {
+	test.describe( 'Disconnect expired sites: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -73,7 +72,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		} );
 	} );
 
-	test.describe( 'Connect From Calypso:', function() {
+	test.describe( 'Connect From Calypso: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -119,7 +118,7 @@ test.describe( `Jetpack Connect: (${ screenSize }) @jetpack`, function() {
 		} );
 	} );
 
-	test.describe( 'Connect From wp-admin:', function() {
+	test.describe( 'Connect From wp-admin: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
