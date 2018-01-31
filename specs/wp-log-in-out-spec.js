@@ -46,7 +46,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 	} );
 
 	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		return driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
 	test.describe( 'Logging In and Out:', function() {
