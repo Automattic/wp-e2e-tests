@@ -220,7 +220,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 		} );
 	} );
 
-	test.xdescribe( 'Inviting New User as a Follower: @parallel @jetpack', function() {
+	test.describe( 'Inviting New User as a Follower: @parallel @jetpack', function() {
 		this.bailSuite( true );
 		const inviteInboxId = config.get( 'inviteInboxId' );
 		const newUserName = 'e2eflowtestingfollower' + new Date().getTime().toString();
