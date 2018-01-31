@@ -390,6 +390,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				} );
 				postEditorSidebarComponent.closeStatusSection();
 				let editorPage = new EditorPage( driver );
+				editorPage.waitForPage();
 				postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				postEditorToolbarComponent.ensureSaved( { clickSave: true } );
 				return postEditorToolbarComponent.clickPublishPost();
