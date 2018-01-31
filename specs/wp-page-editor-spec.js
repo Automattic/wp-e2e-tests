@@ -31,7 +31,6 @@ test.before( function() {
 
 test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 	this.timeout( mochaTimeOut );
-	const usePublishConfirmation = config.get( 'usePublishConfirmation' );
 
 	test.describe( 'Public Pages: @parallel @jetpack', function() {
 		this.bailSuite( true );
@@ -62,7 +61,10 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				editorPage.enterTitle( pageTitle );
 				editorPage.enterContent( pageQuote + '\n' );
 				editorPage.enterPostImage( fileDetails );
-				return editorPage.waitUntilImageInserted( fileDetails );
+				editorPage.waitUntilImageInserted( fileDetails );
+				editorPage.errorDisplayed().then( ( errorShown ) => {
+					assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+				} );
 			} );
 
 			test.it( 'Can disable sharing buttons', function() {
@@ -75,6 +77,9 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 			if ( httpsHost ) {
 				test.describe( 'Preview', function() {
 					test.it( 'Can launch page preview', function() {
+						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						postEditorSidebarComponent.hideComponentIfNecessary();
+
 						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						postEditorToolbarComponent.ensureSaved();
 						postEditorToolbarComponent.launchPreview();
@@ -108,9 +113,9 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 					test.it( 'Can publish and preview published content', function() {
 						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						if ( httpsHost ) {
-							this.postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
+							this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 						} else {
-							this.postEditorToolbarComponent.publishAndPreviewPublished( { useConfirmStep: usePublishConfirmation } );
+							this.postEditorToolbarComponent.publishAndPreviewPublished( { useConfirmStep: true } );
 						}
 						return this.pagePreviewComponent = new PagePreviewComponent( driver );
 					} );
@@ -146,7 +151,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				test.describe( 'Publish Content', function() {
 					test.it( 'Can publish content', function() {
 						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-						return this.postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
+						return this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 					} );
 				} );
 			}
@@ -302,7 +307,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 			test.describe( 'Publish and View', function() {
 				test.it( 'Can publish and view content', function() {
 					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
+					postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 				} );
 
 				test.describe( 'As a logged in user', function() {

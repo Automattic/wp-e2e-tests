@@ -39,7 +39,7 @@ test.describe( `[${host}] Jetpack Sites on Calypso - Existing Plugins: (${screen
 	test.describe( 'Can activate Hello Dolly', function() {
 		test.it( 'Ensure Hello Dolly is deactivated', function() {
 			this.pluginsPage = new PluginsPage( driver );
-			this.pluginsPage.viewPlugin( 'hello-dolly' );
+			this.pluginsPage.viewPlugin( 'hello' );
 			this.pluginDetailsPage = new PluginDetailsPage( driver );
 			this.pluginDetailsPage.waitForPlugin();
 			this.pluginDetailsPage.ensureDeactivated();
@@ -48,7 +48,7 @@ test.describe( `[${host}] Jetpack Sites on Calypso - Existing Plugins: (${screen
 
 		test.it( 'Can view the plugin details to activate Hello Dolly', function() {
 			this.pluginsPage = new PluginsPage( driver );
-			this.pluginsPage.viewPlugin( 'hello-dolly' );
+			this.pluginsPage.viewPlugin( 'hello' );
 			this.pluginDetailsPage = new PluginDetailsPage( driver );
 			this.pluginDetailsPage.waitForPlugin();
 			return this.pluginDetailsPage.clickActivateToggleForPlugin();

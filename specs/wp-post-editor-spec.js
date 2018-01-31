@@ -9,6 +9,7 @@ import TwitterFeedPage from '../lib/pages/twitter-feed-page.js';
 import ViewPostPage from '../lib/pages/view-post-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
 import PostsPage from '../lib/pages/posts-page.js';
+import ReaderPage from '../lib/pages/reader-page';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
@@ -19,7 +20,7 @@ import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-co
 import * as driverManager from '../lib/driver-manager';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
-import * as slackNotifier from '../lib/slack-notifier';
+import * as eyesHelper from '../lib/eyes-helper.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -27,7 +28,9 @@ const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
 const httpsHost = config.get( 'httpsHosts' ).indexOf( host ) !== -1;
 
-var driver;
+let driver;
+
+let eyes = eyesHelper.eyesSetup( true );
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -37,7 +40,6 @@ test.before( function() {
 test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
-	const usePublishConfirmation = config.get( 'usePublishConfirmation' );
 
 	test.describe( 'Public Posts: @parallel @jetpack', function() {
 		let fileDetails;
@@ -86,30 +88,32 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 
 					test.it( 'Can add a new category', function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						postEditorSidebarComponent.addNewCategory( newCategoryName );
-						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
-							assert( ! subtitle.match( /Uncategorized/ ), 'Post still marked Uncategorized after adding new category BEFORE SAVE' );
-						} );
-						postEditorToolbarComponent.ensureSaved();
-						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
-							assert( ! subtitle.match( /Uncategorized/ ), 'Post still marked Uncategorized after adding new category AFTER SAVE' );
-						} );
 					} );
 
 					test.it( 'Can add a new tag', function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						postEditorSidebarComponent.addNewTag( newTagName );
-						postEditorToolbarComponent.ensureSaved();
-						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
-							assert( subtitle.match( `#${newTagName}` ), `New tag #${newTagName} not applied` );
-						} );
 					} );
 
 					test.it( 'Close categories and tags', function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 						postEditorSidebarComponent.closeCategoriesAndTags();
+					} );
+
+					test.it( 'Verify categories and tags present after save', function() {
+						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+
+						postEditorSidebarComponent.hideComponentIfNecessary();
+						postEditorToolbarComponent.ensureSaved();
+						postEditorSidebarComponent.displayComponentIfNecessary();
+						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
+							assert( ! subtitle.match( /Uncategorized/ ), 'Post still marked Uncategorized after adding new category AFTER SAVE' );
+						} );
+						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
+							assert( subtitle.match( `#${newTagName}` ), `New tag #${newTagName} not applied` );
+						} );
 					} );
 
 					test.describe( 'Publicize Options', function() {
@@ -128,8 +132,8 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 
 							test.it( 'Can see the default publicise message', function() {
 								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-								postEditorSidebarComponent.publicizeMessagePlaceholder().then( function( placeholderDisplayed ) {
-									assert.equal( placeholderDisplayed, blogPostTitle, 'The placeholder for publicize is not equal to the blog post title. Placeholder: \'' + placeholderDisplayed + '\', Title: \'' + blogPostTitle + '\'' );
+								postEditorSidebarComponent.publicizeMessageDisplayed().then( function( messageDisplayed ) {
+									assert.equal( messageDisplayed, '', 'The publicize message is not defaulting to empty' );
 								} );
 							} );
 
@@ -147,6 +151,9 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 						test.describe( 'Preview (https only)', function() {
 							if ( httpsHost ) {
 								test.it( 'Can launch post preview', function() {
+									let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+									postEditorSidebarComponent.hideComponentIfNecessary();
+
 									this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 									this.postEditorToolbarComponent.ensureSaved();
 									this.postEditorToolbarComponent.launchPreview();
@@ -191,9 +198,9 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 									test.it( 'Can publish and view content', function() {
 										let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 										if ( httpsHost ) {
-											postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
+											postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 										} else {
-											postEditorToolbarComponent.publishAndPreviewPublished( { useConfirmStep: usePublishConfirmation } );
+											postEditorToolbarComponent.publishAndPreviewPublished( { useConfirmStep: true } );
 										}
 										this.postPreviewComponent = new PostPreviewComponent( driver );
 									} );
@@ -240,7 +247,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 							} else { // Jetpack tests
 								test.it( 'Can publish content', function() {
 									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-									postEditorToolbarComponent.publishThePost(  { useConfirmStep: usePublishConfirmation } );
+									postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 								} );
 							}
 
@@ -332,7 +339,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can publish and view content', function() {
 				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				postEditorToolbarComponent.ensureSaved();
-				return postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
+				return postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 			} );
 
 			test.it( 'Can see correct post title', function() {
@@ -496,7 +503,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				// Can publish and view content
 				test.before( function() {
 					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
+					postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 				} );
 
 				test.describe( 'As a logged in user', function() {
@@ -820,52 +827,45 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can publish the post', function() {
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				this.postEditorToolbarComponent.ensureSaved();
-				this.postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
+				this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 				return this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 			} );
 
 			test.describe( 'Edit the post via posts', function() {
 				test.it( 'Can view the posts list', function() {
+					this.readerPage = new ReaderPage( driver, true );
 					this.navbarComponent = new NavbarComponent( driver );
 					this.navbarComponent.clickMySites();
-					this.sidebarComponent = new SidebarComponent( driver );
+					const jetpackSiteName = dataHelper.getJetpackSiteName();
+					this.sidebarComponent = new SidebarComponent( driver, jetpackSiteName );
 					this.sidebarComponent.selectPosts();
-					this.postsPage = new PostsPage( driver );
-					this.postsPage.waitForPosts();
+					return this.postsPage = new PostsPage( driver );
 				} );
 
 				test.it( 'Can see and edit our new post', function() {
-					this.postsPage.isPostDisplayed( originalBlogPostTitle ).then( ( displayed ) => {
-						if ( displayed === false ) {
-							slackNotifier.warn( 'Could not locate the post on posts page, retrying the posts menu option again' );
-							this.sidebarComponent = new SidebarComponent( driver );
-							this.sidebarComponent.selectPosts();
-							this.postsPage = new PostsPage( driver );
-							return this.postsPage.waitForPosts();
-						}
-					} );
+					this.postsPage.waitForPostTitled( originalBlogPostTitle );
 					this.postsPage.isPostDisplayed( originalBlogPostTitle ).then( ( displayed ) => {
 						assert.equal( displayed, true, `The blog post titled '${originalBlogPostTitle}' is not displayed in the list of posts` );
 					} );
 					this.postsPage.editPostWithTitle( originalBlogPostTitle );
-					this.editorPage = new EditorPage( driver );
+					return this.editorPage = new EditorPage( driver );
 				} );
 
 				test.it( 'Can see the post title', function() {
 					this.editorPage.waitForTitle();
-					this.editorPage.titleShown().then( ( titleShown ) => {
+					return this.editorPage.titleShown().then( ( titleShown ) => {
 						assert.equal( titleShown, originalBlogPostTitle, 'The blog post title shown was unexpected' );
 					} );
 				} );
 
-				test.it( 'Can set the new title and save it', function() {
+				test.it( 'Can set the new title and update it, and link to the updated post', function() {
 					this.editorPage.enterTitle( updatedBlogPostTitle );
 					this.editorPage.errorDisplayed().then( ( errorShown ) => {
 						assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 					} );
 					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					this.postEditorToolbarComponent.ensureSaved();
-					this.postEditorToolbarComponent.publishAndViewContent();
+					this.postEditorToolbarComponent.publishThePost();
+					return this.postEditorToolbarComponent.waitForSuccessAndViewPost();
 				} );
 
 				test.describe( 'Can view the post with the new title', function() {
@@ -874,7 +874,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 					} );
 
 					test.it( 'Can see correct post title', function() {
-						this.viewPostPage.postTitle().then( function( postTitle ) {
+						return this.viewPostPage.postTitle().then( function( postTitle ) {
 							assert.equal( postTitle.toLowerCase(), updatedBlogPostTitle.toLowerCase(), 'The published blog post title is not correct' );
 						} );
 					} );
@@ -916,7 +916,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can publish and view content', function() {
 				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				postEditorToolbarComponent.ensureSaved();
-				postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
+				postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 				this.viewPostPage = new ViewPostPage( driver );
 			} );
 
@@ -928,8 +928,14 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 		} );
 	} );
 
-	test.describe( 'Insert a payment button: @parallel', function() {
+	test.describe( 'Insert a payment button: @parallel @visdiff', function() {
 		this.bailSuite( true );
+
+		test.before( function() {
+			let testEnvironment = 'WordPress.com';
+			let testName = `Post Editor - Payment Button [${global.browserName}] [${screenSize}]`;
+			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
+		} );
 
 		test.it( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
@@ -946,7 +952,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can insert the payment button', function() {
 				this.editorPage = new EditorPage( driver );
 				this.editorPage.enterTitle( originalBlogPostTitle );
-				this.editorPage.insertPaymentButton();
+				this.editorPage.insertPaymentButton( eyes );
 
 				return this.editorPage.errorDisplayed().then( ( errorShown ) => {
 					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
@@ -961,7 +967,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can publish and view content', function() {
 				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				postEditorToolbarComponent.ensureSaved();
-				postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: usePublishConfirmation } );
+				postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 				this.viewPostPage = new ViewPostPage( driver );
 			} );
 
@@ -970,6 +976,10 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 					assert.equal( displayed, true, 'The published post does not contain the payment button' );
 				} );
 			} );
+		} );
+
+		test.after( function() {
+			eyesHelper.eyesClose( eyes );
 		} );
 	} );
 
@@ -1002,7 +1012,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can publish the post', function() {
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				this.postEditorToolbarComponent.ensureSaved();
-				this.postEditorToolbarComponent.publishThePost( { useConfirmStep: usePublishConfirmation } );
+				this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 
 				if ( httpsHost ) {
 					this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
@@ -1020,6 +1030,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can revert the post to draft', function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				postEditorToolbarComponent.dismissSuccessViewPostNotice();
 				postEditorSidebarComponent.revertToDraft();
 				postEditorToolbarComponent.waitForIsDraftStatus();
 				postEditorToolbarComponent.statusIsDraft().then( ( isDraft ) => {

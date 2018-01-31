@@ -15,7 +15,6 @@
   "checkForConsoleErrors": false,
   "reportWarningsToSlack": false,
   "closeBrowserOnComplete": true,
-  "usePublishConfirmation": true,
   "sauceConfigurations": {
     "osx-chrome": {
         "browserName": "chrome",
@@ -57,11 +56,25 @@
     }
   },
   "httpsHosts": [ "WPCOM", "PRESSABLE" ],
-  "knownABTestKeys": [ "multiDomainRegistrationV1", "signupSurveyStep", "presaleChatButton", "businessPlanDescriptionAT", "newSiteWithJetpack", "postPublishConfirmation", "readerIntroIllustration", "paymentShowPaypalLogo", "jetpackConnectPlansCopyChanges", "postSignupUpgradeScreen", "privacyNoPopup", "skipThemesSelectionModal" ],
+  "knownABTestKeys": [
+    "businessPlanDescriptionAT",
+    "domainsCheckoutLocalizedAddresses",
+    "gsuiteUpsellV2",
+    "multiDomainRegistrationV1",
+    "presaleChatButton",
+    "skipThemesSelectionModal",
+    "unlimitedThemeNudge",
+    "jetpackHidePlanIconsForAllDevices",
+    "checklistThankYouForFreeUser",
+    "checklistThankYouForPaidUser",
+    "promoteYearlyJetpackPlanSavings"
+  ],
   "overrideABTests": [
-	[ "signupSurveyStep_20170329", "hideSurveyStep" ],
-	[ "postPublishConfirmation_20170801", "showPublishConfirmation" ],
-	[ "privacyNoPopup_20170830", "original" ],
-	[ "skipThemesSelectionModal_20170830", "show" ]
+    [ "skipThemesSelectionModal_20170830", "show" ],
+    [ "gsuiteUpsellV2_20171225", "original" ],
+    [ "domainsCheckoutLocalizedAddresses_20171025", "showDefaultAddressFormat" ],
+    [ "checklistThankYouForFreeUser_20171204", "hide" ],
+    [ "checklistThankYouForPaidUser_20171204", "hide" ],
+    [ "promoteYearlyJetpackPlanSavings_20180124", "original" ]
   ]
 }

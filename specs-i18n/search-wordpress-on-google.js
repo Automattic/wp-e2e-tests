@@ -3,8 +3,9 @@ import config from 'config';
 
 import * as driverManager from '../lib/driver-manager.js';
 
-import localization_data from '../../localization_data.json';
+import localization_data from '../localization-data.json';
 import GoogleFlow from '../lib/flows/google-flow.js';
+import GoogleSearchPage from '../lib/pages/external/google-search.js';
 import LandingPage from '../lib/pages/landing-page.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
@@ -20,14 +21,18 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-function doGoogleAdSearch( search_params ) {
-	var description = 'Search for "' + search_params.query + '" on Google from ' +
-		search_params.originating_location +
-		( search_params.originating_location_english
-			? ' (' + search_params.originating_location_english + ')'
-			: '' );
+test.after( function( done ) {
+	// Wait between tests to not overload Google
+	var wait_seconds = 10;
+	this.timeout( ( wait_seconds + 2 ) * 1e3 );
+	setTimeout( done, wait_seconds * 1e3 );
+} );
 
-	test.describe( description + ' @i18n', function() {
+function doGoogleAdSearch( search_params ) {
+	var description = 'Search for "' + search_params.query + '" on ' + search_params.domain + ' from ' +
+		search_params.comment_location;
+
+	test.describe( description + ' @i18n (' + locale + ')', function() {
 		this.timeout( mochaTimeOut );
 
 		test.beforeEach( function() {
@@ -35,28 +40,37 @@ function doGoogleAdSearch( search_params ) {
 			driverManager.deleteLocalStorage( driver );
 		} );
 
-		test.it( `Google search contains our ad`, function() {
+		test.it( 'Google search contains our ad', function() {
+			if ( locale === 'tr' || locale === 'ar' || locale === 'zh-tw' ) {
+				this.skip( 'Currently no advertising in this locale' );
+			}
+
 			const googleFlow = new GoogleFlow( driver, 'desktop' );
 			const that = this;
-			return googleFlow.search( search_params, test_data ).then( searchPage => {
-				that.searchPage = searchPage;
-			} )
+			googleFlow.search( search_params, test_data ).then( () => {
+				const searchPage = new GoogleSearchPage( driver, 'https://' + test_data.wpcom_base_url );
+				if ( searchPage.adExists() ) {
+					that.searchPage = searchPage;
+				}
+			} );
 		} );
 
-		test.it( `Our landing page exists`, function() {
-			const that = this;
+		test.it( 'Our landing page exists', function() {
 			if ( ! this.searchPage ) {
 				this.skip( 'Depends on previous test passing' );
 			}
-			this.searchPage.getAdUrl().then( function( url ) {
+
+			const that = this;
+			this.searchPage.getAdUrl().then( url => {
 				that.landingPage = new LandingPage( driver, url );
 			} );
 		} );
 
-		test.it( `Localized string found on landing page`, function() {
+		test.it( 'Localized string found on landing page', function() {
 			if ( ! this.landingPage ) {
 				this.skip( 'Depends on previous test passing' );
 			}
+
 			this.landingPage.checkLocalizedString( test_data.wpcom_landing_page_string );
 		} );
 	} );
