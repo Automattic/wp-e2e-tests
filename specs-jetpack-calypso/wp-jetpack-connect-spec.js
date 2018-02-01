@@ -7,7 +7,6 @@ import * as driverHelper from '../lib/driver-helper';
 import { By } from 'selenium-webdriver';
 
 import AddNewSitePage from '../lib/pages/add-new-site-page';
-import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.js';
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 import JetpackConnectInstallPage from '../lib/pages/jetpack-connect-install-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page';
@@ -144,11 +143,6 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		test.it( 'Can click the Connect Jetpack button', () => {
 			this.wpAdminJetpack = new WPAdminJetpackPage( driver );
 			return this.wpAdminJetpack.connectWordPressCom();
-		} );
-
-		test.it( 'Can click the login link in the account creation page', () => {
-			this.createAccountPage = new CreateYourAccountPage( driver );
-			return this.createAccountPage.clickLoginLink();
 		} );
 
 		test.it( 'Can login into WordPress.com', () => {
