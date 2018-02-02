@@ -42,7 +42,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 	} );
 
-	test.beforeEach( function() {
+	test.before( function() {
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
