@@ -45,11 +45,11 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 	} );
 
-	test.before( function() {
-		return driverManager.clearCookiesAndDeleteLocalStorage( driver );
-	} );
-
 	test.describe( 'Logging In and Out:', function() {
+		test.before( function() {
+			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
 		test.describe( 'Can Log In', function() {
 			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
@@ -103,6 +103,10 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 
 	if ( dataHelper.hasAccountWithFeatures( '+2fa-sms -passwordless' ) ) {
 		test.describe( 'Can Log in on a 2fa account', function() {
+			test.before( function() {
+				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			} );
+
 			let loginFlow, twoFALoginPage, twoFACode;
 			test.before( function( done ) {
 				loginFlow = new LoginFlow( driver, [ '+2fa-sms', '-passwordless' ] );
@@ -139,6 +143,10 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 
 	if ( dataHelper.hasAccountWithFeatures( '+2fa-otp -passwordless' ) ) {
 		test.describe( 'Can Log in on a 2fa account', function() {
+			test.before( function() {
+				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			} );
+
 			let loginFlow, twoFALoginPage;
 			test.before( function() {
 				loginFlow = new LoginFlow( driver, [ '+2fa-otp', '-passwordless' ] );
@@ -167,6 +175,10 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 
 	if ( dataHelper.hasAccountWithFeatures( '+passwordless -2fa' ) ) {
 		test.describe( 'Can Log in on a passwordless account', function() {
+			test.before( function() {
+				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			} );
+
 			test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
 				let magicLoginLink, loginFlow, magicLinkEmail, emailClient;
 				test.before( function() {
@@ -215,7 +227,11 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 	}
 
 	if ( dataHelper.hasAccountWithFeatures( '+passwordless +2fa-sms' ) ) {
-		test.describe( 'Can Log in on a passwordless account', function() {
+		test.describe( 'Can Log in on a passwordless account with 2fa using sms', function() {
+			test.before( function() {
+				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			} );
+
 			test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
 				let magicLoginLink, loginFlow, magicLinkEmail, emailClient;
 				test.before( function() {
@@ -286,7 +302,11 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 	}
 
 	if ( dataHelper.hasAccountWithFeatures( '+passwordless +2fa-otp' ) ) {
-		test.describe( 'Can Log in on a passwordless account', function() {
+		test.describe( 'Can Log in on a passwordless account with 2fa using authenticator', function() {
+			test.before( function() {
+				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			} );
+
 			test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
 				let magicLoginLink, loginFlow, magicLinkEmail, emailClient;
 				test.before( function() {
