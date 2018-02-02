@@ -1,6 +1,7 @@
 import assert from 'assert';
 import test from 'selenium-webdriver/testing';
 import { get } from 'lodash';
+import speakeasy from 'speakeasy';
 
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
@@ -8,10 +9,12 @@ import * as dataHelper from '../lib/data-helper';
 import * as eyesHelper from '../lib/eyes-helper';
 
 import EmailClient from '../lib/email-client.js';
+import { listenForSMS } from '../lib/xmpp-client';
 import ReaderPage from '../lib/pages/reader-page';
 import ProfilePage from '../lib/pages/profile-page';
 import WPHomePage from '../lib/pages/wp-home-page';
 import MagicLoginPage from '../lib/pages/magic-login-page';
+import LoginPage from '../lib/pages/login-page';
 
 import NavbarComponent from '../lib/components/navbar-component.js';
 import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component';
@@ -42,11 +45,11 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 	} );
 
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
-	} );
-
 	test.describe( 'Logging In and Out:', function() {
+		test.before( function() {
+			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
 		test.describe( 'Can Log In', function() {
 			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
@@ -98,12 +101,88 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 		} );
 	} );
 
-	if ( dataHelper.hasAccountWithFeatures( 'passwordless' ) ) {
+	if ( dataHelper.hasAccountWithFeatures( '+2fa-sms -passwordless' ) ) {
+		test.describe( 'Can Log in on a 2fa account', function() {
+			test.before( function() {
+				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			} );
+
+			let loginFlow, twoFALoginPage, twoFACode;
+			test.before( function( done ) {
+				loginFlow = new LoginFlow( driver, [ '+2fa-sms', '-passwordless' ] );
+				// make sure we listen for SMS before we trigger any
+				const xmppClient = listenForSMS( loginFlow.account );
+				xmppClient.once( 'e2e:ready', () => {
+					// send sms now!
+					loginFlow.login();
+					twoFALoginPage = new LoginPage( driver );
+					twoFALoginPage.use2FAMethod( 'sms' );
+				} );
+				xmppClient.on( 'e2e:sms', sms => {
+					const twoFACodeMatches = sms.body.match( /^\d+/ );
+					twoFACode = twoFACodeMatches && twoFACodeMatches[0];
+					if ( twoFACode ) {
+						xmppClient.stop().then( () => done() );
+					}
+				} );
+			} );
+
+			test.it( 'Should be on the /log-in/sms page', function() {
+				return twoFALoginPage.displayed().then( function() {
+					return driver.getCurrentUrl().then( ( urlDisplayed ) => {
+						assert( urlDisplayed.indexOf( '/log-in/sms' ) !== -1, 'The 2fa sms page is not displayed after log in' );
+					} );
+				} );
+			} );
+
+			test.it( 'Enter the 2fa code and we\'re logged in', function() {
+				return twoFALoginPage.enter2FACode( twoFACode );
+			} );
+		} );
+	}
+
+	if ( dataHelper.hasAccountWithFeatures( '+2fa-otp -passwordless' ) ) {
+		test.describe( 'Can Log in on a 2fa account', function() {
+			test.before( function() {
+				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			} );
+
+			let loginFlow, twoFALoginPage;
+			test.before( function() {
+				loginFlow = new LoginFlow( driver, [ '+2fa-otp', '-passwordless' ] );
+				loginFlow.login();
+				twoFALoginPage = new LoginPage( driver );
+				return twoFALoginPage.use2FAMethod( 'otp' );
+			} );
+
+			test.it( 'Should be on the /log-in/authenticator page', function() {
+				return twoFALoginPage.displayed().then( function() {
+					return driver.getCurrentUrl().then( ( urlDisplayed ) => {
+						assert( urlDisplayed.indexOf( '/log-in/authenticator' ) !== -1, 'The 2fa authenticator page is not displayed after log in' );
+					} );
+				} );
+			} );
+
+			test.it( 'Enter the 2fa code and we\'re logged in', function() {
+				const twoFACode = speakeasy.totp( {
+					secret: loginFlow.account['2faOTPsecret'],
+					encoding: 'base32'
+				} );
+				return twoFALoginPage.enter2FACode( twoFACode );
+			} );
+		} );
+	}
+
+	if ( dataHelper.hasAccountWithFeatures( '+passwordless -2fa' ) ) {
 		test.describe( 'Can Log in on a passwordless account', function() {
+			test.before( function() {
+				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			} );
+
 			test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
 				let magicLoginLink, loginFlow, magicLinkEmail, emailClient;
 				test.before( function() {
-					loginFlow = new LoginFlow( driver, [ 'passwordless' ] );
+					loginFlow = new LoginFlow( driver, [ '+passwordless', '-2fa' ] );
 					emailClient = new EmailClient( get( loginFlow.account, 'mailosaur.inboxId' ) );
 					return loginFlow.login();
 				} );
@@ -128,6 +207,148 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 						return readerPage.displayed().then( function( displayed ) {
 							return assert.equal( displayed, true, 'The reader page is not displayed after log in' );
 						} );
+					} );
+
+					// we should always remove a magic link email once the magic link has been used (even if login failed)
+					test.after( function() {
+						if ( magicLinkEmail ) {
+							return emailClient.deleteAllEmailByID( magicLinkEmail.id );
+						}
+					} );
+				} );
+
+				test.after( function() {
+					if ( loginFlow ) {
+						loginFlow.end();
+					}
+				} );
+			} );
+		} );
+	}
+
+	if ( dataHelper.hasAccountWithFeatures( '+passwordless +2fa-sms' ) ) {
+		test.describe( 'Can Log in on a passwordless account with 2fa using sms', function() {
+			test.before( function() {
+				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			} );
+
+			test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
+				let magicLoginLink, loginFlow, magicLinkEmail, emailClient;
+				test.before( function() {
+					loginFlow = new LoginFlow( driver, [ '+passwordless', '+2fa-sms' ] );
+					emailClient = new EmailClient( get( loginFlow.account, 'mailosaur.inboxId' ) );
+					return loginFlow.login();
+				} );
+
+				test.it( 'Can find the magic link in the email received', function() {
+					return emailClient.pollEmailsByRecipient( loginFlow.account.email ).then( function( emails ) {
+						magicLinkEmail = emails.find( email => email.subject.indexOf( 'WordPress.com' ) > -1 );
+						assert( magicLinkEmail !== undefined, 'Could not find the magic login email' );
+						magicLoginLink = magicLinkEmail.html.links[0].href;
+						assert( magicLoginLink !== undefined, 'Could not locate the magic login link in the email' );
+						return true;
+					} );
+				} );
+
+				test.describe( 'Can use the magic link and the code received via sms to log in', function() {
+					let magicLoginPage, twoFALoginPage, twoFACode;
+					test.before( function( done ) {
+						driver.get( magicLoginLink );
+						magicLoginPage = new MagicLoginPage( driver );
+						// make sure we listen for SMS before we trigger any
+						const xmppClient = listenForSMS( loginFlow.account );
+						xmppClient.once( 'e2e:ready', () => {
+							// send sms now!
+							magicLoginPage.finishLogin();
+							twoFALoginPage = new LoginPage( driver );
+							twoFALoginPage.use2FAMethod( 'sms' );
+						} );
+						xmppClient.on( 'e2e:sms', sms => {
+							const twoFACodeMatches = sms.body.match( /^\d+/ );
+							twoFACode = twoFACodeMatches && twoFACodeMatches[0];
+							if ( twoFACode ) {
+								xmppClient.stop().then( () => done() );
+							}
+						} );
+					} );
+
+					test.it( 'Should be on the /log-in/sms page', function() {
+						return twoFALoginPage.displayed().then( function() {
+							return driver.getCurrentUrl().then( ( urlDisplayed ) => {
+								assert( urlDisplayed.indexOf( '/log-in/sms' ) !== -1, 'The 2fa sms page is not displayed after log in' );
+							} );
+						} );
+					} );
+
+					test.it( 'Enter the 2fa code and we\'re logged in', function() {
+						return twoFALoginPage.enter2FACode( twoFACode );
+					} );
+
+					// we should always remove a magic link email once the magic link has been used (even if login failed)
+					test.after( function() {
+						if ( magicLinkEmail ) {
+							return emailClient.deleteAllEmailByID( magicLinkEmail.id );
+						}
+					} );
+				} );
+
+				test.after( function() {
+					if ( loginFlow ) {
+						loginFlow.end();
+					}
+				} );
+			} );
+		} );
+	}
+
+	if ( dataHelper.hasAccountWithFeatures( '+passwordless +2fa-otp' ) ) {
+		test.describe( 'Can Log in on a passwordless account with 2fa using authenticator', function() {
+			test.before( function() {
+				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			} );
+
+			test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
+				let magicLoginLink, loginFlow, magicLinkEmail, emailClient;
+				test.before( function() {
+					loginFlow = new LoginFlow( driver, [ '+passwordless', '+2fa-otp' ] );
+					emailClient = new EmailClient( get( loginFlow.account, 'mailosaur.inboxId' ) );
+					return loginFlow.login();
+				} );
+
+				test.it( 'Can find the magic link in the email received', function() {
+					return emailClient.pollEmailsByRecipient( loginFlow.account.email ).then( function( emails ) {
+						magicLinkEmail = emails.find( email => email.subject.indexOf( 'WordPress.com' ) > -1 );
+						assert( magicLinkEmail !== undefined, 'Could not find the magic login email' );
+						magicLoginLink = magicLinkEmail.html.links[0].href;
+						assert( magicLoginLink !== undefined, 'Could not locate the magic login link in the email' );
+						return true;
+					} );
+				} );
+
+				test.describe( 'Can use the magic link and the code received via sms to log in', function() {
+					let magicLoginPage, twoFALoginPage;
+					test.before( function() {
+						driver.get( magicLoginLink );
+						magicLoginPage = new MagicLoginPage( driver );
+						magicLoginPage.finishLogin();
+						twoFALoginPage = new LoginPage( driver );
+						return twoFALoginPage.use2FAMethod( 'otp' );
+					} );
+
+					test.it( 'Should be on the /log-in/authenticator page', function() {
+						return twoFALoginPage.displayed().then( function() {
+							return driver.getCurrentUrl().then( ( urlDisplayed ) => {
+								assert( urlDisplayed.indexOf( '/log-in/authenticator' ) !== -1, 'The 2fa authenticator page is not displayed after log in' );
+							} );
+						} );
+					} );
+
+					test.it( 'Enter the 2fa code and we\'re logged in', function() {
+						const twoFACode = speakeasy.totp( {
+							secret: loginFlow.account['2faOTPsecret'],
+							encoding: 'base32'
+						} );
+						return twoFALoginPage.enter2FACode( twoFACode );
 					} );
 
 					// we should always remove a magic link email once the magic link has been used (even if login failed)
