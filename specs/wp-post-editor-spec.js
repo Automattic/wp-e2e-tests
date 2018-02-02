@@ -16,6 +16,7 @@ import NavbarComponent from '../lib/components/navbar-component.js';
 import PostPreviewComponent from '../lib/components/post-preview-component.js';
 import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component';
+import EditorConfirmationSidebarComponent from '../lib/components/editor-confirmation-sidebar-component';
 
 import * as driverManager from '../lib/driver-manager';
 import * as mediaHelper from '../lib/media-helper';
@@ -346,6 +347,66 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				this.viewPostPage = new ViewPostPage( driver );
 				this.viewPostPage.postTitle().then( function( postTitle ) {
 					assert.equal( postTitle.toLowerCase(), blogPostTitle.toLowerCase(), 'The published blog post title is not correct' );
+				} );
+			} );
+		} );
+	} );
+
+	test.describe( 'Schedule Basic Public Post @parallel @jetpack', function() {
+		this.bailSuite( true );
+		let publishDate;
+
+		test.it( 'Delete Cookies and Local Storage', function() {
+			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.describe( 'Schedule a New Post', function() {
+			const blogPostTitle = dataHelper.randomPhrase();
+			const blogPostQuote = '“Worries shared are worries halved.”\n- Unknown';
+
+			test.it( 'Can log in', function() {
+				this.loginFlow = new LoginFlow( driver );
+				return this.loginFlow.loginAndStartNewPost();
+			} );
+
+			test.it( 'Can enter post title and content', function() {
+				this.editorPage = new EditorPage( driver );
+				this.editorPage.enterTitle( blogPostTitle );
+				this.editorPage.enterContent( blogPostQuote + '\n' );
+
+				return this.editorPage.errorDisplayed().then( ( errorShown ) => {
+					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+				} );
+			} );
+
+			test.it( 'Can schedule content for a future date (first day of second week next month)', function() {
+				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				postEditorToolbarComponent.ensureSaved( { clickSave: true } );
+				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				postEditorSidebarComponent.expandStatusSection();
+				postEditorSidebarComponent.chooseFutureDate();
+				postEditorSidebarComponent.getSelectedPublishDate().then( ( publishDateShown ) => {
+					publishDate = publishDateShown;
+				} );
+				postEditorSidebarComponent.closeStatusSection();
+				let editorPage = new EditorPage( driver );
+				editorPage.waitForPage();
+				postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				postEditorToolbarComponent.ensureSaved( { clickSave: true } );
+				return postEditorToolbarComponent.clickPublishPost();
+			} );
+
+			test.it( 'Can confirm scheduling post and see correct publish date', function() {
+				let editorConfirmationSidebarComponent = new EditorConfirmationSidebarComponent( driver );
+				editorConfirmationSidebarComponent.publishDateShown().then( ( publishDateShown ) => {
+					assert.equal( publishDateShown, publishDate, 'The publish date shown is not the expected publish date' );
+				} );
+				editorConfirmationSidebarComponent.confirmAndPublish();
+				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				postEditorToolbarComponent.waitForPostSucessNotice();
+				let postEditorPage = new EditorPage( driver );
+				return postEditorPage.postIsScheduled().then( ( isScheduled ) => {
+					assert( isScheduled, 'The newly scheduled post is not showing in the editor as scheduled' );
 				} );
 			} );
 		} );
