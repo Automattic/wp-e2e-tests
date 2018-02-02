@@ -37,13 +37,13 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 	this.bailSuite( true );
 
 	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
-	} );
-
-	test.before( function() {
 		let testEnvironment = 'WordPress.com';
 		let testName = `Log In and Out [${global.browserName}] [${screenSize}]`;
 		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
+	} );
+
+	test.beforeEach( function() {
+		driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
 	test.describe( 'Logging In and Out:', function() {
@@ -98,10 +98,6 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 		} );
 	} );
 
-	test.after( function() {
-		eyesHelper.eyesClose( eyes );
-	} );
-
 	if ( dataHelper.hasAccountWithFeatures( 'passwordless' ) ) {
 		test.describe( 'Can Log in on a passwordless account', function() {
 			test.describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
@@ -150,6 +146,10 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 			} );
 		} );
 	}
+
+	test.after( function() {
+		eyesHelper.eyesClose( eyes );
+	} );
 } );
 
 test.describe( `[${host}] User Agent: (${screenSize}) @parallel @jetpack`, function() {
