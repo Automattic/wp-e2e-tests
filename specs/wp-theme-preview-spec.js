@@ -42,8 +42,8 @@ test.describe( `[${host}] Theme: Customizer (${screenSize})`, function() {
 				return this.customizerPage.expandMenus();
 			} );
 
-			test.it( 'Can create a new menu as a header menu', function() {
-				return this.customizerPage.createNewMenuAndSetAsHeader( newMenuName );
+			test.it( 'Can create a new menu as a primary menu', function() {
+				return this.customizerPage.addNewMenuAndSetAsPrimaryAndClickBack( newMenuName );
 			} );
 		} );
 
@@ -51,6 +51,10 @@ test.describe( `[${host}] Theme: Customizer (${screenSize})`, function() {
 		const menuItemName2 = dataHelper.randomPhrase();
 
 		test.describe( 'Can add items to the menu', function() {
+			test.it( 'Can open the newly created menu', function() {
+				return this.customizerPage.openMenuSettingsByMenuName( newMenuName );
+			} );
+
 			test.it( 'Can open "Add items" slider', function() {
 				return this.customizerPage.openAddItemsSlider();
 			} );
@@ -59,12 +63,16 @@ test.describe( `[${host}] Theme: Customizer (${screenSize})`, function() {
 				return this.customizerPage.addMenuItems( menuItemName1, menuItemName2 );
 			} );
 
-			test.it( 'Can save the theme', function() {
-				return this.customizerPage.saveNewTheme();
-			} );
-
 			test.it( 'Can open publish settings', function() {
 				return this.customizerPage.openPublishSettings();
+			} );
+
+			test.it( 'Can select "Save Draft" action in publish settings', function() {
+				return this.customizerPage.selectActionSaveDraft();
+			} );
+
+			test.it( 'Can save the theme', function() {
+				return this.customizerPage.saveNewTheme();
 			} );
 
 			test.it( 'Can navigate to preview URL', function() {
@@ -72,7 +80,7 @@ test.describe( `[${host}] Theme: Customizer (${screenSize})`, function() {
 			} );
 
 			test.it( 'Can see the recently added menu items on the preview page', function() {
-				return this.customizerPage.checkMenu( menuItemName1, menuItemName2 );
+				return this.customizerPage.checkNavMenu( menuItemName1, menuItemName2 );
 			} );
 		} );
 	} );
