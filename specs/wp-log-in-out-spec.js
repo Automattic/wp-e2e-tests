@@ -103,27 +103,25 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 
 	if ( dataHelper.hasAccountWithFeatures( '+2fa-sms -passwordless' ) ) {
 		test.describe( 'Can Log in on a 2fa account', function() {
-			test.before( function() {
-				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
-			} );
-
 			let loginFlow, twoFALoginPage, twoFACode;
 			test.before( function( done ) {
-				loginFlow = new LoginFlow( driver, [ '+2fa-sms', '-passwordless' ] );
-				// make sure we listen for SMS before we trigger any
-				const xmppClient = listenForSMS( loginFlow.account );
-				xmppClient.once( 'e2e:ready', () => {
-					// send sms now!
-					loginFlow.login();
-					twoFALoginPage = new LoginPage( driver );
-					twoFALoginPage.use2FAMethod( 'sms' );
-				} );
-				xmppClient.on( 'e2e:sms', sms => {
-					const twoFACodeMatches = sms.body.match( /^\d+/ );
-					twoFACode = twoFACodeMatches && twoFACodeMatches[0];
-					if ( twoFACode ) {
-						xmppClient.stop().then( () => done() );
-					}
+				driverManager.clearCookiesAndDeleteLocalStorage( driver ).then( function() {
+					loginFlow = new LoginFlow( driver, [ '+2fa-sms', '-passwordless' ] );
+					// make sure we listen for SMS before we trigger any
+					const xmppClient = listenForSMS( loginFlow.account );
+					xmppClient.once( 'e2e:ready', () => {
+						// send sms now!
+						loginFlow.login();
+						twoFALoginPage = new LoginPage( driver );
+						twoFALoginPage.use2FAMethod( 'sms' );
+					} );
+					xmppClient.on( 'e2e:sms', sms => {
+						const twoFACodeMatches = sms.body.match( /^\d+/ );
+						twoFACode = twoFACodeMatches && twoFACodeMatches[0];
+						if ( twoFACode ) {
+							xmppClient.stop().then( () => done() );
+						}
+					} );
 				} );
 			} );
 
@@ -143,16 +141,14 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 
 	if ( dataHelper.hasAccountWithFeatures( '+2fa-otp -passwordless' ) ) {
 		test.describe( 'Can Log in on a 2fa account', function() {
-			test.before( function() {
-				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
-			} );
-
 			let loginFlow, twoFALoginPage;
 			test.before( function() {
-				loginFlow = new LoginFlow( driver, [ '+2fa-otp', '-passwordless' ] );
-				loginFlow.login();
-				twoFALoginPage = new LoginPage( driver );
-				return twoFALoginPage.use2FAMethod( 'otp' );
+				return driverManager.clearCookiesAndDeleteLocalStorage( driver ).then( function() {
+					loginFlow = new LoginFlow( driver, [ '+2fa-otp', '-passwordless' ] );
+					loginFlow.login();
+					twoFALoginPage = new LoginPage( driver );
+					return twoFALoginPage.use2FAMethod( 'otp' );
+				} );
 			} );
 
 			test.it( 'Should be on the /log-in/authenticator page', function() {
