@@ -66,17 +66,6 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 					} );
 				} );
 
-				test.it( 'Can update and view site tagline', function() {
-					if ( screenSize !== 'desktop' ) {
-						console.log( 'Preview of Taglines not supported on mobile & tablet - skipping test' );
-						return true;
-					}
-					const newTagline = dataHelper.randomPhrase();
-					this.customizerPage.setTagline( newTagline );
-					return this.customizerPage.previewTagline().then( ( taglineShown ) => {
-						assert.equal( taglineShown.toUpperCase(), newTagline.toUpperCase(), 'The customizer preview tagline shown does not reflect the tagline input' );
-					} );
-				} );
 
 				test.it( 'Direct Manipulation: clicking the icon on title jumps to site title field', function() {
 					this.customizerPage.clickSiteTitleIconInPreview();
@@ -192,14 +181,14 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 							} );
 
 							test.it( 'Can add a new menu as the primary menu', function() {
-								return this.customizerPage.addNewMenuAndSetAsPrimary( newMenuName );
+								return this.customizerPage.addNewMenuAndSetAsPrimaryAndClickBack( newMenuName );
 							} );
 
 							test.it( 'Can see the new menu listed as primary', function() {
 								this.customizerPage.menuDisplayedAsPrimary( newMenuName ).then( ( displayed ) => {
 									if ( displayed === false ) {
 										slackNotifier.warn( 'Could not see the new menu set in the customizer - trying again now' );
-										this.customizerPage.addNewMenuAndSetAsPrimary( newMenuName );
+										this.customizerPage.addNewMenuAndSetAsPrimaryAndClickBack( newMenuName );
 									}
 								} );
 
