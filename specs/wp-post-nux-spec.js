@@ -66,7 +66,6 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 					} );
 				} );
 
-
 				test.it( 'Direct Manipulation: clicking the icon on title jumps to site title field', function() {
 					this.customizerPage.clickSiteTitleIconInPreview();
 					return assert( this.customizerPage.waitForTitleFieldDisplayed(), 'The title field is not displayed' );
