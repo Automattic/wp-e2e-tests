@@ -163,7 +163,13 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 
 			test.it( 'Approve push 2fa token and we\'re logged in', function( done ) {
 				subscribeToPush( loginFlow.account.pushConfig, pushToken => {
-					approvePushToken( pushToken, loginFlow.account.bearerToken ).then( done );
+					approvePushToken( pushToken, loginFlow.account.bearerToken ).then( () => {
+						let readerPage = new ReaderPage( driver );
+						readerPage.displayed().then( function( displayed ) {
+							assert.equal( displayed, true, 'The reader page is not displayed after log in' );
+							done();
+						} );
+					} );
 				} );
 			} );
 		} );
