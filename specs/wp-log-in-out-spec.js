@@ -141,14 +141,13 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 	}
 
 	if ( dataHelper.hasAccountWithFeatures( '+2fa-push -passwordless' ) ) {
-		test.describe.only( 'Can Log in on with 2fa push account', function() {
+		test.describe( 'Can Log in on with 2fa push account', function() {
 			let loginFlow, twoFALoginPage;
 			test.before( function( done ) {
 				driverManager.clearCookiesAndDeleteLocalStorage( driver ).then( () => {
 					loginFlow = new LoginFlow( driver, [ '+2fa-push', '-passwordless' ] );
 					loginFlow.login();
 					twoFALoginPage = new LoginPage( driver );
-					//twoFALoginPage.use2FAMethod( 'push' ).then( done );
 					done();
 				} );
 			} );
@@ -164,8 +163,8 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 			test.it( 'Approve push 2fa token and we\'re logged in', function( done ) {
 				subscribeToPush( loginFlow.account.pushConfig, pushToken => {
 					approvePushToken( pushToken, loginFlow.account.bearerToken ).then( () => {
-						let readerPage = new ReaderPage( driver );
-						readerPage.displayed().then( function( displayed ) {
+						const readerPage = new ReaderPage( driver );
+						readerPage.displayed().then( displayed => {
 							assert.equal( displayed, true, 'The reader page is not displayed after log in' );
 							done();
 						} );
