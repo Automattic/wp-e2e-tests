@@ -67,7 +67,8 @@
     "jetpackHidePlanIconsForAllDevices",
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser",
-    "promoteYearlyJetpackPlanSavings"
+    "promoteYearlyJetpackPlanSavings",
+		"domainSuggestionTestV5"
   ],
   "overrideABTests": [
     [ "skipThemesSelectionModal_20170830", "show" ],
