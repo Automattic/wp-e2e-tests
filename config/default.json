@@ -68,7 +68,7 @@
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser",
     "promoteYearlyJetpackPlanSavings",
-		"domainSuggestionTestV5"
+    "domainSuggestionTestV5"
   ],
   "overrideABTests": [
     [ "skipThemesSelectionModal_20170830", "show" ],
