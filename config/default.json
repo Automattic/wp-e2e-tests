@@ -75,6 +75,7 @@
     [ "domainsCheckoutLocalizedAddresses_20171025", "showDefaultAddressFormat" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
-    [ "promoteYearlyJetpackPlanSavings_20180124", "original" ]
+    [ "promoteYearlyJetpackPlanSavings_20180124", "original" ],
+    [ "domainSuggestionTestV5_20180204", "group_0" ]
   ]
 }
