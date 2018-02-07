@@ -123,7 +123,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 							postEditorSidebarComponent.expandSharingSection();
 						} );
 
-						if ( host !== 'CI' || host !== 'JN' ) {
+						if ( host !== 'CI' && host !== 'JN' ) {
 							test.it( 'Can see the publicise to twitter account', function() {
 								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 								postEditorSidebarComponent.publicizeToTwitterAccountDisplayed().then( function( accountDisplayed ) {
@@ -289,7 +289,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 									} );
 								} );
 
-								if ( host !== 'CI' || host !== 'JN' ) {
+								if ( host !== 'CI' && host !== 'JN' ) {
 									test.describe( 'Can see post publicized on twitter', function() {
 										test.it( 'Can see post message', function() {
 											let twitterFeedPage = new TwitterFeedPage( driver, publicizeTwitterAccount, true );
