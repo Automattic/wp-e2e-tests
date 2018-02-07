@@ -43,13 +43,13 @@ test.describe( `[${host}] Jurassic Ninja Connection: (${screenSize}) @jetpack`, 
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
+	test.it( 'Can connect from WP Admin', () => {
+		return this.jnFlow.connectFromWPAdmin();
+	} );
+
 	test.it( 'Can remove diconnected sites', () => {
 		this.jnFlow = new JetpackConnectFlow( driver, 'jetpackUserJN' );
 		this.jnFlow.removeSites();
-	} );
-
-	test.it( 'Can connect from WP Admin', () => {
-		return this.jnFlow.connectFromWPAdmin();
 	} );
 
 	test.it( 'Can logout from WP admin', () => {
