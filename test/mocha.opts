@@ -1,3 +1,2 @@
 --compilers js:babel-register
 lib/after.js
-lib/before.js
