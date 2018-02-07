@@ -48,10 +48,6 @@ test.describe( `[${host}] Jurassic Ninja Connection: (${screenSize}) @jetpack`, 
 		return this.jnFlow.connectFromWPAdmin();
 	} );
 
-	test.it( 'Can remove diconnected sites', () => {
-		this.jnFlow.removeSites();
-	} );
-
 	test.it( 'Can logout from WP admin', () => {
 		const wpDashboard = new WPAdminDashboardPage( driver, this.jnFlow.url );
 		return wpDashboard.logout();
@@ -59,5 +55,9 @@ test.describe( `[${host}] Jurassic Ninja Connection: (${screenSize}) @jetpack`, 
 
 	test.it( 'Can save JN credentials to file', () => {
 		writeJNCredentials( this.jnFlow.url, 'demo', this.jnFlow.password );
+	} );
+
+	test.it( 'Can remove diconnected sites', () => {
+		this.jnFlow.removeSites();
 	} );
 } );
