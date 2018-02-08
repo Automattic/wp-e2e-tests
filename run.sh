@@ -23,10 +23,6 @@ if [ "$CI" == "true" ]; then
 
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
   nvm install
-
-  # Weird issue on CircleCI not properly building this package on the first try...
-  rm -rf node_modules/fibers
-  npm install
 fi
 
 # Function to join arrays into a string
