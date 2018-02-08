@@ -27,11 +27,8 @@ const host = dataHelper.getJetpackHost();
 const expect = require( 'chai' ).expect;
 
 const bluecat = require( 'bluecat' );
-const path = require( 'path' );
 
 const oauth = require( '../lib/wpcom-api/oauth.js' );
-const posts = require( '../lib/wpcom-api/posts.js' );
-const media = require( '../lib/wpcom-api/media.js' );
 
 const api = bluecat.Api( 'wp' );
 api.oauth2.host = 'https://public-api.wordpress.com';
@@ -126,30 +123,15 @@ test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function
 				} );
 
 				// Remove all items from basket for clean up
-				test.it( 'Can empty cart for next test', () => {
+				test.it( 'Can empty cart for next test', ( done ) => {
 					return service.run( function() {
 						oauth.login( service, account );
 						let res = service.sites['${site}']['shopping-cart'].clear.POST( {
 							params: { site: account[2] }
 						} );
-						expect( res.data.statusCode ).to.equal( 444 );
-						console.log ( 'blah' );
-						console.log( res.data.body );
-						return true;
+						expect( res.data.statusCode ).to.equal( 200 );
+						done();
 					} );
-					// this.readerPage = new ReaderPage( driver, true );
-                    //
-					// this.navbarComponent = new NavbarComponent( driver );
-					// this.navbarComponent.clickMySites();
-                    //
-					// this.statsPage = new StatsPage( driver, true );
-                    //
-					// this.sideBarComponent = new SidebarComponent( driver );
-					// this.sideBarComponent.selectDomains();
-                    //
-					// this.domainsPage = new DomainsPage( driver );
-					// this.shoppingCartWidgetComponent = new ShoppingCartWidgetComponent( driver );
-					// return this.shoppingCartWidgetComponent.empty();
 				} );
 			} );
 		} );
