@@ -18,6 +18,7 @@ UPLOAD=0
 # Warn if NODE_ENV variable is not set
 if [ "$NODE_ENV" = "" ]; then
 	echo "WARNING: NODE_ENV environment variable is not set."
+	exit 1
 fi
 
 # On CI, use nvm to define NodeJS version if possible
