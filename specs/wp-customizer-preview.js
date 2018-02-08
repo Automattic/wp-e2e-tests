@@ -43,7 +43,7 @@ test.describe( `[${host}] Customizer: Preview (${screenSize})`, function() {
 			} );
 
 			test.it( 'Can create a new menu as a primary menu', function() {
-				return this.customizerPage.addNewMenuAndSetAsPrimaryAndClickBack( newMenuName );
+				return this.customizerPage.addNewMenuAndSetAsPrimary( newMenuName );
 			} );
 		} );
 
