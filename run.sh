@@ -25,7 +25,7 @@ if [ "$CI" == "true" ]; then
   nvm install
 
   # Weird issue on CircleCI not properly building this package on the first try...
-  rm -rf node_modules/fiber
+  rm -rf node_modules/fibers
   npm install
 fi
 
