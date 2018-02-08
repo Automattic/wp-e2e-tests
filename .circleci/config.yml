@@ -14,7 +14,7 @@ jobs:
           key: << checksum "package.json" >>
       - run: source $HOME/.nvm/nvm.sh && npm install
       - run: source $HOME/.nvm/nvm.sh && npm run lint
-      - run: source $HOME/.nvm/nvm.sh && openssl enc -aes-256-cbc -d -k $CONFIG_KEY -in ./config/encrypted.enc -out ./config local-test.json
+      - run: source $HOME/.nvm/nvm.sh && openssl enc -aes-256-cbc -d -k $CONFIG_KEY -in ./config/encrypted.enc -out ./config/local-test.json
       - save_cache:
           paths:
             - /wp-e2e-tests/node_modules
