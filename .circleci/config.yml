@@ -7,12 +7,14 @@ jobs:
       - image: automattic/wp-e2e-tests:0.0.8
         environment:
                 NODE_ENV: test
+                NODE_CONFIG: {}
     steps:
       - checkout
       - restore_cache:
           key: << checksum "package.json" >>
       - run: source $HOME/.nvm/nvm.sh && npm install
       - run: source $HOME/.nvm/nvm.sh && npm run lint
+      - run: source $HOME/.nvm/nvm.sh && openssl enc -aes-256-cbc -d -k $CONFIG_KEY -in ./config/encrypted.enc -out ./config local-test.json
       - save_cache:
           paths:
             - /wp-e2e-tests/node_modules
