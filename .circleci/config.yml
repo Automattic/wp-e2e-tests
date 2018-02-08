@@ -11,7 +11,7 @@ jobs:
       - checkout
       - restore_cache:
           key: << checksum "package.json" >>
-      - run: source $HOME/.nvm/nvm.sh && npm install
+      - run: source $HOME/.nvm/nvm.sh && CFLAGS=-std=gnu11 npm install
       - run: source $HOME/.nvm/nvm.sh && npm run lint
       - save_cache:
           paths:
