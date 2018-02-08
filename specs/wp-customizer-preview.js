@@ -19,7 +19,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Theme: Customizer (${screenSize})`, function() {
+test.describe( `[${host}] Customizer: Preview (${screenSize})`, function() {
 	this.bailSuite( true );
 
 	test.describe( 'Preview a draft with changes in the menu @parallel', function() {
