@@ -7,14 +7,9 @@ import * as dataHelper from '../lib/data-helper.js';
 
 import DomainsPage from '../lib/pages/domains-page.js';
 import CheckOutPage from '../lib/pages/signup/checkout-page.js';
-import ReaderPage from '../lib/pages/reader-page.js';
-import StatsPage from '../lib/pages/stats-page.js';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
-import ShoppingCartWidgetComponent from '../lib/components/shopping-cart-widget-component.js';
-import SidebarComponent from '../lib/components/sidebar-component.js';
-import NavbarComponent from '../lib/components/navbar-component.js';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
@@ -37,7 +32,7 @@ const service = new bluecat.ServiceSync( api, 'public-api.wordpress.com/rest/v1.
 // Test account for the API
 const account = config.testAccounts.defaultUser;
 
-var driver;
+let driver;
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
