@@ -11,8 +11,14 @@
   "defaultTestArgs": "-g -s $BROWSERSIZE",
   "scripts": {
     "lint": "eslint . --max-warnings=0",
+		"precommitlint": "LIST=`git diff-index --name-only HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then eslint $LIST --max-warnings=0; fi",
     "postinstall": "npm pack ./lib/reporter && npm install ./spec-xunit-reporter-0.0.1.tgz --no-save",
     "test": "./run.sh ${TESTARGS:-$npm_package_defaultTestArgs}"
+	},
+	"husky": {
+    "hooks": {
+      "pre-commit": "npm run precommitlint"
+    }
   },
   "dependencies": {
     "asana-phrase": "0.0.8",
@@ -56,7 +62,6 @@
     "xunit-viewer": "5.0.3"
   },
   "devDependencies": {
-    "eslint": "<2.3.0",
     "babel-cli": "^6.10.1",
     "babel-eslint": "^5.0.0-beta6",
     "babel-plugin-add-module-exports": "^0.1.2",
@@ -64,6 +69,8 @@
     "babel-plugin-transform-runtime": "^6.3.13",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-stage-1": "^6.3.13",
-    "babel-register": "^6.3.13"
+    "babel-register": "^6.3.13",
+    "eslint": "<2.3.0",
+    "husky": "^0.15.0-rc.6"
   }
 }
