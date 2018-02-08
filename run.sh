@@ -23,9 +23,6 @@ if [ "$CI" == "true" ]; then
 
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
   nvm install
-
-  rm -rf node_modules/fibers
-  npm install
 fi
 
 # Function to join arrays into a string
