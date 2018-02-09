@@ -11,14 +11,14 @@
   "defaultTestArgs": "-g -s $BROWSERSIZE",
   "scripts": {
     "lint": "eslint . --max-warnings=0",
-		"precommitlint": "LIST=`git diff-index --name-only HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then eslint $LIST --max-warnings=0; fi",
+    "precommitlint": "LIST=`git diff-index --name-only HEAD | grep js$`; if [ \"$LIST\" ]; then eslint $LIST --max-warnings=0; fi",
     "postinstall": "npm pack ./lib/reporter && npm install ./spec-xunit-reporter-0.0.1.tgz --no-save",
     "test": "./run.sh ${TESTARGS:-$npm_package_defaultTestArgs}"
-	},
-	"husky": {
-    "hooks": {
-      "pre-commit": "npm run precommitlint"
-    }
+    },
+    "husky": {
+      "hooks": {
+        "pre-commit": "npm run precommitlint"
+      }
   },
   "dependencies": {
     "asana-phrase": "0.0.8",
