@@ -3,7 +3,7 @@ import test from "selenium-webdriver/testing";
 
 import config from "config";
 import * as driverManager from "../lib/driver-manager.js";
-import * as dataHelper from '../lib/data-helper.js';
+import * as dataHelper from "../lib/data-helper.js";
 
 import DomainsPage from '../lib/pages/domains-page.js';
 import CheckOutPage from '../lib/pages/signup/checkout-page.js';
