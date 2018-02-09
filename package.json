@@ -17,7 +17,7 @@
     },
     "husky": {
       "hooks": {
-        "pre-commit": "npm run precommitlint"
+        "precommit": "npm run precommitlint"
       }
   },
   "dependencies": {

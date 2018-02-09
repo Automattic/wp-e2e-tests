@@ -1,7 +1,7 @@
 import assert from "assert";
 import test from "selenium-webdriver/testing";
 
-import config from 'config';
+import config from "config";
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper.js';
 
