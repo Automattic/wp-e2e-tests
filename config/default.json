@@ -58,20 +58,16 @@
   "httpsHosts": [ "WPCOM", "PRESSABLE" ],
   "knownABTestKeys": [
     "businessPlanDescriptionAT",
-    "domainsCheckoutLocalizedAddresses",
     "gsuiteUpsellV2",
     "multiDomainRegistrationV1",
-    "presaleChatButton",
     "skipThemesSelectionModal",
     "unlimitedThemeNudge",
-    "jetpackHidePlanIconsForAllDevices",
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser"
   ],
   "overrideABTests": [
-    [ "skipThemesSelectionModal_20170830", "show" ],
+    [ "skipThemesSelectionModal_20170904", "show" ],
     [ "gsuiteUpsellV2_20171225", "original" ],
-    [ "domainsCheckoutLocalizedAddresses_20171025", "showDefaultAddressFormat" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ]
   ]
