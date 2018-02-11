@@ -1,15 +1,17 @@
 # Config Values and Environment Variables
 
 ## Table of Contents
-  - [Test Configuration](#test-configuration)
-  - [Config Values](#config-values)
-  - [Standalone Environment Variables](#standalone-environment-variables)
-  - [CircleCI Environment Variables](#circleci-environment-variables)
-  
-## Test Configuration  
+
+- [Test Configuration](#test-configuration)
+- [Config Values](#config-values)
+- [Standalone Environment Variables](#standalone-environment-variables)
+- [CircleCI Environment Variables](#circleci-environment-variables)
+
+## Test Configuration
+
 The tests use the node [config](https://www.npmjs.com/package/config) library to specify config values for the tests.
 
-Under the config directory, there are files for each environment: <code>default.json</code> is the base for all environments, then <code>development.json</code> for local, and <code>test.json</code> for CI.
+Under the config directory, there are files for each environment: `default.json` is the base for all environments, then `development.json` for local, and `test.json` for CI.
 
 You can also use local config files that are not committed.
 
@@ -29,14 +31,13 @@ The local configurations are excluded from the repository, in order to prevent a
 
 **Please don't commit usernames and passwords in these (non local- )files!**
 
-
 ## Config Values
 
 A full list of config values are:
 
 | Name | Description | Example | Required | Store in file? |
 | ---- | ----------- | ------- | -------- | ------------------- |
-| calypsoBaseURL | The home page for calypso | https://wordpress.com | Yes | Yes |
+| calypsoBaseURL | The home page for calypso | <https://wordpress.com> | Yes | Yes |
 | calypsoDocker | A boolean indicating whether the tests will be run against a local Calypso Docker instance (required to ensure login works) | true | No | Yes |
 | explicitWaitMS | The explicit wait time in milliseconds to wait for an element to appear - for example a widget loading data via an API | 10000 | Yes | Yes |
 | mochaTimeoutMS | This is the maximum total time in milliseconds a single mocha end to end test can take to finish - otherwise it will time out. | 120000 | Yes | Yes |
@@ -44,14 +45,14 @@ A full list of config values are:
 | startBrowserTimeoutMS | This is the maximum total time in milliseconds that the browser can take to start - this is different from test time as we want it to fail fast | 30000 | Yes | Yes |
 | startAppTimeoutMS | This is the maximum total time in milliseconds that the app can take to start for mobile testing - this is different from test time as we want it to fail fast | 240000 | Yes (for app testing only)| Yes |
 | afterHookTimeoutMS | This is the maximum total time in milliseconds that an after test hook can take including capturing the screenshots | 20000 | Yes | Yes |
-| browser | The browser to use: either <code>firefox</code> or <code>chrome</code> | <code>chrome</code> | Yes |  Yes |
-| proxy | The type of proxy to use: either <code>system</code> to use whatever your system is configured to use, or <code>direct</code> to use no proxy. Also supports <code>charles</code> to send web traffic through the [Charles Proxy](https://www.charlesproxy.com/) app for troubleshooting.| <code>direct</code> | Yes |  Yes |
-| saveAllScreenshots | Whether screenshots should be saved for all steps, including those that pass | <code>false</code> | Yes |  Yes |
-| neverSaveScreenshots | Overrides the screenshot function so nothing is captured.  This is intended for use with the Applitools visual diff specs, since the screenshots are handled via their utilities instead. | <code>false</code> | Yes |  Yes |
-| checkForConsoleErrors | Automatically report on console errors in the browser | <code>true</code> | Yes |  Yes |
-| reportWarningsToSlack | Specifies whether warnings should be reported to Slack - should be used for CI builds | <code>false</code> | Yes |  Yes |
-| closeBrowserOnComplete | Specifies whether to close the browser window when the tests are done | <code>true</code> | Yes |  Yes |
-| sauceConfigurations | Config values for launching browsers on Sauce Labs | <code>{ "osx-chrome": { "browserName": "chrome", "platform": "OS X 10.11", "screenResolution": "2048x1536", "version": "50.0" } }</code>  | Yes (if using Sauce) |  Yes |
+| browser | The browser to use: either `firefox` or `chrome` | `chrome` | Yes |  Yes |
+| proxy | The type of proxy to use: either `system` to use whatever your system is configured to use, or `direct` to use no proxy. Also supports `charles` to send web traffic through the [Charles Proxy](https://www.charlesproxy.com/) app for troubleshooting.| `direct` | Yes |  Yes |
+| saveAllScreenshots | Whether screenshots should be saved for all steps, including those that pass | `false` | Yes |  Yes |
+| neverSaveScreenshots | Overrides the screenshot function so nothing is captured.  This is intended for use with the Applitools visual diff specs, since the screenshots are handled via their utilities instead. | `false` | Yes |  Yes |
+| checkForConsoleErrors | Automatically report on console errors in the browser | `true` | Yes |  Yes |
+| reportWarningsToSlack | Specifies whether warnings should be reported to Slack - should be used for CI builds | `false` | Yes |  Yes |
+| closeBrowserOnComplete | Specifies whether to close the browser window when the tests are done | `true` | Yes |  Yes |
+| sauceConfigurations | Config values for launching browsers on Sauce Labs | `{ "osx-chrome": { "browserName": "chrome", "platform": "OS X 10.11", "screenResolution": "2048x1536", "version": "50.0" } }`  | Yes (if using Sauce) |  Yes |
 | knownABTestKeys | An array of expected, known AB testing keys used in localstorage. If a key is found on any page that isn't in here, the test will fail | [ "freeTrials_20160112", "plansPageBusinessAATest_20160108" ] | Yes | Yes |
 | overrideABTests | An array of key/value pairs for AB tests and their values to manually override their settings | [ [ "signupStore_20160927", "designTypeWithStore" ] ] | Yes | Yes |
 | testUserName   | This is an existing test WordPress.com account for testing purposes - this account should have a **single** site | testuser123 | Yes | **NO** |
@@ -69,8 +70,8 @@ A full list of config values are:
 | publicizeTwitterAccount | This is the name of the test twitter account connected to your test username | @endtoendtesting | Yes | **NO** |
 | passwordForNewTestSignUps | This is the password that will be set for new sign ups created for testing purposes | alongcomplexpassword%### | Yes | **NO** |
 | storeSandboxCookieValue | This is a secret cookie value used for testing payments |  | No | **NO** |
-| slackHook | This is a Slack incoming webhook where notifications are sent for test status (https://my.slack.com/services/new/incoming-webhook -- requires Slack login) | https://hooks.slack.com/services/XXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX | No | **NO** |
-| slackTokenForScreenshots | This is a Slack token used for uploading screenshots (https://api.slack.com/custom-integrations/legacy-tokens -- requires Slack login) | XXXX-XXXXXXXXXX-XXXXXXXXXX-XXXXXXXXXXX-XXXXXXXXXX | No | **NO** |
+| slackHook | This is a Slack incoming webhook where notifications are sent for test status (<https://my.slack.com/services/new/incoming-webhook> -- requires Slack login) | <https://hooks.slack.com/services/XXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX> | No | **NO** |
+| slackTokenForScreenshots | This is a Slack token used for uploading screenshots (<https://api.slack.com/custom-integrations/legacy-tokens> -- requires Slack login) | XXXX-XXXXXXXXXX-XXXXXXXXXX-XXXXXXXXXXX-XXXXXXXXXX | No | **NO** |
 | slackChannelForScreenshots | String name (including the `#`) of the channel to receive screenshots | #e2eflowtesting-notif | No | Yes |
 | emailPrefix | A string to stick on the beginning of the e-mail addresses used for invites and signups | username | No | **NO** |
 | accounts | A JSON list of wordpress.com account information (as JSON objects).  | [ { "username": "username", "password": "password", "site": "site.wordpress.com", "features": [] }, { "email": "passwordless@gmail.com", "features": [ "passwordless" ] } ] | No | **NO** |
@@ -81,7 +82,6 @@ A full list of config values are:
 
 ## Standalone Environment Variables
 
-
 | Name | Description | Example | Required | Store in file? |
 | ---- | ----------- | ------- | -------- | ------------------- |
 | EYESDEBUG | If this is set, no connection is opened to Applitools, only local screenshots are taken | 1 | No | **NO** |
@@ -89,6 +89,7 @@ A full list of config values are:
 | SAUCEDEBUG | If this is set, on test failure a breakpoint will be set in SauceLabs, enabling you to continue interacting with the browser for troubleshooting | 1 | No | **NO** |
 
 ## CircleCI Environment Variables
+
 These environment variables are intended for use inside CircleCI, to control which tests are being run
 
 | Name | Description | Default | Required |
