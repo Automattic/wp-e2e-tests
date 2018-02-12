@@ -10,6 +10,7 @@ import * as eyesHelper from '../lib/eyes-helper';
 
 import EmailClient from '../lib/email-client.js';
 import { listenForSMS } from '../lib/xmpp-client';
+import { subscribeToPush, approvePushToken } from '../lib/push-client';
 import ReaderPage from '../lib/pages/reader-page';
 import ProfilePage from '../lib/pages/profile-page';
 import WPHomePage from '../lib/pages/wp-home-page';
@@ -135,6 +136,40 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 
 			test.it( 'Enter the 2fa code and we\'re logged in', function() {
 				return twoFALoginPage.enter2FACode( twoFACode );
+			} );
+		} );
+	}
+
+	if ( dataHelper.hasAccountWithFeatures( '+2fa-push -passwordless' ) ) {
+		test.describe( 'Can Log in on with 2fa push account', function() {
+			let loginFlow, twoFALoginPage;
+			test.before( function( done ) {
+				driverManager.clearCookiesAndDeleteLocalStorage( driver ).then( () => {
+					loginFlow = new LoginFlow( driver, [ '+2fa-push', '-passwordless' ] );
+					loginFlow.login();
+					twoFALoginPage = new LoginPage( driver );
+					done();
+				} );
+			} );
+
+			test.it( 'Should be on the /log-in/push page', function() {
+				return twoFALoginPage.displayed().then( function() {
+					return driver.getCurrentUrl().then( ( urlDisplayed ) => {
+						assert( urlDisplayed.indexOf( '/log-in/push' ) !== -1, 'The 2fa push page is not displayed after log in' );
+					} );
+				} );
+			} );
+
+			test.it( 'Approve push 2fa token and we\'re logged in', function( done ) {
+				subscribeToPush( loginFlow.account.pushConfig, pushToken => {
+					approvePushToken( pushToken, loginFlow.account.bearerToken ).then( () => {
+						const readerPage = new ReaderPage( driver );
+						readerPage.displayed().then( displayed => {
+							assert.equal( displayed, true, 'The reader page is not displayed after log in' );
+							done();
+						} );
+					} );
+				} );
 			} );
 		} );
 	}
