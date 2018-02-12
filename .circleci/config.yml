@@ -6,7 +6,8 @@ jobs:
     docker:
       - image: automattic/wp-e2e-tests:0.0.8
         environment:
-                NODE_ENV: test
+          NODE_ENV: test
+          NODE_CONFIG: {}
     steps:
       - checkout
       - restore_cache:
