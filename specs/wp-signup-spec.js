@@ -914,8 +914,8 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 													managePurchasePage.domainDisplayed().then( ( domainDisplayed ) => {
 														assert.equal( domainDisplayed, expectedDomainName, 'The domain displayed on the manage purchase page is unexpected' );
 													} );
-													managePurchasePage.chooseRemovePurchase();
-													managePurchasePage.removeNow();
+													managePurchasePage.chooseCancelAndRefund();
+													managePurchasePage.confirmCancelDomain();
 													return managePurchasePage.waitTillRemoveNoLongerShown();
 												} catch ( err ) {
 													SlackNotifier.warn( `There was an error in the hooks that clean up the test domains but since it is cleaning up we really don't care: '${ err }'` );

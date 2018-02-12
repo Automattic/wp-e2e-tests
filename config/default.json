@@ -61,7 +61,8 @@
     "multiDomainRegistrationV1",
     "skipThemesSelectionModal",
     "checklistThankYouForFreeUser",
-    "checklistThankYouForPaidUser"
+    "checklistThankYouForPaidUser",
+    "domainSuggestionTestV5"
   ],
   "overrideABTests": [
     [ "skipThemesSelectionModal_20170904", "show" ],
