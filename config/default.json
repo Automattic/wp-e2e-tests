@@ -58,7 +58,6 @@
   "httpsHosts": [ "WPCOM", "PRESSABLE" ],
   "knownABTestKeys": [
     "businessPlanDescriptionAT",
-    "gsuiteUpsellV2",
     "multiDomainRegistrationV1",
     "skipThemesSelectionModal",
     "checklistThankYouForFreeUser",
@@ -66,7 +65,6 @@
   ],
   "overrideABTests": [
     [ "skipThemesSelectionModal_20170904", "show" ],
-    [ "gsuiteUpsellV2_20171225", "original" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ]
   ]
