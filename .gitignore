@@ -11,6 +11,7 @@ spec-xunit-reporter-0.0.1.tgz
 *xunit_*.xml
 .DS_Store
 temp/
+npm-debug.log
 
 # Ignore all local config files, but keep the example there.
 config/local-*
