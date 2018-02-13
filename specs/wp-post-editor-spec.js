@@ -865,9 +865,8 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 
 		test.it( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			return SlackNotifier.warn( 'Not running the edit a post test because of https://github.com/Automattic/wp-calypso/issues/22258', { suppressDuplicateMessages: true } );
 		} );
-
-		SlackNotifier.warn( 'Not running the edit a post test because of https://github.com/Automattic/wp-calypso/issues/22258', { suppressDuplicateMessages: true } );
 
 		test.xdescribe( 'Publish a New Post', function() {
 			const originalBlogPostTitle = dataHelper.randomPhrase();
