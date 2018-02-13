@@ -851,10 +851,10 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				return postEditorSidebarComponent.trashPost();
 			} );
 
-			test.it( 'Can then see the Posts page (new)', function() {
-				const postsPage = new PostsPage( driver );
-				return postsPage.displayed().then( ( displayed ) => {
-					return assert.equal( displayed, true, 'The posts page is not displayed' );
+			test.it( 'Can then see the Reader page', function() {
+				const readerPage = new ReaderPage( driver );
+				return readerPage.displayed().then( ( displayed ) => {
+					return assert.equal( displayed, true, 'The reader page is not displayed' );
 				} );
 			} );
 		} );
