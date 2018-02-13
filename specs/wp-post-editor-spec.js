@@ -851,10 +851,10 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				return postEditorSidebarComponent.trashPost();
 			} );
 
-			test.it( 'Can then see the Posts page (new)', function() {
-				const postsPage = new PostsPage( driver );
-				return postsPage.displayed().then( ( displayed ) => {
-					return assert.equal( displayed, true, 'The posts page is not displayed' );
+			test.it( 'Can then see the Reader page', function() {
+				const readerPage = new ReaderPage( driver );
+				return readerPage.displayed().then( ( displayed ) => {
+					return assert.equal( displayed, true, 'The reader page is not displayed' );
 				} );
 			} );
 		} );
@@ -865,9 +865,8 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 
 		test.it( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			return SlackNotifier.warn( 'Not running the edit a post test because of https://github.com/Automattic/wp-calypso/issues/22258', { suppressDuplicateMessages: true } );
 		} );
-
-		SlackNotifier.warn( 'Not running the edit a post test because of https://github.com/Automattic/wp-calypso/issues/22258', { suppressDuplicateMessages: true } );
 
 		test.xdescribe( 'Publish a New Post', function() {
 			const originalBlogPostTitle = dataHelper.randomPhrase();
