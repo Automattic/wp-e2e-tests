@@ -52,9 +52,9 @@ test.describe( `[${host}] Managing Domain Mapping: (${screenSize}) @parallel`, f
 		test.describe( 'Can find domain mapping section and enter a domain to map', function() {
 			test.it( 'Can choose add a domain', () => {
 				const domainsPage = new DomainsPage( driver );
-				driver.getCurrentUrl().then( ( urlDisplayed ) => {
-					domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
-				} );
+				// driver.getCurrentUrl().then( ( urlDisplayed ) => {
+				// 	domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
+				// } );
 				return domainsPage.clickAddDomain();
 			} );
 

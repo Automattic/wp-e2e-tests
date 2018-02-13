@@ -28,6 +28,7 @@ import PurchasesPage from '../lib/pages/purchases-page';
 import ManagePurchasePage from '../lib/pages/manage-purchase-page';
 import CancelPurchasePage from '../lib/pages/cancel-purchase-page';
 import CancelDomainPage from '../lib/pages/cancel-domain-page';
+import GSuiteUpsellPage from '../lib/pages/gsuite-upsell-page';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
@@ -865,52 +866,61 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 									return this.securePaymentComponent.waitForPageToDisappear();
 								} );
 
-								test.describe( `Step ${stepNum}: Checkout Thank You Page`, function() {
+								test.describe( `Step ${stepNum}: GSuite Upsell Page`, function() {
 									stepNum++;
 
-									test.it( 'Can see the secure check out thank you page', function() {
-										this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
-										return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
-											return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
-										} );
+									test.it( 'Can see the gsuite upsell page', function() {
+										this.gsuiteUpsellPage = new GSuiteUpsellPage( driver );
+										return this.gsuiteUpsellPage.declineEmail();
 									} );
 
-									test.describe( `Step ${stepNum}: Cancel the domain via purchases`, function() {
+									test.describe( `Step ${stepNum}: Checkout Thank You Page`, function() {
 										stepNum++;
 
-										test.it( 'Cancel the domain', function() {
-											try {
-												let navBarComponent = new NavBarComponent( driver );
-												navBarComponent.clickProfileLink();
+										test.it( 'Can see the secure check out thank you page', function() {
+											this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
+											return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
+												return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
+											} );
+										} );
 
-												let profilePage = new ProfilePage( driver );
-												profilePage.chooseManagePurchases();
+										test.describe( `Step ${stepNum}: Cancel the domain via purchases`, function() {
+											stepNum++;
 
-												let purchasesPage = new PurchasesPage( driver );
-												purchasesPage.dismissGuidedTour();
-												purchasesPage.selectBusinessPlan( driver );
+											test.it( 'Cancel the domain', function() {
+												try {
+													let navBarComponent = new NavBarComponent( driver );
+													navBarComponent.clickProfileLink();
 
-												let managePurchasePage = new ManagePurchasePage( driver );
-												managePurchasePage.chooseCancelAndRefund();
+													let profilePage = new ProfilePage( driver );
+													profilePage.chooseManagePurchases();
 
-												let cancelPurchasePage = new CancelPurchasePage( driver );
-												cancelPurchasePage.clickCancelPurchase();
-												cancelPurchasePage.completeCancellationSurvey();
-												cancelPurchasePage.waitToDisappear();
-												purchasesPage.waitForAndDismissSuccessMessage();
+													let purchasesPage = new PurchasesPage( driver );
+													purchasesPage.dismissGuidedTour();
+													purchasesPage.selectBusinessPlan( driver );
 
-												purchasesPage.selectDomainInPlan( );
+													let managePurchasePage = new ManagePurchasePage( driver );
+													managePurchasePage.chooseCancelAndRefund();
 
-												managePurchasePage = new ManagePurchasePage( driver );
-												managePurchasePage.domainDisplayed().then( ( domainDisplayed ) => {
-													assert.equal( domainDisplayed, expectedDomainName, 'The domain displayed on the manage purchase page is unexpected' );
-												} );
-												managePurchasePage.chooseRemovePurchase();
-												managePurchasePage.removeNow();
-												return managePurchasePage.waitTillRemoveNoLongerShown();
-											} catch ( err ) {
-												SlackNotifier.warn( `There was an error in the hooks that clean up the test domains but since it is cleaning up we really don't care: '${ err }'` );
-											}
+													let cancelPurchasePage = new CancelPurchasePage( driver );
+													cancelPurchasePage.clickCancelPurchase();
+													cancelPurchasePage.completeCancellationSurvey();
+													cancelPurchasePage.waitToDisappear();
+													purchasesPage.waitForAndDismissSuccessMessage();
+
+													purchasesPage.selectDomainInPlan( );
+
+													managePurchasePage = new ManagePurchasePage( driver );
+													managePurchasePage.domainDisplayed().then( ( domainDisplayed ) => {
+														assert.equal( domainDisplayed, expectedDomainName, 'The domain displayed on the manage purchase page is unexpected' );
+													} );
+													managePurchasePage.chooseCancelAndRefund();
+													managePurchasePage.confirmCancelDomain();
+													return managePurchasePage.waitTillRemoveNoLongerShown();
+												} catch ( err ) {
+													SlackNotifier.warn( `There was an error in the hooks that clean up the test domains but since it is cleaning up we really don't care: '${ err }'` );
+												}
+											} );
 										} );
 									} );
 								} );

@@ -63,9 +63,9 @@ test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function
 		test.describe( 'Can search for and select a paid domain', function() {
 			test.it( 'Can choose add a domain', () => {
 				const domainsPage = new DomainsPage( driver );
-				driver.getCurrentUrl().then( ( urlDisplayed ) => {
-					domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
-				} );
+				// driver.getCurrentUrl().then( ( urlDisplayed ) => {
+				// 	domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
+				// } );
 				return domainsPage.clickAddDomain();
 			} );
 

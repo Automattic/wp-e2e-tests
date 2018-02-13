@@ -22,6 +22,7 @@ import * as driverManager from '../lib/driver-manager';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
 import * as eyesHelper from '../lib/eyes-helper.js';
+import * as SlackNotifier from '../lib/slack-notifier';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -123,7 +124,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 							postEditorSidebarComponent.expandSharingSection();
 						} );
 
-						if ( host !== 'CI' ) {
+						if ( host !== 'CI' && host !== 'JN' ) {
 							test.it( 'Can see the publicise to twitter account', function() {
 								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 								postEditorSidebarComponent.publicizeToTwitterAccountDisplayed().then( function( accountDisplayed ) {
@@ -289,7 +290,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 									} );
 								} );
 
-								if ( host !== 'CI' ) {
+								if ( host !== 'CI' && host !== 'JN' ) {
 									test.describe( 'Can see post publicized on twitter', function() {
 										test.it( 'Can see post message', function() {
 											let twitterFeedPage = new TwitterFeedPage( driver, publicizeTwitterAccount, true );
@@ -850,10 +851,10 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				return postEditorSidebarComponent.trashPost();
 			} );
 
-			test.it( 'Can then see the Posts page (new)', function() {
-				const postsPage = new PostsPage( driver );
-				return postsPage.displayed().then( ( displayed ) => {
-					return assert.equal( displayed, true, 'The posts page is not displayed' );
+			test.it( 'Can then see the Reader page', function() {
+				const readerPage = new ReaderPage( driver );
+				return readerPage.displayed().then( ( displayed ) => {
+					return assert.equal( displayed, true, 'The reader page is not displayed' );
 				} );
 			} );
 		} );
@@ -864,9 +865,10 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 
 		test.it( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			return SlackNotifier.warn( 'Not running the edit a post test because of https://github.com/Automattic/wp-calypso/issues/22258', { suppressDuplicateMessages: true } );
 		} );
 
-		test.describe( 'Publish a New Post', function() {
+		test.xdescribe( 'Publish a New Post', function() {
 			const originalBlogPostTitle = dataHelper.randomPhrase();
 			const updatedBlogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = 'Science is organised knowledge. Wisdom is organised life..\n~ Immanuel Kant\n';
