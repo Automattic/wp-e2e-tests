@@ -62,7 +62,8 @@
     "skipThemesSelectionModal",
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser",
-    "domainSuggestionTestV5"
+    "domainSuggestionTestV5",
+    "siteGoalsShuffle",
   ],
   "overrideABTests": [
     [ "skipThemesSelectionModal_20170904", "show" ],
