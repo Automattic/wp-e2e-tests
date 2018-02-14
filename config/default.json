@@ -63,7 +63,7 @@
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser",
     "domainSuggestionTestV5",
-    "siteGoalsShuffle",
+    "siteGoalsShuffle"
   ],
   "overrideABTests": [
     [ "skipThemesSelectionModal_20170904", "show" ],
