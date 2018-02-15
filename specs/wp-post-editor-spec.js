@@ -865,10 +865,9 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 
 		test.it( 'Delete Cookies and Local Storage', function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
-			return SlackNotifier.warn( 'Not running the edit a post test because of https://github.com/Automattic/wp-calypso/issues/22258', { suppressDuplicateMessages: true } );
 		} );
 
-		test.xdescribe( 'Publish a New Post', function() {
+		test.describe( 'Publish a New Post', function() {
 			const originalBlogPostTitle = dataHelper.randomPhrase();
 			const updatedBlogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = 'Science is organised knowledge. Wisdom is organised life..\n~ Immanuel Kant\n';
