@@ -50,7 +50,7 @@ test.describe( `[${host}] Notifications: (${screenSize}) @parallel @visdiff`, fu
 		} );
 
 		test.describe( 'Leave a comment on the test site for notifications', function() {
-			const testSiteForInvitationsURL = `https://${config.get( 'testSiteForNotifications' )}`;
+			const testSiteForInvitationsURL = `https://${dataHelper.configGet( 'testSiteForNotifications' )}`;
 
 			test.it( 'Can view the first post', function() {
 				this.viewBlogPage = new ViewSitePage( driver, true, testSiteForInvitationsURL );

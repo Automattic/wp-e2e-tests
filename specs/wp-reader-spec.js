@@ -52,7 +52,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 			} );
 
 			test.it( 'The latest post is on the expected test site', function() {
-				const testSiteForNotifications = config.get( 'testSiteForNotifications' );
+				const testSiteForNotifications = dataHelper.configGet( 'testSiteForNotifications' );
 				return this.readerPage.siteOfLatestPost().then( ( siteOfLatestPost ) => {
 					assert.equal( siteOfLatestPost, testSiteForNotifications, 'The latest post is not on the expected test site' );
 				} );
@@ -66,7 +66,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 			test.describe( 'Delete the new comment', function() {
 				test.before( function() {
 					driverManager.clearCookiesAndDeleteLocalStorage( driver ).then( () => {
-						driver.get( config.get( 'calypsoBaseURL' ) );
+						driver.get( dataHelper.configGet( 'calypsoBaseURL' ) );
 					} );
 				} );
 
