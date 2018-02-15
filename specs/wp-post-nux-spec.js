@@ -49,7 +49,6 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 
 		test.describe( 'Customize and Preview site', function() {
 			test.describe( 'Can customize the site identity ', function() {
-				const newSiteTitle = dataHelper.randomPhrase();
 				// Wait for animation
 				test.afterEach( () => {
 					return driver.sleep( 500 );
@@ -60,55 +59,11 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 				} );
 
 				test.it( 'Can update and view site title', function() {
+					const newSiteTitle = dataHelper.randomPhrase();
 					this.customizerPage.setTitle( newSiteTitle );
 					return this.customizerPage.previewTitle().then( ( titleShown ) => {
 						assert.equal( titleShown.toUpperCase(), newSiteTitle.toUpperCase(), 'The customizer preview title shown does not reflect the title input' );
 					} );
-				} );
-
-				test.it( 'Can open publish settings', function() {
-					return this.customizerPage.openPublishSettings();
-				} );
-
-				test.it( 'Can select "Save Draft" action in publish settings', function() {
-					return this.customizerPage.selectActionSaveDraft();
-				} );
-
-				test.it( 'Can save the theme', function() {
-					return this.customizerPage.saveNewTheme();
-				} );
-
-				test.it( 'Can navigate to preview URL', function() {
-					return this.customizerPage.navigateToPreviewURL();
-				} );
-
-				test.it( 'Can see the correct title displayed', function() {
-					return this.customizerPage.title().then( ( title ) => {
-						return assert( title.includes( newSiteTitle ), 'The title is correctly displayed on the preview' );
-					} );
-				} );
-
-				test.it( 'Can return to the Customizer via pressing back button', function() {
-					this.customizerPage.navigateBack();
-					this.customizerPage = new CustomizerPage( driver );
-					return this.customizerPage.displayed().then( ( displayed ) => {
-						assert( displayed, 'The customizer page was not displayed' );
-					} );
-				} );
-
-				test.it( 'Can expand site identity', function() {
-					return this.customizerPage.expandSiteIdentity();
-				} );
-
-				test.it( 'Can revert the site title', function() {
-					this.customizerPage.setTitle( 'SITE TITLE' );
-					return this.customizerPage.previewTitle().then( ( titleShown ) => {
-						assert.equal( titleShown.toUpperCase(), 'SITE TITLE', 'The customizer preview title shown does not reflect the title input' );
-					} );
-				} );
-
-				test.it( 'Can save the revert', function() {
-					return this.customizerPage.saveNewTheme();
 				} );
 
 				test.it( 'Can update and view site tagline', function() {
