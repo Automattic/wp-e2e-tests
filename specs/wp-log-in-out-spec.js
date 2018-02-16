@@ -102,7 +102,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 		} );
 	} );
 
-	if ( dataHelper.hasAccountWithFeatures( '+2fa-sms -passwordless' ) ) {
+	if ( dataHelper.hasAccountWithFeatures( '+2fa-sms -passwordless' ) && !dataHelper.isRunningOnLiveBranch() ) {
 		test.describe( 'Can Log in on a 2fa account', function() {
 			let loginFlow, twoFALoginPage, twoFACode;
 			test.before( function( done ) {
@@ -140,7 +140,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 		} );
 	}
 
-	if ( dataHelper.hasAccountWithFeatures( '+2fa-push -passwordless' ) ) {
+	if ( dataHelper.hasAccountWithFeatures( '+2fa-push -passwordless' ) && !dataHelper.isRunningOnLiveBranch() ) {
 		test.describe( 'Can Log in on with 2fa push account', function() {
 			let loginFlow, twoFALoginPage;
 			test.before( function( done ) {
@@ -174,7 +174,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 		} );
 	}
 
-	if ( dataHelper.hasAccountWithFeatures( '+2fa-otp -passwordless' ) ) {
+	if ( dataHelper.hasAccountWithFeatures( '+2fa-otp -passwordless' ) && !dataHelper.isRunningOnLiveBranch() ) {
 		test.describe( 'Can Log in on a 2fa account', function() {
 			let loginFlow, twoFALoginPage;
 			test.before( function() {
@@ -204,7 +204,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 		} );
 	}
 
-	if ( dataHelper.hasAccountWithFeatures( '+passwordless -2fa' ) ) {
+	if ( dataHelper.hasAccountWithFeatures( '+passwordless -2fa' ) && !dataHelper.isRunningOnLiveBranch() ) {
 		test.describe( 'Can Log in on a passwordless account', function() {
 			test.before( function() {
 				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
@@ -257,7 +257,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 		} );
 	}
 
-	if ( dataHelper.hasAccountWithFeatures( '+passwordless +2fa-sms' ) ) {
+	if ( dataHelper.hasAccountWithFeatures( '+passwordless +2fa-sms' ) && !dataHelper.isRunningOnLiveBranch() ) {
 		test.describe( 'Can Log in on a passwordless account with 2fa using sms', function() {
 			test.before( function() {
 				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
@@ -332,7 +332,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 		} );
 	}
 
-	if ( dataHelper.hasAccountWithFeatures( '+passwordless +2fa-otp' ) ) {
+	if ( dataHelper.hasAccountWithFeatures( '+passwordless +2fa-otp' ) && !dataHelper.isRunningOnLiveBranch() ) {
 		test.describe( 'Can Log in on a passwordless account with 2fa using authenticator', function() {
 			test.before( function() {
 				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
