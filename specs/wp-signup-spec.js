@@ -366,7 +366,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 							test.it( 'Verify login screen not present', () => {
 								return driver.getCurrentUrl().then( ( url ) => {
 									if ( ! url.match( /checkout/ ) ) {
-										let baseURL = config.get( 'calypsoBaseURL' );
+										let baseURL = dataHelper.configGet( 'calypsoBaseURL' );
 										let newUrl = `${baseURL}/checkout/${selectedBlogAddress}`;
 										SlackNotifier.warn( `WARNING: Signup process sent me to ${url} instead of ${newUrl}` );
 										return driver.get( decodeURIComponent( newUrl ) );
@@ -820,7 +820,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 							test.it( 'Verify login screen not present', () => {
 								return driver.getCurrentUrl().then( ( url ) => {
 									if ( ! url.match( /checkout/ ) ) {
-										let baseURL = config.get( 'calypsoBaseURL' );
+										let baseURL = dataHelper.configGet( 'calypsoBaseURL' );
 										let newUrl = `${baseURL}/checkout/${expectedDomainName}/business`;
 										SlackNotifier.warn( `WARNING: Signup process sent me to ${url} instead of ${newUrl}!` );
 										return driver.get( decodeURIComponent( newUrl ) );
