@@ -10,7 +10,7 @@ import * as mediaHelper from '../lib/media-helper';
 import LoginFlow from '../lib/flows/login-flow';
 import CustomizerPage from '../lib/pages/customizer-page';
 import SidebarComponent from '../lib/components/sidebar-component';
-import {switchToWindow} from '../lib/driver-helper';
+import {closeCurrentWindow, switchToWindow} from '../lib/driver-helper';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -91,6 +91,7 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 				} );
 
 				test.it( 'Can revert the site title', function() {
+					closeCurrentWindow( driver );
 					switchToWindow( driver, 0 );
 					if ( screenSize === 'mobile' ) {
 						this.customizerPage.openOrClosePublishSettings();
