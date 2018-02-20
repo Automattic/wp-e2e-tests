@@ -20,9 +20,8 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
-const httpsHost = config.get( 'httpsHosts' ).indexOf( host ) !== -1;
 
-var driver;
+let driver;
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -74,87 +73,69 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				postEditorSidebarComponent.closeSharingSection();
 			} );
 
-			if ( httpsHost ) {
-				test.describe( 'Preview', function() {
-					test.it( 'Can launch page preview', function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.hideComponentIfNecessary();
+			test.describe( 'Preview', function() {
+				test.it( 'Can launch page preview', function() {
+					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+					postEditorSidebarComponent.hideComponentIfNecessary();
 
-						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-						postEditorToolbarComponent.ensureSaved();
-						postEditorToolbarComponent.launchPreview();
-						this.pagePreviewComponent = new PagePreviewComponent( driver );
-					} );
+					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					postEditorToolbarComponent.ensureSaved();
+					postEditorToolbarComponent.launchPreview();
+					this.pagePreviewComponent = new PagePreviewComponent( driver );
+				} );
 
-					test.it( 'Can see correct page title in preview', function() {
-						this.pagePreviewComponent.pageTitle().then( function( actualPageTitle ) {
-							assert.equal( actualPageTitle.toUpperCase(), pageTitle.toUpperCase(), 'The page preview title is not correct' );
-						} );
-					} );
-
-					test.it( 'Can see correct page content in preview', function() {
-						this.pagePreviewComponent.pageContent().then( function( content ) {
-							assert.equal( content.indexOf( pageQuote ) > -1, true, 'The page preview content (' + content + ') does not include the expected content (' + pageQuote + ')' );
-						} );
-					} );
-
-					test.it( 'Can see the image uploaded in the preview', function() {
-						return this.pagePreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
-							assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
-						} );
-					} );
-
-					test.it( 'Can close page preview', function() {
-						this.pagePreviewComponent.close();
+				test.it( 'Can see correct page title in preview', function() {
+					this.pagePreviewComponent.pageTitle().then( function( actualPageTitle ) {
+						assert.equal( actualPageTitle.toUpperCase(), pageTitle.toUpperCase(), 'The page preview title is not correct' );
 					} );
 				} );
 
-				test.describe( 'Publish and Preview Published Content', function() {
-					test.it( 'Can publish and preview published content', function() {
-						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-						if ( httpsHost ) {
-							this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
-						} else {
-							this.postEditorToolbarComponent.publishAndPreviewPublished( { useConfirmStep: true } );
-						}
-						return this.pagePreviewComponent = new PagePreviewComponent( driver );
-					} );
-
-					test.it( 'Can see correct page title in preview', function() {
-						this.pagePreviewComponent.pageTitle().then( function( actualPageTitle ) {
-							assert.equal( actualPageTitle.toUpperCase(), pageTitle.toUpperCase(), 'The page preview title is not correct' );
-						} );
-					} );
-
-					test.it( 'Can see correct page content in preview', function() {
-						this.pagePreviewComponent.pageContent().then( function( content ) {
-							assert.equal( content.indexOf( pageQuote ) > -1, true, 'The page preview content (' + content + ') does not include the expected content (' + pageQuote + ')' );
-						} );
-					} );
-
-					test.it( 'Can see the image uploaded in the preview', function() {
-						this.pagePreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
-							assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
-						} );
-					} );
-
-					test.it( 'Can close page preview', function() {
-						if ( httpsHost ) {
-							return this.pagePreviewComponent.edit();
-						}
-
-						// else Jetpack
-						return this.pagePreviewComponent.close();
+				test.it( 'Can see correct page content in preview', function() {
+					this.pagePreviewComponent.pageContent().then( function( content ) {
+						assert.equal( content.indexOf( pageQuote ) > -1, true, 'The page preview content (' + content + ') does not include the expected content (' + pageQuote + ')' );
 					} );
 				} );
-			} else { // Jetpack tests
-				test.describe( 'Publish Content', function() {
-					test.it( 'Can publish content', function() {
-						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-						return this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
+
+				test.it( 'Can see the image uploaded in the preview', function() {
+					return this.pagePreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
+						assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
 					} );
 				} );
-			}
+
+				test.it( 'Can close page preview', function() {
+					this.pagePreviewComponent.close();
+				} );
+			} );
+
+			test.describe( 'Publish and Preview Published Content', function() {
+				test.it( 'Can publish and preview published content', function() {
+					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
+					return this.pagePreviewComponent = new PagePreviewComponent( driver );
+				} );
+
+				test.it( 'Can see correct page title in preview', function() {
+					this.pagePreviewComponent.pageTitle().then( function( actualPageTitle ) {
+						assert.equal( actualPageTitle.toUpperCase(), pageTitle.toUpperCase(), 'The page preview title is not correct' );
+					} );
+				} );
+
+				test.it( 'Can see correct page content in preview', function() {
+					this.pagePreviewComponent.pageContent().then( function( content ) {
+						assert.equal( content.indexOf( pageQuote ) > -1, true, 'The page preview content (' + content + ') does not include the expected content (' + pageQuote + ')' );
+					} );
+				} );
+
+				test.it( 'Can see the image uploaded in the preview', function() {
+					this.pagePreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
+						assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
+					} );
+				} );
+
+				test.it( 'Can close page preview', function() {
+					return this.pagePreviewComponent.edit();
+				} );
+			} );
 
 			test.describe( 'View published content', function() {
 				test.it( 'Can view content', function() {
