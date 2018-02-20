@@ -149,7 +149,6 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 						} );
 
 						test.describe( 'Preview (https only)', function() {
-
 							test.it( 'Can launch post preview', function() {
 								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 								postEditorSidebarComponent.hideComponentIfNecessary();
@@ -235,7 +234,6 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 									return this.postPreviewComponent.edit();
 								} );
 							} );
-
 
 							test.describe( 'View Published Content', function() {
 								test.it( 'Can publish and view content', function() {
