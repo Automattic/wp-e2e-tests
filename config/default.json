@@ -68,6 +68,7 @@
   "overrideABTests": [
     [ "skipThemesSelectionModal_20170904", "show" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
-    [ "checklistThankYouForPaidUser_20171204", "hide" ]
+    [ "checklistThankYouForPaidUser_20171204", "hide" ],
+    [ "domainSuggestionTestV6_20180215", "group_0" ]
   ]
 }
