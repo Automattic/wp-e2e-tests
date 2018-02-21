@@ -55,7 +55,6 @@
         "version": "11.103"
     }
   },
-  "httpsHosts": [ "WPCOM", "PRESSABLE", "JN" ],
   "knownABTestKeys": [
     "businessPlanDescriptionAT",
     "multiDomainRegistrationV1",

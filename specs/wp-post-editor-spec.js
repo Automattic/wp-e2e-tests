@@ -27,7 +27,6 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
-const httpsHost = config.get( 'httpsHosts' ).indexOf( host ) !== -1;
 
 let driver;
 
@@ -150,14 +149,54 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 						} );
 
 						test.describe( 'Preview (https only)', function() {
-							if ( httpsHost ) {
-								test.it( 'Can launch post preview', function() {
-									let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-									postEditorSidebarComponent.hideComponentIfNecessary();
+							test.it( 'Can launch post preview', function() {
+								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+								postEditorSidebarComponent.hideComponentIfNecessary();
 
-									this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-									this.postEditorToolbarComponent.ensureSaved();
-									this.postEditorToolbarComponent.launchPreview();
+								this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+								this.postEditorToolbarComponent.ensureSaved();
+								this.postEditorToolbarComponent.launchPreview();
+								this.postPreviewComponent = new PostPreviewComponent( driver );
+							} );
+
+							test.it( 'Can see correct post title in preview', function() {
+								this.postPreviewComponent.postTitle().then( function( postTitle ) {
+									assert.equal( postTitle.toLowerCase(), blogPostTitle.toLowerCase(), 'The blog post preview title is not correct' );
+								} );
+							} );
+
+							test.it( 'Can see correct post content in preview', function() {
+								this.postPreviewComponent.postContent().then( function( content ) {
+									assert.equal( content.indexOf( blogPostQuote ) > -1, true, 'The post preview content (' + content + ') does not include the expected content (' + blogPostQuote + ')' );
+								} );
+							} );
+
+							test.it( 'Can see the post category in preview', function() {
+								this.postPreviewComponent.categoryDisplayed().then( function( categoryDisplayed ) {
+									assert.equal( categoryDisplayed.toUpperCase(), newCategoryName.toUpperCase(), 'The category: ' + newCategoryName + ' is not being displayed on the post' );
+								} );
+							} );
+
+							test.it( 'Can see the post tag in preview', function() {
+								this.postPreviewComponent.tagDisplayed().then( function( tagDisplayed ) {
+									assert.equal( tagDisplayed.toUpperCase(), newTagName.toUpperCase(), 'The tag: ' + newTagName + ' is not being displayed on the post' );
+								} );
+							} );
+
+							test.it( 'Can see the image in preview', function() {
+								this.postPreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
+									assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
+								} );
+							} );
+
+							test.it( 'Can close post preview', function() {
+								this.postPreviewComponent.close();
+							} );
+
+							test.describe( 'Publish and Preview Published Content', function() {
+								test.it( 'Can publish and view content', function() {
+									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+									postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 									this.postPreviewComponent = new PostPreviewComponent( driver );
 								} );
 
@@ -192,65 +231,9 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 								} );
 
 								test.it( 'Can close post preview', function() {
-									this.postPreviewComponent.close();
+									return this.postPreviewComponent.edit();
 								} );
-
-								test.describe( 'Publish and Preview Published Content', function() {
-									test.it( 'Can publish and view content', function() {
-										let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-										if ( httpsHost ) {
-											postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
-										} else {
-											postEditorToolbarComponent.publishAndPreviewPublished( { useConfirmStep: true } );
-										}
-										this.postPreviewComponent = new PostPreviewComponent( driver );
-									} );
-
-									test.it( 'Can see correct post title in preview', function() {
-										this.postPreviewComponent.postTitle().then( function( postTitle ) {
-											assert.equal( postTitle.toLowerCase(), blogPostTitle.toLowerCase(), 'The blog post preview title is not correct' );
-										} );
-									} );
-
-									test.it( 'Can see correct post content in preview', function() {
-										this.postPreviewComponent.postContent().then( function( content ) {
-											assert.equal( content.indexOf( blogPostQuote ) > -1, true, 'The post preview content (' + content + ') does not include the expected content (' + blogPostQuote + ')' );
-										} );
-									} );
-
-									test.it( 'Can see the post category in preview', function() {
-										this.postPreviewComponent.categoryDisplayed().then( function( categoryDisplayed ) {
-											assert.equal( categoryDisplayed.toUpperCase(), newCategoryName.toUpperCase(), 'The category: ' + newCategoryName + ' is not being displayed on the post' );
-										} );
-									} );
-
-									test.it( 'Can see the post tag in preview', function() {
-										this.postPreviewComponent.tagDisplayed().then( function( tagDisplayed ) {
-											assert.equal( tagDisplayed.toUpperCase(), newTagName.toUpperCase(), 'The tag: ' + newTagName + ' is not being displayed on the post' );
-										} );
-									} );
-
-									test.it( 'Can see the image in preview', function() {
-										this.postPreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
-											assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
-										} );
-									} );
-
-									test.it( 'Can close post preview', function() {
-										if ( httpsHost ) {
-											return this.postPreviewComponent.edit();
-										}
-
-										// else Jetpack
-										return this.postPreviewComponent.close();
-									} );
-								} );
-							} else { // Jetpack tests
-								test.it( 'Can publish content', function() {
-									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-									postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
-								} );
-							}
+							} );
 
 							test.describe( 'View Published Content', function() {
 								test.it( 'Can publish and view content', function() {
@@ -1075,15 +1058,10 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				this.postEditorToolbarComponent.ensureSaved();
 				this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 
-				if ( httpsHost ) {
-					this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
-					let postPreviewComponent = new PostPreviewComponent( driver );
+				this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
+				let postPreviewComponent = new PostPreviewComponent( driver );
 
-					return postPreviewComponent.edit();
-				}
-
-				// else Jetpack
-				return this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
+				return postPreviewComponent.edit();
 			} );
 		} );
 
