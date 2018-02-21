@@ -7,14 +7,9 @@ import * as dataHelper from '../lib/data-helper.js';
 
 import DomainsPage from '../lib/pages/domains-page.js';
 import CheckOutPage from '../lib/pages/signup/checkout-page.js';
-import ReaderPage from '../lib/pages/reader-page.js';
-import StatsPage from '../lib/pages/stats-page.js';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
-import ShoppingCartWidgetComponent from '../lib/components/shopping-cart-widget-component.js';
-import SidebarComponent from '../lib/components/sidebar-component.js';
-import NavbarComponent from '../lib/components/navbar-component.js';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
@@ -24,7 +19,20 @@ const screenSize = driverManager.currentScreenSize();
 const domainsInboxId = config.get( 'domainsInboxId' );
 const host = dataHelper.getJetpackHost();
 
-var driver;
+const expect = require( 'chai' ).expect;
+
+const bluecat = require( 'bluecat' );
+
+const oauth = require( '../lib/wpcom-api/oauth.js' );
+
+const api = bluecat.Api( 'wp' );
+api.oauth2.host = 'https://public-api.wordpress.com';
+const service = new bluecat.ServiceSync( api, 'public-api.wordpress.com/rest/v1.1' );
+
+// Test account for the API
+const account = config.testAccounts.defaultUser;
+
+let driver;
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -110,20 +118,15 @@ test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function
 				} );
 
 				// Remove all items from basket for clean up
-				test.it( 'Can empty cart for next test', () => {
-					this.readerPage = new ReaderPage( driver, true );
-
-					this.navbarComponent = new NavbarComponent( driver );
-					this.navbarComponent.clickMySites();
-
-					this.statsPage = new StatsPage( driver, true );
-
-					this.sideBarComponent = new SidebarComponent( driver );
-					this.sideBarComponent.selectDomains();
-
-					this.domainsPage = new DomainsPage( driver );
-					this.shoppingCartWidgetComponent = new ShoppingCartWidgetComponent( driver );
-					return this.shoppingCartWidgetComponent.empty();
+				test.it( 'Can empty cart for next test', ( done ) => {
+					return service.run( function() {
+						oauth.login( service, account );
+						let res = service.sites['${site}']['shopping-cart'].clear.POST( {
+							params: { site: account[2] }
+						} );
+						expect( res.data.statusCode ).to.equal( 200 );
+						done();
+					} );
 				} );
 			} );
 		} );

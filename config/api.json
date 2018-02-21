@@ -99,6 +99,14 @@
             "schema": "https",
             "method": ["POST"]
           }
+        },
+        "shopping-cart": {
+          "schema": "https",
+          "method": ["GET"],
+          "clear": {
+            "schema": "https",
+            "method": ["POST"]
+          }
         }
       }
     }
