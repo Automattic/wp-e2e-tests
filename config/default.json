@@ -69,6 +69,6 @@
     [ "skipThemesSelectionModal_20170904", "show" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
-    [ "domainSuggestionTestV6_20180215", "group_0" ]
+    [ "domainSuggestionTestV6_20180219", "group_0" ]
   ]
 }
