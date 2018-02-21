@@ -547,8 +547,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		} );
 	} );
 
-	// Not running due to .live domain sandbox issues
-	test.xdescribe( 'Sign up for a domain only purchase coming in from wordpress.com/domains @parallel', function() {
+	test.describe( 'Sign up for a domain only purchase coming in from wordpress.com/domains @parallel', function() {
 		this.bailSuite( true );
 		let stepNum = 1;
 		const siteName = dataHelper.getNewBlogName();
@@ -717,8 +716,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		} );
 	} );
 
-	// Not running due to .live domain sandbox issues
-	test.xdescribe( 'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow @parallel', function() {
+	test.describe( 'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow @parallel', function() {
 		this.bailSuite( true );
 		let stepNum = 1;
 
