@@ -10,34 +10,27 @@ import PressableSitesPage from '../lib/pages/pressable/pressable-sites-page';
 import PressableApprovePage from '../lib/pages/pressable-approve-page';
 import PressableSiteSettingsPage from '../lib/pages/pressable/pressable-site-settings-page';
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
-
-import * as driverManager from '../lib/driver-manager';
-import * as dataHelper from '../lib/data-helper';
-import EmailClient from '../lib/email-client';
-import WPAdminSidebar from '../lib/pages/wp-admin/wp-admin-sidebar';
 import ReaderPage from '../lib/pages/reader-page';
-import NavbarComponent from '../lib/components/navbar-component';
-import SidebarComponent from '../lib/components/sidebar-component';
 import StatsPage from '../lib/pages/stats-page';
 import ActivityPage from '../lib/pages/stats/activity-page';
 import WPAdminDashboardPage from '../lib/pages/wp-admin/wp-admin-dashboard-page';
+
+import WPAdminSidebar from '../lib/pages/wp-admin/wp-admin-sidebar';
+import NavbarComponent from '../lib/components/navbar-component';
+import SidebarComponent from '../lib/components/sidebar-component';
+
+import * as driverManager from '../lib/driver-manager';
+import * as dataHelper from '../lib/data-helper';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
 
-const apiKey = config.get( 'mailosaurAPIKey' );
-const Mailosaur = require( 'mailosaur' )( apiKey );
-
 var driver;
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
-	this.emailClient = new EmailClient( 'ndcpbd5u' );
-	this.emailClient.deleteAllEmail();
-
-	this.mailbox = new Mailosaur.Mailbox( 'ndcpbd5u' );
 	driver = driverManager.startBrowser();
 } );
 
@@ -72,24 +65,7 @@ test.describe( `[${host}] Pressable NUX: (${screenSize}) @jetpack`, function() {
 			return this.pressableSitesPage.addNewSite( this.siteName );
 		} );
 
-		test.it( 'Can get credentials from email', function() {
-			const emailAddress = 'account.ndcpbd5u@mailosaur.io';
-			return this.emailClient.pollEmailsByRecipient( emailAddress )
-			.then( ( emails ) => {
-				//Disabled due to a/b test on activation email. See https://github.com/Automattic/wp-e2e-tests/issues/819
-				//assert.equal( emails.length, 2, 'The number of newly registered emails is not equal to 2 (activation and magic link)' );
-				for ( let email of emails ) {
-					if ( email.subject.indexOf( 'WordPress credentials' ) > -1 ) {
-						this.username = email.text.body.match( /(Username:\r\n)(\w+)/ )[2];
-						this.password = email.text.body.match( /(Password:\r\n)(\w+)/ )[2];
-						return true;
-					}
-				}
-			} );
-		} );
-
 		test.it( 'Can go to site settings', function() {
-			this.pressableSitesPage = new PressableSitesPage( driver );
 			return this.pressableSitesPage.gotoSettings( this.siteName );
 		} );
 
@@ -114,15 +90,19 @@ test.describe( `[${host}] Pressable NUX: (${screenSize}) @jetpack`, function() {
 		} );
 
 		test.it( 'Can open recently created site stats', function() {
+			const siteURL = `${this.siteName}.mystagingwebsite.com`;
+			// const siteURL = 'e2eflowtesting1519293477608988.mystagingwebsite.com';
+			//
 			this.readerPage = new ReaderPage( driver, true );
 
 			this.navbarComponent = new NavbarComponent( driver );
-			this.navbarComponent.clickMySites();
-
-			const siteURL = `${this.siteName}.mystagingwebsite.com`;
-			let sideBarComponent = new SidebarComponent( driver );
-			sideBarComponent.selectSiteSwitcher();
-			return sideBarComponent.searchForSite( siteURL );
+			return this.navbarComponent.clickMySites()
+			.then( () => {
+				let sidebarComponent = new SidebarComponent( driver );
+				return sidebarComponent.selectSiteSwitcher()
+				.then( () => sidebarComponent.searchForSite( siteURL ) )
+				.then( () => sidebarComponent.selectStats() );
+			} );
 		} );
 
 		test.it( 'Can add site credentials', function() {
@@ -146,11 +126,7 @@ test.describe( `[${host}] Pressable NUX: (${screenSize}) @jetpack`, function() {
 				return;
 			}
 			this.pressableSitesPage = new PressableSitesPage( driver, true );
-			return this.pressableSitesPage.gotoSettings( this.siteName )
-			.then( () => {
-				this.pressableSiteSettinsPage = new PressableSiteSettingsPage( driver );
-				return this.pressableSiteSettinsPage.deleteSite();
-			} );
+			return this.pressableSitesPage.deleteFirstSite();
 		} );
 	} );
 } );
