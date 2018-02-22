@@ -29,6 +29,16 @@ if [ "$CI" == "true" ]; then
 
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
   nvm install
+
+  # Temporary workaround to force an updated version of Chrome on CircleCI 1.0 containers
+  # https://github.com/Automattic/wp-e2e-tests/issues/783
+  # p6fDka-v0-p2
+  if [ "$(google-chrome --version | awk -F. '{ print $1 }' | awk '{ print $3 }')" -le "59" ]; then
+    curl -L -o google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    sudo dpkg -i google-chrome.deb
+    sudo sed -i 's|HERE/chrome\"|HERE/chrome\" --disable-setuid-sandbox|g' /opt/google/chrome/google-chrome
+    rm google-chrome.deb
+  fi
 fi
 
 # Function to join arrays into a string
