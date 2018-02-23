@@ -55,11 +55,13 @@ usage () {
 -R		  - Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
 -p 		  - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop)
 -b [branch]	  - Run tests on given branch via https://calypso.live
+-B [branch]	  - Run Jetpack tests on given Jetpack branch via https://jurassic.ninja
 -s		  - Screensizes in a comma-separated list (defaults to mobile,desktop)
 -g		  - Execute general tests in the specs/ directory
 -j 		  - Execute Jetpack tests in the specs-jetpack-calypso/ directory (desktop and mobile)
 -W		  - Execute WooCommerce tests in the specs-woocommerce/ directory (desktop and mobile)
 -C		  - Execute tests tagged with @canary
+-J		  - Execute Jetpack connect tests tagged with @canary
 -H [host]	  - Specify an alternate host for Jetpack tests
 -w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
 -l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration
@@ -81,7 +83,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
+while getopts ":a:Rpb:B:s:gjWCJH:wl:cm:fiIUvxu:h" opt; do
   case $opt in
     a)
       WORKERS=$OPTARG
@@ -101,6 +103,10 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
       ;;
     b)
       NODE_CONFIG_ARGS+=("\"liveBranch\":\"true\",\"branchName\":\"$OPTARG\",\"calypsoBaseURL\":\"https://calypso.live\"")
+      continue
+      ;;
+    B)
+      NODE_CONFIG_ARGS+=("\"jetpackBranch\":\"true\",\"jetpackBranchName\":\"$OPTARG\"")
       continue
       ;;
     s)
@@ -151,6 +157,10 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
     j)
       SCREENSIZES="desktop,mobile"
       MAGELLAN_CONFIG="magellan-jetpack.json"
+      ;;
+    J)
+      SCREENSIZES="desktop"
+      MAGELLAN_CONFIG="magellan-jetpack-canary.json"
       ;;
     W)
       SCREENSIZES="desktop,mobile"

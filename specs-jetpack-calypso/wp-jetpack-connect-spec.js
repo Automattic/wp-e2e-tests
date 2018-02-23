@@ -4,6 +4,7 @@ import config from 'config';
 
 import * as driverManager from '../lib/driver-manager';
 import * as driverHelper from '../lib/driver-helper';
+import * as dataHelper from '../lib/data-helper';
 import { By } from 'selenium-webdriver';
 
 import AddNewSitePage from '../lib/pages/add-new-site-page';
@@ -23,7 +24,7 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 
-var driver;
+let driver;
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -33,7 +34,7 @@ test.before( function() {
 test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Disconnect expired sites: @parallel @jetpack', function() {
+	test.describe( 'Disconnect expired sites: @parallel @jetpack @canary', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -71,7 +72,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 	} );
 
-	test.describe( 'Connect From Calypso: @parallel @jetpack', function() {
+	test.describe( 'Connect From Calypso: @parallel @jetpack @canary', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -79,7 +80,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can create wporg site', () => {
-			this.wporgCreator = new WporgCreatorPage( driver );
+			const template = dataHelper.isRunningOnJetpackBranch() ? 'branch' : 'default';
+			this.wporgCreator = new WporgCreatorPage( driver, template );
 			this.wporgCreator.waitForWpadmin();
 		} );
 
@@ -117,7 +119,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 	} );
 
-	test.describe( 'Connect From wp-admin: @parallel @jetpack', function() {
+	test.describe( 'Connect From wp-admin: @parallel @jetpack @canary', function() {
 		this.bailSuite( true );
 
 		test.before( function() {
@@ -125,7 +127,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can create a WP.org site', () => {
-			this.wporgCreator = new WporgCreatorPage( driver );
+			const template = dataHelper.isRunningOnJetpackBranch() ? 'branch' : 'default';
+			this.wporgCreator = new WporgCreatorPage( driver, template );
 			this.wporgCreator.waitForWpadmin();
 		} );
 
