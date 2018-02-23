@@ -31,8 +31,10 @@ if [ "$RUN_SPECIFIED" == "true" ]; then
   TESTARGS=$RUN_ARGS
 elif [[ "$CIRCLE_BRANCH" =~ .*[Jj]etpack.*|.*[Jj][Pp].* ]]; then
   export JETPACKHOST=PRESSABLE
+  export TARGET=JETPACK
   TESTARGS="-R -j" # Execute Jetpack tests
 elif [[ "$CIRCLE_BRANCH" =~ .*[Ww][Oo][Oo].* ]]; then
+  export TARGET=WOO
   TESTARGS="-R -W" # Execute WooCommerce tests
 elif [ "$CIRCLE_BRANCH" == "master" ]; then
   TESTARGS="-R -p -x" # Parallel execution, implies -g -s mobile,desktop

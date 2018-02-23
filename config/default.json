@@ -55,7 +55,6 @@
         "version": "11.103"
     }
   },
-  "httpsHosts": [ "WPCOM", "PRESSABLE" ],
   "knownABTestKeys": [
     "businessPlanDescriptionAT",
     "multiDomainRegistrationV1",
@@ -68,6 +67,7 @@
   "overrideABTests": [
     [ "skipThemesSelectionModal_20170904", "show" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
-    [ "checklistThankYouForPaidUser_20171204", "hide" ]
+    [ "checklistThankYouForPaidUser_20171204", "hide" ],
+    [ "domainSuggestionTestV6_20180219", "group_0" ]
   ]
 }
