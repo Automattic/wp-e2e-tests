@@ -8,7 +8,6 @@ import * as dataHelper from '../lib/data-helper';
 import LoginFlow from '../lib/flows/login-flow';
 
 import PlansPage from '../lib/pages/plans-page';
-import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page';
 import StatsPage from '../lib/pages/stats-page';
 import WPAdminJetpackPage from '../lib/pages/wp-admin/wp-admin-jetpack-page';
 import JetpackPlanSalesPage from '../lib/pages/jetpack-plans-sales-page';
@@ -26,7 +25,7 @@ const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
 
-var driver;
+let driver;
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -71,11 +70,6 @@ test.describe( `[${host}] Jetpack Plans: (${screenSize}) @jetpack`, function() {
 			return driver.sleep( 3000 ).then( () => {
 				return this.jetpackPlanSalesPage.clickPurchaseButton();
 			} );
-		} );
-
-		test.it( 'Can click the purchase premium button', () => {
-			this.pickAPlanPage = new PickAPlanPage( driver );
-			return this.pickAPlanPage.selectPremiumPlan();
 		} );
 
 		test.it( 'Can then see secure payment component', () => {
