@@ -2,8 +2,6 @@ import test from 'selenium-webdriver/testing';
 import config from 'config';
 import assert from 'assert';
 
-import LoginFlow from '../lib/flows/login-flow';
-
 import WPAdminJetpackPage from '../lib/pages/wp-admin/wp-admin-jetpack-page';
 import PressableLogonPage from '../lib/pages/pressable/pressable-logon-page';
 import PressableSitesPage from '../lib/pages/pressable/pressable-sites-page';
@@ -21,6 +19,7 @@ import SidebarComponent from '../lib/components/sidebar-component';
 
 import * as driverManager from '../lib/driver-manager';
 import * as dataHelper from '../lib/data-helper';
+import LoginPage from '../lib/pages/login-page';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -44,14 +43,15 @@ test.describe( `[${host}] Pressable NUX: (${screenSize}) @jetpack`, function() {
 			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.it( 'Can log into WordPress.com', function() {
-			this.loginFlow = new LoginFlow( driver, 'jetpackUserPRESSABLE' );
-			return this.loginFlow.login();
-		} );
-
 		test.it( 'Can log into Pressable', function() {
 			this.pressableLoginPage = new PressableLogonPage( driver, true );
 			return this.pressableLoginPage.loginWithWP();
+		} );
+
+		test.it( 'Can log into WordPress.com', function() {
+			const user = dataHelper.getAccountConfig( 'jetpackUserPRESSABLE' );
+			this.loginPage = new LoginPage( driver );
+			return this.loginPage.login( user[0], user[1] );
 		} );
 
 		test.it( 'Can approve login with WordPress', function() {
@@ -122,9 +122,6 @@ test.describe( `[${host}] Pressable NUX: (${screenSize}) @jetpack`, function() {
 		} );
 
 		test.after( function() {
-			if ( !this.siteName ) {
-				return;
-			}
 			this.pressableSitesPage = new PressableSitesPage( driver, true );
 			return this.pressableSitesPage.deleteFirstSite();
 		} );
