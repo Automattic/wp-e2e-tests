@@ -2,9 +2,9 @@ version: 2
 jobs:
   build:
     parallelism: 2
-    working_directory: /wp-e2e-tests
+    working_directory: ~/wp-e2e-tests
     docker:
-      - image: automattic/wp-e2e-tests:0.0.8
+      - image: circleci/node:8.9.4-browsers
         environment:
           NODE_ENV: test
           NODE_CONFIG: {}
@@ -12,12 +12,12 @@ jobs:
       - checkout
       - restore_cache:
           key: << checksum "package.json" >>
-      - run: source $HOME/.nvm/nvm.sh && npm install
-      - run: source $HOME/.nvm/nvm.sh && npm run lint
-      - run: source $HOME/.nvm/nvm.sh && npm run decryptconfig
+      - run: npm install
+      - run: npm run lint
+      - run: npm run decryptconfig
       - save_cache:
           paths:
-            - /wp-e2e-tests/node_modules
+            - ~/wp-e2e-tests/node_modules
           key: << checksum "package.json" >>
       - run: ./scripts/randomize.sh specs
       - run: ./scripts/run-wrapper.sh

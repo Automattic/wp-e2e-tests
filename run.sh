@@ -21,15 +21,7 @@ if [ "$NODE_ENV" = "" ]; then
 	exit 1
 fi
 
-# On CI, use nvm to define NodeJS version if possible
 if [ "$CI" == "true" ]; then
-  if  [ -d $HOME/.nvm ]; then
-    export NVM_DIR="$HOME/.nvm"
-  fi
-
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-  nvm install
-
   # Temporary workaround to force an updated version of Chrome on CircleCI 1.0 containers
   # https://github.com/Automattic/wp-e2e-tests/issues/783
   # p6fDka-v0-p2
@@ -167,8 +159,8 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
       NODE_CONFIG_ARGS+=("\"failVisdiffs\":\"true\"")
       ;;
     x)
-#      NODE_CONFIG_ARGS+=("\"headless\":\"true\"")
-       MAGELLAN="xvfb-run $MAGELLAN"
+      NODE_CONFIG_ARGS+=("\"headless\":\"true\"")
+#       MAGELLAN="xvfb-run $MAGELLAN"
       ;;
     u)
       NODE_CONFIG_ARGS+=("\"calypsoBaseURL\":\"$OPTARG\"")
