@@ -3,8 +3,6 @@ import test from 'selenium-webdriver/testing';
 import config from 'config';
 
 import * as driverManager from '../lib/driver-manager';
-import * as driverHelper from '../lib/driver-helper';
-import { By } from 'selenium-webdriver';
 
 import AddNewSitePage from '../lib/pages/add-new-site-page';
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
@@ -23,7 +21,7 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 
-var driver;
+let driver;
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -54,15 +52,17 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 						// no sites left to remove
 						return;
 					}
-					// seems like it is not waiting for this
-					driverHelper.waitTillPresentAndDisplayed(
-						driver,
-						By.css( '.notice.is-success.is-dismissable' )
-					);
-					driverHelper.clickWhenClickable(
-						driver,
-						By.css( '.notice.is-dismissable .notice__dismiss' )
-					);
+					// Success message is NOT appearing
+					// See: https://github.com/Automattic/wp-e2e-tests/issues/978
+					// // seems like it is not waiting for this
+					// driverHelper.waitTillPresentAndDisplayed(
+					// 	driver,
+					// 	By.css( '.notice.is-success.is-dismissable' )
+					// );
+					// driverHelper.clickWhenClickable(
+					// 	driver,
+					// 	By.css( '.notice.is-dismissable .notice__dismiss' )
+					// );
 					removeSites();
 				} );
 			};
