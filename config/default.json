@@ -63,7 +63,8 @@
     "checklistThankYouForPaidUser",
     "domainSuggestionTestV6",
     "siteGoalsShuffle",
-    "minimizeFreePlan"
+    "minimizeFreePlan",
+    "upgradePricingDisplay"
   ],
   "overrideABTests": [
     [ "skipThemesSelectionModal_20170904", "show" ],
