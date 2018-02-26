@@ -54,7 +54,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 					}
 					// Success message is NOT appearing
 					// See: https://github.com/Automattic/wp-e2e-tests/issues/978
-					this.driver.sleep( 2000 );
+					driver.sleep( 2000 );
 					// // seems like it is not waiting for this
 					// driverHelper.waitTillPresentAndDisplayed(
 					// 	driver,
