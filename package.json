@@ -13,7 +13,6 @@
     "lint": "eslint . --max-warnings=0",
     "precommitlint": "LIST=`git diff-index --name-only HEAD | grep js$`; if [ \"$LIST\" ]; then eslint $LIST --max-warnings=0; fi",
     "precommitcirclecivalidate": "./scripts/git-pre-commit-circleci-validate",
-    "postinstall": "npm pack ./lib/reporter && npm install ./spec-xunit-reporter-0.0.1.tgz --no-save",
     "test": "./run.sh ${TESTARGS:-$npm_package_defaultTestArgs}",
     "encryptconfig": "openssl enc -aes-256-cbc -pass env:CONFIG_KEY -out ./config/encrypted.enc -in ./config/local-$NODE_ENV.json",
     "decryptconfig": "openssl enc -aes-256-cbc -d -pass env:CONFIG_KEY -in ./config/encrypted.enc -out ./config/local-$NODE_ENV.json"
@@ -59,6 +58,7 @@
     "serverpilot": "0.1.2",
     "slack-notify": "0.1.4",
     "speakeasy": "^2.0.0",
+    "spec-xunit-reporter": "./lib/reporter",
     "testarmada-magellan": "8.8.6",
     "testarmada-magellan-mocha-plugin": "github:hoverduck/magellan-mocha-plugin#40a619c",
     "wpcom": "5.4.0",
