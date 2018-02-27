@@ -1079,7 +1079,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			stepNum++;
 
 			test.it( 'Can see the themes page', function() {
-				this.themesPage = new ThemesPage( driver, true );
+				this.themesPage = new ThemesPage( driver, true, 'with-theme' );
 				return this.themesPage.displayed().then( ( displayed ) => {
 					return assert.equal( displayed, true, 'The about page is not displayed' );
 				} );
