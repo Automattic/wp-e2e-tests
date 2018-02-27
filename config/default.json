@@ -18,16 +18,16 @@
   "sauceConfigurations": {
     "osx-chrome": {
         "browserName": "chrome",
-        "platform": "OS X 10.11",
+        "platform": "OS X 10.13",
         "screenResolution": "2048x1536",
-        "version": "50.0"
+        "version": "64.0"
     },
     "osx-firefox": {
         "browserName": "firefox",
-        "platform": "OS X 10.11",
+        "platform": "OS X 10.13",
         "screenResolution": "2048x1536",
         "nativeEvents": true,
-        "version": "46.0"
+        "version": "58.0"
     },
     "osx-safari": {
         "browserName": "safari",
