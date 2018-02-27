@@ -11,14 +11,14 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: << checksum "package.json" >>
+          key: dependency-cache-{{ checksum "package.json" }}
       - run: npm install
       - run: npm run lint
       - run: npm run decryptconfig
       - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
           paths:
-            - ~/wp-e2e-tests/node_modules
-          key: << checksum "package.json" >>
+            - ./node_modules
       - run: ./scripts/randomize.sh specs
       - run: ./scripts/run-wrapper.sh
       - store_test_results:
