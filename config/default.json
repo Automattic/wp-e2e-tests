@@ -18,9 +18,9 @@
   "sauceConfigurations": {
     "osx-chrome": {
         "browserName": "chrome",
-        "platform": "OS X 10.11",
+        "platform": "OS X 10.13",
         "screenResolution": "2048x1536",
-        "version": "50.0"
+        "version": "64.0"
     },
     "osx-firefox": {
         "browserName": "firefox",
