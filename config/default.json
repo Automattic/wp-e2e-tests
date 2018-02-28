@@ -64,7 +64,8 @@
     "domainSuggestionTestV6",
     "siteGoalsShuffle",
     "minimizeFreePlan",
-    "upgradePricingDisplay"
+    "upgradePricingDisplay",
+    "redesignedSidebarBanner"
   ],
   "overrideABTests": [
     [ "skipThemesSelectionModal_20170904", "show" ],
