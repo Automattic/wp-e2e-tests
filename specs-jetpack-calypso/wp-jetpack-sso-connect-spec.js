@@ -116,14 +116,14 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			.then( () => this.signupFlow.activateAccount() );
 		} );
 
-		test.it( 'Can connect via SSO on WP Admin', () => {
+		test.it( 'Can login via SSO into WP Admin', () => {
 			const loginPage = new WPAdminLogonPage( driver, this.jnFlow.url, { visit: true } );
 			return loginPage.logonSSO()
 			.then( () => {
 				let jetpackAuthPage = new JetpackAuthorizePage( driver );
 				jetpackAuthPage.approveSSOConnection();
 			} )
-			.then( () => new WPAdminDashboardPage( driver, this.jnFlow.url ) );
+			.then( () => new WPAdminDashboardPage( driver ) );
 		} );
 	} );
 } );
