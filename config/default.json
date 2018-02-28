@@ -68,6 +68,7 @@
     "redesignedSidebarBanner"
   ],
   "overrideABTests": [
+    [ "businessPlanDescriptionAT_20170605", "original" ],
     [ "skipThemesSelectionModal_20170904", "show" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
