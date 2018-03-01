@@ -20,6 +20,10 @@ jobs:
           paths:
             - ./node_modules
       - run: ./scripts/randomize.sh specs
+      - run:
+          name: Running X virtual framebuffer
+          command: Xvfb :99 -screen 0 1280x1024x24
+          background: true
       - run: ./scripts/run-wrapper.sh
       - store_test_results:
           path: reports/
