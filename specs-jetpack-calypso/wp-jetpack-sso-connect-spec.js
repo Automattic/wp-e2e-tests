@@ -1,31 +1,24 @@
 import test from 'selenium-webdriver/testing';
-import { By } from 'selenium-webdriver';
 import config from 'config';
 
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 import WPAdminSidebar from '../lib/pages/wp-admin/wp-admin-sidebar.js';
 import LoginFlow from '../lib/flows/login-flow';
-import SidebarComponent from '../lib/components/sidebar-component';
 import JetpackConnectFlow from '../lib/flows/jetpack-connect-flow';
 
 import * as driverManager from '../lib/driver-manager';
-import * as driverHelper from '../lib/driver-helper';
 import * as dataHelper from '../lib/data-helper';
-import SignUpFlow from '../lib/flows/sign-up-flow';
 import WPAdminDashboardPage from '../lib/pages/wp-admin/wp-admin-dashboard-page';
 import WPAdminNewUserPage from '../lib/pages/wp-admin/wp-admin-new-user-page';
 import WPAdminLogonPage from '../lib/pages/wp-admin/wp-admin-logon-page';
-import EmailClient from '../lib/email-client';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
-const signupInboxId = config.get( 'signupInboxId' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
-const userAccount = 'jetpackUser' + host;
+const account = 'jetpackUser' + host;
 
 let driver;
-let blogCreds;
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -42,34 +35,9 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.it( 'Can log in', () => {
-			const loginFlow = new LoginFlow( driver, userAccount );
-			loginFlow.loginAndSelectMySite();
-		} );
-
-		test.it( 'Can disconnect any expired sites', () => {
-			this.sidebarComponent = new SidebarComponent( driver );
-
-			const removeSites = () => {
-				this.sidebarComponent.removeBrokenSite().then( removed => {
-					if ( ! removed ) {
-						// no sites left to remove
-						return;
-					}
-					// seems like it is not waiting for this
-					driverHelper.waitTillPresentAndDisplayed(
-						driver,
-						By.css( '.notice.is-success.is-dismissable' )
-					);
-					driverHelper.clickWhenClickable(
-						driver,
-						By.css( '.notice.is-dismissable .notice__dismiss' )
-					);
-					removeSites();
-				} );
-			};
-
-			removeSites();
+		test.it( 'Can diconnect any expired sites', () => {
+			let jnFlow = new JetpackConnectFlow( driver, account );
+			return jnFlow.removeSites();
 		} );
 	} );
 
@@ -77,28 +45,21 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		this.bailSuite( true );
 
 		test.before( function() {
-			this.emailClient = new EmailClient( signupInboxId );
-			const blogName = dataHelper.getNewBlogName();
-			blogCreds = {
-				blogName: blogName,
-				expectedBlogAddresses: dataHelper.getExpectedFreeAddresses( blogName ),
-				emailAddress: dataHelper.getEmailAddress( blogName, signupInboxId ),
-				password: config.get( 'passwordForNewTestSignUps' ),
-			};
 			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.it( 'Can create new JN site & connect from WP Admin', () => {
-			this.jnFlow = new JetpackConnectFlow( driver, userAccount );
+			this.jnFlow = new JetpackConnectFlow( driver, account );
 			return this.jnFlow.connectFromWPAdmin();
 		} );
 
 		test.it( 'Add new user as Subscriber in wp-admin', () => {
+			const emailAddress = dataHelper.getAccountConfig( 'subscriberUser' )[3];
 			const wpAdminSidebar = new WPAdminSidebar( driver );
 			return wpAdminSidebar.selectAddNewUser()
 			.then( () => {
 				const newUserPage = new WPAdminNewUserPage( driver );
-				return newUserPage.addUser( blogCreds.emailAddress );
+				return newUserPage.addUser( emailAddress );
 			} );
 		} );
 
@@ -110,10 +71,9 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 		} );
 
-		test.it( 'Can Sign up new user and activate his account', () => {
-			this.signupFlow = new SignUpFlow( driver, blogCreds );
-			return this.signupFlow.signupFreePlan()
-			.then( () => this.signupFlow.activateAccount() );
+		test.it( 'Can log in', () => {
+			const loginFlow = new LoginFlow( driver, 'subscriberUser' );
+			loginFlow.loginAndSelectMySite();
 		} );
 
 		test.it( 'Can login via SSO into WP Admin', () => {
