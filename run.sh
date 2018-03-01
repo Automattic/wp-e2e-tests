@@ -170,7 +170,8 @@ while getopts ":a:Rpb:B:s:gjWCJH:wl:cm:fiIUvxu:h" opt; do
       ;;
     x)
       # NODE_CONFIG_ARGS+=("\"headless\":\"true\"")
-      MAGELLAN="xvfb-run $MAGELLAN"
+      #MAGELLAN="xvfb-run $MAGELLAN"
+      echo "headless"
       ;;
     u)
       NODE_CONFIG_ARGS+=("\"calypsoBaseURL\":\"$OPTARG\"")
