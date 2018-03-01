@@ -71,7 +71,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 		} );
 
-		test.it( 'Can log in', () => {
+		test.it( 'Can log in as Subscriber', () => {
 			const loginFlow = new LoginFlow( driver, 'subscriberUser' );
 			loginFlow.loginAndSelectMySite();
 		} );
