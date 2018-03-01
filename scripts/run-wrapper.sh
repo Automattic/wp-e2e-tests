@@ -16,7 +16,7 @@ if [ "$NODE_ENV_OVERRIDE" != "" ]; then
   NODE_ENV=$NODE_ENV_OVERRIDE
 fi
 
-export TESTARGS="-R -p -x"
+export TESTARGS="-R -p"
 
 if [ "$RUN_SPECIFIED" == "true" ]; then
   TESTARGS=$RUN_ARGS
@@ -28,16 +28,11 @@ elif [[ "$CIRCLE_BRANCH" =~ .*[Ww][Oo][Oo].* ]]; then
   export TARGET=WOO
   TESTARGS="-R -W" # Execute WooCommerce tests
 elif [ "$CIRCLE_BRANCH" == "master" ]; then
-  TESTARGS="-R -p -x" # Parallel execution, implies -g -s mobile,desktop
+  TESTARGS="-R -p" # Parallel execution, implies -g -s mobile,desktop
 fi
 
 if [ "$liveBranches" == "true" ]; then
   TESTARGS+=" -b $branchName"
-fi
-
-# If on CI and the -x flag is not yet set, set it
-if [ "$CI" == "true" ] && [[ "$TESTARGS" != *"-x"* ]]; then
-  TESTARGS+=" -x"
 fi
 
 npm test
