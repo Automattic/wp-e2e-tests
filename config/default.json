@@ -68,11 +68,12 @@
     "redesignedSidebarBanner"
   ],
   "overrideABTests": [
+    [ "upgradePricingDisplay_20180213", "original" ],
+    [ "domainSuggestionTestV6_20180301", "group_0" ],
     [ "businessPlanDescriptionAT_20170605", "original" ],
     [ "skipThemesSelectionModal_20170904", "show" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
-    [ "domainSuggestionTestV6_20180219", "group_0" ],
     [ "minimizeFreePlan_20180219", "original" ],
     [ "siteGoalsShuffle_20180214", "control" ]
   ]
