@@ -73,6 +73,7 @@
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
     [ "domainSuggestionTestV6_20180219", "group_0" ],
-    [ "minimizeFreePlan_20180219", "original" ]
+    [ "minimizeFreePlan_20180219", "original" ],
+    [ "siteGoalsShuffle_20180214", "control" ]
   ]
 }
