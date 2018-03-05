@@ -27,7 +27,7 @@ test.before( function() {
 } );
 
 test.describe( `[${host}] Pressable NUX: (${screenSize}) @jetpack`, function() {
-	this.timeout( mochaTimeOut );
+	this.timeout( mochaTimeOut * 2 );
 	this.bailSuite( true );
 
 	test.before( function() {
@@ -70,6 +70,10 @@ test.describe( `[${host}] Pressable NUX: (${screenSize}) @jetpack`, function() {
 		return this.jetpackAuthorizePage.approveConnection();
 	} );
 
+	test.it( 'Can wait for 15 secs until Jetpack Rewind will be ready for configuration', function() {
+		return driver.sleep( 15000 );
+	} );
+
 	test.it( 'Can proceed with Pressable NUX flow', function() {
 		this.nuxFlow = new PressableNUXFlow( driver );
 		return this.nuxFlow.addSiteCredentials();
@@ -82,8 +86,8 @@ test.describe( `[${host}] Pressable NUX: (${screenSize}) @jetpack`, function() {
 		} );
 	} );
 
-	// test.after( function() {
-	// 	this.pressableSitesPage = new PressableSitesPage( driver, true );
-	// 	return this.pressableSitesPage.deleteFirstSite();
-	// } );
+	test.after( function() {
+		this.pressableSitesPage = new PressableSitesPage( driver, true );
+		return this.pressableSitesPage.deleteFirstSite();
+	} );
 } );
