@@ -21,15 +21,7 @@ if [ "$NODE_ENV" = "" ]; then
 	exit 1
 fi
 
-# On CI, use nvm to define NodeJS version if possible
 if [ "$CI" == "true" ]; then
-  if  [ -d $HOME/.nvm ]; then
-    export NVM_DIR="$HOME/.nvm"
-  fi
-
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-  nvm install
-
   # Temporary workaround to force an updated version of Chrome on CircleCI 1.0 containers
   # https://github.com/Automattic/wp-e2e-tests/issues/783
   # p6fDka-v0-p2
@@ -55,11 +47,13 @@ usage () {
 -R		  - Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
 -p 		  - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop)
 -b [branch]	  - Run tests on given branch via https://calypso.live
+-B [branch]	  - Run Jetpack tests on given Jetpack branch via https://jurassic.ninja
 -s		  - Screensizes in a comma-separated list (defaults to mobile,desktop)
 -g		  - Execute general tests in the specs/ directory
 -j 		  - Execute Jetpack tests in the specs-jetpack-calypso/ directory (desktop and mobile)
 -W		  - Execute WooCommerce tests in the specs-woocommerce/ directory (desktop and mobile)
 -C		  - Execute tests tagged with @canary
+-J		  - Execute Jetpack connect tests tagged with @canary
 -H [host]	  - Specify an alternate host for Jetpack tests
 -w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
 -l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration
@@ -81,7 +75,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
+while getopts ":a:Rpb:B:s:gjWCJH:wl:cm:fiIUvxu:h" opt; do
   case $opt in
     a)
       WORKERS=$OPTARG
@@ -101,6 +95,10 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
       ;;
     b)
       NODE_CONFIG_ARGS+=("\"liveBranch\":\"true\",\"branchName\":\"$OPTARG\",\"calypsoBaseURL\":\"https://calypso.live\"")
+      continue
+      ;;
+    B)
+      NODE_CONFIG_ARGS+=("\"jetpackBranch\":\"true\",\"jetpackBranchName\":\"$OPTARG\"")
       continue
       ;;
     s)
@@ -152,6 +150,10 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
       SCREENSIZES="desktop,mobile"
       MAGELLAN_CONFIG="magellan-jetpack.json"
       ;;
+    J)
+      SCREENSIZES="desktop"
+      MAGELLAN_CONFIG="magellan-jetpack-canary.json"
+      ;;
     W)
       SCREENSIZES="desktop,mobile"
       MAGELLAN_CONFIG="magellan-woocommerce.json"
@@ -167,8 +169,8 @@ while getopts ":a:Rpb:s:gjWCH:wl:cm:fiIUvxu:h" opt; do
       NODE_CONFIG_ARGS+=("\"failVisdiffs\":\"true\"")
       ;;
     x)
-#      NODE_CONFIG_ARGS+=("\"headless\":\"true\"")
-       MAGELLAN="xvfb-run $MAGELLAN"
+      NODE_CONFIG_ARGS+=("\"headless\":\"true\"")
+#       MAGELLAN="xvfb-run $MAGELLAN"
       ;;
     u)
       NODE_CONFIG_ARGS+=("\"calypsoBaseURL\":\"$OPTARG\"")

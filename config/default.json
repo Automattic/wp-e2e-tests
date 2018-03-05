@@ -18,9 +18,9 @@
   "sauceConfigurations": {
     "osx-chrome": {
         "browserName": "chrome",
-        "platform": "OS X 10.11",
+        "platform": "OS X 10.13",
         "screenResolution": "2048x1536",
-        "version": "50.0"
+        "version": "64.0"
     },
     "osx-firefox": {
         "browserName": "firefox",
@@ -62,12 +62,19 @@
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser",
     "domainSuggestionTestV6",
-    "siteGoalsShuffle"
+    "siteGoalsShuffle",
+    "minimizeFreePlan",
+    "upgradePricingDisplay",
+    "redesignedSidebarBanner"
   ],
   "overrideABTests": [
+    [ "upgradePricingDisplay_20180213", "original" ],
+    [ "domainSuggestionTestV6_20180301", "group_0" ],
+    [ "businessPlanDescriptionAT_20170605", "original" ],
     [ "skipThemesSelectionModal_20170904", "show" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
-    [ "domainSuggestionTestV6_20180219", "group_0" ]
+    [ "minimizeFreePlan_20180219", "original" ],
+    [ "siteGoalsShuffle_20180214", "control" ]
   ]
 }
