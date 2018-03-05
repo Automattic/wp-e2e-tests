@@ -70,8 +70,8 @@ test.describe( `[${host}] Pressable NUX: (${screenSize}) @jetpack`, function() {
 		return this.jetpackAuthorizePage.approveConnection();
 	} );
 
-	test.it( 'Can wait for 30 sec until Jetpack Rewind will be ready for configuration', function() {
-		return driver.sleep( 30000 );
+	test.it( 'Can wait for 45 sec until Jetpack Rewind will be ready for configuration', function() {
+		return driver.sleep( 45000 );
 	} );
 
 	test.it( 'Can proceed with Pressable NUX flow', function() {
