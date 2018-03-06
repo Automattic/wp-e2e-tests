@@ -9,7 +9,6 @@ import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
 
 import * as driverManager from '../lib/driver-manager';
 import * as dataHelper from '../lib/data-helper';
-import LoginPage from '../lib/pages/login-page';
 import PressableNUXFlow from '../lib/flows/pressable-nux-flow';
 import ReaderPage from '../lib/pages/reader-page';
 import SidebarComponent from '../lib/components/sidebar-component';
@@ -17,6 +16,7 @@ import StatsPage from '../lib/pages/stats-page';
 import ActivityPage from '../lib/pages/stats/activity-page';
 import NavbarComponent from '../lib/components/navbar-component';
 import JetpackConnectFlow from '../lib/flows/jetpack-connect-flow';
+import LoginFlow from '../lib/flows/login-flow';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -38,10 +38,10 @@ test.describe( `[${host}] Pressable NUX: (${screenSize})`, function() {
 		this.bailSuite( true );
 
 		test.before( function() {
-			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.it( 'Can diconnect any expired sites', () => {
+		test.it( 'Can disconnect any expired sites', () => {
 			let jnFlow = new JetpackConnectFlow( driver, account );
 			return jnFlow.removeSites();
 		} );
@@ -51,18 +51,17 @@ test.describe( `[${host}] Pressable NUX: (${screenSize})`, function() {
 		this.bailSuite( true );
 
 		test.before( function() {
-			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			return driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		test.it( 'Can log into WordPress.com', function() {
+			this.loginFlow = new LoginFlow( driver, account );
+			return this.loginFlow.login();
 		} );
 
 		test.it( 'Can log into Pressable', function() {
 			this.pressableLoginPage = new PressableLogonPage( driver, true );
 			return this.pressableLoginPage.loginWithWP();
-		} );
-
-		test.it( 'Can log into WordPress.com', function() {
-			const user = dataHelper.getAccountConfig( account );
-			this.loginPage = new LoginPage( driver );
-			return this.loginPage.login( user[0], user[1] );
 		} );
 
 		test.it( 'Can approve login with WordPress', function() {
