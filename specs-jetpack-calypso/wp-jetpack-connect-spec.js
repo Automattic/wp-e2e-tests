@@ -21,6 +21,7 @@ import JetpackConnectFlow from '../lib/flows/jetpack-connect-flow';
 import JetpackComPage from '../lib/pages/external/jetpackcom-page';
 import JetpackConnectPage from '../lib/pages/jetpack/jetpack-connect-page';
 import PlansPage from '../lib/pages/plans-page';
+import LoginPage from '../lib/pages/login-page';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -190,11 +191,6 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.it( 'Can log in', () => {
-			const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
-			loginFlow.login();
-		} );
-
 		test.it( 'Can create wporg site', function() {
 			this.jnFlow = new JetpackConnectFlow( driver, null, 'noJetpack' );
 			return this.jnFlow.createJNSite();
@@ -233,6 +229,12 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		test.it( 'Can click the Connect Jetpack button', function() {
 			const wpAdminPluginsPage = new WPAdminPluginsPage( driver );
 			return wpAdminPluginsPage.connectJetpackAfterActivation();
+		} );
+
+		test.it( 'Can log into WP.com', function() {
+			const user = dataHelper.getAccountConfig( 'jetpackConnectUser' );
+			const loginPage = new LoginPage( driver );
+			return loginPage.login( user[0], user[1] );
 		} );
 
 		test.it( 'Can confirm that current plan is Free', function() {
