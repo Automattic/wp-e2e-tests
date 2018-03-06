@@ -1,6 +1,7 @@
 /** @format */
 import test from 'selenium-webdriver/testing';
 import config from 'config';
+import assert from 'assert';
 
 import * as driverManager from '../lib/driver-manager';
 import * as dataHelper from '../lib/data-helper';
@@ -79,7 +80,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Has site URL in route', function( done ) {
-			const siteSlug = this.url.replace( /^https?:\/\//, '' );
+			const siteSlug = this.jnFlow.url.replace( /^https?:\/\//, '' );
 			return driver.getCurrentUrl().then( url => {
 				if ( url.includes( siteSlug ) ) {
 					return done();
@@ -95,18 +96,6 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		test.before( function() {
 			return driverManager.ensureNotLoggedIn( driver );
 		} );
-
-		// test.it( 'Can create a WP.org site', () => {
-		// 	const template = dataHelper.isRunningOnJetpackBranch() ? 'branch' : 'default';
-		// 	this.wporgCreator = new WporgCreatorPage( driver, template );
-		// 	this.wporgCreator.waitForWpadmin();
-		// } );
-
-		// test.it( 'Can get URL of WP.org site', () => {
-		// 	this.wporgCreator.getUrl().then( url => {
-		// 		this.url = url;
-		// 	} );
-		// } );
 
 		test.it( 'Can create wporg site', function() {
 			const template = dataHelper.isRunningOnJetpackBranch() ? 'branch' : 'default';
@@ -151,20 +140,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		// test.it( 'Can create wporg site', () => {
-		// 	this.wporgCreator = new WporgCreatorPage( driver, 'noJetpack' );
-		// 	this.wporgCreator.waitForWpadmin();
-		// } );
-
-		// test.it( 'Can get URL', () => {
-		// 	this.wporgCreator.getUrl().then( url => {
-		// 		this.url = url;
-		// 	} );
-		// } );
-
 		test.it( 'Can create wporg site', function() {
-			const template = dataHelper.isRunningOnJetpackBranch() ? 'branch' : 'default';
-			this.jnFlow = new JetpackConnectFlow( driver, null, template );
+			this.jnFlow = new JetpackConnectFlow( driver, null, 'noJetpack' );
 			return this.jnFlow.createJNSite();
 		} );
 
@@ -214,7 +191,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can log in', () => {
-			const loginFlow = new LoginFlow( driver );
+			const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
 			loginFlow.login();
 		} );
 
@@ -260,7 +237,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 
 		test.it( 'Can confirm that current plan is Free', function() {
 			const plansPage = new PlansPage( driver );
-			return plansPage.confirmCurrentPlan( 'free' );
+			assert( plansPage.confirmCurrentPlan( 'free' ) );
 		} );
 	} );
 } );
