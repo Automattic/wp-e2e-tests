@@ -70,8 +70,8 @@
     "redesignedSidebarBanner"
   ],
   "overrideABTests": [
-	[ "domainSuggestionTestV6_20180301", "group_0" ],
-	[ "upgradePricingDisplayV2_20180305", "original" ],
+    [ "domainSuggestionTestV6_20180301", "group_0" ],
+    [ "upgradePricingDisplayV2_20180305", "original" ],
     [ "businessPlanDescriptionAT_20170605", "original" ],
     [ "skipThemesSelectionModal_20170904", "show" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
@@ -79,6 +79,8 @@
     [ "minimizeFreePlan_20180219", "original" ],
     [ "minimizedFreePlanForSignedUser_20180308", "original" ],
     [ "minimizedFreePlanForNonSignedUser_20180308", "original" ],
-    [ "siteGoalsShuffle_20180214", "control" ]
+    [ "siteGoalsShuffle_20180214", "control" ],
+    [ "redesignedSidebarBanner_20180222", "oldBanner" ],
+    [ "businessPlanDescriptionAT_20170605", "original" ]
   ]
 }
