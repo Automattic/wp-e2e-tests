@@ -64,6 +64,7 @@
     "domainSuggestionTestV6",
     "siteGoalsShuffle",
     "minimizeFreePlan",
+    "minimizeFreePlanV2",
     "upgradePricingDisplayV2",
     "redesignedSidebarBanner"
   ],
@@ -75,6 +76,7 @@
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
     [ "minimizeFreePlan_20180219", "original" ],
+    [ "minimizeFreePlanV2_20180308", "original" ],
     [ "siteGoalsShuffle_20180214", "control" ]
   ]
 }
