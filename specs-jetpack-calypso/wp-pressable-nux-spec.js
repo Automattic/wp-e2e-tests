@@ -22,7 +22,6 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
-const account = 'jetpackUserPRESSABLE';
 
 var driver;
 
@@ -42,7 +41,7 @@ test.describe( `[${host}] Pressable NUX: (${screenSize})`, function() {
 		} );
 
 		test.it( 'Can disconnect any expired sites', () => {
-			let jnFlow = new JetpackConnectFlow( driver, account );
+			let jnFlow = new JetpackConnectFlow( driver );
 			return jnFlow.removeSites();
 		} );
 	} );
@@ -55,7 +54,7 @@ test.describe( `[${host}] Pressable NUX: (${screenSize})`, function() {
 		} );
 
 		test.it( 'Can log into WordPress.com', function() {
-			this.loginFlow = new LoginFlow( driver, account );
+			this.loginFlow = new LoginFlow( driver );
 			return this.loginFlow.login();
 		} );
 
