@@ -44,7 +44,7 @@ test.describe( `[${host}] Jurassic Ninja Connection: (${screenSize}) @jetpack`, 
 	this.bailSuite( true );
 
 	test.it( 'Can connect from WP Admin', () => {
-		this.jnFlow = new JetpackConnectFlow( driver, 'jetpackUserJN' );
+		this.jnFlow = new JetpackConnectFlow( driver, 'jetpackUserJN', 'default' );
 		return this.jnFlow.connectFromWPAdmin();
 	} );
 
