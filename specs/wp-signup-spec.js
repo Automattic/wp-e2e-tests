@@ -903,20 +903,11 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 													managePurchasePage.chooseCancelAndRefund();
 
 													let cancelPurchasePage = new CancelPurchasePage( driver );
+													cancelPurchasePage.chooseCancelPlanAndDomain();
 													cancelPurchasePage.clickCancelPurchase();
 													cancelPurchasePage.completeCancellationSurvey();
 													cancelPurchasePage.waitToDisappear();
-													purchasesPage.waitForAndDismissSuccessMessage();
-
-													purchasesPage.selectDomainInPlan( );
-
-													managePurchasePage = new ManagePurchasePage( driver );
-													managePurchasePage.domainDisplayed().then( ( domainDisplayed ) => {
-														assert.equal( domainDisplayed, expectedDomainName, 'The domain displayed on the manage purchase page is unexpected' );
-													} );
-													managePurchasePage.chooseCancelAndRefund();
-													managePurchasePage.confirmCancelDomain();
-													return managePurchasePage.waitTillRemoveNoLongerShown();
+													return purchasesPage.waitForAndDismissSuccessMessage();
 												} catch ( err ) {
 													SlackNotifier.warn( `There was an error in the hooks that clean up the test domains but since it is cleaning up we really don't care: '${ err }'` );
 												}
