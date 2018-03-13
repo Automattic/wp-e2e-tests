@@ -28,6 +28,9 @@ import JetpackComFeaturesDesignPage from '../lib/pages/external/jetpackcom-featu
 import * as driverManager from '../lib/driver-manager';
 import * as dataHelper from '../lib/data-helper';
 
+import * as driverManager from '../lib/driver-manager';
+import * as dataHelper from '../lib/data-helper';
+
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
