@@ -353,7 +353,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 								test.it( 'Can remove the follower account from the site', function() {
 									this.peoplePage.selectFollowers();
 									this.peoplePage.waitForSearchResults();
-									this.peoplePage.removeUserByName( newUserName, true );
+									this.peoplePage.removeUserByName( newUserName );
 									this.peoplePage.waitForSearchResults();
 									this.peoplePage.viewerDisplayed( newUserName ).then( ( displayed ) => {
 										assert.equal( displayed, false, `The username of '${newUserName}' was still displayed as a site viewer` );
@@ -516,7 +516,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 
 									test.describe( 'As the original user, I can remove the new user added to site', function() {
 										test.it( 'Can remove the team member from the site', function() {
-											this.peoplePage.removeUserByName( newUserName, false );
+											this.peoplePage.removeUserByName( newUserName );
 											this.peoplePage.waitForSearchResults();
 											this.peoplePage.viewerDisplayed( newUserName ).then( ( displayed ) => {
 												assert.equal( displayed, false, `The username of '${newUserName}' was still displayed as a site viewer` );
