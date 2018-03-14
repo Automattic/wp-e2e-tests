@@ -57,7 +57,6 @@
   },
   "knownABTestKeys": [
     "businessPlanDescriptionAT",
-    "multiDomainRegistrationV1",
     "skipThemesSelectionModal",
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser",
