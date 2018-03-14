@@ -203,8 +203,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select Try it Free', function() {
-			const jepackComPage = new JetpackComPage( driver );
-			return jepackComPage.selectTryItFree();
+			const jetpackComPage = new JetpackComPage( driver );
+			return jetpackComPage.selectTryItFree();
 		} );
 
 		test.it( 'Can select free plan', function() {
@@ -320,8 +320,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select Install Jetpack on Design Page', function() {
-			const jepackComPage = new JetpackComFeaturesDesignPage( driver );
-			return jepackComPage.installJetpack();
+			const jetpackComPage = new JetpackComFeaturesDesignPage( driver );
+			return jetpackComPage.installJetpack();
 		} );
 
 		test.it( 'Can start connection flow using JN site', function() {
