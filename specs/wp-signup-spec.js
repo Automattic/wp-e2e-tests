@@ -888,8 +888,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 								stepNum++;
 
 								test.it( 'Can then see the secure payment page with the chosen theme in the cart', function() {
-									const securePaymentComponent = new SecurePaymentComponent( driver );
-									return securePaymentComponent.getProductsNames().then( ( arry ) => {
+									return new SecurePaymentComponent( driver ).getProductsNames().then( ( arry ) => {
 										assert( arry[0].search( chosenThemeName ), `First product in cart is not ${ chosenThemeName }` );
 									} );
 								} );
