@@ -32,7 +32,7 @@ test.it( 'Can select domain only from the domain first choice page', function() 
 
 ## Arrow functions
 
-You can't use arrow functions in Mocha as this isn't bound,
+Passing arrow functions (“lambdas”) to Mocha is discouraged. Lambdas lexically bind this and cannot access the Mocha context [(source)](https://mochajs.org/#arrow-functions)
 
 Avoid:
 
