@@ -380,67 +380,45 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		} );
 
 		test.it( 'We can set the sandbox cookie for payments', function() {
-			this.WPHomePage = new WPHomePage( driver, { visit: true, culture: locale } );
-			return this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+			return ( new WPHomePage( driver, { visit: true, culture: locale } ).setSandboxModeForPayments( sandboxCookieValue ) );
 		} );
 
 		test.describe( `Step ${stepNum}: About Page`, function() {
 			stepNum++;
 
-			test.it( 'Can see the about page', function() {
-				this.startPage = new StartPage( driver, { visit: true, culture: locale, flow: 'premium' } );
-				this.aboutPage = new AboutPage( driver );
-				return this.aboutPage.displayed().then( ( displayed ) => {
-					return assert.equal( displayed, true, 'The about page is not displayed' );
-				} );
+			test.it( 'Can visit the start page', function() {
+				return new StartPage( driver, { visit: true, culture: locale, flow: 'premium' } ).displayed();
 			} );
 
-			test.it( 'Can accept defaults for about page', function() {
-				this.aboutPage.submitForm();
+			test.it( 'Can see the about page and accept defaults', function() {
+				return ( new AboutPage( driver ).submitForm() );
 			} );
 
 			test.describe( `Step ${stepNum}: Themes`, function() {
 				stepNum++;
 
-				test.it( 'Can see the choose a theme page as the starting page', function() {
-					this.chooseAThemePage = new ChooseAThemePage( driver );
-					return this.chooseAThemePage.displayed().then( ( displayed ) => {
-						return assert.equal( displayed, true, 'The choose a theme start page is not displayed' );
-					} );
-				} );
-
-				test.it( 'Can select the first theme', function() {
-					return this.chooseAThemePage.selectFirstTheme();
+				test.it( 'Can see the choose a theme page as the starting page, and select the first theme', function() {
+					return ( new ChooseAThemePage( driver ).selectFirstTheme() );
 				} );
 
 				test.describe( `Step ${stepNum}: Domains`, function() {
 					stepNum++;
 
-					test.it( 'Can then see the domains page ', function() {
-						this.findADomainComponent = new FindADomainComponent( driver );
-						return this.findADomainComponent.displayed().then( ( displayed ) => {
-							return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
-						} );
-					} );
-
-					test.it( 'Can search for a blog name, can see and select a free WordPress.com blog address in results', function() {
-						this.findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-						this.findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
-						this.findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
+					test.it( 'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results', function() {
+						const findADomainComponent = new FindADomainComponent( driver );
+						findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+						findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
+						findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
 							assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
 						} );
-						return this.findADomainComponent.selectFreeAddress();
+						return findADomainComponent.selectFreeAddress();
 					} );
 
 					test.describe( `Step ${stepNum}: Account`, function() {
 						stepNum++;
 
-						test.it( 'Can then enter account details', function() {
-							this.createYourAccountPage = new CreateYourAccountPage( driver );
-							this.createYourAccountPage.displayed().then( ( displayed ) => {
-								assert.equal( displayed, true, 'The create account page is not displayed' );
-							} );
-							return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, blogName, password );
+						test.it( 'Can see the account details page and enter account details', function() {
+							return ( new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit( emailAddress, blogName, password ) );
 						} );
 
 						test.describe( `Step ${stepNum}: Processing`, function() {
@@ -453,38 +431,27 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 								} );
 							} );
 
-							test.it( 'The sign up processing page will finish and show a \'Continue\' button', function() {
-								return this.signupProcessingPage.waitForContinueButtonToBeEnabled();
-							} );
-
-							test.it( 'Clicking the \'Continue\' button continues the process', function() {
-								return this.signupProcessingPage.continueAlong();
+							test.it( 'Can then see the sign up processing page and it will finish and show a \'Continue\' button, which is clicked', function() {
+								const signupProcessingPage = new SignupProcessingPage( driver );
+								signupProcessingPage.waitForContinueButtonToBeEnabled();
+								return signupProcessingPage.continueAlong();
 							} );
 
 							test.describe( `Step ${stepNum}: Secure Payment Page`, function() {
 								stepNum++;
 
-								test.it( 'Can then see the secure payment page', function() {
-									this.securePaymentComponent = new SecurePaymentComponent( driver );
-									return this.securePaymentComponent.displayed().then( ( displayed ) => {
-										return assert.equal( displayed, true, 'The secure payment page is not displayed' );
-									} );
-								} );
-
-								test.it( 'Can enter and submit test payment details', function() {
-									this.securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
-									this.securePaymentComponent.submitPaymentDetails();
-									return this.securePaymentComponent.waitForPageToDisappear();
+								test.it( 'Can then see the secure payment page, and can enter and submit test payment details', function() {
+									const securePaymentComponent = new SecurePaymentComponent( driver );
+									securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+									securePaymentComponent.submitPaymentDetails();
+									return securePaymentComponent.waitForPageToDisappear();
 								} );
 
 								test.describe( `Step ${stepNum}: Checkout Thank You Page`, function() {
 									stepNum++;
 
 									test.it( 'Can see the secure check out thank you page', function() {
-										this.CheckOutThankyouPage = new CheckOutThankyouPage( driver );
-										return this.CheckOutThankyouPage.displayed().then( ( displayed ) => {
-											return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
-										} );
+										return ( new CheckOutThankyouPage( driver ).displayed() );
 									} );
 								} );
 							} );
