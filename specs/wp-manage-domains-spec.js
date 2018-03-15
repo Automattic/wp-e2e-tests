@@ -42,14 +42,7 @@ test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function
 		const blogName = dataHelper.getNewBlogName();
 		const domainEmailAddress = dataHelper.getEmailAddress( blogName, domainsInboxId );
 		const expectedDomainName = blogName + '.com';
-		const firstName = 'End to End';
-		const lastName = 'Testing';
-		const phoneNumber = '0422 888 888';
-		const countryCode = 'AU';
-		const address = '888 Queen Street';
-		const city = 'Brisbane';
-		const stateCode = 'QLD';
-		const postalCode = '4000';
+		const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( domainEmailAddress );
 
 		test.before( function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
@@ -98,7 +91,7 @@ test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function
 
 				test.it( 'Can enter domain registrar details', () => {
 					const checkOutPage = new CheckOutPage( driver );
-					checkOutPage.enterRegistarDetails( firstName, lastName, domainEmailAddress, phoneNumber, countryCode, address, city, stateCode, postalCode );
+					checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
 					checkOutPage.submitForm();
 				} );
 

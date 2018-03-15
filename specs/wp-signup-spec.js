@@ -556,102 +556,66 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
-		const firstName = 'End to End';
-		const lastName = 'Testing';
-		const phoneNumber = '0422 888 888';
-		const countryCode = 'AU';
-		const address = '888 Queen Street';
-		const city = 'Brisbane';
-		const stateCode = 'QLD';
-		const postalCode = '4000';
+		const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( emailAddress );
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
 			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.it( 'We can visit set the sandbox cookie for payments', function() {
-			this.WPHomePage = new WPHomePage( driver, { visit: true, culture: locale } );
-			return this.WPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+			return ( new WPHomePage( driver, { visit: true, culture: locale } ).setSandboxModeForPayments( sandboxCookieValue ) );
 		} );
 
 		test.describe( `Step ${stepNum}: WordPress.com/domains page`, function() {
 			stepNum++;
 
 			test.it( 'Can visit the domains start page', function() {
-				this.startPage = new StartPage( driver, { visit: true, culture: locale, flow: 'domain-first', domainFirst: true, domainFirstDomain: expectedDomainName } );
+				return ( new StartPage( driver, { visit: true, culture: locale, flow: 'domain-first', domainFirst: true, domainFirstDomain: expectedDomainName } ).displayed() );
 			} );
 
 			test.it( 'Can select domain only from the domain first choice page', function() {
-				this.domainFirstChoicePage = new DomainFirstPage( driver );
-				return this.domainFirstChoicePage.chooseJustBuyTheDomain();
+				return ( new DomainFirstPage( driver ).chooseJustBuyTheDomain() );
 			} );
 
 			test.describe( `Step ${stepNum}: Account`, function() {
 				stepNum++;
 
 				test.it( 'Can then enter account details', function() {
-					this.createYourAccountPage = new CreateYourAccountPage( driver );
-					this.createYourAccountPage.displayed().then( ( displayed ) => {
-						assert.equal( displayed, true, 'The create account page is not displayed' );
-					} );
-					return this.createYourAccountPage.enterAccountDetailsAndSubmit( emailAddress, siteName, password );
+					return ( new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit( emailAddress, siteName, password ) );
 				} );
 
 				test.describe( `Step ${stepNum}: Processing`, function() {
 					stepNum++;
 
 					test.it( 'Can then see the sign up processing page which will finish automatically move along', function() {
-						this.signupProcessingPage = new SignupProcessingPage( driver );
-						return this.signupProcessingPage.waitToDisappear();
+						return ( new SignupProcessingPage( driver ).waitToDisappear() );
 					} );
 
-					test.describe( `Step ${stepNum}: Secure Payment Page`, function() {
+					test.describe( `Step ${stepNum}: Checkout and Secure Payment Page`, function() {
 						stepNum++;
 
-						test.it( 'Can see checkout page', () => {
-							this.checkOutPage = new CheckOutPage( driver );
-							this.checkOutPage.displayed().then( ( displayed ) => {
-								assert.equal( displayed, true, 'Could not see the check out page' );
-							} );
+						test.it( 'Can see checkout page, choose domain privacy option and enter registrar details', () => {
+							const checkOutPage = new CheckOutPage( driver );
+							checkOutPage.selectAddPrivacyProtectionCheckbox();
+							checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
+							return checkOutPage.submitForm();
 						} );
 
-						test.it( 'Can choose domain privacy option', () => {
-							this.checkOutPage = new CheckOutPage( driver );
-							this.checkOutPage.selectAddPrivacyProtectionCheckbox();
-						} );
-
-						test.it( 'Can enter domain registrar details', () => {
-							this.checkOutPage = new CheckOutPage( driver );
-							this.checkOutPage.enterRegistarDetails( firstName, lastName, emailAddress, phoneNumber, countryCode, address, city, stateCode, postalCode );
-							this.checkOutPage.submitForm();
-						} );
-
-						test.it( 'Can then see the secure payment page', function() {
-							this.securePaymentComponent = new SecurePaymentComponent( driver );
-							return this.securePaymentComponent.displayed().then( ( displayed ) => {
-								return assert.equal( displayed, true, 'The secure payment page is not displayed' );
-							} );
-						} );
-
-						test.it( 'Can enter and submit test payment details', function() {
-							this.securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
-							this.securePaymentComponent.submitPaymentDetails();
-							this.securePaymentComponent.waitForCreditCardPaymentProcessing();
-							return this.securePaymentComponent.waitForPageToDisappear();
+						test.it( 'Can then see the secure payment page and enter/submit test payment details', function() {
+							const securePaymentComponent = new SecurePaymentComponent( driver );
+							securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+							securePaymentComponent.submitPaymentDetails();
+							securePaymentComponent.waitForCreditCardPaymentProcessing();
+							return securePaymentComponent.waitForPageToDisappear();
 						} );
 
 						test.describe( `Step ${stepNum}: Checkout Thank You Page`, function() {
 							stepNum++;
 
 							test.it( 'Can see the secure check out thank you page and click "go to my domain" button to see the domain only settings page', function() {
-								this.checkOutThankyouPage = new CheckOutThankyouPage( driver );
-								this.checkOutThankyouPage.goToMyDomain();
-								this.domainOnlySettingsPage = new DomainOnlySettingsPage( driver );
-								this.domainOnlySettingsPage.manageDomain();
-								this.domainDetailsPage = new DomainDetailsPage( driver );
-								this.domainDetailsPage.displayed().then( ( displayed ) => {
-									assert.equal( displayed, true, 'The domain details page is not displayed' );
-								} );
+								new CheckOutThankyouPage( driver ).goToMyDomain();
+								new DomainOnlySettingsPage( driver ).manageDomain();
+								return new DomainDetailsPage( driver ).displayed();
 							} );
 
 							test.describe( `Step ${stepNum}: View Calypso Menus`, function() {
@@ -659,19 +623,14 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 								// Open the sidebar
 								test.before( function() {
-									let navBarComponent = new NavBarComponent( driver );
-									navBarComponent.clickMySites();
+									return ( new NavBarComponent( driver ).clickMySites() );
 								} );
 
-								test.it( 'We should only one option', function() {
-									let sideBarComponent = new SideBarComponent( driver );
-									return sideBarComponent.numberOfMenuItems().then( ( numberMenuItems ) => {
+								test.it( 'We should only one option - the settings option', function() {
+									const sideBarComponent = new SideBarComponent( driver );
+									sideBarComponent.numberOfMenuItems().then( ( numberMenuItems ) => {
 										assert.equal( numberMenuItems, 1, 'There is not a single menu item for a domain only site' );
 									} );
-								} );
-
-								test.it( 'We should see the Settings option', function() {
-									let sideBarComponent = new SideBarComponent( driver );
 									return sideBarComponent.settingsOptionExists().then( ( exists ) => {
 										assert( exists, 'The settings menu option does not exist' );
 									} );
@@ -682,25 +641,19 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 									test.it( 'Cancel the domain', function() {
 										try {
-											let sideBarComponent = new SideBarComponent( driver );
-											sideBarComponent.selectSettings();
+											new SideBarComponent( driver ).selectSettings();
+											new DomainOnlySettingsPage( driver ).manageDomain();
+											new DomainDetailsPage( driver ).viewPaymentSettings();
 
-											let domainOnlySettingsPage = new DomainOnlySettingsPage( driver );
-											domainOnlySettingsPage.manageDomain();
-
-											let domainDetailsPage = new DomainDetailsPage( driver );
-											domainDetailsPage.viewPaymentSettings();
-
-											let managePurchasePage = new ManagePurchasePage( driver );
+											const managePurchasePage = new ManagePurchasePage( driver );
 											managePurchasePage.domainDisplayed().then( ( domainDisplayed ) => {
 												assert.equal( domainDisplayed, expectedDomainName, 'The domain displayed on the manage purchase page is unexpected' );
 											} );
 											managePurchasePage.chooseCancelAndRefund();
 
-											let cancelPurchasePage = new CancelPurchasePage( driver );
-											cancelPurchasePage.clickCancelPurchase();
+											new CancelPurchasePage( driver ).clickCancelPurchase();
 
-											let cancelDomainPage = new CancelDomainPage( driver );
+											const cancelDomainPage = new CancelDomainPage( driver );
 											cancelDomainPage.completeSurveyAndConfirm();
 											return cancelDomainPage.waitToDisappear();
 										} catch ( err ) {
@@ -726,14 +679,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 		const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
-		const firstName = 'End to End';
-		const lastName = 'Testing';
-		const phoneNumber = '0422 888 888';
-		const countryCode = 'AU';
-		const address = '888 Queen Street';
-		const city = 'Brisbane';
-		const stateCode = 'QLD';
-		const postalCode = '4000';
+		const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( emailAddress );
 
 		test.it( 'Ensure we are not logged in as anyone', function() {
 			return driverManager.ensureNotLoggedIn( driver );
@@ -847,7 +793,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 								test.it( 'Can enter domain registrar details', () => {
 									this.checkOutPage = new CheckOutPage( driver );
-									this.checkOutPage.enterRegistarDetails( firstName, lastName, emailAddress, phoneNumber, countryCode, address, city, stateCode, postalCode );
+									this.checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
 									this.checkOutPage.submitForm();
 								} );
 
