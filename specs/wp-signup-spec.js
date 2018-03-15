@@ -569,8 +569,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 											new CancelPurchasePage( driver ).clickCancelPurchase();
 
 											const cancelDomainPage = new CancelDomainPage( driver );
-											cancelDomainPage.completeSurveyAndConfirm();
-											return cancelDomainPage.waitToDisappear();
+											return cancelDomainPage.completeSurveyAndConfirm();
 										} catch ( err ) {
 											SlackNotifier.warn( `There was an error in the hooks that clean up the test domains but since it is cleaning up we really don't care: '${ err }'` );
 										}
@@ -706,11 +705,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 													const cancelPurchasePage = new CancelPurchasePage( driver );
 													cancelPurchasePage.chooseCancelPlanAndDomain();
 													cancelPurchasePage.clickCancelPurchase();
-													cancelPurchasePage.completeCancellationSurvey();
-													cancelPurchasePage.waitToDisappear();
-
-													purchasesPage = new PurchasesPage( driver );
-													return purchasesPage.waitForAndDismissSuccessMessage();
+													return cancelPurchasePage.completeCancellationSurvey();
 												} catch ( err ) {
 													SlackNotifier.warn( `There was an error in the hooks that clean up the test domains but since it is cleaning up we really don't care: '${ err }'` );
 												}
