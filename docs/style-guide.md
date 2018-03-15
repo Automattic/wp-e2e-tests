@@ -50,3 +50,33 @@ test.it( 'We can visit set the sandbox cookie for payments', function() {
 } );
 ```
 
+## Default values using destructuring
+
+Use destructuring for default values as this makes calling the function explicit and avoids boolean traps.
+
+Avoid
+
+
+```
+constructor( driver, visit = true, culture = 'en', flow = '', domainFirst = false, domainFirstDomain = '' ) {
+```
+
+instead:
+
+```
+constructor( driver, { visit = true, culture = 'en', flow = '', domainFirst = false, domainFirstDomain = '' } = {} ) {
+```
+
+that way, the page can be called like:
+
+```
+new StartPage( driver, { visit: true, domainFirst: true } ).displayed();
+```
+
+instead of:
+
+
+```
+new StartPage( driver, true, 'en', '', true, '' ).displayed();
+```
+
