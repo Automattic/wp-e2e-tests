@@ -36,7 +36,7 @@
     "esformatter-quotes": "^1.0.3",
     "esformatter-semicolons": "^1.1.2",
     "esformatter-special-bangs": "^1.0.1",
-    "eyes.selenium": "0.0.53",
+    "eyes.selenium": "0.0.78",
     "fs-extra": "0.22.1",
     "grunt": "0.4.5",
     "grunt-cli": "^0.1.13",
