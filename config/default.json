@@ -57,6 +57,7 @@
   },
   "knownABTestKeys": [
     "businessPlanDescriptionAT",
+    "inlineHelpWithContactForm",
     "skipThemesSelectionModal",
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser",
@@ -70,6 +71,7 @@
   ],
   "overrideABTests": [
     [ "domainSuggestionTestV6_20180301", "group_0" ],
+    [ "inlineHelpWithContactForm_20180315", "inlinecontact" ],
     [ "upgradePricingDisplayV2_20180305", "original" ],
     [ "businessPlanDescriptionAT_20170605", "original" ],
     [ "skipThemesSelectionModal_20170904", "show" ],
