@@ -85,7 +85,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 			stepNum++;
 
 			test.it( 'Can visit the start page', function() {
-				new StartPage( driver, { visit: true, culture: locale } ).displayed();
+				return ( new StartPage( driver, { visit: true, culture: locale } ).displayed() );
 			} );
 
 			test.it( 'Can see the "About" page, and enter some site information', function() {
@@ -237,8 +237,11 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		test.describe( `Step ${stepNum}: About Page`, function() {
 			stepNum++;
 
-			test.it( 'Can see the about page', function() {
-				new StartPage( driver, { visit: true, culture: locale } ).displayed();
+			test.it( 'Can visit the start page', function() {
+				return ( new StartPage( driver, { visit: true, culture: locale } ).displayed() );
+			} );
+
+			test.it( 'Can see the "About" page, and enter some site information', function() {
 				const aboutPage = new AboutPage( driver );
 				return aboutPage.displayed().then( ( displayed ) => {
 					eyesHelper.eyesScreenshot( driver, eyes, 'About Page' );
