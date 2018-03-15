@@ -404,12 +404,6 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 					} );
 				} );
 
-				test.it( 'Can remove all viewers', function() {
-					return this.peoplePage.selectViewers()
-					.then( () => this.peoplePage.emptyUsers() )
-					.then( () => this.peoplePage.selectTeam() );
-				} );
-
 				test.it( 'Can invite a new user as an viewer', function() {
 					this.peoplePage.inviteUser();
 					this.invitePeoplePage = new InvitePeoplePage( driver );
