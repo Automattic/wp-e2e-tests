@@ -427,13 +427,6 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 						test.describe( `Step ${stepNum}: Processing`, function() {
 							stepNum++;
 
-							test.it( 'Can then see the sign up processing page', function() {
-								this.signupProcessingPage = new SignupProcessingPage( driver );
-								return this.signupProcessingPage.displayed().then( ( displayed ) => {
-									return assert.equal( displayed, true, 'The sign up processing page is not displayed' );
-								} );
-							} );
-
 							test.it( 'Can then see the sign up processing page and it will finish and show a \'Continue\' button, which is clicked', function() {
 								const signupProcessingPage = new SignupProcessingPage( driver );
 								signupProcessingPage.waitForContinueButtonToBeEnabled();
