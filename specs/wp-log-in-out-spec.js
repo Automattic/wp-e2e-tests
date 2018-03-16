@@ -60,6 +60,7 @@ test.describe( `[${host}] Authentication: (${screenSize}) @parallel @jetpack @vi
 			test.it( 'Can see Reader Page after logging in', function() {
 				let readerPage = new ReaderPage( driver );
 				readerPage.displayed().then( function( displayed ) {
+					// assert.equal( displayed, true, 'The reader page is not displayed after log in' );
 					assert.equal( displayed, false, 'The reader page is displayed after log in' );
 				} );
 			} );
