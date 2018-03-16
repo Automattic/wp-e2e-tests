@@ -23,11 +23,11 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
     - [To run headlessly](docs/running-tests.md#to-run-headlessly)
     - [To run inside a Docker container](docs/running-tests.md#to-run-inside-a-docker-container)
     - [Jetpack Tests on CircleCI](docs/running-tests.md#jetpack-tests-on-circleci)  
+- [Style Guide](docs/style-guide.md)
 - [Other information](#other-information)    
   - [NodeJS Version](docs/miscellaneous.md#nodejs-version)
   - [Git Pre-Commit Hook](docs/miscellaneous.md#git-pre-commit-hook)
   - [Launch Logged-In Window](docs/miscellaneous.md#launch-logged-in-window)
-
 
 ## Pre-requisites
 
