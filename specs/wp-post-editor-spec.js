@@ -1069,7 +1069,6 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 			test.it( 'Can revert the post to draft', function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-				postEditorToolbarComponent.dismissSuccessViewPostNotice();
 				postEditorSidebarComponent.revertToDraft();
 				postEditorToolbarComponent.waitForIsDraftStatus();
 				postEditorToolbarComponent.statusIsDraft().then( ( isDraft ) => {

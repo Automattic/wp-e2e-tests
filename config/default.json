@@ -57,7 +57,7 @@
   },
   "knownABTestKeys": [
     "businessPlanDescriptionAT",
-    "multiDomainRegistrationV1",
+    "inlineHelpWithContactForm",
     "skipThemesSelectionModal",
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser",
@@ -66,12 +66,13 @@
     "minimizedFreePlanForSignedUser",
     "minimizedFreePlanForUnsignedUser",
     "upgradePricingDisplayV2",
-    "redesignedSidebarBanner"
+    "redesignedSidebarBanner",
+    "domainSearchPrefill"
   ],
   "overrideABTests": [
     [ "domainSuggestionTestV6_20180301", "group_0" ],
+    [ "inlineHelpWithContactForm_20180306", "inlinecontact" ],
     [ "upgradePricingDisplayV2_20180305", "original" ],
-    [ "businessPlanDescriptionAT_20170605", "original" ],
     [ "skipThemesSelectionModal_20170904", "show" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
@@ -79,6 +80,7 @@
     [ "minimizedFreePlanForUnsignedUser_20180308", "original" ],
     [ "siteGoalsShuffle_20180214", "control" ],
     [ "redesignedSidebarBanner_20180222", "oldBanner" ],
-    [ "businessPlanDescriptionAT_20170605", "original" ]
+    [ "businessPlanDescriptionAT_20170605", "original" ],
+    [ "domainSearchPrefill_20180315", "noPrefill" ]
   ]
 }
