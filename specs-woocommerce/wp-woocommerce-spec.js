@@ -45,14 +45,14 @@ test.describe( `Can see WooCommerce Store option in Calypso '${ screenSize }' @p
 		this.navBarComponent.clickMySites();
 	} );
 
-	test.it( 'Can see \'Store (BETA)\' option in main Calypso menu for an AT WooCommerce site set to the US', function() {
+	test.it( 'Can see \'Store\' option in main Calypso menu for an AT WooCommerce site set to the US', function() {
 		this.sideBarComponent = new SidebarComponent( driver );
 		this.sideBarComponent.storeOptionDisplayed().then( ( displayed ) => {
 			assert( displayed, 'The Store menu option is not displayed for the AT WooCommerce site set to the US' );
 		} );
 	} );
 
-	test.it( 'The \'Store (BETA)\' option opens the store dashboard with its own sidebar', function() {
+	test.it( 'The \'Store\' option opens the store dashboard with its own sidebar', function() {
 		this.sideBarComponent = new SidebarComponent( driver );
 		this.sideBarComponent.selectStoreOption();
 		this.storeDashboardPage = new StoreDashboardPage( driver );
