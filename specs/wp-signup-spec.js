@@ -283,16 +283,12 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 				test.describe( `Step ${stepNum}: Plans`, function() {
 					stepNum++;
 
-					test.it( 'Can then see the plans page', function() {
+					test.it( 'Can then see the plans page and select the premium plan ', function() {
 						const pickAPlanPage = new PickAPlanPage( driver );
-						return pickAPlanPage.displayed().then( ( displayed ) => {
+						pickAPlanPage.displayed().then( ( displayed ) => {
 							eyesHelper.eyesScreenshot( driver, eyes, 'Plans Page' );
 							return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
 						} );
-					} );
-
-					test.it( 'Can select the premium plan', function() {
-						const pickAPlanPage = new PickAPlanPage( driver );
 						return pickAPlanPage.selectPremiumPlan();
 					} );
 
