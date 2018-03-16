@@ -36,7 +36,7 @@ test.before( function() {
 test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Onboard Personal site with static homepage', function() {
+	test.describe( 'Onboard Personal site with static homepage: @parallel @jetpack', function() {
 		this.bailSuite( true );
 		const blogTitle = dataHelper.randomPhrase();
 		const blogTagline = dataHelper.randomPhrase();
@@ -132,7 +132,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 	} );
 
-	test.describe( 'Onboard Business site with posts homepage', function() {
+	test.describe( 'Onboard Business site with posts homepage: @parallel @jetpack', function() {
 		this.bailSuite( true );
 		const blogTitle = dataHelper.randomPhrase();
 		const blogTagline = dataHelper.randomPhrase();
