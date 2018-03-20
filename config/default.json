@@ -67,7 +67,8 @@
     "minimizedFreePlanForUnsignedUser",
     "upgradePricingDisplayV2",
     "redesignedSidebarBanner",
-    "domainSearchPrefill"
+    "domainSearchPrefill",
+    "mobilePlansTablesOnSignup"
   ],
   "overrideABTests": [
     [ "domainSuggestionTestV6_20180301", "group_0" ],
@@ -81,6 +82,7 @@
     [ "siteGoalsShuffle_20180214", "control" ],
     [ "redesignedSidebarBanner_20180222", "oldBanner" ],
     [ "businessPlanDescriptionAT_20170605", "original" ],
-    [ "domainSearchPrefill_20180315", "noPrefill" ]
+    [ "domainSearchPrefill_20180315", "noPrefill" ],
+    [ "mobilePlansTablesOnSignup_20180320", "original" ]
   ]
 }
