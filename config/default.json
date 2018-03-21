@@ -63,8 +63,6 @@
     "checklistThankYouForPaidUser",
     "domainSuggestionTestV6",
     "siteGoalsShuffle",
-    "minimizedFreePlanForSignedUser",
-    "minimizedFreePlanForUnsignedUser",
     "upgradePricingDisplayV2",
     "redesignedSidebarBanner",
     "domainSearchPrefill"
@@ -76,8 +74,6 @@
     [ "skipThemesSelectionModal_20170904", "show" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
-    [ "minimizedFreePlanForSignedUser_20180308", "original" ],
-    [ "minimizedFreePlanForUnsignedUser_20180308", "original" ],
     [ "siteGoalsShuffle_20180214", "control" ],
     [ "redesignedSidebarBanner_20180222", "oldBanner" ],
     [ "businessPlanDescriptionAT_20170605", "original" ],
