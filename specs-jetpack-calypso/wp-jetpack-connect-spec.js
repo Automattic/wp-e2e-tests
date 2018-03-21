@@ -421,21 +421,22 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 
 		test.it( 'Can log into WP.com', function() {
 			const user = dataHelper.getAccountConfig( 'jetpackConnectUser' );
-			const loginPage = new LoginPage( driver );
-			return loginPage.login( user[0], user[1] );
+			return ( new LoginPage( driver ).login( user[0], user[1] ) );
+		} );
+
+		test.it( 'Can wait for Jetpack get connected', function() {
+			return ( new JetpackAuthorizePage( driver ).waitToDisappear() );
 		} );
 
 		test.it( 'Can see the secure payment page and enter/submit test payment details', function() {
 			const securePaymentComponent = new SecurePaymentComponent( driver );
-			securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
-			securePaymentComponent.submitPaymentDetails();
+			securePaymentComponent.payWithStoredCardIfPossible( testCreditCardDetails );
 			securePaymentComponent.waitForCreditCardPaymentProcessing();
 			return securePaymentComponent.waitForPageToDisappear();
 		} );
 
 		test.it( 'Can see Premium Thank You page', function() {
-			const pickAPlanPage = new CheckOutThankyouPage( driver );
-			assert( pickAPlanPage.isPremiumPlan() );
+			assert( new CheckOutThankyouPage( driver ).isPremiumPlan() );
 		} );
 	} );
 } );
