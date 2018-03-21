@@ -713,7 +713,7 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 		} );
 	} );
 
-	test.describe( 'Basic sign up for a free site @parallel @email @canary', function() {
+	test.describe( 'Basic sign up for a free site @parallel @email @canary @ie11canary', function() {
 		this.bailSuite( true );
 		let stepNum = 1;
 
