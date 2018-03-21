@@ -115,7 +115,7 @@ while getopts ":a:Rpb:B:s:gjWCJH:wl:cm:fiIUvxu:h" opt; do
       MAGELLAN_CONFIG="magellan-i18n-nux.json"
       ;;
     I)
-      SCREENSIZES=desktop
+      SCREENSIZES="desktop"
       WORKERS=1 # We need to be careful to take it slow with Google
       NODE_CONFIG_ARGS+=$I18N_CONFIG
       LOCALES="en,es,pt-br,de,fr,he,ja,it,nl,ru,tr,id,zh-cn,zh-tw,ko,ar,sv"
@@ -126,7 +126,7 @@ while getopts ":a:Rpb:B:s:gjWCJH:wl:cm:fiIUvxu:h" opt; do
       ;;
     w)
       NODE_CONFIG_ARGS+=$IE11_CONFIG
-      SCREENSIZES=desktop
+      SCREENSIZES="desktop"
       MAGELLAN_CONFIG="magellan-ie11.json"
       ;;
     l)
@@ -141,8 +141,7 @@ while getopts ":a:Rpb:B:s:gjWCJH:wl:cm:fiIUvxu:h" opt; do
       BROWSERS=$(echo $OPTARG | sed 's/,/ /g')
       if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
         CMD="$GRUNT $BROWSERS"
-
-	eval $CMD
+        eval $CMD
       fi
       exit $?
       ;;
