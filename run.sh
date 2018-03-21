@@ -141,8 +141,7 @@ while getopts ":a:Rpb:B:s:gjWCJH:wl:cm:fiIUvxu:h" opt; do
       BROWSERS=$(echo $OPTARG | sed 's/,/ /g')
       if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
         CMD="$GRUNT $BROWSERS"
-
-	eval $CMD
+        eval $CMD
       fi
       exit $?
       ;;
