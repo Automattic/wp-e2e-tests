@@ -1,4 +1,5 @@
-#!/usr/bin/env node
+/** @format */
+
 const config = require( 'config' );
 const ServerPilot = require( 'serverpilot' );
 
@@ -6,7 +7,7 @@ const spConfig = config.get( 'spConfig' );
 
 const sp = new ServerPilot( {
 	clientId: spConfig.clientId,
-	apiKey: spConfig.apiKey
+	apiKey: spConfig.apiKey,
 } );
 
 sp.getApps( ( getErr, data ) => {
@@ -15,17 +16,17 @@ sp.getApps( ( getErr, data ) => {
 		throw getErr;
 	}
 
-	const currentApps = data.data.filter( ( app ) => {
+	const currentApps = data.data.filter( app => {
 		return app.name.match( /^wordpress-/ );
 	} );
 
 	for ( let i = 0; i < currentApps.length; i++ ) {
-		sp.deleteApp( currentApps[i].id, function( delErr ) {
+		sp.deleteApp( currentApps[ i ].id, function( delErr ) {
 			if ( delErr !== null ) {
 				console.log( delErr );
 				throw delErr;
 			} else {
-				console.log( `App ${currentApps[i].id} successfully deleted` );
+				console.log( `App ${ currentApps[ i ].id } successfully deleted` );
 			}
 		} );
 	}

@@ -1,3 +1,5 @@
+/** @format */
+
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 
@@ -18,7 +20,7 @@ let driver;
 
 // Write url and site credentials into file for further use
 function writeJNCredentials( url, username, password ) {
-	const fileContents = `${url} ${username} ${password}`;
+	const fileContents = `${ url } ${ username } ${ password }`;
 	return fs.mkdir( './temp', err => {
 		if ( err && err.code !== 'EEXIST' ) {
 			return console.log( err );
@@ -39,7 +41,7 @@ test.before( function() {
 	return driverManager.clearCookiesAndDeleteLocalStorage( driver );
 } );
 
-test.describe( `[${host}] Jurassic Ninja Connection: (${screenSize}) @jetpack`, function() {
+test.describe( `[${ host }] Jurassic Ninja Connection: (${ screenSize }) @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 

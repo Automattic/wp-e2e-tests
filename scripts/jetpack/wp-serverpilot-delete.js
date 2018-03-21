@@ -1,4 +1,5 @@
-#!/usr/bin/env node
+/** @format */
+
 const config = require( 'config' );
 const ServerPilot = require( 'serverpilot' );
 
@@ -6,7 +7,7 @@ const spConfig = config.get( 'spConfig' );
 
 const sp = new ServerPilot( {
 	clientId: spConfig.clientId,
-	apiKey: spConfig.apiKey
+	apiKey: spConfig.apiKey,
 } );
 
 sp.getApps( ( getErr, data ) => {
@@ -15,18 +16,18 @@ sp.getApps( ( getErr, data ) => {
 		throw getErr;
 	}
 
-	const currentApps = data.data.filter( ( app ) => {
-		return app.name === `wordpress-${process.env.CIRCLE_SHA1.substr( 0, 20 )}`;
+	const currentApps = data.data.filter( app => {
+		return app.name === `wordpress-${ process.env.CIRCLE_SHA1.substr( 0, 20 ) }`;
 	} );
 
 	// There should only be one, but if not we just silently ignore
 	if ( currentApps.length === 1 ) {
-		sp.deleteApp( currentApps[0].id, function( delErr ) {
+		sp.deleteApp( currentApps[ 0 ].id, function( delErr ) {
 			if ( delErr !== null ) {
 				console.log( delErr );
 				throw delErr;
 			} else {
-				console.log( `App ${currentApps[0].id} successfully deleted` );
+				console.log( `App ${ currentApps[ 0 ].id } successfully deleted` );
 			}
 		} );
 	}

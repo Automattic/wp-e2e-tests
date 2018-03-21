@@ -1,3 +1,5 @@
+/** @format */
+
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 
@@ -20,7 +22,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Jetpack Connection Removal: (${screenSize}) @jetpack`, function() {
+test.describe( `[${ host }] Jetpack Connection Removal: (${ screenSize }) @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Deactivate Jetpack Plugin:', function() {
