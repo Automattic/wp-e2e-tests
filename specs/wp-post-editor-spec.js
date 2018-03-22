@@ -134,7 +134,7 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 
 								postEditorSidebarComponent.publicizeMessageDisplayed().then( function( messageDisplayed ) {
-									assert.equal( messageDisplayed, blogPostTitle, 'The publicize message is not defaulting to empty' );
+									assert.equal( messageDisplayed, blogPostTitle, 'The publicize message is not defaulting to the post\'s title' );
 								} );
 							} );
 
