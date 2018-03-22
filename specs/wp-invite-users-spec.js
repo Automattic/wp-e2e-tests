@@ -68,7 +68,9 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				this.loginFlow = new LoginFlow( driver );
 				this.loginFlow.loginAndSelectPeople();
 				this.peoplePage = new PeoplePage( driver );
-				return this.peoplePage.displayed().then( displayed => assert.equal( displayed, true, 'The people page is not displayed' ) );
+				return this.peoplePage
+					.displayed()
+					.then( displayed => assert.equal( displayed, true, 'The people page is not displayed' ) );
 			} );
 
 			test.it(
@@ -77,7 +79,11 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 					this.peoplePage = new PeoplePage( driver );
 					this.peoplePage.inviteUser();
 					this.invitePeoplePage = new InvitePeoplePage( driver );
-					return this.invitePeoplePage.displayed().then( displayed => assert.equal( displayed, true, 'The invite people page is not displayed' ) );
+					return this.invitePeoplePage
+						.displayed()
+						.then( displayed =>
+							assert.equal( displayed, true, 'The invite people page is not displayed' )
+						);
 				}
 			);
 
@@ -90,7 +96,11 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Sends an invite', function() {
-				return this.invitePeoplePage.inviteSent().then( sent => assert.equal( sent, true, 'The sent confirmation message was not displayed' ) );
+				return this.invitePeoplePage
+					.inviteSent()
+					.then( sent =>
+						assert.equal( sent, true, 'The sent confirmation message was not displayed' )
+					);
 			} );
 
 			test.describe( 'Can see an invitation email received for the invite', function() {
@@ -101,25 +111,25 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				test.it( 'Can see a single confirmation message', function() {
 					return this.emailClient
 						.pollEmailsByRecipient( newInviteEmailAddress )
-						.then( ( emails ) => assert.equal( emails.length, 1, 'The number of invite emails is not equal to 1' ) );
+						.then( emails =>
+							assert.equal( emails.length, 1, 'The number of invite emails is not equal to 1' )
+						);
 				} );
 
 				test.it( 'Can capture the Accept Invite link from the email', function() {
-					return this.emailClient
-						.pollEmailsByRecipient( newInviteEmailAddress )
-						.then( ( emails ) => {
-							let links = emails[ 0 ].html.links;
-							for ( let link of links ) {
-								if ( link.href.includes( 'accept-invite' ) ) {
-									acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
-								}
+					return this.emailClient.pollEmailsByRecipient( newInviteEmailAddress ).then( emails => {
+						let links = emails[ 0 ].html.links;
+						for ( let link of links ) {
+							if ( link.href.includes( 'accept-invite' ) ) {
+								acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 							}
-							assert.notEqual(
-								acceptInviteURL,
-								'',
-								'Could not locate the accept invite URL in the invite email'
-							);
-						} );
+						}
+						assert.notEqual(
+							acceptInviteURL,
+							'',
+							'Could not locate the accept invite URL in the invite email'
+						);
+					} );
 				} );
 
 				test.describe( 'Can open the invite page as a new user', function() {

@@ -60,14 +60,14 @@ function uploadImagesAndPost( wpcom ) {
 						return imageFormData.reduce( function( imagePromise, formData ) {
 							return imagePromise.then( function() {
 								// Upload images
-								return site
-									.media()
-									.addFiles( {
-										file: formData.media.path,
-									} )
-									.timeout( 60000 )
+								return ( site
+										.media()
+										.addFiles( {
+											file: formData.media.path,
+										} )
+										.timeout( 60000 )
 										// Add image info to array
-									.then( data => imageIDs[ flow ].push( data.media[ 0 ].ID ) );
+										.then( data => imageIDs[ flow ].push( data.media[ 0 ].ID ) ) );
 							} );
 						}, Promise.resolve() );
 					} );
