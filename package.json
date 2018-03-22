@@ -50,6 +50,7 @@
     "parallel-mocha": "~0.0.7",
     "png-itxt": "1.3.0",
     "push-receiver": "git+https://github.com/yurynix/push-receiver#815334144b6335a9663c1134fee89683016fd807",
+    "prettier": "github:automattic/calypso-prettier#503d7779",
     "random-qoutes-generator": "0.0.1",
     "request-promise": "^4.2.2",
     "sanitize-filename": "1.6.0",
