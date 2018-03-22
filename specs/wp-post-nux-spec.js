@@ -1,3 +1,5 @@
+/** @format */
+
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 import assert from 'assert';
@@ -10,7 +12,7 @@ import * as mediaHelper from '../lib/media-helper';
 import LoginFlow from '../lib/flows/login-flow';
 import CustomizerPage from '../lib/pages/customizer-page';
 import SidebarComponent from '../lib/components/sidebar-component';
-import {closeCurrentWindow, switchToWindow} from '../lib/driver-helper';
+import { closeCurrentWindow, switchToWindow } from '../lib/driver-helper';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -24,7 +26,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() {
+test.describe( `[${ host }] Post-NUX Flows (${ screenSize }) @parallel`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Sign in as a post NUX user and load the customizer', function() {
@@ -43,7 +45,7 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 
 		test.it( 'Can see the customizer', function() {
 			this.customizerPage = new CustomizerPage( driver );
-			return this.customizerPage.displayed().then( ( displayed ) => {
+			return this.customizerPage.displayed().then( displayed => {
 				assert( displayed, 'The customizer page was not displayed' );
 			} );
 		} );
@@ -62,8 +64,12 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 
 				test.it( 'Can update and view site title', function() {
 					this.customizerPage.setTitle( newSiteTitle );
-					return this.customizerPage.previewTitle().then( ( titleShown ) => {
-						assert.equal( titleShown.toUpperCase(), newSiteTitle.toUpperCase(), 'The customizer preview title shown does not reflect the title input' );
+					return this.customizerPage.previewTitle().then( titleShown => {
+						assert.equal(
+							titleShown.toUpperCase(),
+							newSiteTitle.toUpperCase(),
+							'The customizer preview title shown does not reflect the title input'
+						);
 					} );
 				} );
 
@@ -85,8 +91,11 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 
 				test.it( 'Can see the correct title displayed', function() {
 					switchToWindow( driver, 1 );
-					return this.customizerPage.title().then( ( title ) => {
-						return assert( title.includes( newSiteTitle ), 'The title is correctly displayed on the preview' );
+					return this.customizerPage.title().then( title => {
+						return assert(
+							title.includes( newSiteTitle ),
+							'The title is correctly displayed on the preview'
+						);
 					} );
 				} );
 
@@ -97,8 +106,12 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 						this.customizerPage.openOrClosePublishSettings();
 					}
 					this.customizerPage.setTitle( 'SITE TITLE' );
-					return this.customizerPage.previewTitle().then( ( titleShown ) => {
-						assert.equal( titleShown.toUpperCase(), 'SITE TITLE', 'The customizer preview title shown does not reflect the title input' );
+					return this.customizerPage.previewTitle().then( titleShown => {
+						assert.equal(
+							titleShown.toUpperCase(),
+							'SITE TITLE',
+							'The customizer preview title shown does not reflect the title input'
+						);
 					} );
 				} );
 
@@ -113,25 +126,38 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 					}
 					const newTagline = dataHelper.randomPhrase();
 					this.customizerPage.setTagline( newTagline );
-					return this.customizerPage.previewTagline().then( ( taglineShown ) => {
-						assert.equal( taglineShown.toUpperCase(), newTagline.toUpperCase(), 'The customizer preview tagline shown does not reflect the tagline input' );
+					return this.customizerPage.previewTagline().then( taglineShown => {
+						assert.equal(
+							taglineShown.toUpperCase(),
+							newTagline.toUpperCase(),
+							'The customizer preview tagline shown does not reflect the tagline input'
+						);
 					} );
 				} );
 
-				test.it( 'Direct Manipulation: clicking the icon on title jumps to site title field', function() {
-					this.customizerPage.clickSiteTitleIconInPreview();
-					return assert( this.customizerPage.waitForTitleFieldDisplayed(), 'The title field is not displayed' );
-				} );
+				test.it(
+					'Direct Manipulation: clicking the icon on title jumps to site title field',
+					function() {
+						this.customizerPage.clickSiteTitleIconInPreview();
+						return assert(
+							this.customizerPage.waitForTitleFieldDisplayed(),
+							'The title field is not displayed'
+						);
+					}
+				);
 
 				test.it( 'Close site identity', function() {
 					return this.customizerPage.closeOpenSection();
 				} );
 
-				test.it( 'Can update and see the site\'s colors', function() {
+				test.it( "Can update and see the site's colors", function() {
 					this.customizerPage.expandColorsAndBackgrounds();
 					this.customizerPage.chooseBackgroundColor();
-					return this.customizerPage.previewShowsCustomBackgroundColor().then( ( displayed ) => {
-						assert( displayed, 'The customizer preview is not showing the custom background color' );
+					return this.customizerPage.previewShowsCustomBackgroundColor().then( displayed => {
+						assert(
+							displayed,
+							'The customizer preview is not showing the custom background color'
+						);
 					} );
 				} );
 
@@ -146,16 +172,22 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 						return this.customizerPage.expandFonts();
 					} );
 
-					test.it( 'Can set the site\'s heading font', function() {
-						return this.customizerPage.chooseFirstHeadingsFont().then( ( font ) => {
+					test.it( "Can set the site's heading font", function() {
+						return this.customizerPage.chooseFirstHeadingsFont().then( font => {
 							headingFontName = font.toLowerCase().replace( /\s/g, '' );
 						} );
 					} );
 
-					test.it( 'Can see the site\'s heading font in preview', function() {
-						assert( headingFontName !== '', 'The heading font was not retrieved from the customizer' );
-						return this.customizerPage.previewUsesFont( headingFontName ).then( ( fontUsed ) => {
-							assert( fontUsed, `The font '${headingFontName}' does not appear to be used in the customizer preview` );
+					test.it( "Can see the site's heading font in preview", function() {
+						assert(
+							headingFontName !== '',
+							'The heading font was not retrieved from the customizer'
+						);
+						return this.customizerPage.previewUsesFont( headingFontName ).then( fontUsed => {
+							assert(
+								fontUsed,
+								`The font '${ headingFontName }' does not appear to be used in the customizer preview`
+							);
 						} );
 					} );
 
@@ -170,16 +202,22 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 							return this.customizerPage.expandFonts();
 						} );
 
-						test.it( 'Can set the site\'s base font', function() {
-							return this.customizerPage.chooseFirstBaseFont().then( ( font ) => {
+						test.it( "Can set the site's base font", function() {
+							return this.customizerPage.chooseFirstBaseFont().then( font => {
 								baseFontName = font.toLowerCase().replace( /\s/g, '' );
 							} );
 						} );
 
-						test.it( 'Can see the site\'s heading font in preview', function() {
-							assert( baseFontName !== '', 'The heading font was not retrieved from the customizer' );
-							return this.customizerPage.previewUsesFont( baseFontName ).then( ( fontUsed ) => {
-								assert( fontUsed, `The font '${baseFontName}' does not appear to be used in the customizer preview` );
+						test.it( "Can see the site's heading font in preview", function() {
+							assert(
+								baseFontName !== '',
+								'The heading font was not retrieved from the customizer'
+							);
+							return this.customizerPage.previewUsesFont( baseFontName ).then( fontUsed => {
+								assert(
+									fontUsed,
+									`The font '${ baseFontName }' does not appear to be used in the customizer preview`
+								);
 							} );
 						} );
 
@@ -187,7 +225,8 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 							return this.customizerPage.closeOpenSection();
 						} );
 
-						if ( screenSize !== 'mobile' ) { // header images broken on mobile https://github.com/Automattic/wp-calypso/issues/2380
+						if ( screenSize !== 'mobile' ) {
+							// header images broken on mobile https://github.com/Automattic/wp-calypso/issues/2380
 							test.describe( 'Custom Header Image', function() {
 								let fileDetails = null;
 
@@ -207,9 +246,14 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 								} );
 
 								test.it( 'Can see the custom header image in preview', function() {
-									return this.customizerPage.previewShowsHeader( fileDetails ).then( ( showsHeader ) => {
-										assert( showsHeader, 'The preview is not showing the recently uploaded header image' );
-									} );
+									return this.customizerPage
+										.previewShowsHeader( fileDetails )
+										.then( showsHeader => {
+											assert(
+												showsHeader,
+												'The preview is not showing the recently uploaded header image'
+											);
+										} );
 								} );
 
 								test.it( 'Close custom header', function() {
@@ -236,16 +280,23 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 							} );
 
 							test.it( 'Can see the new menu listed as primary', function() {
-								this.customizerPage.menuDisplayedAsPrimary( newMenuName ).then( ( displayed ) => {
+								this.customizerPage.menuDisplayedAsPrimary( newMenuName ).then( displayed => {
 									if ( displayed === false ) {
-										slackNotifier.warn( 'Could not see the new menu set in the customizer - trying again now' );
+										slackNotifier.warn(
+											'Could not see the new menu set in the customizer - trying again now'
+										);
 										this.customizerPage.addNewMenuAndSetAsPrimary( newMenuName );
 									}
 								} );
 
-								return this.customizerPage.menuDisplayedAsPrimary( newMenuName ).then( ( displayed ) => {
-									return assert( displayed, `The menu '${ newMenuName }' was not displayed as the primary menu` );
-								} );
+								return this.customizerPage
+									.menuDisplayedAsPrimary( newMenuName )
+									.then( displayed => {
+										return assert(
+											displayed,
+											`The menu '${ newMenuName }' was not displayed as the primary menu`
+										);
+									} );
 							} );
 
 							test.it( 'Close menus', function() {
@@ -266,9 +317,14 @@ test.describe( `[${host}] Post-NUX Flows (${screenSize}) @parallel`, function() 
 								} );
 
 								test.it( 'Can see the new widget in the preview pane', function() {
-									return this.customizerPage.previewShowsWidget( widgetTitle, widgetContent ).then( ( displayed ) => {
-										return assert( displayed, `The widget with title '${widgetTitle}' and content '${widgetContent}' was not displayed in the preview` );
-									} );
+									return this.customizerPage
+										.previewShowsWidget( widgetTitle, widgetContent )
+										.then( displayed => {
+											return assert(
+												displayed,
+												`The widget with title '${ widgetTitle }' and content '${ widgetContent }' was not displayed in the preview`
+											);
+										} );
 								} );
 
 								test.it( 'Close widgets', function() {

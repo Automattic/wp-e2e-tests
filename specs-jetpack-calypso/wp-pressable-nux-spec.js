@@ -1,3 +1,5 @@
+/** @format */
+
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 
@@ -31,7 +33,7 @@ if ( host === 'PRESSABLE' ) {
 		driver = driverManager.startBrowser();
 	} );
 
-	test.describe( `[${host}] Pressable NUX: (${screenSize})`, function() {
+	test.describe( `[${ host }] Pressable NUX: (${ screenSize })`, function() {
 		this.timeout( mochaTimeOut * 2 );
 
 		test.describe( 'Disconnect expired sites: @parallel @jetpack', function() {
@@ -89,9 +91,12 @@ if ( host === 'PRESSABLE' ) {
 				return this.jetpackAuthorizePage.approveConnection();
 			} );
 
-			test.it( 'Can wait for 25 sec until Jetpack Rewind will be ready for configuration', function() {
-				return driver.sleep( 25000 );
-			} );
+			test.it(
+				'Can wait for 25 sec until Jetpack Rewind will be ready for configuration',
+				function() {
+					return driver.sleep( 25000 );
+				}
+			);
 
 			test.it( 'Can proceed with Pressable NUX flow', function() {
 				this.nuxFlow = new PressableNUXFlow( driver );
@@ -101,23 +106,25 @@ if ( host === 'PRESSABLE' ) {
 			test.it( 'Can open Rewind activity page', function() {
 				this.readerPage = new ReaderPage( driver, true );
 				let navbarComponent = new NavbarComponent( driver );
-				return navbarComponent.clickMySites()
-				.then( () => {
-					this.sidebarComponent = new SidebarComponent( driver );
-					return this.sidebarComponent.selectSiteSwitcher();
-				} )
-				.then( () => this.sidebarComponent.searchForSite( this.siteName ) )
-				.then( () => this.sidebarComponent.selectStats() )
-				.then( () => {
-					this.statsPage = new StatsPage( driver );
-					return this.statsPage.openActivity();
-				} );
+				return navbarComponent
+					.clickMySites()
+					.then( () => {
+						this.sidebarComponent = new SidebarComponent( driver );
+						return this.sidebarComponent.selectSiteSwitcher();
+					} )
+					.then( () => this.sidebarComponent.searchForSite( this.siteName ) )
+					.then( () => this.sidebarComponent.selectStats() )
+					.then( () => {
+						this.statsPage = new StatsPage( driver );
+						return this.statsPage.openActivity();
+					} );
 			} );
 
 			test.it( 'Can wait until Rewind backup is completed', function() {
 				this.activityPage = new ActivityPage( driver );
-				return this.activityPage.expandDayCard()
-				.then( () => this.activityPage.waitUntilBackupCompleted() );
+				return this.activityPage
+					.expandDayCard()
+					.then( () => this.activityPage.waitUntilBackupCompleted() );
 			} );
 
 			test.after( function() {

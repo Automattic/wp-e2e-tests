@@ -1,3 +1,5 @@
+/** @format */
+
 import assert from 'assert';
 import test from 'selenium-webdriver/testing';
 
@@ -31,7 +33,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Managing Domain Mapping: (${screenSize}) @parallel`, function() {
+test.describe( `[${ host }] Managing Domain Mapping: (${ screenSize }) @parallel`, function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 
@@ -52,7 +54,7 @@ test.describe( `[${host}] Managing Domain Mapping: (${screenSize}) @parallel`, f
 		test.describe( 'Can find domain mapping section and enter a domain to map', function() {
 			test.it( 'Can choose add a domain', () => {
 				const domainsPage = new DomainsPage( driver );
-				driver.getCurrentUrl().then( ( urlDisplayed ) => {
+				driver.getCurrentUrl().then( urlDisplayed => {
 					domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
 				} );
 				return domainsPage.clickAddDomain();
@@ -70,7 +72,7 @@ test.describe( `[${host}] Managing Domain Mapping: (${screenSize}) @parallel`, f
 
 			test.it( 'Can see use my own domain page', () => {
 				const myOwnDomainPage = new MyOwnDomainPage( driver );
-				myOwnDomainPage.displayed().then( ( displayed ) => {
+				myOwnDomainPage.displayed().then( displayed => {
 					assert.equal( displayed, true, 'Could not see use my own domain page' );
 				} );
 			} );
@@ -82,7 +84,7 @@ test.describe( `[${host}] Managing Domain Mapping: (${screenSize}) @parallel`, f
 
 			test.it( 'Can see enter a domain component', () => {
 				const mapADomainPage = new MapADomainPage( driver );
-				mapADomainPage.displayed().then( ( displayed ) => {
+				mapADomainPage.displayed().then( displayed => {
 					assert.equal( displayed, true, 'Could not see map a domain page' );
 				} );
 			} );
@@ -100,7 +102,7 @@ test.describe( `[${host}] Managing Domain Mapping: (${screenSize}) @parallel`, f
 			test.describe( 'Can pay for domain mapping', function() {
 				test.it( 'Can see checkout page', () => {
 					const mapADomainCheckoutPage = new MapADomainCheckoutPage( driver );
-					mapADomainCheckoutPage.displayed().then( ( displayed ) => {
+					mapADomainCheckoutPage.displayed().then( displayed => {
 						assert.equal( displayed, true, 'Could not see the secure payment component' );
 					} );
 				} );
