@@ -405,7 +405,7 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 				} );
 
 				test.it( 'Can invite a new user as an viewer', function() {
-					this.peoplePage.inviteUser();
+					this.peoplePage.inviteUsers();
 					this.invitePeoplePage = new InvitePeoplePage( driver );
 					return this.invitePeoplePage.inviteNewUser( newInviteEmailAddress, 'viewer', 'Automated e2e testing' );
 				} );
@@ -509,13 +509,13 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 									} );
 
 									test.describe( 'As the original user, I can remove the new user added to site', function() {
-										test.it( 'Can remove the team member from the site', function() {
-											this.peoplePage.removeUserByName( newUserName );
-											this.peoplePage.waitForSearchResults();
-											this.peoplePage.viewerDisplayed( newUserName ).then( ( displayed ) => {
-												assert.equal( displayed, false, `The username of '${newUserName}' was still displayed as a site viewer` );
-											} );
-										} );
+										// test.it( 'Can remove the team member from the site', function() {
+										// 	this.peoplePage.removeUserByName( newUserName );
+										// 	this.peoplePage.waitForSearchResults();
+										// 	this.peoplePage.viewerDisplayed( newUserName ).then( ( displayed ) => {
+										// 		assert.equal( displayed, false, `The username of '${newUserName}' was still displayed as a site viewer` );
+										// 	} );
+										// } );
 
 										test.describe( 'As the invited user, I am no longer a viewer on the site', function() {
 											// Login as the invited user
@@ -537,6 +537,20 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 								} );
 							} );
 						} );
+					} );
+				} );
+
+				test.after( function() {
+					new LoginFlow( driver, 'privateSiteUser' ).loginAndSelectPeople();
+					const peoplePage = new PeoplePage( driver );
+
+					peoplePage.selectViewers();
+					return peoplePage.viewerDisplayed( newUserName )
+					.then( displayed => {
+						if ( displayed ) {
+							peoplePage.removeUserByName( newUserName );
+							return peoplePage.waitForSearchResults();
+						}
 					} );
 				} );
 			} );
