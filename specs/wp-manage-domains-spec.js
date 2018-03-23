@@ -1,4 +1,3 @@
-import assert from 'assert';
 import test from 'selenium-webdriver/testing';
 
 import config from 'config';
@@ -15,6 +14,11 @@ import SecurePaymentComponent from '../lib/components/secure-payment-component.j
 import ShoppingCartWidgetComponent from '../lib/components/shopping-cart-widget-component.js';
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
+import MyOwnDomainPage from '../lib/pages/domain-my-own-page';
+import MapADomainComponent from '../lib/components/map-a-domain-component';
+import MapADomainPage from '../lib/pages/domain-map-page';
+import EnterADomainComponent from '../lib/components/enter-a-domain-component';
+import MapADomainCheckoutPage from '../lib/pages/domain-map-checkout-page';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
@@ -24,7 +28,7 @@ const screenSize = driverManager.currentScreenSize();
 const domainsInboxId = config.get( 'domainsInboxId' );
 const host = dataHelper.getJetpackHost();
 
-var driver;
+let driver;
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -32,93 +36,127 @@ test.before( function() {
 } );
 
 test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function() {
-	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Partially adding a domain to an existing site (Doesn\'t work in full until we work out a way to cancel the domain automatically)', () => {
+	test.describe( 'Adding a domain to an existing site ', function() {
 		this.bailSuite( true );
 
-		//TODO: work out about sandbox payments and automatically cancelling domains
 		const blogName = dataHelper.getNewBlogName();
 		const domainEmailAddress = dataHelper.getEmailAddress( blogName, domainsInboxId );
 		const expectedDomainName = blogName + '.com';
 		const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( domainEmailAddress );
 
 		test.before( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.it( 'Log In and Select Domains', () => {
-			const loginFlow = new LoginFlow( driver );
-			loginFlow.loginAndSelectDomains();
+		test.it( 'Log In and Select Domains', function() {
+			return new LoginFlow( driver ).loginAndSelectDomains();
 		} );
 
-		test.describe( 'Can search for and select a paid domain', function() {
-			test.it( 'Can choose add a domain', () => {
-				const domainsPage = new DomainsPage( driver );
-				driver.getCurrentUrl().then( ( urlDisplayed ) => {
-					domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
-				} );
-				return domainsPage.clickAddDomain();
+		test.it( 'Can see the Domains page and choose add a domain', function() {
+			const domainsPage = new DomainsPage( driver );
+			driver.getCurrentUrl().then( ( urlDisplayed ) => {
+				domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
 			} );
+			return domainsPage.clickAddDomain();
+		} );
 
-			test.it( 'Can see the domain search component', () => {
-				const findADomainComponent = new FindADomainComponent( driver );
-				findADomainComponent.waitForResults();
+		test.it( 'Can see the domain search component', function() {
+			return new FindADomainComponent( driver ).waitForResults();
+		} );
+
+		test.it( 'Can search for a blog name', function() {
+			return new FindADomainComponent( driver ).searchForBlogNameAndWaitForResults( blogName );
+		} );
+
+		test.it( 'Can select the .com search result and decline Google Apps for email', function() {
+			const findADomainComponent = new FindADomainComponent( driver );
+			findADomainComponent.selectDotComAddress( expectedDomainName );
+			return findADomainComponent.declineGoogleApps();
+		} );
+
+		test.it( 'Can see checkout page, choose privacy and enter registrar details', function() {
+			const checkOutPage = new CheckOutPage( driver );
+			checkOutPage.selectAddPrivacyProtectionCheckbox();
+			checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
+			return checkOutPage.submitForm();
+		} );
+
+		test.it( 'Can then see secure payment component', function() {
+			return new SecurePaymentComponent( driver ).displayed();
+		} );
+
+		test.after( function() { // Empty the cart
+			new ReaderPage( driver, true ).displayed();
+			new NavbarComponent( driver ).clickMySites();
+			new StatsPage( driver, true ).displayed();
+			new SidebarComponent( driver ).selectDomains();
+			new DomainsPage( driver ).displayed();
+			return new ShoppingCartWidgetComponent( driver ).empty();
+		} );
+	} );
+
+	test.describe( 'Map a domain to an existing site @parallel', function() {
+		this.bailSuite( true );
+
+		const blogName = 'myawesomedomain.com';
+
+		test.before( function() {
+			return driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		test.it( 'Log In and Select Domains', function() {
+			return new LoginFlow( driver ).loginAndSelectDomains();
+		} );
+
+		test.it( 'Can see the Domains page and choose add a domain', function() {
+			const domainsPage = new DomainsPage( driver );
+			driver.getCurrentUrl().then( ( urlDisplayed ) => {
+				domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
 			} );
-			test.it( 'Can search for a blog name', () => {
-				const findADomainComponent = new FindADomainComponent( driver );
-				findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-			} );
-			test.it( 'Can select the .com search result and decline Google Apps for email', () => {
-				const findADomainComponent = new FindADomainComponent( driver );
-				findADomainComponent.selectDotComAddress( expectedDomainName );
-				findADomainComponent.declineGoogleApps();
-			} );
+			return domainsPage.clickAddDomain();
+		} );
 
-			test.describe( 'Can pay for domain', function() {
-				test.it( 'Can see checkout page', () => {
-					const checkOutPage = new CheckOutPage( driver );
-					checkOutPage.displayed().then( ( displayed ) => {
-						assert.equal( displayed, true, 'Could not see the check out page' );
-					} );
-				} );
+		test.it( 'Can see the domain search component', function() {
+			return new FindADomainComponent( driver ).waitForResults();
+		} );
 
-				test.it( 'Can choose domain privacy option', () => {
-					const checkOutPage = new CheckOutPage( driver );
-					checkOutPage.selectAddPrivacyProtectionCheckbox();
-				} );
+		test.it( 'Can select to use an existing domain', function() {
+			return new FindADomainComponent( driver ).selectUseOwnDomain();
+		} );
 
-				test.it( 'Can enter domain registrar details', () => {
-					const checkOutPage = new CheckOutPage( driver );
-					checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
-					checkOutPage.submitForm();
-				} );
+		test.it( 'Can see use my own domain page', function() {
+			return new MyOwnDomainPage( driver ).displayed();
+		} );
 
-				test.it( 'Can then see secure payment component', () => {
-					const securePaymentComponent = new SecurePaymentComponent( driver );
-					securePaymentComponent.displayed().then( ( displayed ) => {
-						assert.equal( displayed, true, 'Could not see the secure payment component' );
-					} );
-				} );
+		test.it( 'Can select to manually connect existing domain component', function() {
+			return new MapADomainComponent( driver ).selectManuallyConnectExistingDomain();
+		} );
 
-				// Remove all items from basket for clean up
-				test.it( 'Can empty cart for next test', () => {
-					this.readerPage = new ReaderPage( driver, true );
+		test.it( 'Can see enter a domain component', function() {
+			return new MapADomainPage( driver ).displayed();
+		} );
 
-					this.navbarComponent = new NavbarComponent( driver );
-					this.navbarComponent.clickMySites();
+		test.it( 'Can enter the domain name', function() {
+			return new EnterADomainComponent( driver ).enterADomain( blogName );
+		} );
 
-					this.statsPage = new StatsPage( driver, true );
+		test.it( 'Can add domain to the cart', function() {
+			return new EnterADomainComponent( driver ).clickonAddButtonToAddDomainToTheCart();
+		} );
 
-					this.sideBarComponent = new SidebarComponent( driver );
-					this.sideBarComponent.selectDomains();
+		test.it( 'Can see checkout page', function() {
+			return new MapADomainCheckoutPage( driver ).displayed();
+		} );
 
-					this.domainsPage = new DomainsPage( driver );
-					this.shoppingCartWidgetComponent = new ShoppingCartWidgetComponent( driver );
-					return this.shoppingCartWidgetComponent.empty();
-				} );
-			} );
+		test.after( function() { // Empty the cart
+			new ReaderPage( driver, true ).displayed();
+			new NavbarComponent( driver ).clickMySites();
+			new StatsPage( driver, true ).displayed();
+			new SidebarComponent( driver ).selectDomains();
+			new DomainsPage( driver ).displayed();
+			return new ShoppingCartWidgetComponent( driver ).empty();
 		} );
 	} );
 } );
