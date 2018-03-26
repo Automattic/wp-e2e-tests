@@ -95,10 +95,12 @@ while getopts ":a:Rpb:B:s:gjWCJH:wzl:cm:fiIUvxu:h" opt; do
       continue
       ;;
     b)
+      export LIVEBRANCHES="true"
       NODE_CONFIG_ARGS+=("\"liveBranch\":\"true\",\"branchName\":\"$OPTARG\",\"calypsoBaseURL\":\"https://calypso.live\"")
       continue
       ;;
     B)
+      export LIVEBRANCHES="true"
       NODE_CONFIG_ARGS+=("\"jetpackBranch\":\"true\",\"jetpackBranchName\":\"$OPTARG\"")
       continue
       ;;
