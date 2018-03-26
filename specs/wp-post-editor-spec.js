@@ -834,10 +834,10 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				return postEditorSidebarComponent.trashPost();
 			} );
 
-			test.it( 'Can then see the Posts page', function() {
+			test.it( 'Can then see the Posts page with a confirmation message', function() {
 				const postsPage = new PostsPage( driver );
-				return postsPage.displayed().then( ( displayed ) => {
-					return assert.equal( displayed, true, 'The Posts page is not displayed' );
+				return postsPage.successNoticeDisplayed().then( ( displayed ) => {
+					return assert.equal( displayed, true, 'The Posts page success notice for deleting the post is not displayed' );
 				} );
 			} );
 		} );
