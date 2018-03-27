@@ -50,11 +50,6 @@ test.before( function() {
 test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
-	test.after( function() {
-		const jnFlow = new JetpackConnectFlow( driver, 'jetpackConnectUser' );
-		return jnFlow.removeSites();
-	} );
-
 	test.describe( 'Disconnect expired sites: @parallel @jetpack @canary', function() {
 		this.bailSuite( true );
 
@@ -63,7 +58,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can disconnect any expired sites', function() {
-			const jnFlow = new JetpackConnectFlow( driver );
+			const jnFlow = new JetpackConnectFlow( driver, 'jetpackConnectUser' );
 			return jnFlow.removeSites();
 		} );
 	} );
