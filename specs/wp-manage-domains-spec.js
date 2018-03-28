@@ -72,7 +72,7 @@ test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function
 
 		test.it( 'Can select the .com search result and decline Google Apps for email', function() {
 			const findADomainComponent = new FindADomainComponent( driver );
-			findADomainComponent.selectDotComAddress( expectedDomainName );
+			findADomainComponent.selectDomainAddress( expectedDomainName );
 			return findADomainComponent.declineGoogleApps();
 		} );
 

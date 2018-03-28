@@ -150,7 +150,11 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 								test.it( 'Can see the correct blog title displayed', function() {
 									return ( new ViewBlogPage( driver ).title().then( ( title ) => {
-										return assert.equal( title, blogName, 'The expected blog title is not displaying correctly' );
+										if ( global.browserName === 'Internet Explorer' ) {
+											assert.equal( title, 'Site Title', 'The expected blog title is not displaying correctly' );
+										} else {
+											assert.equal( title, blogName, 'The expected blog title is not displaying correctly' );
+										}
 									} ) );
 								} );
 
@@ -212,7 +216,6 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
-		let selectedBlogAddress = '';
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 		const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
@@ -273,7 +276,6 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 					findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
 					findADomainComponent.freeBlogAddress().then( ( actualAddress ) => {
 						assert( expectedBlogAddresses.indexOf( actualAddress ) > -1, `The displayed free blog address: '${actualAddress}' was not the expected addresses: '${expectedBlogAddresses}'` );
-						selectedBlogAddress = actualAddress;
 					} );
 
 					eyesHelper.eyesScreenshot( driver, eyes, 'Domains Page Site Address Search' );
@@ -308,18 +310,6 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 							test.it( 'Can then see the sign up processing page which will automatically move along', function() {
 								return ( new SignupProcessingPage( driver ).waitToDisappear() );
-							} );
-
-							test.it( 'Verify login screen not present', () => {
-								return driver.getCurrentUrl().then( ( url ) => {
-									if ( ! url.match( /checkout/ ) ) {
-										let baseURL = dataHelper.configGet( 'calypsoBaseURL' );
-										let newUrl = `${baseURL}/checkout/${selectedBlogAddress}`;
-										SlackNotifier.warn( `WARNING: Signup process sent me to ${url} instead of ${newUrl}` );
-										return driver.get( decodeURIComponent( newUrl ) );
-									}
-									return true;
-								} );
 							} );
 
 							test.describe( `Step ${stepNum}: Secure Payment Page`, function() {
@@ -616,10 +606,10 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 				test.describe( `Step ${stepNum}: Domains`, function() {
 					stepNum++;
 
-					test.it( 'Can then see the domains page, and can search for a blog name, can see and select a paid .com address in results ', function() {
+					test.it( 'Can then see the domains page, and can search for a blog name, can see and select a paid .live address in results ', function() {
 						const findADomainComponent = new FindADomainComponent( driver );
 						findADomainComponent.searchForBlogNameAndWaitForResults( expectedDomainName );
-						return findADomainComponent.selectDotComAddress( expectedDomainName );
+						return findADomainComponent.selectDomainAddress( expectedDomainName );
 					} );
 
 					test.describe( `Step ${stepNum}: Account`, function() {
@@ -634,18 +624,6 @@ testDescribe( `[${host}] Sign Up  (${screenSize}, ${locale})`, function() {
 
 							test.it( 'Can then see the sign up processing page which will finish automatically move along', function() {
 								return ( new SignupProcessingPage( driver ).waitToDisappear() );
-							} );
-
-							test.it( 'Verify login screen not present', () => {
-								return driver.getCurrentUrl().then( ( url ) => {
-									if ( ! url.match( /checkout/ ) ) {
-										let baseURL = dataHelper.configGet( 'calypsoBaseURL' );
-										let newUrl = `${baseURL}/checkout/${expectedDomainName}/business`;
-										SlackNotifier.warn( `WARNING: Signup process sent me to ${url} instead of ${newUrl}!` );
-										return driver.get( decodeURIComponent( newUrl ) );
-									}
-									return true;
-								} );
 							} );
 
 							test.describe( `Step ${stepNum}: Secure Payment Page`, function() {
