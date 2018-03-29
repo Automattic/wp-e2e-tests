@@ -27,11 +27,18 @@ import JetpackComFeaturesDesignPage from '../lib/pages/external/jetpackcom-featu
 
 import * as driverManager from '../lib/driver-manager';
 import * as dataHelper from '../lib/data-helper';
+import JetpackComPricingPage from '../lib/pages/external/jetpackcom-pricing-page';
+import SecurePaymentComponent from '../lib/components/secure-payment-component';
+import WPHomePage from '../lib/pages/wp-home-page';
+import CheckOutThankyouPage from '../lib/pages/signup/checkout-thankyou-page';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const signupInboxId = config.get( 'signupInboxId' );
+const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
+const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
+const locale = driverManager.currentLocale();
 
 let driver;
 
@@ -51,7 +58,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can disconnect any expired sites', function() {
-			const jnFlow = new JetpackConnectFlow( driver );
+			const jnFlow = new JetpackConnectFlow( driver, 'jetpackConnectUser' );
 			return jnFlow.removeSites();
 		} );
 	} );
@@ -363,6 +370,73 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		test.it( 'Can confirm that current plan is Free', function() {
 			const plansPage = new PlansPage( driver );
 			assert( plansPage.confirmCurrentPlan( 'free' ) );
+		} );
+	} );
+
+	test.describe( 'Connect from Jetpack.com Pricing page and buy paid plan: @parallel @jetpack', function() {
+		this.bailSuite( true );
+
+		test.before( function() {
+			return driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		test.it( 'We can set the sandbox cookie for payments', function() {
+			return ( new WPHomePage( driver, { visit: true, culture: locale } ).setSandboxModeForPayments( sandboxCookieValue ) );
+		} );
+
+		test.it( 'Can create wporg site', function() {
+			this.jnFlow = new JetpackConnectFlow( driver, null, 'noJetpack' );
+			return this.jnFlow.createJNSite();
+		} );
+
+		test.it( 'Can select buy Premium on Pricing Page', function() {
+			const jetpackComPage = new JetpackComPricingPage( driver );
+			return jetpackComPage.buyPremium();
+		} );
+
+		test.it( 'Can start connection flow using JN site', function() {
+			const connectPage = new JetpackConnectPage( driver );
+			return connectPage.addSiteUrl( this.jnFlow.url );
+		} );
+
+		test.it( 'Can click Install Jetpack button in the instructions page', function() {
+			const jetpackConnectInstall = new JetpackConnectInstallPage( driver, false );
+			return jetpackConnectInstall.clickInstallButton();
+		} );
+
+		test.it( 'Can click the install button in the wp-admin plugin iframe', function() {
+			const wpAdminPluginPopup = new WPAdminPluginPopup( driver );
+			return wpAdminPluginPopup.installPlugin();
+		} );
+
+		test.it( 'Can click the plugin Activate button in the wp-admin updates page', function() {
+			const wpAdminUpdatesPage = new WPAdminUpdatesPage( driver );
+			return wpAdminUpdatesPage.activatePlugin();
+		} );
+
+		test.it( 'Can click the Connect Jetpack button', function() {
+			const wpAdminPluginsPage = new WPAdminPluginsPage( driver );
+			return wpAdminPluginsPage.connectJetpackAfterActivation();
+		} );
+
+		test.it( 'Can log into WP.com', function() {
+			const user = dataHelper.getAccountConfig( 'jetpackConnectUser' );
+			return ( new LoginPage( driver ).login( user[0], user[1] ) );
+		} );
+
+		test.it( 'Can wait for Jetpack get connected', function() {
+			return ( new JetpackAuthorizePage( driver ).waitToDisappear() );
+		} );
+
+		test.it( 'Can see the secure payment page and enter/submit test payment details', function() {
+			const securePaymentComponent = new SecurePaymentComponent( driver );
+			securePaymentComponent.payWithStoredCardIfPossible( testCreditCardDetails );
+			securePaymentComponent.waitForCreditCardPaymentProcessing();
+			return securePaymentComponent.waitForPageToDisappear();
+		} );
+
+		test.it( 'Can see Premium Thank You page', function() {
+			assert( new CheckOutThankyouPage( driver ).isPremiumPlan() );
 		} );
 	} );
 } );

@@ -539,6 +539,21 @@ testDescribe( `[${host}] Invites:  (${screenSize})`, function() {
 						} );
 					} );
 				} );
+
+				test.after( function() {
+					new LoginFlow( driver, 'privateSiteUser' ).loginAndSelectPeople();
+					const peoplePage = new PeoplePage( driver );
+
+					peoplePage.selectViewers();
+					return peoplePage.viewerDisplayed( newUserName )
+					.then( displayed => {
+						if ( displayed ) {
+							peoplePage.removeUserByName( newUserName );
+
+							return peoplePage.waitForSearchResults();
+						}
+					} );
+				} );
 			} );
 		} );
 	}

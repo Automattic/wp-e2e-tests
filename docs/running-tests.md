@@ -64,8 +64,9 @@ The `run.sh` script takes the following parameters, which can be combined to exe
     -l [config]   - Execute the tests via Sauce Labs with the given configuration
     -c      - Exit with status code 0 regardless of test results
     -f      - Tell visdiffs to fail the tests rather than just send an alert
-    -i      - Execute i18n screenshot tests, not compatible with -g flag
-    -U      - Execute the i18n screenshot upload script in scripts/
+    -I      - Execute i18n tests in the specs-i18n/ directory (desktop)
+    -i      - Execute i18n signup screenshot tests, not compatible with -g flag
+    -U      - Execute the upload script for i18n signup screenshot tests in scripts/
     -v      - Execute the integrated visdiff tests
     -x      - Execute the tests using the --headless flag in Chrome
     -u [baseUrl]  - Override the calypsoBaseURL config

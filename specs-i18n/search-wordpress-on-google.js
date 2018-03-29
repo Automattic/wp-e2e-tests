@@ -34,6 +34,7 @@ function doGoogleAdSearch( search_params ) {
 
 	test.describe( description + ' @i18n (' + locale + ')', function() {
 		this.timeout( mochaTimeOut );
+		this.bailSuite( true );
 
 		test.beforeEach( function() {
 			driver.manage().deleteAllCookies();
@@ -56,10 +57,6 @@ function doGoogleAdSearch( search_params ) {
 		} );
 
 		test.it( 'Our landing page exists', function() {
-			if ( ! this.searchPage ) {
-				this.skip( 'Depends on previous test passing' );
-			}
-
 			const that = this;
 			this.searchPage.getAdUrl().then( url => {
 				that.landingPage = new LandingPage( driver, url );
@@ -67,10 +64,6 @@ function doGoogleAdSearch( search_params ) {
 		} );
 
 		test.it( 'Localized string found on landing page', function() {
-			if ( ! this.landingPage ) {
-				this.skip( 'Depends on previous test passing' );
-			}
-
 			this.landingPage.checkLocalizedString( test_data.wpcom_landing_page_string );
 		} );
 	} );

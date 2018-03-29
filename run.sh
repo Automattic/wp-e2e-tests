@@ -56,6 +56,7 @@ usage () {
 -J		  - Execute Jetpack connect tests tagged with @canary
 -H [host]	  - Specify an alternate host for Jetpack tests
 -w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
+-z		  - Only execute canary tests on Windows/IE11, not compatible with -g flag
 -l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration
 -c		  - Exit with status code 0 regardless of test results
 -m [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
@@ -75,7 +76,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":a:Rpb:B:s:gjWCJH:wl:cm:fiIUvxu:h" opt; do
+while getopts ":a:Rpb:B:s:gjWCJH:wzl:cm:fiIUvxu:h" opt; do
   case $opt in
     a)
       WORKERS=$OPTARG
@@ -94,10 +95,12 @@ while getopts ":a:Rpb:B:s:gjWCJH:wl:cm:fiIUvxu:h" opt; do
       continue
       ;;
     b)
+      export LIVEBRANCHES="true"
       NODE_CONFIG_ARGS+=("\"liveBranch\":\"true\",\"branchName\":\"$OPTARG\",\"calypsoBaseURL\":\"https://calypso.live\"")
       continue
       ;;
     B)
+      export LIVEBRANCHES="true"
       NODE_CONFIG_ARGS+=("\"jetpackBranch\":\"true\",\"jetpackBranchName\":\"$OPTARG\"")
       continue
       ;;
@@ -115,7 +118,7 @@ while getopts ":a:Rpb:B:s:gjWCJH:wl:cm:fiIUvxu:h" opt; do
       MAGELLAN_CONFIG="magellan-i18n-nux.json"
       ;;
     I)
-      SCREENSIZES=desktop
+      SCREENSIZES="desktop"
       WORKERS=1 # We need to be careful to take it slow with Google
       NODE_CONFIG_ARGS+=$I18N_CONFIG
       LOCALES="en,es,pt-br,de,fr,he,ja,it,nl,ru,tr,id,zh-cn,zh-tw,ko,ar,sv"
@@ -126,8 +129,13 @@ while getopts ":a:Rpb:B:s:gjWCJH:wl:cm:fiIUvxu:h" opt; do
       ;;
     w)
       NODE_CONFIG_ARGS+=$IE11_CONFIG
-      SCREENSIZES=desktop
+      SCREENSIZES="desktop"
       MAGELLAN_CONFIG="magellan-ie11.json"
+      ;;
+    z)
+      NODE_CONFIG_ARGS+=$IE11_CONFIG
+      SCREENSIZES="desktop"
+      MAGELLAN_CONFIG="magellan-ie11-canary.json"
       ;;
     l)
       NODE_CONFIG_ARGS+=("\"sauce\":\"true\",\"sauceConfig\":\"$OPTARG\"")
@@ -141,8 +149,7 @@ while getopts ":a:Rpb:B:s:gjWCJH:wl:cm:fiIUvxu:h" opt; do
       BROWSERS=$(echo $OPTARG | sed 's/,/ /g')
       if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
         CMD="$GRUNT $BROWSERS"
-
-	eval $CMD
+        eval $CMD
       fi
       exit $?
       ;;

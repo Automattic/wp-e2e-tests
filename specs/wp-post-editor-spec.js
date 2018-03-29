@@ -132,8 +132,9 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 
 							test.it( 'Can see the default publicise message', function() {
 								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+
 								postEditorSidebarComponent.publicizeMessageDisplayed().then( function( messageDisplayed ) {
-									assert.equal( messageDisplayed, '', 'The publicize message is not defaulting to empty' );
+									assert.equal( messageDisplayed, blogPostTitle, 'The publicize message is not defaulting to the post\'s title' );
 								} );
 							} );
 
@@ -833,10 +834,10 @@ test.describe( `[${host}] Editor: Posts (${screenSize})`, function() {
 				return postEditorSidebarComponent.trashPost();
 			} );
 
-			test.it( 'Can then see the Posts page', function() {
+			test.it( 'Can then see the Posts page with a confirmation message', function() {
 				const postsPage = new PostsPage( driver );
-				return postsPage.displayed().then( ( displayed ) => {
-					return assert.equal( displayed, true, 'The Posts page is not displayed' );
+				return postsPage.successNoticeDisplayed().then( ( displayed ) => {
+					return assert.equal( displayed, true, 'The Posts page success notice for deleting the post is not displayed' );
 				} );
 			} );
 		} );
