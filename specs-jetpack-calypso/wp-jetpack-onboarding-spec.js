@@ -283,7 +283,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			return siteTypePage.selectBusinessSite();
 		} );
 
-		test.it( 'Can select posts homepage', function() {
+		test.it( 'Can select static homepage', function() {
 			const setHomepagePage = new SetHomepagePage( driver );
 			return setHomepagePage.selectPage();
 		} );
