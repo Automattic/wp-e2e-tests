@@ -1,6 +1,4 @@
 /**
- * A blank docblock to prevent prettier from formatting this file
- *
  * @format
  */
 
