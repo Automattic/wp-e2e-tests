@@ -246,12 +246,6 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		this.bailSuite( true );
 		const blogTitle = dataHelper.randomPhrase();
 		const blogTagline = dataHelper.randomPhrase();
-		const businessName = 'Testing Inc.';
-		const countryCode = 'AU';
-		const address = '888 Queen Street';
-		const city = 'Brisbane';
-		const stateCode = 'QLD';
-		const postalCode = '4000';
 
 		test.before( function() {
 			return driverManager.ensureNotLoggedIn( driver );
@@ -336,7 +330,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			return viewSitePage.siteTitle()
 				.then( title => assert.equal( title.toUpperCase(), blogTitle.toUpperCase(), 'Site title not is not correct' ) )
 				.then( () => viewSitePage.siteTagline() )
-				.then( tagline => assert.equal( tagline, blogTagline, 'Site tagline not is not correct' ) )
+				.then( tagline => assert.equal( tagline, blogTagline, 'Site tagline not is not correct' ) );
 		} );
 	} );
 } );
