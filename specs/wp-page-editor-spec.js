@@ -1,3 +1,5 @@
+/** @format */
+
 import assert from 'assert';
 import test from 'selenium-webdriver/testing';
 import config from 'config';
@@ -28,7 +30,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
+test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Public Pages: @parallel @jetpack', function() {
@@ -48,7 +50,8 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 
 		test.describe( 'Publish a Public Page', function() {
 			var pageTitle = dataHelper.randomPhrase();
-			var pageQuote = 'If you have the same problem for a long time, maybe it’s not a problem. Maybe it’s a fact..\n— Itzhak Rabin';
+			var pageQuote =
+				'If you have the same problem for a long time, maybe it’s not a problem. Maybe it’s a fact..\n— Itzhak Rabin';
 
 			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
@@ -61,7 +64,7 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				editorPage.enterContent( pageQuote + '\n' );
 				editorPage.enterPostImage( fileDetails );
 				editorPage.waitUntilImageInserted( fileDetails );
-				editorPage.errorDisplayed().then( ( errorShown ) => {
+				editorPage.errorDisplayed().then( errorShown => {
 					assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 				} );
 			} );
@@ -86,18 +89,30 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 
 				test.it( 'Can see correct page title in preview', function() {
 					this.pagePreviewComponent.pageTitle().then( function( actualPageTitle ) {
-						assert.equal( actualPageTitle.toUpperCase(), pageTitle.toUpperCase(), 'The page preview title is not correct' );
+						assert.equal(
+							actualPageTitle.toUpperCase(),
+							pageTitle.toUpperCase(),
+							'The page preview title is not correct'
+						);
 					} );
 				} );
 
 				test.it( 'Can see correct page content in preview', function() {
 					this.pagePreviewComponent.pageContent().then( function( content ) {
-						assert.equal( content.indexOf( pageQuote ) > -1, true, 'The page preview content (' + content + ') does not include the expected content (' + pageQuote + ')' );
+						assert.equal(
+							content.indexOf( pageQuote ) > -1,
+							true,
+							'The page preview content (' +
+								content +
+								') does not include the expected content (' +
+								pageQuote +
+								')'
+						);
 					} );
 				} );
 
 				test.it( 'Can see the image uploaded in the preview', function() {
-					return this.pagePreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
+					return this.pagePreviewComponent.imageDisplayed( fileDetails ).then( imageDisplayed => {
 						assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
 					} );
 				} );
@@ -111,23 +126,35 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 				test.it( 'Can publish and preview published content', function() {
 					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 					this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
-					return this.pagePreviewComponent = new PagePreviewComponent( driver );
+					return ( this.pagePreviewComponent = new PagePreviewComponent( driver ) );
 				} );
 
 				test.it( 'Can see correct page title in preview', function() {
 					this.pagePreviewComponent.pageTitle().then( function( actualPageTitle ) {
-						assert.equal( actualPageTitle.toUpperCase(), pageTitle.toUpperCase(), 'The page preview title is not correct' );
+						assert.equal(
+							actualPageTitle.toUpperCase(),
+							pageTitle.toUpperCase(),
+							'The page preview title is not correct'
+						);
 					} );
 				} );
 
 				test.it( 'Can see correct page content in preview', function() {
 					this.pagePreviewComponent.pageContent().then( function( content ) {
-						assert.equal( content.indexOf( pageQuote ) > -1, true, 'The page preview content (' + content + ') does not include the expected content (' + pageQuote + ')' );
+						assert.equal(
+							content.indexOf( pageQuote ) > -1,
+							true,
+							'The page preview content (' +
+								content +
+								') does not include the expected content (' +
+								pageQuote +
+								')'
+						);
 					} );
 				} );
 
 				test.it( 'Can see the image uploaded in the preview', function() {
-					this.pagePreviewComponent.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
+					this.pagePreviewComponent.imageDisplayed( fileDetails ).then( imageDisplayed => {
 						assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
 					} );
 				} );
@@ -146,24 +173,40 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 
 				test.it( 'Can see correct page title', function() {
 					this.viewPagePage.pageTitle().then( function( actualPageTitle ) {
-						assert.equal( actualPageTitle.toUpperCase(), pageTitle.toUpperCase(), 'The published blog page title is not correct' );
+						assert.equal(
+							actualPageTitle.toUpperCase(),
+							pageTitle.toUpperCase(),
+							'The published blog page title is not correct'
+						);
 					} );
 				} );
 
 				test.it( 'Can see correct page content', function() {
 					this.viewPagePage.pageContent().then( function( content ) {
-						assert.equal( content.indexOf( pageQuote ) > -1, true, 'The page content (' + content + ') does not include the expected content (' + pageQuote + ')' );
+						assert.equal(
+							content.indexOf( pageQuote ) > -1,
+							true,
+							'The page content (' +
+								content +
+								') does not include the expected content (' +
+								pageQuote +
+								')'
+						);
 					} );
 				} );
 
-				test.it( 'Can\'t see sharing buttons', function() {
+				test.it( "Can't see sharing buttons", function() {
 					this.viewPagePage.sharingButtonsVisible().then( function( visible ) {
-						assert.equal( visible, false, 'Sharing buttons are shown even though they were disabled when creating the page.' );
+						assert.equal(
+							visible,
+							false,
+							'Sharing buttons are shown even though they were disabled when creating the page.'
+						);
 					} );
 				} );
 
 				test.it( 'Can see the image uploaded displayed', function() {
-					this.viewPagePage.imageDisplayed( fileDetails ).then( ( imageDisplayed ) => {
+					this.viewPagePage.imageDisplayed( fileDetails ).then( imageDisplayed => {
 						assert.equal( imageDisplayed, true, 'Could not see the image in the published page' );
 					} );
 				} );
@@ -186,7 +229,8 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 
 		test.describe( 'Publish a Private Page', function() {
 			var pageTitle = dataHelper.randomPhrase();
-			var pageQuote = 'Few people know how to take a walk. The qualifications are endurance, plain clothes, old shoes, an eye for nature, good humor, vast curiosity, good speech, good silence and nothing too much.\n— Ralph Waldo Emerson\n';
+			var pageQuote =
+				'Few people know how to take a walk. The qualifications are endurance, plain clothes, old shoes, an eye for nature, good humor, vast curiosity, good speech, good silence and nothing too much.\n— Ralph Waldo Emerson\n';
 
 			test.it( 'Can log in', function() {
 				let loginFlow = new LoginFlow( driver );
@@ -218,38 +262,59 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 					test.it( 'Can view page title as logged in user', function() {
 						let viewPagePage = new ViewPagePage( driver );
 						viewPagePage.pageTitle().then( function( actualPageTitle ) {
-							assert.equal( actualPageTitle.toUpperCase(), ( 'Private: ' + pageTitle ).toUpperCase(), 'The published blog page title is not correct' );
+							assert.equal(
+								actualPageTitle.toUpperCase(),
+								( 'Private: ' + pageTitle ).toUpperCase(),
+								'The published blog page title is not correct'
+							);
 						} );
 					} );
 
 					test.it( 'Can view page content as logged in user', function() {
 						let viewPagePage = new ViewPagePage( driver );
 						viewPagePage.pageContent().then( function( content ) {
-							assert.equal( content.indexOf( pageQuote ) > -1, true, 'The page content (' + content + ') does not include the expected content (' + pageQuote + ')' );
+							assert.equal(
+								content.indexOf( pageQuote ) > -1,
+								true,
+								'The page content (' +
+									content +
+									') does not include the expected content (' +
+									pageQuote +
+									')'
+							);
 						} );
 					} );
 
-					test.it( 'Can\'t view page title or content as non-logged in user', function() {
+					test.it( "Can't view page title or content as non-logged in user", function() {
 						driver.manage().deleteAllCookies();
 						driver.navigate().refresh();
 
 						let notFoundPage = new NotFoundPage( driver );
 						notFoundPage.displayed().then( function( displayed ) {
-							assert.equal( displayed, true, 'Could not see the not found (404) page. Check that it is displayed' );
+							assert.equal(
+								displayed,
+								true,
+								'Could not see the not found (404) page. Check that it is displayed'
+							);
 						} );
 					} );
 				} );
-			} else { // Jetpack tests
+			} else {
+				// Jetpack tests
 				test.describe( 'Cannot view content before logging in', function() {
 					test.it( 'Open published page', function() {
 						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 						postEditorToolbarComponent.viewPublishedPostOrPage();
 					} );
 
-					test.it( 'Can\'t view page title or content as non-logged in user', function() {
+					test.it( "Can't view page title or content as non-logged in user", function() {
 						let notFoundPage = new NotFoundPage( driver );
 						notFoundPage.displayed().then( function( displayed ) {
-							assert.equal( displayed, true, 'Could not see the not found (404) page. Check that it is displayed' );
+							assert.equal(
+								displayed,
+								true,
+								'Could not see the not found (404) page. Check that it is displayed'
+							);
 						} );
 					} );
 				} );
@@ -266,7 +331,8 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 
 		test.describe( 'Publish a Password Protected Page', function() {
 			var pageTitle = dataHelper.randomPhrase();
-			var pageQuote = 'If you don’t like something, change it. If you can’t change it, change the way you think about it.\n— Mary Engelbreit\n';
+			var pageQuote =
+				'If you don’t like something, change it. If you can’t change it, change the way you think about it.\n— Mary Engelbreit\n';
 			var postPassword = 'e2e' + new Date().getTime().toString();
 
 			test.it( 'Can log in', function() {
@@ -296,21 +362,36 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 						test.it( 'Can view page title', function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.pageTitle().then( function( actualPageTitle ) {
-								assert.equal( actualPageTitle.toUpperCase(), ( 'Protected: ' + pageTitle ).toUpperCase() );
+								assert.equal(
+									actualPageTitle.toUpperCase(),
+									( 'Protected: ' + pageTitle ).toUpperCase()
+								);
 							} );
 						} );
 
 						test.it( 'Can see password field', function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.isPasswordProtected().then( function( isPasswordProtected ) {
-								assert.equal( isPasswordProtected, true, 'The page does not appear to be password protected' );
+								assert.equal(
+									isPasswordProtected,
+									true,
+									'The page does not appear to be password protected'
+								);
 							} );
 						} );
 
-						test.it( 'Can\'t see content when no password is entered', function() {
+						test.it( "Can't see content when no password is entered", function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.pageContent().then( function( content ) {
-								assert.equal( content.indexOf( pageQuote ) === -1, true, 'The page content (' + content + ') displays the expected content (' + pageQuote + ') when it should be password protected.' );
+								assert.equal(
+									content.indexOf( pageQuote ) === -1,
+									true,
+									'The page content (' +
+										content +
+										') displays the expected content (' +
+										pageQuote +
+										') when it should be password protected.'
+								);
 							} );
 						} );
 					} );
@@ -324,21 +405,36 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 						test.it( 'Can view page title', function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.pageTitle().then( function( actualPageTitle ) {
-								assert.equal( actualPageTitle.toUpperCase(), ( 'Protected: ' + pageTitle ).toUpperCase() );
+								assert.equal(
+									actualPageTitle.toUpperCase(),
+									( 'Protected: ' + pageTitle ).toUpperCase()
+								);
 							} );
 						} );
 
 						test.it( 'Can see password field', function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.isPasswordProtected().then( function( isPasswordProtected ) {
-								assert.equal( isPasswordProtected, true, 'The page does not appear to be password protected' );
+								assert.equal(
+									isPasswordProtected,
+									true,
+									'The page does not appear to be password protected'
+								);
 							} );
 						} );
 
-						test.it( 'Can\'t see content when incorrect password is entered', function() {
+						test.it( "Can't see content when incorrect password is entered", function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.pageContent().then( function( content ) {
-								assert.equal( content.indexOf( pageQuote ) === -1, true, 'The page content (' + content + ') displays the expected content (' + pageQuote + ') when it should be password protected.' );
+								assert.equal(
+									content.indexOf( pageQuote ) === -1,
+									true,
+									'The page content (' +
+										content +
+										') displays the expected content (' +
+										pageQuote +
+										') when it should be password protected.'
+								);
 							} );
 						} );
 					} );
@@ -352,21 +448,36 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 						test.it( 'Can view page title', function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.pageTitle().then( function( actualPageTitle ) {
-								assert.equal( actualPageTitle.toUpperCase(), ( 'Protected: ' + pageTitle ).toUpperCase() );
+								assert.equal(
+									actualPageTitle.toUpperCase(),
+									( 'Protected: ' + pageTitle ).toUpperCase()
+								);
 							} );
 						} );
 
-						test.it( 'Can\'t see password field', function() {
+						test.it( "Can't see password field", function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.isPasswordProtected().then( function( isPasswordProtected ) {
-								assert.equal( isPasswordProtected, false, 'The page still seems to be password protected' );
+								assert.equal(
+									isPasswordProtected,
+									false,
+									'The page still seems to be password protected'
+								);
 							} );
 						} );
 
 						test.it( 'Can see page content', function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.pageContent().then( function( content ) {
-								assert.equal( content.indexOf( pageQuote ) > -1, true, 'The page content (' + content + ') does not include the expected content (' + pageQuote + ')' );
+								assert.equal(
+									content.indexOf( pageQuote ) > -1,
+									true,
+									'The page content (' +
+										content +
+										') does not include the expected content (' +
+										pageQuote +
+										')'
+								);
 							} );
 						} );
 					} );
@@ -380,21 +491,36 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 						test.it( 'Can view page title', function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.pageTitle().then( function( actualPageTitle ) {
-								assert.equal( actualPageTitle.toUpperCase(), ( 'Protected: ' + pageTitle ).toUpperCase() );
+								assert.equal(
+									actualPageTitle.toUpperCase(),
+									( 'Protected: ' + pageTitle ).toUpperCase()
+								);
 							} );
 						} );
 
 						test.it( 'Can see password field', function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.isPasswordProtected().then( function( isPasswordProtected ) {
-								assert.equal( isPasswordProtected, true, 'The page does not appear to be password protected' );
+								assert.equal(
+									isPasswordProtected,
+									true,
+									'The page does not appear to be password protected'
+								);
 							} );
 						} );
 
-						test.it( 'Can\'t see content when no password is entered', function() {
+						test.it( "Can't see content when no password is entered", function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.pageContent().then( function( content ) {
-								assert.equal( content.indexOf( pageQuote ) === -1, true, 'The page content (' + content + ') displays the expected content (' + pageQuote + ') when it should be password protected.' );
+								assert.equal(
+									content.indexOf( pageQuote ) === -1,
+									true,
+									'The page content (' +
+										content +
+										') displays the expected content (' +
+										pageQuote +
+										') when it should be password protected.'
+								);
 							} );
 						} );
 					} );
@@ -408,21 +534,36 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 						test.it( 'Can view page title', function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.pageTitle().then( function( actualPageTitle ) {
-								assert.equal( actualPageTitle.toUpperCase(), ( 'Protected: ' + pageTitle ).toUpperCase() );
+								assert.equal(
+									actualPageTitle.toUpperCase(),
+									( 'Protected: ' + pageTitle ).toUpperCase()
+								);
 							} );
 						} );
 
 						test.it( 'Can see password field', function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.isPasswordProtected().then( function( isPasswordProtected ) {
-								assert.equal( isPasswordProtected, true, 'The page does not appear to be password protected' );
+								assert.equal(
+									isPasswordProtected,
+									true,
+									'The page does not appear to be password protected'
+								);
 							} );
 						} );
 
-						test.it( 'Can\'t see content when incorrect password is entered', function() {
+						test.it( "Can't see content when incorrect password is entered", function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.pageContent().then( function( content ) {
-								assert.equal( content.indexOf( pageQuote ) === -1, true, 'The page content (' + content + ') displays the expected content (' + pageQuote + ') when it should be password protected.' );
+								assert.equal(
+									content.indexOf( pageQuote ) === -1,
+									true,
+									'The page content (' +
+										content +
+										') displays the expected content (' +
+										pageQuote +
+										') when it should be password protected.'
+								);
 							} );
 						} );
 					} );
@@ -436,21 +577,36 @@ test.describe( `[${host}] Editor: Pages (${screenSize})`, function() {
 						test.it( 'Can view page title', function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.pageTitle().then( function( actualPageTitle ) {
-								assert.equal( actualPageTitle.toUpperCase(), ( 'Protected: ' + pageTitle ).toUpperCase() );
+								assert.equal(
+									actualPageTitle.toUpperCase(),
+									( 'Protected: ' + pageTitle ).toUpperCase()
+								);
 							} );
 						} );
 
-						test.it( 'Can\'t see password field', function() {
+						test.it( "Can't see password field", function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.isPasswordProtected().then( function( isPasswordProtected ) {
-								assert.equal( isPasswordProtected, false, 'The page still seems to be password protected' );
+								assert.equal(
+									isPasswordProtected,
+									false,
+									'The page still seems to be password protected'
+								);
 							} );
 						} );
 
 						test.it( 'Can see page content', function() {
 							let viewPagePage = new ViewPagePage( driver );
 							viewPagePage.pageContent().then( function( content ) {
-								assert.equal( content.indexOf( pageQuote ) > -1, true, 'The page content (' + content + ') does not include the expected content (' + pageQuote + ')' );
+								assert.equal(
+									content.indexOf( pageQuote ) > -1,
+									true,
+									'The page content (' +
+										content +
+										') does not include the expected content (' +
+										pageQuote +
+										')'
+								);
 							} );
 						} );
 					} );

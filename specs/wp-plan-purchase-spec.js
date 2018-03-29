@@ -1,3 +1,5 @@
+/** @format */
+
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 import assert from 'assert';
@@ -24,7 +26,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Plans: (${screenSize}) @parallel @jetpack`, function() {
+test.describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Comparing Plans:', function() {
@@ -60,7 +62,7 @@ test.describe( `[${host}] Plans: (${screenSize}) @parallel @jetpack`, function()
 				}
 
 				// Jetpack
-				return this.plansPage.planTypesShown( 'jetpack' ).then( ( displayed ) => {
+				return this.plansPage.planTypesShown( 'jetpack' ).then( displayed => {
 					assert( displayed, 'The Jetpack plans are NOT displayed' );
 				} );
 			} );
@@ -69,7 +71,7 @@ test.describe( `[${host}] Plans: (${screenSize}) @parallel @jetpack`, function()
 				test.it( 'Can Verify Current Plan', function() {
 					const planName = 'premium';
 					return this.plansPage.confirmCurrentPlan( planName ).then( function( present ) {
-						assert( present, `Failed to detect correct plan (${planName})` );
+						assert( present, `Failed to detect correct plan (${ planName })` );
 					} );
 				} );
 			}
