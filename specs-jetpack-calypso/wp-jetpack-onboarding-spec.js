@@ -21,6 +21,9 @@ import InstallWooCommercePage from '../lib/pages/jetpack-onboarding/install-wooc
 import WidgetContactInfoComponent from '../lib/components/widget-contact-info-component';
 import WizardNavigationComponent from '../lib/components/wizard-navigation-component';
 import ActivateStatsPage from '../lib/pages/jetpack-onboarding/activate-stats-page';
+import WPAdminSidebar from '../lib/pages/wp-admin/wp-admin-sidebar.js';
+import WPAdminJetpackPage from '../lib/pages/wp-admin/wp-admin-jetpack-page.js';
+import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -322,6 +325,99 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			const summaryPage = new SummaryPage( driver );
 			return summaryPage.countToDoSteps()
 				.then( toDoCount => assert.equal( toDoCount, 2, 'Expected and actual steps are not equal.' ) )
+				.then( () => summaryPage.selectVisitSite() );
+		} );
+
+		test.it( 'Can see site home page', function() {
+			const viewSitePage = new ViewSitePage( driver );
+			return viewSitePage.siteTitle()
+				.then( title => assert.equal( title.toUpperCase(), blogTitle.toUpperCase(), 'Site title not is not correct' ) )
+				.then( () => viewSitePage.siteTagline() )
+				.then( tagline => assert.equal( tagline, blogTagline, 'Site tagline not is not correct' ) );
+		} );
+	} );
+
+	test.describe( 'Onboard personal site that has already been connected: @parallel @jetpack', function() {
+		this.bailSuite( true );
+		const blogTitle = dataHelper.randomPhrase();
+		const blogTagline = dataHelper.randomPhrase();
+
+		test.it( 'Can create wporg site', function() {
+			this.wporgCreator = new WporgCreatorPage( driver );
+			this.wporgCreator.waitForWpadmin();
+		} );
+
+		test.it( 'Can get URL', function() {
+			this.wporgCreator.getUrl().then( url => {
+				this.url = url;
+			} );
+		} );
+
+		test.it( 'Can navigate to the Jetpack dashboard', function() {
+			const wpAdminSidebar = new WPAdminSidebar( driver );
+			return wpAdminSidebar.selectJetpack();
+		} );
+
+		test.it( 'Can click the Connect Jetpack button', function() {
+			const wpAdminJetpack = new WPAdminJetpackPage( driver );
+			return wpAdminJetpack.connectWordPressCom();
+		} );
+
+		test.it( 'Can login into WordPress.com', function() {
+			const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
+			return loginFlow.loginUsingExistingForm();
+		} );
+
+		test.it( 'Can approve connection on the authorization page', function() {
+			const jetpackAuthorizePage = new JetpackAuthorizePage( driver );
+			return jetpackAuthorizePage.approveConnection();
+		} );
+
+		test.it( 'Can click the free plan button', function() {
+			const pickAPlanPage = new PickAPlanPage( driver );
+			return pickAPlanPage.selectFreePlanJetpack();
+		} );
+
+		test.it( 'Can navigate to onboarding flow', function() {
+			return driver.get( this.url + onboardingUrlExt );
+		} );
+
+		test.it( 'Can fill out site title and tagline', function() {
+			const siteTitleTaglinePage = new SiteTitleTaglinePage( driver );
+			siteTitleTaglinePage.enterTitle( blogTitle );
+			siteTitleTaglinePage.enterTagline( blogTagline );
+			return siteTitleTaglinePage.selectContinue();
+		} );
+
+		test.it( 'Can select personal Site', function() {
+			const siteTypePage = new SiteTypePage( driver );
+			return siteTypePage.selectPersonalSite();
+		} );
+
+		test.it( 'Can select posts homepage', function() {
+			const setHomepagePage = new SetHomepagePage( driver );
+			return setHomepagePage.selectPosts();
+		} );
+
+		test.it( 'Can select add a contact form', function() {
+			const contactFormPage = new ContactFormPage( driver );
+			return contactFormPage.selectAddContactForm();
+		} );
+
+		test.it( 'Can continue on add a contact form', function() {
+			const contactFormPage = new ContactFormPage( driver );
+			return contactFormPage.selectContinue();
+		} );
+
+		test.it( 'Can select continue on activate stats page', function() {
+			const activateStatsPage = new ActivateStatsPage( driver );
+			return activateStatsPage.selectContinue();
+		} );
+
+		test.it( 'Can see onboarding summary page', function() {
+			const summaryPage = new SummaryPage( driver );
+			return summaryPage.countToDoSteps()
+				.then( toDoCount => assert.equal( toDoCount, 0, 'Expected and actual steps are not equal.' ) )
 				.then( () => summaryPage.selectVisitSite() );
 		} );
 
