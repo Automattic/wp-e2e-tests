@@ -1,3 +1,5 @@
+/** @format */
+
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 import assert from 'assert';
@@ -31,13 +33,13 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
+test.describe( `[${ host }] Switching Themes: (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
 	test.before( function() {
 		let testEnvironment = 'WordPress.com';
-		let testName = `Themes [${global.browserName}] [${screenSize}]`;
+		let testName = `Themes [${ global.browserName }] [${ screenSize }]`;
 		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 	} );
 
@@ -74,7 +76,11 @@ test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
 				this.themeDetailPage = new ThemeDetailPage( driver );
 				this.themeDetailPage.displayed().then( function( displayed ) {
 					eyesHelper.eyesScreenshot( driver, eyes, 'Theme Details Page' );
-					assert.equal( displayed, true, 'Could not see the theme detail page after activating a new theme' );
+					assert.equal(
+						displayed,
+						true,
+						'Could not see the theme detail page after activating a new theme'
+					);
 				} );
 			} );
 		} );
@@ -85,62 +91,67 @@ test.describe( `[${host}] Switching Themes: (${screenSize})`, function() {
 	} );
 } );
 
-test.describe( `[${host}] Activating Themes: (${screenSize}) @parallel @jetpack @visdiff`, function() {
-	this.timeout( mochaTimeOut );
-	this.bailSuite( true );
+test.describe(
+	`[${ host }] Activating Themes: (${ screenSize }) @parallel @jetpack @visdiff`,
+	function() {
+		this.timeout( mochaTimeOut );
+		this.bailSuite( true );
 
-	test.describe( 'Activating Themes:', function() {
-		// Ensure logged out
-		test.before( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
-		} );
-
-		test.it( 'Login', function() {
-			let loginFlow = new LoginFlow( driver );
-			return loginFlow.loginAndSelectMySite();
-		} );
-
-		test.it( 'Can open Themes menu', function() {
-			let sidebarComponent = new SidebarComponent( driver );
-			return sidebarComponent.selectThemes();
-		} );
-
-		test.describe( 'Can switch free themes', function() {
-			test.it( 'Can activate a different free theme', function() {
-				let themesPage = new ThemesPage( driver );
-				themesPage.showOnlyFreeThemes();
-				themesPage.searchFor( 'Twenty F' );
-				themesPage.waitForThemeStartingWith( 'Twenty F' );
-				themesPage.clickNewThemeMoreButton();
-				themesPage.popOverMenuDisplayed().then( ( displayed ) => assert( displayed, true, 'Popover menu not displayed' ) );
-				return themesPage.clickPopoverItem( 'Activate' );
+		test.describe( 'Activating Themes:', function() {
+			// Ensure logged out
+			test.before( function() {
+				driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			} );
 
-			test.it( 'Can see the theme thanks dialog', function() {
-				let themeDialogComponent = new ThemeDialogComponent( driver );
-				themeDialogComponent.customizeSite();
+			test.it( 'Login', function() {
+				let loginFlow = new LoginFlow( driver );
+				return loginFlow.loginAndSelectMySite();
 			} );
 
-			if ( host === 'WPCOM' ) {
-				test.it( 'Can customize the site from the theme thanks dialog', function() {
-					let customizerPage = new CustomizerPage( driver );
-					return customizerPage.displayed().then( ( displayed ) => {
-						assert( displayed, 'The customizer page was not displayed' );
-					} );
-				} );
-			} else {
-				test.it( 'Can log in via Jetpack SSO', function() {
-					let wpAdminLogonPage = new WPAdminLogonPage( driver );
-					return wpAdminLogonPage.logonSSO();
+			test.it( 'Can open Themes menu', function() {
+				let sidebarComponent = new SidebarComponent( driver );
+				return sidebarComponent.selectThemes();
+			} );
+
+			test.describe( 'Can switch free themes', function() {
+				test.it( 'Can activate a different free theme', function() {
+					let themesPage = new ThemesPage( driver );
+					themesPage.showOnlyFreeThemes();
+					themesPage.searchFor( 'Twenty F' );
+					themesPage.waitForThemeStartingWith( 'Twenty F' );
+					themesPage.clickNewThemeMoreButton();
+					themesPage
+						.popOverMenuDisplayed()
+						.then( displayed => assert( displayed, true, 'Popover menu not displayed' ) );
+					return themesPage.clickPopoverItem( 'Activate' );
 				} );
 
-				test.it( 'Can customize the site from the theme thanks dialog', function() {
-					let wpAdminCustomizerPage = new WPAdminCustomizerPage( driver );
-					return wpAdminCustomizerPage.displayed().then( ( displayed ) => {
-						assert( displayed, 'The customizer page was not displayed' );
-					} );
+				test.it( 'Can see the theme thanks dialog', function() {
+					let themeDialogComponent = new ThemeDialogComponent( driver );
+					themeDialogComponent.customizeSite();
 				} );
-			}
+
+				if ( host === 'WPCOM' ) {
+					test.it( 'Can customize the site from the theme thanks dialog', function() {
+						let customizerPage = new CustomizerPage( driver );
+						return customizerPage.displayed().then( displayed => {
+							assert( displayed, 'The customizer page was not displayed' );
+						} );
+					} );
+				} else {
+					test.it( 'Can log in via Jetpack SSO', function() {
+						let wpAdminLogonPage = new WPAdminLogonPage( driver );
+						return wpAdminLogonPage.logonSSO();
+					} );
+
+					test.it( 'Can customize the site from the theme thanks dialog', function() {
+						let wpAdminCustomizerPage = new WPAdminCustomizerPage( driver );
+						return wpAdminCustomizerPage.displayed().then( displayed => {
+							assert( displayed, 'The customizer page was not displayed' );
+						} );
+					} );
+				}
+			} );
 		} );
-	} );
-} );
+	}
+);

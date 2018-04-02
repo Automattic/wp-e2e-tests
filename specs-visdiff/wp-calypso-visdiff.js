@@ -1,3 +1,5 @@
+/** @format */
+
 import assert from 'assert';
 import config from 'config';
 import test from 'selenium-webdriver/testing';
@@ -28,7 +30,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `Calypso Visual Diff (${screenSize})`, function() {
+test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 
@@ -37,7 +39,7 @@ test.describe( `Calypso Visual Diff (${screenSize})`, function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 
 			let testEnvironment = 'WordPress.com';
-			let testName = `Site Pages [${global.browserName}] [${screenSize}]`;
+			let testName = `Site Pages [${ global.browserName }] [${ screenSize }]`;
 			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 		} );
 
@@ -63,7 +65,7 @@ test.describe( `Calypso Visual Diff (${screenSize})`, function() {
 			this.pagesPage.editPageWithTitle( defaultPageTitle );
 			this.editorPage = new EditorPage( driver );
 			this.editorPage.waitForTitle();
-			this.editorPage.titleShown().then( ( titleShown ) => {
+			this.editorPage.titleShown().then( titleShown => {
 				assert.equal( titleShown, defaultPageTitle, 'The page title shown was unexpected' );
 			} );
 		} );
@@ -99,7 +101,7 @@ test.describe( `Calypso Visual Diff (${screenSize})`, function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 
 			let testEnvironment = 'WordPress.com';
-			let testName = `Blog Posts [${global.browserName}] [${screenSize}]`;
+			let testName = `Blog Posts [${ global.browserName }] [${ screenSize }]`;
 			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 		} );
 
@@ -125,7 +127,7 @@ test.describe( `Calypso Visual Diff (${screenSize})`, function() {
 			this.postsPage.editPostWithTitle( defaultPostTitle );
 			this.editorPage = new EditorPage( driver );
 			this.editorPage.waitForTitle();
-			this.editorPage.titleShown().then( ( titleShown ) => {
+			this.editorPage.titleShown().then( titleShown => {
 				assert.equal( titleShown, defaultPostTitle, 'The post title shown was unexpected' );
 			} );
 		} );
@@ -183,7 +185,7 @@ test.describe( `Calypso Visual Diff (${screenSize})`, function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 
 			let testEnvironment = 'WordPress.com';
-			let testName = `Comments [${global.browserName}] [${screenSize}]`;
+			let testName = `Comments [${ global.browserName }] [${ screenSize }]`;
 			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 		} );
 

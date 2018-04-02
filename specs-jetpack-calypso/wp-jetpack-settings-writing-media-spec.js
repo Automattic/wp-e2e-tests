@@ -1,3 +1,5 @@
+/** @format */
+
 import assert from 'assert';
 import test from 'selenium-webdriver/testing';
 
@@ -21,7 +23,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Jetpack Settings on Calypso: (${screenSize}) @jetpack`, function() {
+test.describe( `[${ host }] Jetpack Settings on Calypso: (${ screenSize }) @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -38,26 +40,29 @@ test.describe( `[${host}] Jetpack Settings on Calypso: (${screenSize}) @jetpack`
 
 	test.describe( 'Can see Media Settings', function() {
 		test.it( 'Can see media settings section', function() {
-			this.settingsPage.mediaSettingsSectionDisplayed().then( ( shown ) => {
-				assert( shown, 'Can\'t see the media settings section under the Writing settings' );
+			this.settingsPage.mediaSettingsSectionDisplayed().then( shown => {
+				assert( shown, "Can't see the media settings section under the Writing settings" );
 			} );
 		} );
 
 		test.it( 'Can see the Photon toggle switch', function() {
-			this.settingsPage.photonToggleDisplayed().then( ( shown ) => {
-				assert( shown, 'Can\'t see the Photon setting toggle under the Writing settings' );
+			this.settingsPage.photonToggleDisplayed().then( shown => {
+				assert( shown, "Can't see the Photon setting toggle under the Writing settings" );
 			} );
 		} );
 
 		test.it( 'Can see the Carousel toggle switch', function() {
-			this.settingsPage.carouselToggleDisplayed().then( ( shown ) => {
-				assert( shown, 'Can\'t see the carousel setting toggle under the Writing settings' );
+			this.settingsPage.carouselToggleDisplayed().then( shown => {
+				assert( shown, "Can't see the carousel setting toggle under the Writing settings" );
 			} );
 		} );
 
 		test.it( 'Can see the Carousel background color drop down', function() {
-			this.settingsPage.carouseBackgroundColorDisplayed().then( ( shown ) => {
-				assert( shown, 'Can\'t see the carousel background color setting toggle under the Writing settings' );
+			this.settingsPage.carouseBackgroundColorDisplayed().then( shown => {
+				assert(
+					shown,
+					"Can't see the carousel background color setting toggle under the Writing settings"
+				);
 			} );
 		} );
 	} );

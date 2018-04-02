@@ -1,3 +1,5 @@
+/** @format */
+
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 import assert from 'assert';
@@ -32,7 +34,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Jetpack Plans: (${screenSize}) @jetpack`, function() {
+test.describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Purchase Premium Plan:', function() {
@@ -74,7 +76,7 @@ test.describe( `[${host}] Jetpack Plans: (${screenSize}) @jetpack`, function() {
 
 		test.it( 'Can then see secure payment component', () => {
 			const securePaymentComponent = new SecurePaymentComponent( driver );
-			securePaymentComponent.displayed().then( ( displayed ) => {
+			securePaymentComponent.displayed().then( displayed => {
 				assert.equal( displayed, true, 'Could not see the secure payment component' );
 			} );
 		} );

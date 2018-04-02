@@ -1,3 +1,5 @@
+/** @format */
+
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 
@@ -29,7 +31,12 @@ test.after( function( done ) {
 } );
 
 function doGoogleAdSearch( search_params ) {
-	var description = 'Search for "' + search_params.query + '" on ' + search_params.domain + ' from ' +
+	var description =
+		'Search for "' +
+		search_params.query +
+		'" on ' +
+		search_params.domain +
+		' from ' +
 		search_params.comment_location;
 
 	test.describe( description + ' @i18n (' + locale + ')', function() {
@@ -72,4 +79,3 @@ function doGoogleAdSearch( search_params ) {
 test_data.google_searches.forEach( function( search_params ) {
 	doGoogleAdSearch( search_params );
 } );
-
