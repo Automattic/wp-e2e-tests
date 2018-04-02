@@ -1,6 +1,9 @@
 /**
  * External Dependencies
+ *
+ * @format
  */
+
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 
