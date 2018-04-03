@@ -7,7 +7,7 @@ import * as dataHelper from '../lib/data-helper';
 import * as driverManager from '../lib/driver-manager';
 
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
-import WporgCreatorPage from '../lib/pages/wporg-creator-page';
+import JetpackConnectFlow from '../lib/flows/jetpack-connect-flow';
 import LoginFlow from '../lib/flows/login-flow';
 import SiteTitleTaglinePage from '../lib/pages/jetpack-onboarding/site-title-tagline-page';
 import SiteTypePage from '../lib/pages/jetpack-onboarding/site-type-page';
@@ -50,18 +50,12 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can create wporg site', function() {
-			this.wporgCreator = new WporgCreatorPage( driver );
-			this.wporgCreator.waitForWpadmin();
-		} );
-
-		test.it( 'Can get URL', function() {
-			this.wporgCreator.getUrl().then( url => {
-				this.url = url;
-			} );
+			this.jnFlow = new JetpackConnectFlow( driver, null );
+			return this.jnFlow.createJNSite();
 		} );
 
 		test.it( 'Can navigate to onboarding flow', function() {
-			return driver.get( this.url + onboardingUrlExt );
+			return driver.get( this.jnFlow.url + onboardingUrlExt );
 		} );
 
 		test.it( 'Can skip all steps', function() {
@@ -71,16 +65,12 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 				.then( () => wizardNavigationComponent.skipStep() )
 				.then( () => wizardNavigationComponent.skipStep() )
 				.then( () => wizardNavigationComponent.skipStep() )
-				.then( () => {
-					const summaryPage = new SummaryPage( driver );
-					return summaryPage.countToDoSteps();
-				} )
+				.then( () => new SummaryPage( driver ).countToDoSteps() )
 				.then( ( toDoCount ) => assert.equal( toDoCount, 4, 'Expected and actual steps are not equal.' ) );
 		} );
 
 		test.it( 'Can go back to first step in flow from summary page', function() {
-			const summaryPage = new SummaryPage( driver );
-			return summaryPage.visitStep( 1 );
+			return new SummaryPage( driver ).visitStep( 1 );
 		} );
 
 		test.it( 'Can fill out site title and tagline', function() {
@@ -91,18 +81,15 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select Personal Site', function() {
-			const siteTypePage = new SiteTypePage( driver );
-			return siteTypePage.selectPersonalSite();
+			return new SiteTypePage( driver ).selectPersonalSite();
 		} );
 
 		test.it( 'Can select static page homepage', function() {
-			const setHomepagePage = new SetHomepagePage( driver );
-			return setHomepagePage.selectPage();
+			return new SetHomepagePage( driver ).selectPage();
 		} );
 
 		test.it( 'Can select add a contact form', function() {
-			const contactFormPage = new ContactFormPage( driver );
-			return contactFormPage.selectAddContactForm();
+			return new ContactFormPage( driver ).selectAddContactForm();
 		} );
 
 		test.it( 'Can login into WordPress.com', function() {
@@ -111,19 +98,15 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can approve connection on the authorization page', function() {
-			const jetpackAuthorizePage = new JetpackAuthorizePage( driver );
-			return jetpackAuthorizePage.approveConnection();
+			return new JetpackAuthorizePage( driver ).approveConnection();
 		} );
 
 		test.it( 'Can select continue on add contact form', function() {
-			const contactFormPage = new ContactFormPage( driver );
-			contactFormPage.waitForPage();
-			return contactFormPage.selectContinue();
+			return new ContactFormPage( driver ).selectContinue();
 		} );
 
 		test.it( 'Can select continue on activate stats page', function() {
-			const activateStatsPage = new ActivateStatsPage( driver );
-			return activateStatsPage.selectContinue();
+			return new ActivateStatsPage( driver ).selectContinue();
 		} );
 
 		test.it( 'Can see onboarding summary page', function() {
@@ -156,18 +139,12 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can create wporg site', function() {
-			this.wporgCreator = new WporgCreatorPage( driver );
-			this.wporgCreator.waitForWpadmin();
-		} );
-
-		test.it( 'Can get URL', function() {
-			this.wporgCreator.getUrl().then( url => {
-				this.url = url;
-			} );
+			this.jnFlow = new JetpackConnectFlow( driver, null );
+			return this.jnFlow.createJNSite();
 		} );
 
 		test.it( 'Can navigate to onboarding flow', function() {
-			return driver.get( this.url + onboardingUrlExt );
+			return driver.get( this.jnFlow.url + onboardingUrlExt );
 		} );
 
 		test.it( 'Can fill out site title and tagline', function() {
@@ -178,23 +155,19 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select Business Site', function() {
-			const siteTypePage = new SiteTypePage( driver );
-			return siteTypePage.selectBusinessSite();
+			return new SiteTypePage( driver ).selectBusinessSite();
 		} );
 
 		test.it( 'Can select posts homepage', function() {
-			const setHomepagePage = new SetHomepagePage( driver );
-			return setHomepagePage.selectPosts();
+			return new SetHomepagePage( driver ).selectPosts();
 		} );
 
 		test.it( 'Can skip add a contact form', function() {
-			const wizardNavigationComponent = new WizardNavigationComponent( driver );
-			return wizardNavigationComponent.skipStep();
+			return new WizardNavigationComponent( driver ).skipStep();
 		} );
 
 		test.it( 'Can select add a business address', function() {
-			const businessAddressPage = new BusinessAddressPage( driver );
-			return businessAddressPage.selectAddBusinessAddress();
+			return new BusinessAddressPage( driver ).selectAddBusinessAddress();
 		} );
 
 		test.it( 'Can login into WordPress.com', function() {
@@ -203,8 +176,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can approve connection on the authorization page', function() {
-			const jetpackAuthorizePage = new JetpackAuthorizePage( driver );
-			return jetpackAuthorizePage.approveConnection();
+			return new JetpackAuthorizePage( driver ).approveConnection();
 		} );
 
 		test.it( 'Can enter address on business address page', function() {
@@ -214,13 +186,11 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can make business an online store', function() {
-			const installWooCommercePage = new InstallWooCommercePage( driver );
-			return installWooCommercePage.selectSellOnline();
+			return new InstallWooCommercePage( driver ).selectSellOnline();
 		} );
 
 		test.it( 'Can select continue on activate stats page', function() {
-			const activateStatsPage = new ActivateStatsPage( driver );
-			return activateStatsPage.selectContinue();
+			return new ActivateStatsPage( driver ).selectContinue();
 		} );
 
 		test.it( 'Can see onboarding summary page', function() {
@@ -260,18 +230,12 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can create wporg site', function() {
-			this.wporgCreator = new WporgCreatorPage( driver );
-			this.wporgCreator.waitForWpadmin();
-		} );
-
-		test.it( 'Can get URL', function() {
-			this.wporgCreator.getUrl().then( url => {
-				this.url = url;
-			} );
+			this.jnFlow = new JetpackConnectFlow( driver, null );
+			return this.jnFlow.createJNSite();
 		} );
 
 		test.it( 'Can navigate to onboarding flow', function() {
-			return driver.get( this.url + onboardingUrlExt );
+			return driver.get( this.jnFlow.url + onboardingUrlExt );
 		} );
 
 		test.it( 'Can fill out site title and tagline', function() {
@@ -282,43 +246,35 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select Business Site', function() {
-			const siteTypePage = new SiteTypePage( driver );
-			return siteTypePage.selectBusinessSite();
+			return new SiteTypePage( driver ).selectBusinessSite();
 		} );
 
 		test.it( 'Can select static homepage', function() {
-			const setHomepagePage = new SetHomepagePage( driver );
-			return setHomepagePage.selectPage();
+			return new SetHomepagePage( driver ).selectPage();
 		} );
 
 		test.it( 'Can skip add a contact form', function() {
-			const wizardNavigationComponent = new WizardNavigationComponent( driver );
-			return wizardNavigationComponent.skipStep();
+			return new WizardNavigationComponent( driver ).skipStep();
 		} );
 
 		test.it( 'Can skip add a business address', function() {
-			const wizardNavigationComponent = new WizardNavigationComponent( driver );
-			return wizardNavigationComponent.skipStep();
+			return new WizardNavigationComponent( driver ).skipStep();
 		} );
 
 		test.it( 'Can make business an online store', function() {
-			const installWooCommercePage = new InstallWooCommercePage( driver );
-			return installWooCommercePage.selectSellOnline();
+			return new InstallWooCommercePage( driver ).selectSellOnline();
 		} );
 
 		test.it( 'Can select activate on activate stats page', function() {
-			const activateStatsPage = new ActivateStatsPage( driver );
-			return activateStatsPage.selectActivateStats();
+			return new ActivateStatsPage( driver ).selectActivateStats();
 		} );
 
 		test.it( 'Can approve connection on the authorization page', function() {
-			const jetpackAuthorizePage = new JetpackAuthorizePage( driver );
-			return jetpackAuthorizePage.approveConnection();
+			return new JetpackAuthorizePage( driver ).approveConnection();
 		} );
 
 		test.it( 'Can select activate on activate stats page', function() {
-			const activateStatsPage = new ActivateStatsPage( driver );
-			return activateStatsPage.selectContinue();
+			return new ActivateStatsPage( driver ).selectContinue();
 		} );
 
 		test.it( 'Can see onboarding summary page', function() {
@@ -342,25 +298,21 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		const blogTitle = dataHelper.randomPhrase();
 		const blogTagline = dataHelper.randomPhrase();
 
-		test.it( 'Can create wporg site', function() {
-			this.wporgCreator = new WporgCreatorPage( driver );
-			this.wporgCreator.waitForWpadmin();
+		test.before( function() {
+			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.it( 'Can get URL', function() {
-			this.wporgCreator.getUrl().then( url => {
-				this.url = url;
-			} );
+		test.it( 'Can create wporg site', function() {
+			this.jnFlow = new JetpackConnectFlow( driver, null );
+			return this.jnFlow.createJNSite();
 		} );
 
 		test.it( 'Can navigate to the Jetpack dashboard', function() {
-			const wpAdminSidebar = new WPAdminSidebar( driver );
-			return wpAdminSidebar.selectJetpack();
+			return new WPAdminSidebar( driver ).selectJetpack();
 		} );
 
 		test.it( 'Can click the Connect Jetpack button', function() {
-			const wpAdminJetpack = new WPAdminJetpackPage( driver );
-			return wpAdminJetpack.connectWordPressCom();
+			return new WPAdminJetpackPage( driver ).connectWordPressCom();
 		} );
 
 		test.it( 'Can login into WordPress.com', function() {
@@ -369,17 +321,15 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can approve connection on the authorization page', function() {
-			const jetpackAuthorizePage = new JetpackAuthorizePage( driver );
-			return jetpackAuthorizePage.approveConnection();
+			return new JetpackAuthorizePage( driver ).approveConnection();
 		} );
 
 		test.it( 'Can click the free plan button', function() {
-			const pickAPlanPage = new PickAPlanPage( driver );
-			return pickAPlanPage.selectFreePlanJetpack();
+			return new PickAPlanPage( driver ).selectFreePlanJetpack();
 		} );
 
 		test.it( 'Can navigate to onboarding flow', function() {
-			return driver.get( this.url + onboardingUrlExt );
+			return driver.get( this.jnFlow.url + onboardingUrlExt );
 		} );
 
 		test.it( 'Can fill out site title and tagline', function() {
@@ -390,33 +340,28 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select personal Site', function() {
-			const siteTypePage = new SiteTypePage( driver );
-			return siteTypePage.selectPersonalSite();
+			return new SiteTypePage( driver ).selectPersonalSite();
 		} );
 
 		test.it( 'Can select posts homepage', function() {
-			const setHomepagePage = new SetHomepagePage( driver );
-			return setHomepagePage.selectPosts();
+			return new SetHomepagePage( driver ).selectPosts();
 		} );
 
 		test.it( 'Can select add a contact form', function() {
-			const contactFormPage = new ContactFormPage( driver );
-			return contactFormPage.selectAddContactForm();
+			return new ContactFormPage( driver ).selectAddContactForm();
 		} );
 
 		test.it( 'Can continue on add a contact form', function() {
-			const contactFormPage = new ContactFormPage( driver );
-			return contactFormPage.selectContinue();
+			return new ContactFormPage( driver ).selectContinue();
 		} );
 
 		test.it( 'Can select continue on activate stats page', function() {
-			const activateStatsPage = new ActivateStatsPage( driver );
-			return activateStatsPage.selectContinue();
+			return new ActivateStatsPage( driver ).selectContinue();
 		} );
 
 		test.it( 'Can see onboarding summary page', function() {
 			const summaryPage = new SummaryPage( driver );
-			return summaryPage.countToDoSteps()
+			return new SummaryPage( driver ).countToDoSteps()
 				.then( toDoCount => assert.equal( toDoCount, 0, 'Expected and actual steps are not equal.' ) )
 				.then( () => summaryPage.selectVisitSite() );
 		} );
