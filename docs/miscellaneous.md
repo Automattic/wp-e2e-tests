@@ -5,6 +5,7 @@
 - [NodeJS Version](#nodejs-version)
 - [Git Pre-Commit Hook](#git-pre-commit-hook)
 - [Launch Logged-In Window](#launch-logged-in-window)
+- [User account requirements](#user-account-requirements)
 
 ## NodeJS Version
 
@@ -23,3 +24,13 @@ Example:
 ```bash
 ./node_modules/.bin/babel-node scripts/launch-wpcom-login.js multiSiteUser
 ```
+
+## User account requirements
+
+### jetpackUserPRESSABLE for PRESSABLE Target
+
+- Selected main site (in Account Settings)
+- Working Twitter Publicize integration
+- Free plan
+- Theme which is displaying tags and categories (e.g. Twenty Fifteen)
+- Installed "Hello Dolly" plugin
