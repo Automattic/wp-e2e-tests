@@ -57,7 +57,6 @@
   },
   "knownABTestKeys": [
     "businessPlanDescriptionAT",
-    "inlineHelpWithContactForm",
     "skipThemesSelectionModal",
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser",
@@ -68,7 +67,6 @@
     "domainSuggestionKrakenV313"
   ],
   "overrideABTests": [
-    [ "inlineHelpWithContactForm_20180306", "inlinecontact" ],
     [ "upgradePricingDisplayV2_20180305", "original" ],
     [ "skipThemesSelectionModal_20170904", "show" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
@@ -76,7 +74,7 @@
     [ "siteGoalsShuffle_20180214", "control" ],
     [ "redesignedSidebarBanner_20180222", "oldBanner" ],
     [ "businessPlanDescriptionAT_20170605", "original" ],
-    [ "mobilePlansTablesOnSignup_20180320", "original" ],
+    [ "mobilePlansTablesOnSignup_20180330", "original" ],
     [ "domainSuggestionKrakenV313_20180329", "group_0" ]
   ]
 }

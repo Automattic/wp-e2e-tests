@@ -1,3 +1,5 @@
+/** @format */
+
 import assert from 'assert';
 import test from 'selenium-webdriver/testing';
 
@@ -30,7 +32,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Notifications: (${screenSize}) @parallel @visdiff`, function() {
+test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
@@ -38,19 +40,21 @@ test.describe( `[${host}] Notifications: (${screenSize}) @parallel @visdiff`, fu
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
 
 		let testEnvironment = 'WordPress.com';
-		let testName = `Notifications [${global.browserName}] [${screenSize}]`;
+		let testName = `Notifications [${ global.browserName }] [${ screenSize }]`;
 		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 	} );
 
 	test.describe( 'Log in as commenting user', function() {
 		test.it( 'Can log in as commenting user', function() {
-			this.commentingUser = dataHelper.getAccountConfig( 'commentingUser' )[0];
+			this.commentingUser = dataHelper.getAccountConfig( 'commentingUser' )[ 0 ];
 			this.loginFlow = new LoginFlow( driver, 'commentingUser' );
 			return this.loginFlow.login();
 		} );
 
 		test.describe( 'Leave a comment on the test site for notifications', function() {
-			const testSiteForInvitationsURL = `https://${dataHelper.configGet( 'testSiteForNotifications' )}`;
+			const testSiteForInvitationsURL = `https://${ dataHelper.configGet(
+				'testSiteForNotifications'
+			) }`;
 
 			test.it( 'Can view the first post', function() {
 				this.viewBlogPage = new ViewSitePage( driver, true, testSiteForInvitationsURL );
@@ -59,8 +63,8 @@ test.describe( `[${host}] Notifications: (${screenSize}) @parallel @visdiff`, fu
 
 			test.it( 'Can see the first post page and capture the title', function() {
 				this.viewPostPage = new ViewPostPage( driver );
-				return this.viewPostPage.postTitle().then( ( postTitle ) => {
-					return this.commentedPostTitle = postTitle;
+				return this.viewPostPage.postTitle().then( postTitle => {
+					return ( this.commentedPostTitle = postTitle );
 				} );
 			} );
 
@@ -70,9 +74,13 @@ test.describe( `[${host}] Notifications: (${screenSize}) @parallel @visdiff`, fu
 			} );
 
 			test.it( 'Can see the comment', function() {
-				return this.viewPostPage.commentEventuallyShown( this.comment ).then( ( shown ) => {
+				return this.viewPostPage.commentEventuallyShown( this.comment ).then( shown => {
 					if ( shown === false ) {
-						slackNotifier.warn( `Could not see newly added comment '${this.comment}' on blog page - most likely a refresh issue` );
+						slackNotifier.warn(
+							`Could not see newly added comment '${
+								this.comment
+							}' on blog page - most likely a refresh issue`
+						);
 					}
 				} );
 			} );
@@ -95,24 +103,33 @@ test.describe( `[${host}] Notifications: (${screenSize}) @parallel @visdiff`, fu
 					} );
 
 					test.it( 'Can see the notification of the comment', function() {
-						const expectedContent = `${this.commentingUser} commented on ${this.commentedPostTitle}\n${this.comment}`;
+						const expectedContent = `${ this.commentingUser } commented on ${
+							this.commentedPostTitle
+						}\n${ this.comment }`;
 						this.navBarComponent = new NavbarComponent( driver );
 						this.navBarComponent.openNotifications();
 						this.notificationsComponent = new NotificationsComponent( driver );
 						this.notificationsComponent.selectComments();
-						return this.notificationsComponent.allCommentsContent().then( ( content ) => {
+						return this.notificationsComponent.allCommentsContent().then( content => {
 							eyesHelper.eyesScreenshot( driver, eyes, 'Notifications List' );
-							assert.equal( content.includes( expectedContent ), true, `The actual notifications content '${content}' does not contain expected content '${expectedContent}'` );
+							assert.equal(
+								content.includes( expectedContent ),
+								true,
+								`The actual notifications content '${ content }' does not contain expected content '${ expectedContent }'`
+							);
 						} );
 					} );
 
-					test.it( 'Can delete the comment (and wait for UNDO grace period so it is actually deleted)', function() {
-						this.notificationsComponent.selectCommentByText( this.comment );
-						eyesHelper.eyesScreenshot( driver, eyes, 'Single Comment Notification' );
-						this.notificationsComponent.trashComment();
-						this.notificationsComponent.waitForUndoMessage();
-						return this.notificationsComponent.waitForUndoMessageToDisappear();
-					} );
+					test.it(
+						'Can delete the comment (and wait for UNDO grace period so it is actually deleted)',
+						function() {
+							this.notificationsComponent.selectCommentByText( this.comment );
+							eyesHelper.eyesScreenshot( driver, eyes, 'Single Comment Notification' );
+							this.notificationsComponent.trashComment();
+							this.notificationsComponent.waitForUndoMessage();
+							return this.notificationsComponent.waitForUndoMessageToDisappear();
+						}
+					);
 				} );
 			} );
 		} );

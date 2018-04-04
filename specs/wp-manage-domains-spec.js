@@ -1,3 +1,5 @@
+/** @format */
+
 import test from 'selenium-webdriver/testing';
 
 import config from 'config';
@@ -35,7 +37,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function() {
+test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Adding a domain to an existing site ', function() {
@@ -56,7 +58,7 @@ test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function
 
 		test.it( 'Can see the Domains page and choose add a domain', function() {
 			const domainsPage = new DomainsPage( driver );
-			driver.getCurrentUrl().then( ( urlDisplayed ) => {
+			driver.getCurrentUrl().then( urlDisplayed => {
 				domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
 			} );
 			return domainsPage.clickAddDomain();
@@ -87,7 +89,8 @@ test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function
 			return new SecurePaymentComponent( driver ).displayed();
 		} );
 
-		test.after( function() { // Empty the cart
+		test.after( function() {
+			// Empty the cart
 			new ReaderPage( driver, true ).displayed();
 			new NavbarComponent( driver ).clickMySites();
 			new StatsPage( driver, true ).displayed();
@@ -112,7 +115,7 @@ test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function
 
 		test.it( 'Can see the Domains page and choose add a domain', function() {
 			const domainsPage = new DomainsPage( driver );
-			driver.getCurrentUrl().then( ( urlDisplayed ) => {
+			driver.getCurrentUrl().then( urlDisplayed => {
 				domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
 			} );
 			return domainsPage.clickAddDomain();
@@ -150,7 +153,8 @@ test.describe( `[${host}] Managing Domains: (${screenSize}) @parallel`, function
 			return new MapADomainCheckoutPage( driver ).displayed();
 		} );
 
-		test.after( function() { // Empty the cart
+		test.after( function() {
+			// Empty the cart
 			new ReaderPage( driver, true ).displayed();
 			new NavbarComponent( driver ).clickMySites();
 			new StatsPage( driver, true ).displayed();
