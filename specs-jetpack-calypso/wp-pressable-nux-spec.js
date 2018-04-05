@@ -44,8 +44,7 @@ if ( host === 'PRESSABLE' ) {
 			} );
 
 			test.it( 'Can disconnect any expired sites', () => {
-				let jnFlow = new JetpackConnectFlow( driver );
-				return jnFlow.removeSites();
+				return new JetpackConnectFlow( driver ).removeSites();
 			} );
 		} );
 
@@ -57,18 +56,15 @@ if ( host === 'PRESSABLE' ) {
 			} );
 
 			test.it( 'Can log into WordPress.com', function() {
-				this.loginFlow = new LoginFlow( driver );
-				return this.loginFlow.login();
+				return new LoginFlow( driver, 'jetpackUser' + host ).login();
 			} );
 
 			test.it( 'Can log into Pressable', function() {
-				this.pressableLoginPage = new PressableLogonPage( driver, true );
-				return this.pressableLoginPage.loginWithWP();
+				return new PressableLogonPage( driver, true ).loginWithWP();
 			} );
 
 			test.it( 'Can approve login with WordPress', function() {
-				this.pressableApprovePage = new PressableApprovePage( driver );
-				return this.pressableApprovePage.approve();
+				return new PressableApprovePage( driver ).approve();
 			} );
 
 			test.it( 'Can create new site', function() {
@@ -82,13 +78,11 @@ if ( host === 'PRESSABLE' ) {
 			} );
 
 			test.it( 'Can proceed to Jetpack activation', function() {
-				this.pressableSiteSettinsPage = new PressableSiteSettingsPage( driver );
-				return this.pressableSiteSettinsPage.activateJetpackPremium();
+				return new PressableSiteSettingsPage( driver ).activateJetpackPremium();
 			} );
 
 			test.it( 'Can approve connection on the authorization page', function() {
-				this.jetpackAuthorizePage = new JetpackAuthorizePage( driver );
-				return this.jetpackAuthorizePage.approveConnection();
+				return new JetpackAuthorizePage( driver ).approveConnection();
 			} );
 
 			test.it(
@@ -99,37 +93,26 @@ if ( host === 'PRESSABLE' ) {
 			);
 
 			test.it( 'Can proceed with Pressable NUX flow', function() {
-				this.nuxFlow = new PressableNUXFlow( driver );
-				return this.nuxFlow.addSiteCredentials();
+				return new PressableNUXFlow( driver ).addSiteCredentials();
 			} );
 
 			test.it( 'Can open Rewind activity page', function() {
 				this.readerPage = new ReaderPage( driver, true );
-				let navbarComponent = new NavbarComponent( driver );
-				return navbarComponent
-					.clickMySites()
-					.then( () => {
-						this.sidebarComponent = new SidebarComponent( driver );
-						return this.sidebarComponent.selectSiteSwitcher();
-					} )
-					.then( () => this.sidebarComponent.searchForSite( this.siteName ) )
-					.then( () => this.sidebarComponent.selectStats() )
-					.then( () => {
-						this.statsPage = new StatsPage( driver );
-						return this.statsPage.openActivity();
-					} );
+				new NavbarComponent( driver ).clickMySites();
+				const sidebarComponent = new SidebarComponent( driver );
+				sidebarComponent.selectSiteSwitcher();
+				sidebarComponent.searchForSite( this.siteName );
+				sidebarComponent.selectStats();
+				return new StatsPage( driver ).openActivity();
 			} );
 
 			test.it( 'Can wait until Rewind backup is completed', function() {
-				this.activityPage = new ActivityPage( driver );
-				return this.activityPage
-					.expandDayCard()
-					.then( () => this.activityPage.waitUntilBackupCompleted() );
+				const activityPage = new ActivityPage( driver );
+				return activityPage.expandDayCard().then( () => activityPage.waitUntilBackupCompleted() );
 			} );
 
 			test.after( function() {
-				this.pressableSitesPage = new PressableSitesPage( driver, true );
-				return this.pressableSitesPage.deleteFirstSite();
+				return new PressableSitesPage( driver, true ).deleteFirstSite();
 			} );
 		} );
 	} );
