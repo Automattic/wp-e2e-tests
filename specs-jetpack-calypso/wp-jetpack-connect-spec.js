@@ -467,7 +467,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		}
 	);
 
-	test.describe.only( 'Connect From WooCommerce plugin when Jetpack is not installed: @parallel @jetpack', function() {
+	test.describe( 'Connect From WooCommerce plugin when Jetpack is not installed: @parallel @jetpack', function() {
 		this.bailSuite( true );
 		const countryStateCode = 'US:CO';
 		const address = '2101 Blake St';
