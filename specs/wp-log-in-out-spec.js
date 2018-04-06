@@ -24,6 +24,8 @@ import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
+require( 'babel-polyfill' );
+
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
@@ -33,9 +35,9 @@ let driver;
 
 let eyes = eyesHelper.eyesSetup( true );
 
-test.before( function() {
+test.before( async function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser();
+	driver = await driverManager.startBrowser();
 } );
 
 test.describe(
@@ -51,21 +53,20 @@ test.describe(
 		} );
 
 		test.describe( 'Logging In and Out:', function() {
-			test.before( function() {
-				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			test.before( async function() {
+				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			} );
 
 			test.describe( 'Can Log In', function() {
-				test.it( 'Can log in', function() {
-					let loginFlow = new LoginFlow( driver );
-					loginFlow.login( { screenshot: true }, eyes );
+				test.it( 'Can log in', async function() {
+					let loginFlow = await new LoginFlow( driver );
+					await loginFlow.login( { screenshot: true }, eyes );
 				} );
 
-				test.it( 'Can see Reader Page after logging in', function() {
-					let readerPage = new ReaderPage( driver );
-					readerPage.displayed().then( function( displayed ) {
-						assert.equal( displayed, true, 'The reader page is not displayed after log in' );
-					} );
+				test.it( 'Can see Reader Page after logging in', async function() {
+					let readerPage = await new ReaderPage( driver );
+					let displayed = await readerPage.displayed();
+					assert.equal( displayed, true, 'The reader page is not displayed after log in' );
 				} );
 			} );
 
@@ -85,23 +86,22 @@ test.describe(
 			}
 
 			test.describe( 'Can Log Out', function() {
-				test.it( 'Can view profile to log out', function() {
-					let navbarComponent = new NavbarComponent( driver );
-					navbarComponent.clickProfileLink();
+				test.it( 'Can view profile to log out', async function() {
+					let navbarComponent = await new NavbarComponent( driver );
+					await navbarComponent.clickProfileLink();
 				} );
 
-				test.it( 'Can logout from profile page', function() {
-					let profilePage = new ProfilePage( driver );
-					profilePage.waitForProfileLinks();
-					eyesHelper.eyesScreenshot( driver, eyes, 'Me Profile Page' );
-					profilePage.clickSignOut();
+				test.it( 'Can logout from profile page', async function() {
+					let profilePage = await new ProfilePage( driver );
+					await profilePage.waitForProfileLinks();
+					await eyesHelper.eyesScreenshot( driver, eyes, 'Me Profile Page' );
+					await profilePage.clickSignOut();
 				} );
 
-				test.it( 'Can see wordpress.com home when after logging out', function() {
-					const loggedOutMasterbarComponent = new LoggedOutMasterbarComponent( driver );
-					loggedOutMasterbarComponent.displayed().then( displayed => {
-						assert( displayed, "The logged out masterbar isn't displayed after logging out" );
-					} );
+				test.it( 'Can see wordpress.com home when after logging out', async function() {
+					const loggedOutMasterbarComponent = await new LoggedOutMasterbarComponent( driver );
+					let displayed = await loggedOutMasterbarComponent.displayed();
+					assert( displayed, "The logged out masterbar isn't displayed after logging out" );
 				} );
 			} );
 		} );
@@ -403,8 +403,8 @@ test.describe(
 		// 	} );
 		// }
 
-		test.after( function() {
-			eyesHelper.eyesClose( eyes );
+		test.after( async function() {
+			await eyesHelper.eyesClose( eyes );
 		} );
 	}
 );
@@ -413,13 +413,13 @@ test.describe( `[${ host }] User Agent: (${ screenSize }) @parallel @jetpack`, f
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	test.before( async function() {
+		await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
-	test.it( 'Can see the correct user agent set', function() {
+	test.it( 'Can see the correct user agent set', async function() {
 		this.wpHomePage = new WPHomePage( driver, { visit: true } );
-		driver.executeScript( 'return navigator.userAgent;' ).then( userAgent => {
+		await driver.executeScript( 'return navigator.userAgent;' ).then( userAgent => {
 			assert(
 				userAgent.match( 'wp-e2e-tests' ),
 				`User Agent does not contain 'wp-e2e-tests'.  [${ userAgent }]`
