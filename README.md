@@ -29,6 +29,7 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
   - [Git Pre-Commit Hook](docs/miscellaneous.md#git-pre-commit-hook)
   - [Launch Logged-In Window](docs/miscellaneous.md#launch-logged-in-window)
   - [User account requirements](docs/miscellaneous.md#user-account-requirements)
+  - [List of wrapper repos & friends](docs/miscellaneous.md#list-wrapper-repos)
 
 ## Pre-requisites
 
