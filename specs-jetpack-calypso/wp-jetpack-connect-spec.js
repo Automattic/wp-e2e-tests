@@ -26,6 +26,12 @@ import PlansPage from '../lib/pages/plans-page';
 import LoginPage from '../lib/pages/login-page';
 import JetpackComPage from '../lib/pages/external/jetpackcom-page';
 import JetpackComFeaturesDesignPage from '../lib/pages/external/jetpackcom-features-design-page';
+import WooWizardSetupPage from '../lib/pages/woocommerce/wizard-setup-page';
+import WooWizardPaymentsPage from '../lib/pages/woocommerce/wizard-payments-page';
+import WooWizardShippingPage from '../lib/pages/woocommerce/wizard-shipping-page';
+import WooWizardExtrasPage from '../lib/pages/woocommerce/wizard-extras-page';
+import WooWizardJetpackPage from '../lib/pages/woocommerce/wizard-jetpack-page';
+import WooWizardReadyPage from '../lib/pages/woocommerce/wizard-ready-page';
 
 import * as driverManager from '../lib/driver-manager';
 import * as dataHelper from '../lib/data-helper';
@@ -460,4 +466,61 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 		}
 	);
+
+	test.describe( 'Connect From WooCommerce plugin when Jetpack is not installed: @parallel @jetpack', function() {
+		this.bailSuite( true );
+		const countryStateCode = 'US:CO';
+		const address = '2101 Blake St';
+		const address2 = '';
+		const city = 'Denver';
+		const postalCode = '80205';
+		const currency = 'USD';
+		const productType = 'physical';
+
+		test.before( function() {
+			return driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		test.it( 'Can create wporg site', function() {
+			this.jnFlow = new JetpackConnectFlow( driver, null, 'wooCommerceNoJetpack' );
+			return this.jnFlow.createJNSite();
+		} );
+
+		test.it( 'Can enter WooCommerce Wizard', function() {
+			return new WPAdminDashboardPage( driver ).enterWooCommerceWizard();
+		} );
+
+		test.it( 'Can fill out and submit store information form', function() {
+			return new WooWizardSetupPage( driver ).enterStoreDetailsAndSubmit( { countryStateCode, address, address2, city, postalCode, currency, productType } );
+		} );
+
+		test.it( 'Can continue through payments information', function() {
+			return new WooWizardPaymentsPage( driver ).selectContinue();
+		} );
+
+		test.it( 'Can continue through shipping information', function() {
+			return new WooWizardShippingPage( driver ).selectContinue();
+		} );
+
+		test.it( 'Can continue through extras information', function() {
+			return new WooWizardExtrasPage( driver ).selectContinue();
+		} );
+
+		test.it( 'Can activate Jetpack', function() {
+			return new WooWizardJetpackPage( driver ).selectContinueWithJetpack();
+		} );
+
+		test.it( 'Can log into WP.com', function() {
+			const user = dataHelper.getAccountConfig( 'jetpackConnectUser' );
+			return new LoginPage( driver ).login( user[ 0 ], user[ 1 ] );
+		} );
+
+		test.it( 'Can wait for Jetpack get connected', function() {
+			return new JetpackAuthorizePage( driver ).waitToDisappear();
+		} );
+
+		test.it( 'Can see the Woo wizard ready page', function() {
+			return new WooWizardReadyPage( driver );
+		} );
+	} );
 } );
