@@ -1,10 +1,9 @@
 {
 	"presets": [
-		"es2015",
-		"stage-1"
-	],
-	"plugins": [
-		"add-module-exports",
-		"syntax-export-extensions"
+		["@babel/preset-env", {
+			"targets": {
+				"node": "8.11.0"
+			}
+		}]
 	]
 }
