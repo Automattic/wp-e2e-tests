@@ -73,14 +73,14 @@ test.describe(
 			// Test Jetpack SSO
 			if ( host !== 'WPCOM' ) {
 				test.describe( 'Can Log via Jetpack SSO', function() {
-					test.it( 'Can log into site via Jetpack SSO', () => {
-						let loginFlow = new LoginFlow( driver );
-						return loginFlow.login( { jetpackSSO: true } );
+					test.it( 'Can log into site via Jetpack SSO', async () => {
+						let loginFlow = await new LoginFlow( driver );
+						return await loginFlow.login( { jetpackSSO: true } );
 					} );
 
-					test.it( 'Can return to Reader', () => {
+					test.it( 'Can return to Reader', async () => {
 						let readerPage = new ReaderPage( driver, true );
-						return readerPage.displayed();
+						return await readerPage.displayed();
 					} );
 				} );
 			}
