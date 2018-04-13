@@ -24,6 +24,7 @@ import NoticesComponent from '../lib/components/notices-component.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
 import NoSitesComponent from '../lib/components/no-sites-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
+import SidebarComponent from '../lib/components/sidebar-component.js'
 
 import * as dataHelper from '../lib/data-helper.js';
 
@@ -94,10 +95,23 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Sends an invite', function() {
-				return this.invitePeoplePage.inviteSent().then( sent => {
-					assert.equal( sent, true, 'The sent confirmation message was not displayed' );
+				 this.invitePeoplePage.inviteSent().then( sent => {
+				 return assert.equal( sent, true, 'The sent confirmation message was not displayed' );
 				} );
 			} );
+
+			test.it(
+				'Can see pending invite',
+				function() {
+					this.invitePeoplePage.backToPeopleMenu();
+
+					this.peoplePage = new PeoplePage( driver );
+					this.peoplePage.selectInvites();
+					return this.peoplePage.pendingInviteLabelDisplayed().then( displayed => {
+						return assert.equal( displayed, true, 'The pending invite people page is not displayed' );
+					} );
+				}
+			);
 
 			test.describe( 'Can see an invitation email received for the invite', function() {
 				test.before( function() {
@@ -311,6 +325,19 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 					} );
 				} );
 
+				test.it(
+					'Can see pending invite',
+					function() {
+						this.invitePeoplePage.backToPeopleMenu();
+
+						this.peoplePage = new PeoplePage( driver );
+						this.peoplePage.selectInvites();
+						return this.peoplePage.pendingInviteLabelDisplayed().then( displayed => {
+							return assert.equal( displayed, true, 'The pending invite people page is not displayed' );
+						} );
+					}
+				);
+
 				test.describe( 'Can see an invitation email received for the invite', function() {
 					test.before( function() {
 						this.emailClient = new EmailClient( inviteInboxId );
@@ -523,6 +550,19 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 								assert.equal( sent, true, 'The sent confirmation message was not displayed' );
 							} );
 						} );
+
+						test.it(
+							'Can see pending invite',
+							function() {
+								this.invitePeoplePage.backToPeopleMenu();
+
+								this.peoplePage = new PeoplePage( driver );
+								this.peoplePage.selectInvites();
+								return this.peoplePage.pendingInviteLabelDisplayed().then( displayed => {
+									return assert.equal( displayed, true, 'The pending invite people page is not displayed' );
+								} );
+							}
+						);
 
 						test.describe( 'Can see an invitation email received for the invite', function() {
 							test.before( function() {
@@ -780,6 +820,19 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 								assert.equal( sent, true, 'The sent confirmation message was not displayed' );
 							} );
 						} );
+
+						test.it(
+							'Can see pending invite',
+							function() {
+								this.invitePeoplePage.backToPeopleMenu();
+
+								this.peoplePage = new PeoplePage( driver );
+								this.peoplePage.selectInvites();
+								return this.peoplePage.pendingInviteLabelDisplayed().then( displayed => {
+									return assert.equal( displayed, true, 'The pending invite people page is not displayed' );
+								} );
+							}
+						);
 
 						test.describe( 'Can see an invitation email received for the invite', function() {
 							test.before( function() {
