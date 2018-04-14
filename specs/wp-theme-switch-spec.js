@@ -24,7 +24,7 @@ const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
 
-var driver;
+let driver;
 
 let eyes = eyesHelper.eyesSetup( false );
 
@@ -44,50 +44,53 @@ test.describe( `[${ host }] Switching Themes: (${ screenSize })`, function() {
 	} );
 
 	test.describe( 'Switching Themes @parallel @jetpack @visdiff', function() {
-		test.it( 'Delete Cookies and Login', function() {
+		test.it( 'Delete Cookies and Login', async function() {
 			driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			let loginFlow = new LoginFlow( driver );
-			loginFlow.loginAndSelectThemes();
+			await loginFlow.loginAndSelectThemes();
 		} );
 
 		test.describe( 'Can switch free themes', function() {
-			test.it( 'Can select a different free theme', function() {
+			test.it( 'Can select a different free theme', async function() {
 				this.themesPage = new ThemesPage( driver );
-				eyesHelper.eyesScreenshot( driver, eyes, 'Themes Page' );
-				this.themesPage.showOnlyFreeThemes();
-				this.themesPage.searchFor( 'Twenty F' );
-				this.themesPage.waitForThemeStartingWith( 'Twenty F' );
-				return this.themesPage.selectNewThemeStartingWith( 'Twenty F' );
+				await eyesHelper.eyesScreenshot( driver, eyes, 'Themes Page' );
+				await this.themesPage.showOnlyFreeThemes();
+				await this.themesPage.searchFor( 'Twenty F' );
+				await this.themesPage.waitForThemeStartingWith( 'Twenty F' );
+				return await this.themesPage.selectNewThemeStartingWith( 'Twenty F' );
 			} );
 
-			test.it( 'Can see theme details page and open the live demo', function() {
+			test.it( 'Can see theme details page and open the live demo', async function() {
 				this.themeDetailPage = new ThemeDetailPage( driver );
-				return this.themeDetailPage.openLiveDemo();
+				return await this.themeDetailPage.openLiveDemo();
 			} );
 
-			test.it( 'Can activate the theme from the theme preview page', function() {
+			test.it( 'Can activate the theme from the theme preview page', async function() {
 				this.themePreviewPage = new ThemePreviewPage( driver );
-				this.themePreviewPage.activate();
+				await this.themePreviewPage.activate();
 			} );
 
-			test.it( 'Can see the theme thanks dialog and go back to the theme details page', function() {
-				this.themeDialogComponent = new ThemeDialogComponent( driver );
-				this.themeDialogComponent.goToThemeDetail();
-				this.themeDetailPage = new ThemeDetailPage( driver );
-				this.themeDetailPage.displayed().then( function( displayed ) {
-					eyesHelper.eyesScreenshot( driver, eyes, 'Theme Details Page' );
+			test.it(
+				'Can see the theme thanks dialog and go back to the theme details page',
+				async function() {
+					this.themeDialogComponent = new ThemeDialogComponent( driver );
+					await this.themeDialogComponent.goToThemeDetail();
+					this.themeDetailPage = new ThemeDetailPage( driver );
+					let displayed = await this.themeDetailPage.displayed();
+					await eyesHelper.eyesScreenshot( driver, eyes, 'Theme Details Page' );
+					console.log( '>>>' + displayed.value );
 					assert.equal(
 						displayed,
 						true,
 						'Could not see the theme detail page after activating a new theme'
 					);
-				} );
-			} );
+				}
+			);
 		} );
 	} );
 
-	test.after( function() {
-		eyesHelper.eyesClose( eyes );
+	test.after( async function() {
+		await eyesHelper.eyesClose( eyes );
 	} );
 } );
 
@@ -99,56 +102,53 @@ test.describe(
 
 		test.describe( 'Activating Themes:', function() {
 			// Ensure logged out
-			test.before( function() {
-				driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			test.before( async function() {
+				await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			} );
 
-			test.it( 'Login', function() {
+			test.it( 'Login', async function() {
 				let loginFlow = new LoginFlow( driver );
-				return loginFlow.loginAndSelectMySite();
+				return await loginFlow.loginAndSelectMySite();
 			} );
 
-			test.it( 'Can open Themes menu', function() {
+			test.it( 'Can open Themes menu', async function() {
 				let sidebarComponent = new SidebarComponent( driver );
-				return sidebarComponent.selectThemes();
+				return await sidebarComponent.selectThemes();
 			} );
 
 			test.describe( 'Can switch free themes', function() {
-				test.it( 'Can activate a different free theme', function() {
+				test.it( 'Can activate a different free theme', async function() {
 					let themesPage = new ThemesPage( driver );
-					themesPage.showOnlyFreeThemes();
-					themesPage.searchFor( 'Twenty F' );
-					themesPage.waitForThemeStartingWith( 'Twenty F' );
-					themesPage.clickNewThemeMoreButton();
-					themesPage
-						.popOverMenuDisplayed()
-						.then( displayed => assert( displayed, true, 'Popover menu not displayed' ) );
-					return themesPage.clickPopoverItem( 'Activate' );
+					await themesPage.showOnlyFreeThemes();
+					await themesPage.searchFor( 'Twenty F' );
+					await themesPage.waitForThemeStartingWith( 'Twenty F' );
+					await themesPage.clickNewThemeMoreButton();
+					let displayed = await themesPage.popOverMenuDisplayed();
+					assert( displayed, true, 'Popover menu not displayed' );
+					return await themesPage.clickPopoverItem( 'Activate' );
 				} );
 
-				test.it( 'Can see the theme thanks dialog', function() {
+				test.it( 'Can see the theme thanks dialog', async function() {
 					let themeDialogComponent = new ThemeDialogComponent( driver );
-					themeDialogComponent.customizeSite();
+					await themeDialogComponent.customizeSite();
 				} );
 
 				if ( host === 'WPCOM' ) {
-					test.it( 'Can customize the site from the theme thanks dialog', function() {
+					test.it( 'Can customize the site from the theme thanks dialog', async function() {
 						let customizerPage = new CustomizerPage( driver );
-						return customizerPage.displayed().then( displayed => {
-							assert( displayed, 'The customizer page was not displayed' );
-						} );
+						let displayed = await customizerPage.displayed();
+						assert( displayed, 'The customizer page was not displayed' );
 					} );
 				} else {
-					test.it( 'Can log in via Jetpack SSO', function() {
+					test.it( 'Can log in via Jetpack SSO', async function() {
 						let wpAdminLogonPage = new WPAdminLogonPage( driver );
-						return wpAdminLogonPage.logonSSO();
+						return await wpAdminLogonPage.logonSSO();
 					} );
 
-					test.it( 'Can customize the site from the theme thanks dialog', function() {
+					test.it( 'Can customize the site from the theme thanks dialog', async function() {
 						let wpAdminCustomizerPage = new WPAdminCustomizerPage( driver );
-						return wpAdminCustomizerPage.displayed().then( displayed => {
-							assert( displayed, 'The customizer page was not displayed' );
-						} );
+						let displayed = await wpAdminCustomizerPage.displayed();
+						assert( displayed, 'The customizer page was not displayed' );
 					} );
 				}
 			} );
