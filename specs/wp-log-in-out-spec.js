@@ -24,8 +24,6 @@ import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
-require( 'babel-polyfill' );
-
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
@@ -59,12 +57,12 @@ test.describe(
 
 			test.describe( 'Can Log In', function() {
 				test.it( 'Can log in', async function() {
-					let loginFlow = await new LoginFlow( driver );
+					let loginFlow = new LoginFlow( driver );
 					await loginFlow.login( { screenshot: true }, eyes );
 				} );
 
 				test.it( 'Can see Reader Page after logging in', async function() {
-					let readerPage = await new ReaderPage( driver );
+					let readerPage = new ReaderPage( driver );
 					let displayed = await readerPage.displayed();
 					assert.equal( displayed, true, 'The reader page is not displayed after log in' );
 				} );
@@ -74,7 +72,7 @@ test.describe(
 			if ( host !== 'WPCOM' ) {
 				test.describe( 'Can Log via Jetpack SSO', function() {
 					test.it( 'Can log into site via Jetpack SSO', async () => {
-						let loginFlow = await new LoginFlow( driver );
+						let loginFlow = new LoginFlow( driver );
 						return await loginFlow.login( { jetpackSSO: true } );
 					} );
 
@@ -87,19 +85,19 @@ test.describe(
 
 			test.describe( 'Can Log Out', function() {
 				test.it( 'Can view profile to log out', async function() {
-					let navbarComponent = await new NavbarComponent( driver );
+					let navbarComponent = new NavbarComponent( driver );
 					await navbarComponent.clickProfileLink();
 				} );
 
 				test.it( 'Can logout from profile page', async function() {
-					let profilePage = await new ProfilePage( driver );
+					let profilePage = new ProfilePage( driver );
 					await profilePage.waitForProfileLinks();
 					await eyesHelper.eyesScreenshot( driver, eyes, 'Me Profile Page' );
 					await profilePage.clickSignOut();
 				} );
 
 				test.it( 'Can see wordpress.com home when after logging out', async function() {
-					const loggedOutMasterbarComponent = await new LoggedOutMasterbarComponent( driver );
+					const loggedOutMasterbarComponent = new LoggedOutMasterbarComponent( driver );
 					let displayed = await loggedOutMasterbarComponent.displayed();
 					assert( displayed, "The logged out masterbar isn't displayed after logging out" );
 				} );
@@ -419,11 +417,10 @@ test.describe( `[${ host }] User Agent: (${ screenSize }) @parallel @jetpack`, f
 
 	test.it( 'Can see the correct user agent set', async function() {
 		this.wpHomePage = new WPHomePage( driver, { visit: true } );
-		await driver.executeScript( 'return navigator.userAgent;' ).then( userAgent => {
-			assert(
-				userAgent.match( 'wp-e2e-tests' ),
-				`User Agent does not contain 'wp-e2e-tests'.  [${ userAgent }]`
-			);
-		} );
+		let userAgent = await driver.executeScript( 'return navigator.userAgent;' );
+		assert(
+			userAgent.match( 'wp-e2e-tests' ),
+			`User Agent does not contain 'wp-e2e-tests'.  [${ userAgent }]`
+		);
 	} );
 } );
