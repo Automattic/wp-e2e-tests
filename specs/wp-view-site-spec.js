@@ -42,17 +42,17 @@ test.describe(
 			} );
 
 			test.it( 'Can Log In and go to My Sites', async function() {
-				const loginFlow = await new LoginFlow( driver );
+				const loginFlow = new LoginFlow( driver );
 				return await loginFlow.loginAndSelectMySite();
 			} );
 
 			test.it( 'Can view the default site from sidebar', async function() {
-				this.sidebarComponent = await new SidebarComponent( driver );
+				this.sidebarComponent = new SidebarComponent( driver );
 				return await this.sidebarComponent.selectViewThisSite();
 			} );
 
 			test.it( 'Can see the web preview button', async function() {
-				this.siteViewComponent = await new SiteViewComponent( driver );
+				this.siteViewComponent = new SiteViewComponent( driver );
 				let present = await this.siteViewComponent.isWebPreviewPresent();
 				return assert.equal( present, true, 'The web preview button was not displayed' );
 			} );
