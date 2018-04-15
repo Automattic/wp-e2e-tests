@@ -88,9 +88,6 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 					) {
 						this.customizerPage = new CustomizerPage( driver );
 						let url = await driver.getCurrentUrl();
-						// console.log( '>>>' + url );
-						// console.log( this.siteSelector.selectedSiteDomain );
-						// console.log( this.themeSearchName );
 						assert.include( url, this.siteSelector.selectedSiteDomain, 'Wrong site domain' );
 						assert.include( url, this.themeSearchName, 'Wrong theme' );
 						done();

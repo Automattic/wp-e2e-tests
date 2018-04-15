@@ -28,9 +28,9 @@ let driver;
 
 let eyes = eyesHelper.eyesSetup( false );
 
-test.before( function() {
+test.before( async function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser();
+	driver = await driverManager.startBrowser();
 } );
 
 test.describe( `[${ host }] Switching Themes: (${ screenSize })`, function() {
@@ -45,7 +45,7 @@ test.describe( `[${ host }] Switching Themes: (${ screenSize })`, function() {
 
 	test.describe( 'Switching Themes @parallel @jetpack @visdiff', function() {
 		test.it( 'Delete Cookies and Login', async function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			let loginFlow = new LoginFlow( driver );
 			await loginFlow.loginAndSelectThemes();
 		} );
@@ -78,7 +78,6 @@ test.describe( `[${ host }] Switching Themes: (${ screenSize })`, function() {
 					this.themeDetailPage = new ThemeDetailPage( driver );
 					let displayed = await this.themeDetailPage.displayed();
 					await eyesHelper.eyesScreenshot( driver, eyes, 'Theme Details Page' );
-					console.log( '>>>' + displayed.value );
 					assert.equal(
 						displayed,
 						true,
@@ -129,8 +128,7 @@ test.describe(
 				} );
 
 				test.it( 'Can see the theme thanks dialog', async function() {
-					let themeDialogComponent = new ThemeDialogComponent( driver );
-					await themeDialogComponent.customizeSite();
+					await new ThemeDialogComponent( driver ).customizeSite();
 				} );
 
 				if ( host === 'WPCOM' ) {
