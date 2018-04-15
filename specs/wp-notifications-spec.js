@@ -23,21 +23,21 @@ const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
 
-var driver;
+let driver;
 
 let eyes = eyesHelper.eyesSetup( false );
 
-test.before( function() {
+test.before( async function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser();
+	driver = await driverManager.startBrowser();
 } );
 
 test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	test.before( async function() {
+		await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 
 		let testEnvironment = 'WordPress.com';
 		let testName = `Notifications [${ global.browserName }] [${ screenSize }]`;
@@ -45,10 +45,10 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 	} );
 
 	test.describe( 'Log in as commenting user', function() {
-		test.it( 'Can log in as commenting user', function() {
+		test.it( 'Can log in as commenting user', async function() {
 			this.commentingUser = dataHelper.getAccountConfig( 'commentingUser' )[ 0 ];
 			this.loginFlow = new LoginFlow( driver, 'commentingUser' );
-			return this.loginFlow.login();
+			return await this.loginFlow.login();
 		} );
 
 		test.describe( 'Leave a comment on the test site for notifications', function() {
@@ -56,78 +56,74 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 				'testSiteForNotifications'
 			) }`;
 
-			test.it( 'Can view the first post', function() {
+			test.it( 'Can view the first post', async function() {
 				this.viewBlogPage = new ViewSitePage( driver, true, testSiteForInvitationsURL );
-				return this.viewBlogPage.viewFirstPost();
+				return await this.viewBlogPage.viewFirstPost();
 			} );
 
-			test.it( 'Can see the first post page and capture the title', function() {
+			test.it( 'Can see the first post page and capture the title', async function() {
 				this.viewPostPage = new ViewPostPage( driver );
-				return this.viewPostPage.postTitle().then( postTitle => {
-					return ( this.commentedPostTitle = postTitle );
-				} );
+				let postTitle = await this.viewPostPage.postTitle();
+				return ( this.commentedPostTitle = postTitle );
 			} );
 
-			test.it( 'Can leave a comment', function() {
+			test.it( 'Can leave a comment', async function() {
 				this.comment = dataHelper.randomPhrase() + ' TBD';
-				return this.viewPostPage.leaveAComment( this.comment );
+				return await this.viewPostPage.leaveAComment( this.comment );
 			} );
 
-			test.it( 'Can see the comment', function() {
-				return this.viewPostPage.commentEventuallyShown( this.comment ).then( shown => {
-					if ( shown === false ) {
-						slackNotifier.warn(
-							`Could not see newly added comment '${
-								this.comment
-							}' on blog page - most likely a refresh issue`
-						);
-					}
-				} );
+			test.it( 'Can see the comment', async function() {
+				let shown = await this.viewPostPage.commentEventuallyShown( this.comment );
+				if ( shown === false ) {
+					slackNotifier.warn(
+						`Could not see newly added comment '${
+							this.comment
+						}' on blog page - most likely a refresh issue`
+					);
+				}
 			} );
 
 			test.describe( 'Log in as notifications user', function() {
-				test.it( 'Can log in as notifications user', function() {
+				test.it( 'Can log in as notifications user', async function() {
 					this.loginFlow = new LoginFlow( driver, 'notificationsUser' );
-					this.loginFlow.login();
+					await this.loginFlow.login();
 					this.readerPage = new ReaderPage( driver );
-					return this.readerPage.waitForPage();
+					return await this.readerPage.waitForPage();
 				} );
 
 				test.describe( 'See the notification', function() {
-					test.it( 'Can open notifications tab with keyboard shortcut', function() {
+					test.it( 'Can open notifications tab with keyboard shortcut', async function() {
 						this.navBarComponent = new NavbarComponent( driver );
-						this.navBarComponent.openNotificationsShortcut();
-						return this.navBarComponent.confirmNotificationsOpen().then( function( present ) {
-							assert( present, 'Notifications tab is not open' );
-						} );
+						await this.navBarComponent.openNotificationsShortcut();
+						let present = await this.navBarComponent.confirmNotificationsOpen();
+						assert( present, 'Notifications tab is not open' );
 					} );
 
-					test.it( 'Can see the notification of the comment', function() {
+					test.it( 'Can see the notification of the comment', async function() {
 						const expectedContent = `${ this.commentingUser } commented on ${
 							this.commentedPostTitle
 						}\n${ this.comment }`;
 						this.navBarComponent = new NavbarComponent( driver );
-						this.navBarComponent.openNotifications();
+						await this.navBarComponent.openNotifications();
 						this.notificationsComponent = new NotificationsComponent( driver );
-						this.notificationsComponent.selectComments();
-						return this.notificationsComponent.allCommentsContent().then( content => {
-							eyesHelper.eyesScreenshot( driver, eyes, 'Notifications List' );
-							assert.equal(
-								content.includes( expectedContent ),
-								true,
-								`The actual notifications content '${ content }' does not contain expected content '${ expectedContent }'`
-							);
-						} );
+						await this.notificationsComponent.selectComments();
+						let content = await this.notificationsComponent.allCommentsContent();
+						await eyesHelper.eyesScreenshot( driver, eyes, 'Notifications List' );
+						assert.equal(
+							content.includes( expectedContent ),
+							true,
+							`The actual notifications content '${ content }' does not contain expected content '${ expectedContent }'`
+						);
 					} );
 
 					test.it(
 						'Can delete the comment (and wait for UNDO grace period so it is actually deleted)',
-						function() {
-							this.notificationsComponent.selectCommentByText( this.comment );
-							eyesHelper.eyesScreenshot( driver, eyes, 'Single Comment Notification' );
-							this.notificationsComponent.trashComment();
-							this.notificationsComponent.waitForUndoMessage();
-							return this.notificationsComponent.waitForUndoMessageToDisappear();
+						async function() {
+							await this.notificationsComponent.selectCommentByText( this.comment );
+							await eyesHelper.eyesScreenshot( driver, eyes, 'Single Comment Notification' );
+							await this.notificationsComponent.trashComment();
+							await this.notificationsComponent.waitForUndoMessage();
+							return await this.notificationsComponent.waitForUndoMessageToDisappear();
 						}
 					);
 				} );
@@ -135,7 +131,7 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 		} );
 	} );
 
-	test.after( function() {
-		eyesHelper.eyesClose( eyes );
+	test.after( async function() {
+		await eyesHelper.eyesClose( eyes );
 	} );
 } );
