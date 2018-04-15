@@ -43,13 +43,13 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 
 	test.describe( 'Log in as commenting user', function() {
 		test.it( 'Can log in as commenting user', async function() {
-			this.loginFlow = await new LoginFlow( driver, 'commentingUser' );
+			this.loginFlow = new LoginFlow( driver, 'commentingUser' );
 			return await this.loginFlow.login();
 		} );
 
 		test.describe( 'Leave a comment on the latest post in the Reader', function() {
 			test.it( 'Can see the Reader stream', async function() {
-				this.readerPage = await new ReaderPage( driver );
+				this.readerPage = new ReaderPage( driver );
 				return await this.readerPage.waitForPage();
 			} );
 
@@ -75,7 +75,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 				} );
 
 				test.it( 'Can log in as test site owner', async function() {
-					this.loginFlow = await new LoginFlow( driver, 'notificationsUser' );
+					this.loginFlow = new LoginFlow( driver, 'notificationsUser' );
 					return await this.loginFlow.login();
 				} );
 
@@ -83,9 +83,9 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 					'Can delete the new comment (and wait for UNDO grace period so it is actually deleted)',
 					async function() {
 						await eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
-						this.navBarComponent = await new NavbarComponent( driver );
+						this.navBarComponent = new NavbarComponent( driver );
 						await this.navBarComponent.openNotifications();
-						this.notificationsComponent = await new NotificationsComponent( driver );
+						this.notificationsComponent = new NotificationsComponent( driver );
 						await this.notificationsComponent.selectCommentByText( this.comment );
 						await this.notificationsComponent.trashComment();
 						await this.notificationsComponent.waitForUndoMessage();
@@ -95,7 +95,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 
 				test.describe( 'Manage Followed Sites', function() {
 					test.it( 'Can see the Manage page', async function() {
-						this.readerManagePage = await new ReaderManagePage( driver, true );
+						this.readerManagePage = new ReaderManagePage( driver, true );
 						await this.readerManagePage.waitForSites();
 						await eyesHelper.eyesScreenshot(
 							driver,
