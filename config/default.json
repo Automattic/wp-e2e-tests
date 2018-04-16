@@ -69,9 +69,8 @@
     [ "skipThemesSelectionModal_20170904", "show" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
-    [ "siteGoalsShuffle_20180214", "control" ],
     [ "redesignedSidebarBanner_20180222", "oldBanner" ],
     [ "businessPlanDescriptionAT_20170605", "original" ],
-    [ "mobilePlansTablesOnSignup_20180330", "original" ]
+    [ "mobilePlansTablesOnSignup_20180330", "vertical" ]
   ]
 }
