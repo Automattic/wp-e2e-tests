@@ -656,7 +656,8 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 		}
 	);
 
-	test.describe(
+	// Disabled due to https://github.com/Automattic/wp-e2e-tests/issues/1132
+	test.xdescribe(
 		'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow @parallel',
 		function() {
 			this.bailSuite( true );
