@@ -60,21 +60,17 @@
     "skipThemesSelectionModal",
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser",
-    "siteGoalsShuffle",
     "upgradePricingDisplayV2",
     "redesignedSidebarBanner",
-    "mobilePlansTablesOnSignup",
-    "domainSuggestionKrakenV313"
+    "mobilePlansTablesOnSignup"
   ],
   "overrideABTests": [
     [ "upgradePricingDisplayV2_20180305", "original" ],
     [ "skipThemesSelectionModal_20170904", "show" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
-    [ "siteGoalsShuffle_20180214", "control" ],
     [ "redesignedSidebarBanner_20180222", "oldBanner" ],
     [ "businessPlanDescriptionAT_20170605", "original" ],
-    [ "mobilePlansTablesOnSignup_20180330", "original" ],
-    [ "domainSuggestionKrakenV313_20180329", "group_0" ]
+    [ "mobilePlansTablesOnSignup_20180330", "vertical" ]
   ]
 }

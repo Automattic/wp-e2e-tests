@@ -72,8 +72,6 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 		'Sign up for a free site and log in via a magic link @parallel @email',
 		function() {
 			this.bailSuite( true );
-			let stepNum = 1;
-
 			const blogName = dataHelper.getNewBlogName();
 			let newBlogAddress = '';
 			const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
@@ -85,178 +83,117 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 				return driverManager.ensureNotLoggedIn( driver );
 			} );
 
-			test.describe( `Step ${ stepNum }: About Page`, function() {
-				stepNum++;
+			test.it( 'Can visit the start page', function() {
+				return new StartPage( driver, {
+					visit: true,
+					culture: locale,
+				} ).displayed();
+			} );
 
-				test.it( 'Can visit the start page', function() {
-					return new StartPage( driver, { visit: true, culture: locale } ).displayed();
+			test.it( 'Can see the "About" page, and enter some site information', function() {
+				const aboutPage = new AboutPage( driver );
+				aboutPage.enterSiteDetails( blogName, 'Electronics', {
+					share: true,
 				} );
+				return aboutPage.submitForm();
+			} );
 
-				test.it( 'Can see the "About" page, and enter some site information', function() {
-					const aboutPage = new AboutPage( driver );
-					aboutPage.enterSiteDetails( blogName, 'Electronics', { share: true } );
-					return aboutPage.submitForm();
-				} );
-
-				test.describe( `Step ${ stepNum }: Domains`, function() {
-					stepNum++;
-
-					test.it(
-						'Can then see the domains page, and Can search for a blog name, can see and select a free .wordpress address in the results',
-						function() {
-							const findADomainComponent = new FindADomainComponent( driver );
-							findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-							findADomainComponent.checkAndRetryForFreeBlogAddresses(
-								expectedBlogAddresses,
-								blogName
-							);
-							findADomainComponent.freeBlogAddress().then( actualAddress => {
-								assert(
-									expectedBlogAddresses.indexOf( actualAddress ) > -1,
-									`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
-								);
-								newBlogAddress = actualAddress;
-							} );
-							return findADomainComponent.selectFreeAddress();
-						}
-					);
-
-					test.describe( `Step ${ stepNum }: Plans`, function() {
-						stepNum++;
-
-						test.it( 'Can then see the plans page and pick the free plan', function() {
-							return new PickAPlanPage( driver ).selectFreePlan();
-						} );
-
-						test.describe( `Step ${ stepNum }: Account`, function() {
-							stepNum++;
-
-							test.it( 'Can then see the account page and enter account details', function() {
-								return new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
-									emailAddress,
-									blogName,
-									password
-								);
-							} );
-
-							test.describe( `Step ${ stepNum }: Sign Up Processing`, function() {
-								stepNum++;
-
-								test.it(
-									"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
-									function() {
-										const signupProcessingPage = new SignupProcessingPage( driver );
-										signupProcessingPage.waitForContinueButtonToBeEnabled();
-										return signupProcessingPage.continueAlong();
-									}
-								);
-
-								test.describe( `Step ${ stepNum }: View Site/Trampoline`, function() {
-									stepNum++;
-
-									test.it(
-										'We are on the view blog page, can see trampoline, our URL and title',
-										function() {
-											const viewBlogPage = new ViewBlogPage( driver );
-											viewBlogPage.waitForTrampolineWelcomeMessage();
-											return viewBlogPage.isTrampolineWelcomeDisplayed().then( displayed => {
-												return assert.equal(
-													displayed,
-													true,
-													'The trampoline welcome message is not displayed'
-												);
-											} );
-										}
-									);
-
-									test.it( 'Can see the correct blog URL displayed', function() {
-										return new ViewBlogPage( driver ).urlDisplayed().then( url => {
-											return assert.equal(
-												url,
-												'https://' + newBlogAddress + '/',
-												'The displayed URL on the view blog page is not as expected'
-											);
-										} );
-									} );
-
-									test.it( 'Can see the correct blog title displayed', function() {
-										return new ViewBlogPage( driver ).title().then( title => {
-											if ( global.browserName === 'Internet Explorer' ) {
-												assert.equal(
-													title,
-													'Site Title',
-													'The expected blog title is not displaying correctly'
-												);
-											} else {
-												assert.equal(
-													title,
-													blogName,
-													'The expected blog title is not displaying correctly'
-												);
-											}
-										} );
-									} );
-
-									test.describe( `Step ${ stepNum }: Log out and request magic link`, function() {
-										stepNum++;
-
-										// Ensure logged out
-										test.before( function() {
-											return driverManager.clearCookiesAndDeleteLocalStorage( driver );
-										} );
-
-										test.it( 'Request a magic link', function() {
-											return new LoginPage( driver, true ).requestMagicLink( emailAddress );
-										} );
-
-										test.describe(
-											`Step ${ stepNum }: Can see email containing magic link`,
-											function() {
-												stepNum++;
-
-												test.before( function() {
-													return ( this.emailClient = new EmailClient( signupInboxId ) );
-												} );
-
-												test.it( 'Can see a the magic link email', function() {
-													return this.emailClient
-														.pollEmailsByRecipient( emailAddress )
-														.then( function( emails ) {
-															//Disabled due to a/b test on activation email. See https://github.com/Automattic/wp-e2e-tests/issues/819
-															//assert.equal( emails.length, 2, 'The number of newly registered emails is not equal to 2 (activation and magic link)' );
-															for ( let email of emails ) {
-																if ( email.subject.indexOf( 'WordPress.com' ) > -1 ) {
-																	magicLoginLink = email.html.links[ 0 ].href;
-																}
-															}
-															assert(
-																magicLoginLink !== undefined,
-																'Could not locate the magic login link email link'
-															);
-															return true;
-														} );
-												} );
-
-												test.describe(
-													`Step ${ stepNum }: Visit the magic link and we should be logged in`,
-													function() {
-														stepNum++;
-
-														test.it( "Visit the magic link and we're logged in", function() {
-															driver.get( magicLoginLink );
-															new MagicLoginPage( driver ).finishLogin();
-															return new ReaderPage( driver ).displayed();
-														} );
-													}
-												);
-											}
-										);
-									} );
-								} );
-							} );
-						} );
+			test.it(
+				'Can then see the domains page, and Can search for a blog name, can see and select a free .wordpress address in the results',
+				function() {
+					const findADomainComponent = new FindADomainComponent( driver );
+					findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+					findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
+					findADomainComponent.freeBlogAddress().then( actualAddress => {
+						assert(
+							expectedBlogAddresses.indexOf( actualAddress ) > -1,
+							`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+						);
+						newBlogAddress = actualAddress;
 					} );
+					return findADomainComponent.selectFreeAddress();
+				}
+			);
+
+			test.it( 'Can see the plans page and pick the free plan', function() {
+				return new PickAPlanPage( driver ).selectFreePlan();
+			} );
+
+			test.it( 'Can see the account page and enter account details', function() {
+				return new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+					emailAddress,
+					blogName,
+					password
+				);
+			} );
+
+			test.it(
+				"Can see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+				function() {
+					const signupProcessingPage = new SignupProcessingPage( driver );
+					signupProcessingPage.waitForContinueButtonToBeEnabled();
+					return signupProcessingPage.continueAlong();
+				}
+			);
+
+			test.it( 'Can see expected Welcome message, URL, title, ', function() {
+				const viewBlogPage = new ViewBlogPage( driver );
+				viewBlogPage.waitForTrampolineWelcomeMessage();
+				viewBlogPage
+					.isTrampolineWelcomeDisplayed()
+					.then( displayed =>
+						assert.equal( displayed, true, 'The trampoline welcome message is not displayed' )
+					);
+				viewBlogPage
+					.urlDisplayed()
+					.then( url =>
+						assert.equal(
+							url,
+							'https://' + newBlogAddress + '/',
+							'The displayed URL on the view blog page is not as expected'
+						)
+					);
+				return viewBlogPage.title().then( title => {
+					if ( global.browserName === 'Internet Explorer' ) {
+						assert.equal(
+							title,
+							'Site Title',
+							'The expected blog title is not displaying correctly'
+						);
+					} else {
+						assert.equal( title, blogName, 'The expected blog title is not displaying correctly' );
+					}
 				} );
+			} );
+
+			test.it( 'Can log out and request a magic link', function() {
+				driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				return new LoginPage( driver, true ).requestMagicLink( emailAddress );
+			} );
+
+			test.it( 'Can see email containing magic link', function() {
+				const emailClient = new EmailClient( signupInboxId );
+				const validator = emails =>
+					emails.find( email => email.subject.includes( 'WordPress.com' ) );
+				return emailClient.pollEmailsByRecipient( emailAddress, validator ).then( emails => {
+					//Disabled due to a/b test on activation email. See https://github.com/Automattic/wp-e2e-tests/issues/819
+					//assert.equal( emails.length, 2, 'The number of newly registered emails is not equal to 2 (activation and magic link)' );
+					for ( let email of emails ) {
+						if ( email.subject.includes( 'WordPress.com' ) ) {
+							return ( magicLoginLink = email.html.links[ 0 ].href );
+						}
+					}
+					assert(
+						magicLoginLink !== undefined,
+						'Could not locate the magic login link email link'
+					);
+				} );
+			} );
+
+			test.it( 'Can visit the magic link and we should be logged in', function() {
+				driver.get( magicLoginLink );
+				new MagicLoginPage( driver ).finishLogin();
+				return new ReaderPage( driver ).displayed();
 			} );
 		}
 	);
@@ -285,7 +222,10 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', function() {
-				const wPHomePage = new WPHomePage( driver, { visit: true, culture: locale } );
+				const wPHomePage = new WPHomePage( driver, {
+					visit: true,
+					culture: locale,
+				} );
 				eyesHelper.eyesScreenshot( driver, eyes, 'Logged Out Homepage' );
 				return wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 			} );
@@ -294,7 +234,10 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 				stepNum++;
 
 				test.it( 'Can visit the start page', function() {
-					return new StartPage( driver, { visit: true, culture: locale } ).displayed();
+					return new StartPage( driver, {
+						visit: true,
+						culture: locale,
+					} ).displayed();
 				} );
 
 				test.it( 'Can see the "About" page, and enter some site information', function() {
@@ -449,9 +392,10 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', function() {
-				return new WPHomePage( driver, { visit: true, culture: locale } ).setSandboxModeForPayments(
-					sandboxCookieValue
-				);
+				return new WPHomePage( driver, {
+					visit: true,
+					culture: locale,
+				} ).setSandboxModeForPayments( sandboxCookieValue );
 			} );
 
 			test.describe( `Step ${ stepNum }: About Page`, function() {
@@ -571,9 +515,10 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 			} );
 
 			test.it( 'We can visit set the sandbox cookie for payments', function() {
-				return new WPHomePage( driver, { visit: true, culture: locale } ).setSandboxModeForPayments(
-					sandboxCookieValue
-				);
+				return new WPHomePage( driver, {
+					visit: true,
+					culture: locale,
+				} ).setSandboxModeForPayments( sandboxCookieValue );
 			} );
 
 			test.describe( `Step ${ stepNum }: WordPress.com/domains page`, function() {
@@ -711,7 +656,8 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 		}
 	);
 
-	test.describe(
+	// Disabled due to https://github.com/Automattic/wp-e2e-tests/issues/1132
+	test.xdescribe(
 		'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow @parallel',
 		function() {
 			this.bailSuite( true );
@@ -730,9 +676,10 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', function() {
-				return new WPHomePage( driver, { visit: true, culture: locale } ).setSandboxModeForPayments(
-					sandboxCookieValue
-				);
+				return new WPHomePage( driver, {
+					visit: true,
+					culture: locale,
+				} ).setSandboxModeForPayments( sandboxCookieValue );
 			} );
 
 			test.describe( `Step ${ stepNum }: About Page`, function() {
@@ -888,7 +835,10 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 			stepNum++;
 
 			test.it( 'Can visit the start page', function() {
-				return new StartPage( driver, { visit: true, culture: locale } ).displayed();
+				return new StartPage( driver, {
+					visit: true,
+					culture: locale,
+				} ).displayed();
 			} );
 
 			test.it( 'Can see the about page and accept defaults', function() {
