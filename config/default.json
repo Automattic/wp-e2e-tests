@@ -15,6 +15,7 @@
   "checkForConsoleErrors": false,
   "reportWarningsToSlack": false,
   "closeBrowserOnComplete": true,
+  "highlightElements": false,
   "sauceConfigurations": {
     "osx-chrome": {
         "browserName": "chrome",
