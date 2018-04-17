@@ -76,6 +76,6 @@
     [ "businessPlanDescriptionAT_20170605", "original" ],
     [ "mobilePlansTablesOnSignup_20180330", "original" ],
     [ "springSale30PercentOff_20180413", "control" ],
-    [ "showMoneyBackGuarantee", "no" ]
+    [ "showMoneyBackGuarantee_20180409", "no" ]
   ]
 }
