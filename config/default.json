@@ -72,6 +72,7 @@
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
     [ "redesignedSidebarBanner_20180222", "oldBanner" ],
     [ "businessPlanDescriptionAT_20170605", "original" ],
-    [ "mobilePlansTablesOnSignup_20180330", "original" ]
+    [ "mobilePlansTablesOnSignup_20180330", "original" ],
+    [ "springSale30PercentOff_20180413", "control" ],
   ]
 }
