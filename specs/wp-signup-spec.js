@@ -154,15 +154,7 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 						)
 					);
 				return viewBlogPage.title().then( title => {
-					if ( global.browserName === 'Internet Explorer' ) {
-						assert.equal(
-							title,
-							'Site Title',
-							'The expected blog title is not displaying correctly'
-						);
-					} else {
-						assert.equal( title, blogName, 'The expected blog title is not displaying correctly' );
-					}
+					assert.equal( title, blogName, 'The expected blog title is not displaying correctly' );
 				} );
 			} );
 
