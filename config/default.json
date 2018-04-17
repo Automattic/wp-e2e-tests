@@ -63,7 +63,8 @@
     "checklistThankYouForPaidUser",
     "upgradePricingDisplayV2",
     "redesignedSidebarBanner",
-    "mobilePlansTablesOnSignup"
+	"mobilePlansTablesOnSignup",
+	"springSale30PercentOff"
   ],
   "overrideABTests": [
     [ "upgradePricingDisplayV2_20180305", "original" ],
