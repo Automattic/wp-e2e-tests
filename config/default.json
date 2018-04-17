@@ -63,8 +63,9 @@
     "checklistThankYouForPaidUser",
     "upgradePricingDisplayV2",
     "redesignedSidebarBanner",
-	"mobilePlansTablesOnSignup",
-	"springSale30PercentOff"
+    "mobilePlansTablesOnSignup",
+    "springSale30PercentOff",
+    "showMoneyBackGuarantee"
   ],
   "overrideABTests": [
     [ "upgradePricingDisplayV2_20180305", "original" ],
@@ -74,6 +75,7 @@
     [ "redesignedSidebarBanner_20180222", "oldBanner" ],
     [ "businessPlanDescriptionAT_20170605", "original" ],
     [ "mobilePlansTablesOnSignup_20180330", "original" ],
-    [ "springSale30PercentOff_20180413", "control" ]
+    [ "springSale30PercentOff_20180413", "control" ],
+    [ "showMoneyBackGuarantee_20180409", "no" ]
   ]
 }
