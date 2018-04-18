@@ -60,13 +60,16 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 
 		test.it( 'Can skip all steps', function() {
 			const wizardNavigationComponent = new WizardNavigationComponent( driver );
-			return wizardNavigationComponent.skipStep()
+			return wizardNavigationComponent
+				.skipStep()
 				.then( () => wizardNavigationComponent.skipStep() )
 				.then( () => wizardNavigationComponent.skipStep() )
 				.then( () => wizardNavigationComponent.skipStep() )
 				.then( () => wizardNavigationComponent.skipStep() )
 				.then( () => new SummaryPage( driver ).countToDoSteps() )
-				.then( ( toDoCount ) => assert.equal( toDoCount, 4, 'Expected and actual steps are not equal.' ) );
+				.then( toDoCount =>
+					assert.equal( toDoCount, 4, 'Expected and actual steps are not equal.' )
+				);
 		} );
 
 		test.it( 'Can go back to first step in flow from summary page', function() {
@@ -111,15 +114,21 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 
 		test.it( 'Can see onboarding summary page', function() {
 			const summaryPage = new SummaryPage( driver );
-			return summaryPage.countToDoSteps()
-				.then( toDoCount => assert.equal( toDoCount, 0, 'Expected and actual steps are not equal.' ) )
+			return summaryPage
+				.countToDoSteps()
+				.then( toDoCount =>
+					assert.equal( toDoCount, 0, 'Expected and actual steps are not equal.' )
+				)
 				.then( () => summaryPage.selectVisitSite() );
 		} );
 
 		test.it( 'Can see site home page', function() {
 			const viewPagePage = new ViewPagePage( driver );
-			return viewPagePage.pageTitle()
-				.then( title => assert.equal( title.toUpperCase(), 'HOME PAGE', 'Homepage not set to a static page' ) );
+			return viewPagePage
+				.pageTitle()
+				.then( title =>
+					assert.equal( title.toUpperCase(), 'HOME PAGE', 'Homepage not set to a static page' )
+				);
 		} );
 	} );
 
@@ -181,7 +190,15 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 
 		test.it( 'Can enter address on business address page', function() {
 			const businessAddressPage = new BusinessAddressPage( driver );
-			return businessAddressPage.enterBusinessAddressAndSubmit( businessName, address, city, stateCode, postalCode, countryCode )
+			return businessAddressPage
+				.enterBusinessAddressAndSubmit(
+					businessName,
+					address,
+					city,
+					stateCode,
+					postalCode,
+					countryCode
+				)
 				.then( () => businessAddressPage.selectContinue() );
 		} );
 
@@ -195,183 +212,235 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 
 		test.it( 'Can see onboarding summary page', function() {
 			const summaryPage = new SummaryPage( driver );
-			return summaryPage.countToDoSteps()
-				.then( toDoCount => assert.equal( toDoCount, 1, 'Expected and actual steps are not equal.' ) )
+			return summaryPage
+				.countToDoSteps()
+				.then( toDoCount =>
+					assert.equal( toDoCount, 1, 'Expected and actual steps are not equal.' )
+				)
 				.then( () => summaryPage.selectVisitSite() );
 		} );
 
 		test.it( 'Can see site home page', function() {
 			const viewSitePage = new ViewSitePage( driver );
 			const widgetContactInfoComponent = new WidgetContactInfoComponent( driver );
-			const businessAddress = [ address, city, stateCode, postalCode, countryCode];
-			return viewSitePage.siteTitle()
-				.then( title => assert.equal( title.toUpperCase(), blogTitle.toUpperCase(), 'Site title not is not correct' ) )
+			const businessAddress = [ address, city, stateCode, postalCode, countryCode ];
+			return viewSitePage
+				.siteTitle()
+				.then( title =>
+					assert.equal(
+						title.toUpperCase(),
+						blogTitle.toUpperCase(),
+						'Site title not is not correct'
+					)
+				)
 				.then( () => viewSitePage.siteTagline() )
 				.then( tagline => assert.equal( tagline, blogTagline, 'Site tagline not is not correct' ) )
 				.then( () => widgetContactInfoComponent.getName() )
-				.then( siteBusinessName => assert.equal( siteBusinessName.toUpperCase(), businessName.toUpperCase(), 'Business name not found on page' ) )
+				.then( siteBusinessName =>
+					assert.equal(
+						siteBusinessName.toUpperCase(),
+						businessName.toUpperCase(),
+						'Business name not found on page'
+					)
+				)
 				.then( () => widgetContactInfoComponent.getAddress() )
-				.then( siteBusinessAddress => assert.equal( siteBusinessAddress, businessAddress.join( ' ' ), 'Business address not found on page' ) );
+				.then( siteBusinessAddress =>
+					assert.equal(
+						siteBusinessAddress,
+						businessAddress.join( ' ' ),
+						'Business address not found on page'
+					)
+				);
 		} );
 	} );
 
-	test.describe( 'Onboard business site with static homepage when already logged in to WordPress: @parallel @jetpack', function() {
-		this.bailSuite( true );
-		const blogTitle = dataHelper.randomPhrase();
-		const blogTagline = dataHelper.randomPhrase();
+	test.describe(
+		'Onboard business site with static homepage when already logged in to WordPress: @parallel @jetpack',
+		function() {
+			this.bailSuite( true );
+			const blogTitle = dataHelper.randomPhrase();
+			const blogTagline = dataHelper.randomPhrase();
 
-		test.before( function() {
-			return driverManager.ensureNotLoggedIn( driver );
-		} );
+			test.before( function() {
+				return driverManager.ensureNotLoggedIn( driver );
+			} );
 
-		test.it( 'Can login into WordPress.com', function() {
-			const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
-			return loginFlow.login();
-		} );
+			test.it( 'Can login into WordPress.com', function() {
+				const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
+				return loginFlow.login();
+			} );
 
-		test.it( 'Can create wporg site', function() {
-			this.jnFlow = new JetpackConnectFlow( driver, null );
-			return this.jnFlow.createJNSite();
-		} );
+			test.it( 'Can create wporg site', function() {
+				this.jnFlow = new JetpackConnectFlow( driver, null );
+				return this.jnFlow.createJNSite();
+			} );
 
-		test.it( 'Can navigate to onboarding flow', function() {
-			return driver.get( this.jnFlow.url + onboardingUrlExt );
-		} );
+			test.it( 'Can navigate to onboarding flow', function() {
+				return driver.get( this.jnFlow.url + onboardingUrlExt );
+			} );
 
-		test.it( 'Can fill out site title and tagline', function() {
-			const siteTitleTaglinePage = new SiteTitleTaglinePage( driver );
-			siteTitleTaglinePage.enterTitle( blogTitle );
-			siteTitleTaglinePage.enterTagline( blogTagline );
-			return siteTitleTaglinePage.selectContinue();
-		} );
+			test.it( 'Can fill out site title and tagline', function() {
+				const siteTitleTaglinePage = new SiteTitleTaglinePage( driver );
+				siteTitleTaglinePage.enterTitle( blogTitle );
+				siteTitleTaglinePage.enterTagline( blogTagline );
+				return siteTitleTaglinePage.selectContinue();
+			} );
 
-		test.it( 'Can select Business Site', function() {
-			return new SiteTypePage( driver ).selectBusinessSite();
-		} );
+			test.it( 'Can select Business Site', function() {
+				return new SiteTypePage( driver ).selectBusinessSite();
+			} );
 
-		test.it( 'Can select static homepage', function() {
-			return new SetHomepagePage( driver ).selectPage();
-		} );
+			test.it( 'Can select static homepage', function() {
+				return new SetHomepagePage( driver ).selectPage();
+			} );
 
-		test.it( 'Can skip add a contact form', function() {
-			return new WizardNavigationComponent( driver ).skipStep();
-		} );
+			test.it( 'Can skip add a contact form', function() {
+				return new WizardNavigationComponent( driver ).skipStep();
+			} );
 
-		test.it( 'Can skip add a business address', function() {
-			return new WizardNavigationComponent( driver ).skipStep();
-		} );
+			test.it( 'Can skip add a business address', function() {
+				return new WizardNavigationComponent( driver ).skipStep();
+			} );
 
-		test.it( 'Can make business an online store', function() {
-			return new InstallWooCommercePage( driver ).selectSellOnline();
-		} );
+			test.it( 'Can make business an online store', function() {
+				return new InstallWooCommercePage( driver ).selectSellOnline();
+			} );
 
-		test.it( 'Can select activate on activate stats page', function() {
-			return new ActivateStatsPage( driver ).selectActivateStats();
-		} );
+			test.it( 'Can select activate on activate stats page', function() {
+				return new ActivateStatsPage( driver ).selectActivateStats();
+			} );
 
-		test.it( 'Can approve connection on the authorization page', function() {
-			return new JetpackAuthorizePage( driver ).approveConnection();
-		} );
+			test.it( 'Can approve connection on the authorization page', function() {
+				return new JetpackAuthorizePage( driver ).approveConnection();
+			} );
 
-		test.it( 'Can select activate on activate stats page', function() {
-			return new ActivateStatsPage( driver ).selectContinue();
-		} );
+			test.it( 'Can select activate on activate stats page', function() {
+				return new ActivateStatsPage( driver ).selectContinue();
+			} );
 
-		test.it( 'Can see onboarding summary page', function() {
-			const summaryPage = new SummaryPage( driver );
-			return summaryPage.countToDoSteps()
-				.then( toDoCount => assert.equal( toDoCount, 2, 'Expected and actual steps are not equal.' ) )
-				.then( () => summaryPage.selectVisitSite() );
-		} );
+			test.it( 'Can see onboarding summary page', function() {
+				const summaryPage = new SummaryPage( driver );
+				return summaryPage
+					.countToDoSteps()
+					.then( toDoCount =>
+						assert.equal( toDoCount, 2, 'Expected and actual steps are not equal.' )
+					)
+					.then( () => summaryPage.selectVisitSite() );
+			} );
 
-		test.it( 'Can see site home page', function() {
-			const viewSitePage = new ViewSitePage( driver );
-			return viewSitePage.siteTitle()
-				.then( title => assert.equal( title.toUpperCase(), blogTitle.toUpperCase(), 'Site title not is not correct' ) )
-				.then( () => viewSitePage.siteTagline() )
-				.then( tagline => assert.equal( tagline, blogTagline, 'Site tagline not is not correct' ) );
-		} );
-	} );
+			test.it( 'Can see site home page', function() {
+				const viewSitePage = new ViewSitePage( driver );
+				return viewSitePage
+					.siteTitle()
+					.then( title =>
+						assert.equal(
+							title.toUpperCase(),
+							blogTitle.toUpperCase(),
+							'Site title not is not correct'
+						)
+					)
+					.then( () => viewSitePage.siteTagline() )
+					.then( tagline =>
+						assert.equal( tagline, blogTagline, 'Site tagline not is not correct' )
+					);
+			} );
+		}
+	);
 
-	test.describe( 'Onboard personal site that has already been connected: @parallel @jetpack', function() {
-		this.bailSuite( true );
-		const blogTitle = dataHelper.randomPhrase();
-		const blogTagline = dataHelper.randomPhrase();
+	test.describe(
+		'Onboard personal site that has already been connected: @parallel @jetpack',
+		function() {
+			this.bailSuite( true );
+			const blogTitle = dataHelper.randomPhrase();
+			const blogTagline = dataHelper.randomPhrase();
 
-		test.before( function() {
-			return driverManager.ensureNotLoggedIn( driver );
-		} );
+			test.before( function() {
+				return driverManager.ensureNotLoggedIn( driver );
+			} );
 
-		test.it( 'Can create wporg site', function() {
-			this.jnFlow = new JetpackConnectFlow( driver, null );
-			return this.jnFlow.createJNSite();
-		} );
+			test.it( 'Can create wporg site', function() {
+				this.jnFlow = new JetpackConnectFlow( driver, null );
+				return this.jnFlow.createJNSite();
+			} );
 
-		test.it( 'Can navigate to the Jetpack dashboard', function() {
-			return new WPAdminSidebar( driver ).selectJetpack();
-		} );
+			test.it( 'Can navigate to the Jetpack dashboard', function() {
+				return new WPAdminSidebar( driver ).selectJetpack();
+			} );
 
-		test.it( 'Can click the Connect Jetpack button', function() {
-			return new WPAdminJetpackPage( driver ).connectWordPressCom();
-		} );
+			test.it( 'Can click the Connect Jetpack button', function() {
+				return new WPAdminJetpackPage( driver ).connectWordPressCom();
+			} );
 
-		test.it( 'Can login into WordPress.com', function() {
-			const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
-			return loginFlow.loginUsingExistingForm();
-		} );
+			test.it( 'Can login into WordPress.com', function() {
+				const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
+				return loginFlow.loginUsingExistingForm();
+			} );
 
-		test.it( 'Can approve connection on the authorization page', function() {
-			return new JetpackAuthorizePage( driver ).approveConnection();
-		} );
+			test.it( 'Can approve connection on the authorization page', function() {
+				return new JetpackAuthorizePage( driver ).approveConnection();
+			} );
 
-		test.it( 'Can click the free plan button', function() {
-			return new PickAPlanPage( driver ).selectFreePlanJetpack();
-		} );
+			test.it( 'Can click the free plan button', function() {
+				return new PickAPlanPage( driver ).selectFreePlanJetpack();
+			} );
 
-		test.it( 'Can navigate to onboarding flow', function() {
-			return driver.get( this.jnFlow.url + onboardingUrlExt );
-		} );
+			test.it( 'Can navigate to onboarding flow', function() {
+				return driver.get( this.jnFlow.url + onboardingUrlExt );
+			} );
 
-		test.it( 'Can fill out site title and tagline', function() {
-			const siteTitleTaglinePage = new SiteTitleTaglinePage( driver );
-			siteTitleTaglinePage.enterTitle( blogTitle );
-			siteTitleTaglinePage.enterTagline( blogTagline );
-			return siteTitleTaglinePage.selectContinue();
-		} );
+			test.it( 'Can fill out site title and tagline', function() {
+				const siteTitleTaglinePage = new SiteTitleTaglinePage( driver );
+				siteTitleTaglinePage.enterTitle( blogTitle );
+				siteTitleTaglinePage.enterTagline( blogTagline );
+				return siteTitleTaglinePage.selectContinue();
+			} );
 
-		test.it( 'Can select personal Site', function() {
-			return new SiteTypePage( driver ).selectPersonalSite();
-		} );
+			test.it( 'Can select personal Site', function() {
+				return new SiteTypePage( driver ).selectPersonalSite();
+			} );
 
-		test.it( 'Can select posts homepage', function() {
-			return new SetHomepagePage( driver ).selectPosts();
-		} );
+			test.it( 'Can select posts homepage', function() {
+				return new SetHomepagePage( driver ).selectPosts();
+			} );
 
-		test.it( 'Can select add a contact form', function() {
-			return new ContactFormPage( driver ).selectAddContactForm();
-		} );
+			test.it( 'Can select add a contact form', function() {
+				return new ContactFormPage( driver ).selectAddContactForm();
+			} );
 
-		test.it( 'Can continue on add a contact form', function() {
-			return new ContactFormPage( driver ).selectContinue();
-		} );
+			test.it( 'Can continue on add a contact form', function() {
+				return new ContactFormPage( driver ).selectContinue();
+			} );
 
-		test.it( 'Can select continue on activate stats page', function() {
-			return new ActivateStatsPage( driver ).selectContinue();
-		} );
+			test.it( 'Can select continue on activate stats page', function() {
+				return new ActivateStatsPage( driver ).selectContinue();
+			} );
 
-		test.it( 'Can see onboarding summary page', function() {
-			const summaryPage = new SummaryPage( driver );
-			return new SummaryPage( driver ).countToDoSteps()
-				.then( toDoCount => assert.equal( toDoCount, 0, 'Expected and actual steps are not equal.' ) )
-				.then( () => summaryPage.selectVisitSite() );
-		} );
+			test.it( 'Can see onboarding summary page', function() {
+				const summaryPage = new SummaryPage( driver );
+				return new SummaryPage( driver )
+					.countToDoSteps()
+					.then( toDoCount =>
+						assert.equal( toDoCount, 0, 'Expected and actual steps are not equal.' )
+					)
+					.then( () => summaryPage.selectVisitSite() );
+			} );
 
-		test.it( 'Can see site home page', function() {
-			const viewSitePage = new ViewSitePage( driver );
-			return viewSitePage.siteTitle()
-				.then( title => assert.equal( title.toUpperCase(), blogTitle.toUpperCase(), 'Site title not is not correct' ) )
-				.then( () => viewSitePage.siteTagline() )
-				.then( tagline => assert.equal( tagline, blogTagline, 'Site tagline not is not correct' ) );
-		} );
-	} );
+			test.it( 'Can see site home page', function() {
+				const viewSitePage = new ViewSitePage( driver );
+				return viewSitePage
+					.siteTitle()
+					.then( title =>
+						assert.equal(
+							title.toUpperCase(),
+							blogTitle.toUpperCase(),
+							'Site title not is not correct'
+						)
+					)
+					.then( () => viewSitePage.siteTagline() )
+					.then( tagline =>
+						assert.equal( tagline, blogTagline, 'Site tagline not is not correct' )
+					);
+			} );
+		}
+	);
 } );
