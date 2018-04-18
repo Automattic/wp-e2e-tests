@@ -4,7 +4,7 @@ jobs:
     parallelism: 2
     working_directory: ~/wp-e2e-tests
     docker:
-      - image: circleci/node:8.9.4-browsers
+      - image: circleci/node:8.11.0-browsers
         environment:
           NODE_ENV: test
           NODE_CONFIG: {}

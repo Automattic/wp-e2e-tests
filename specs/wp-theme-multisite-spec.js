@@ -1,3 +1,5 @@
+/** @format */
+
 import test from 'selenium-webdriver/testing';
 import { assert } from 'chai';
 
@@ -28,7 +30,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Themes: All sites (${screenSize})`, function() {
+test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 	test.describe( 'Preview a theme @parallel', function() {
 		this.bailSuite( true );
 		this.timeout( mochaTimeOut );
@@ -60,7 +62,9 @@ test.describe( `[${host}] Themes: All sites (${screenSize})`, function() {
 			} );
 
 			test.it( 'should show a menu', function() {
-				this.themesPage.popOverMenuDisplayed().then( ( displayed ) => assert( displayed, true, 'Popover menu not displayed' ) );
+				this.themesPage
+					.popOverMenuDisplayed()
+					.then( displayed => assert( displayed, true, 'Popover menu not displayed' ) );
 			} );
 
 			test.describe( 'when "Try & Customize" is clicked', function() {
@@ -83,7 +87,7 @@ test.describe( `[${host}] Themes: All sites (${screenSize})`, function() {
 
 					test.it( 'should open the customizer with the selected site and theme', function( done ) {
 						this.customizerPage = new CustomizerPage( driver );
-						driver.getCurrentUrl().then( ( url ) => {
+						driver.getCurrentUrl().then( url => {
 							assert.include( url, this.siteSelector.selectedSiteDomain, 'Wrong site domain' );
 							assert.include( url, this.themeSearchName, 'Wrong theme' );
 							done();
@@ -121,7 +125,7 @@ test.describe( `[${host}] Themes: All sites (${screenSize})`, function() {
 			this.themesPage.searchFor( this.themeSearchName );
 			this.themesPage.waitForThemeStartingWith( this.expectedTheme );
 
-			this.themesPage.getFirstThemeName().then( ( name ) => {
+			this.themesPage.getFirstThemeName().then( name => {
 				this.currentThemeName = name;
 			} );
 		} );
@@ -132,13 +136,15 @@ test.describe( `[${host}] Themes: All sites (${screenSize})`, function() {
 			} );
 
 			test.it( 'should show a menu', function() {
-				this.themesPage.popOverMenuDisplayed().then( ( displayed ) => assert( displayed, true, 'Popover menu not displayed' ) );
+				this.themesPage
+					.popOverMenuDisplayed()
+					.then( displayed => assert( displayed, true, 'Popover menu not displayed' ) );
 			} );
 
 			test.describe( 'when Activate is clicked', function() {
 				test.it( 'can click activate', function() {
 					this.themesPage.clickPopoverItem( 'Activate' );
-					return this.siteSelector = new SiteSelectorComponent( driver );
+					return ( this.siteSelector = new SiteSelectorComponent( driver ) );
 				} );
 
 				test.it( 'shows the site selector', function() {
@@ -162,7 +168,7 @@ test.describe( `[${host}] Themes: All sites (${screenSize})`, function() {
 						this.themeDetailPage = new ThemeDetailPage( driver );
 						this.themeDetailPage.goBackToAllThemes();
 						this.currentThemeComponent = new CurrentThemeComponent( driver );
-						return this.currentThemeComponent.getThemeName().then( ( name ) => {
+						return this.currentThemeComponent.getThemeName().then( name => {
 							return assert.equal( name, this.currentThemeName );
 						} );
 					} );
@@ -170,7 +176,7 @@ test.describe( `[${host}] Themes: All sites (${screenSize})`, function() {
 					test.it( 'should highlight the current theme as active', function() {
 						this.themesPage.showOnlyFreeThemes();
 						this.themesPage.searchFor( this.themeSearchName );
-						return this.themesPage.getActiveThemeName().then( ( name ) => {
+						return this.themesPage.getActiveThemeName().then( name => {
 							return assert.equal( name, this.currentThemeName );
 						} );
 					} );

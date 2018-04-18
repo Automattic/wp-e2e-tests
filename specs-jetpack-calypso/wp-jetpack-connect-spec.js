@@ -1,3 +1,5 @@
+/** @format */
+
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 import assert from 'assert';
@@ -25,6 +27,12 @@ import PlansPage from '../lib/pages/plans-page';
 import LoginPage from '../lib/pages/login-page';
 import JetpackComPage from '../lib/pages/external/jetpackcom-page';
 import JetpackComFeaturesDesignPage from '../lib/pages/external/jetpackcom-features-design-page';
+import WooWizardSetupPage from '../lib/pages/woocommerce/wizard-setup-page';
+import WooWizardPaymentsPage from '../lib/pages/woocommerce/wizard-payments-page';
+import WooWizardShippingPage from '../lib/pages/woocommerce/wizard-shipping-page';
+import WooWizardExtrasPage from '../lib/pages/woocommerce/wizard-extras-page';
+import WooWizardJetpackPage from '../lib/pages/woocommerce/wizard-jetpack-page';
+import WooWizardReadyPage from '../lib/pages/woocommerce/wizard-ready-page';
 
 import * as driverManager from '../lib/driver-manager';
 import * as dataHelper from '../lib/data-helper';
@@ -59,7 +67,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can disconnect any expired sites', function() {
-			const jnFlow = new JetpackConnectFlow( driver );
+			const jnFlow = new JetpackConnectFlow( driver, 'jetpackConnectUser' );
 			return jnFlow.removeSites();
 		} );
 	} );
@@ -148,55 +156,58 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 	} );
 
-	test.describe( 'Connect From Calypso, when Jetpack not installed: @parallel @jetpack', function() {
-		this.bailSuite( true );
+	test.describe(
+		'Connect From Calypso, when Jetpack not installed: @parallel @jetpack',
+		function() {
+			this.bailSuite( true );
 
-		test.before( function() {
-			return driverManager.ensureNotLoggedIn( driver );
-		} );
+			test.before( function() {
+				return driverManager.ensureNotLoggedIn( driver );
+			} );
 
-		test.it( 'Can create wporg site', function() {
-			this.jnFlow = new JetpackConnectFlow( driver, null, 'noJetpack' );
-			return this.jnFlow.createJNSite();
-		} );
+			test.it( 'Can create wporg site', function() {
+				this.jnFlow = new JetpackConnectFlow( driver, null, 'noJetpack' );
+				return this.jnFlow.createJNSite();
+			} );
 
-		test.it( 'Can log in', function() {
-			const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
-			return loginFlow.loginAndSelectMySite();
-		} );
+			test.it( 'Can log in', function() {
+				const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
+				return loginFlow.loginAndSelectMySite();
+			} );
 
-		test.it( 'Can add new site', function() {
-			this.sidebarComponent = new SidebarComponent( driver );
-			this.sidebarComponent.addNewSite();
-			const addNewSitePage = new AddNewSitePage( driver );
-			return addNewSitePage.addSiteUrl( this.jnFlow.url );
-		} );
+			test.it( 'Can add new site', function() {
+				this.sidebarComponent = new SidebarComponent( driver );
+				this.sidebarComponent.addNewSite();
+				const addNewSitePage = new AddNewSitePage( driver );
+				return addNewSitePage.addSiteUrl( this.jnFlow.url );
+			} );
 
-		test.it( 'Can click Install Jetpack button in the instructions page', function() {
-			this.jetpackConnectInstall = new JetpackConnectInstallPage( driver );
-			return this.jetpackConnectInstall.clickInstallButton();
-		} );
+			test.it( 'Can click Install Jetpack button in the instructions page', function() {
+				this.jetpackConnectInstall = new JetpackConnectInstallPage( driver );
+				return this.jetpackConnectInstall.clickInstallButton();
+			} );
 
-		test.it( 'Can click the install button in the wp-admin plugin iframe', function() {
-			const wpAdminPluginPopup = new WPAdminPluginPopup( driver );
-			return wpAdminPluginPopup.installPlugin();
-		} );
+			test.it( 'Can click the install button in the wp-admin plugin iframe', function() {
+				const wpAdminPluginPopup = new WPAdminPluginPopup( driver );
+				return wpAdminPluginPopup.installPlugin();
+			} );
 
-		test.it( 'Can click the plugin Activate button in the wp-admin updates page', function() {
-			const wpAdminUpdatesPage = new WPAdminUpdatesPage( driver );
-			return wpAdminUpdatesPage.activatePlugin();
-		} );
+			test.it( 'Can click the plugin Activate button in the wp-admin updates page', function() {
+				const wpAdminUpdatesPage = new WPAdminUpdatesPage( driver );
+				return wpAdminUpdatesPage.activatePlugin();
+			} );
 
-		test.it( 'Can click the Connect Jetpack button', function() {
-			this.wpAdminPluginsPage = new WPAdminPluginsPage( driver );
-			return this.wpAdminPluginsPage.connectJetpackAfterActivation();
-		} );
+			test.it( 'Can click the Connect Jetpack button', function() {
+				this.wpAdminPluginsPage = new WPAdminPluginsPage( driver );
+				return this.wpAdminPluginsPage.connectJetpackAfterActivation();
+			} );
 
-		test.it( 'Can click the free plan button', function() {
-			this.pickAPlanPage = new PickAPlanPage( driver );
-			return this.pickAPlanPage.selectFreePlanJetpack();
-		} );
-	} );
+			test.it( 'Can click the free plan button', function() {
+				this.pickAPlanPage = new PickAPlanPage( driver );
+				return this.pickAPlanPage.selectFreePlanJetpack();
+			} );
+		}
+	);
 
 	test.describe( 'Connect from Jetpack.com using free plan: @parallel @jetpack', function() {
 		this.bailSuite( true );
@@ -248,7 +259,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		test.it( 'Can log into WP.com', function() {
 			const user = dataHelper.getAccountConfig( 'jetpackConnectUser' );
 			const loginPage = new LoginPage( driver );
-			return loginPage.login( user[0], user[1] );
+			return loginPage.login( user[ 0 ], user[ 1 ] );
 		} );
 
 		test.it( 'Can confirm that current plan is Free', function() {
@@ -267,10 +278,14 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		test.it( 'Can register new Subscriber user', () => {
 			this.emailAddress = dataHelper.getEmailAddress( dataHelper.getNewBlogName(), signupInboxId );
 			this.password = config.get( 'passwordForNewTestSignUps' );
-			this.signupFlow = new SignUpFlow( driver, {emailAddress: this.emailAddress, password: this.password} );
-			return this.signupFlow.signupFreePlan()
-			.then( () => this.signupFlow.activateAccount() )
-			.then( () => driverManager.ensureNotLoggedIn( driver ) );
+			this.signupFlow = new SignUpFlow( driver, {
+				emailAddress: this.emailAddress,
+				password: this.password,
+			} );
+			return this.signupFlow
+				.signupFreePlan()
+				.then( () => this.signupFlow.activateAccount() )
+				.then( () => driverManager.ensureNotLoggedIn( driver ) );
 		} );
 
 		test.it( 'Can log into WordPress.com', () => {
@@ -284,17 +299,18 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 
 		test.it( 'Add new user as Subscriber in wp-admin', () => {
 			const wpAdminSidebar = new WPAdminSidebar( driver );
-			return wpAdminSidebar.selectAddNewUser()
-			.then( () => {
+			return wpAdminSidebar.selectAddNewUser().then( () => {
 				const newUserPage = new WPAdminNewUserPage( driver );
 				return newUserPage.addUser( this.emailAddress );
 			} );
 		} );
 
 		test.it( 'Log out from WP Admin', () => {
-			return driverManager.ensureNotLoggedIn( driver )
-			.then( () => {
-				const wpAdminDashboardPage = new WPAdminDashboardPage( driver, dataHelper.getJetpackSiteName() );
+			return driverManager.ensureNotLoggedIn( driver ).then( () => {
+				const wpAdminDashboardPage = new WPAdminDashboardPage(
+					driver,
+					dataHelper.getJetpackSiteName()
+				);
 				wpAdminDashboardPage.logout();
 			} );
 		} );
@@ -305,180 +321,265 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can login via SSO into WP Admin', () => {
-			const loginPage = new WPAdminLogonPage( driver, dataHelper.getJetpackSiteName(), { visit: true } );
-			return loginPage.logonSSO()
-			.then( () => {
-				let jetpackAuthPage = new JetpackAuthorizePage( driver );
-				jetpackAuthPage.approveSSOConnection();
-			} )
-			.then( () => new WPAdminDashboardPage( driver ) );
+			const loginPage = new WPAdminLogonPage( driver, dataHelper.getJetpackSiteName(), {
+				visit: true,
+			} );
+			return loginPage
+				.logonSSO()
+				.then( () => {
+					let jetpackAuthPage = new JetpackAuthorizePage( driver );
+					jetpackAuthPage.approveSSOConnection();
+				} )
+				.then( () => new WPAdminDashboardPage( driver ) );
 		} );
 	} );
 
-	test.describe( 'Connect from Jetpack.com using "Install Jetpack" button: @parallel @jetpack', function() {
-		this.bailSuite( true );
+	test.describe(
+		'Connect from Jetpack.com using "Install Jetpack" button: @parallel @jetpack',
+		function() {
+			this.bailSuite( true );
 
-		test.before( function() {
-			return driverManager.ensureNotLoggedIn( driver );
-		} );
+			test.before( function() {
+				return driverManager.ensureNotLoggedIn( driver );
+			} );
 
-		test.it( 'Can create wporg site', function() {
-			this.jnFlow = new JetpackConnectFlow( driver, null, 'noJetpack' );
-			return this.jnFlow.createJNSite();
-		} );
+			test.it( 'Can create wporg site', function() {
+				this.jnFlow = new JetpackConnectFlow( driver, null, 'noJetpack' );
+				return this.jnFlow.createJNSite();
+			} );
 
-		test.it( 'Can select Install Jetpack on Design Page', function() {
-			const jetpackComPage = new JetpackComFeaturesDesignPage( driver );
-			return jetpackComPage.installJetpack();
-		} );
+			test.it( 'Can select Install Jetpack on Design Page', function() {
+				const jetpackComPage = new JetpackComFeaturesDesignPage( driver );
+				return jetpackComPage.installJetpack();
+			} );
 
-		test.it( 'Can start connection flow using JN site', function() {
-			const connectPage = new JetpackConnectPage( driver );
-			return connectPage.addSiteUrl( this.jnFlow.url );
-		} );
+			test.it( 'Can start connection flow using JN site', function() {
+				const connectPage = new JetpackConnectPage( driver );
+				return connectPage.addSiteUrl( this.jnFlow.url );
+			} );
 
-		test.it( 'Can click Install Jetpack button in the instructions page', function() {
-			const jetpackConnectInstall = new JetpackConnectInstallPage( driver, false );
-			return jetpackConnectInstall.clickInstallButton();
-		} );
+			test.it( 'Can click Install Jetpack button in the instructions page', function() {
+				const jetpackConnectInstall = new JetpackConnectInstallPage( driver, false );
+				return jetpackConnectInstall.clickInstallButton();
+			} );
 
-		test.it( 'Can click the install button in the wp-admin plugin iframe', function() {
-			const wpAdminPluginPopup = new WPAdminPluginPopup( driver );
-			return wpAdminPluginPopup.installPlugin();
-		} );
+			test.it( 'Can click the install button in the wp-admin plugin iframe', function() {
+				const wpAdminPluginPopup = new WPAdminPluginPopup( driver );
+				return wpAdminPluginPopup.installPlugin();
+			} );
 
-		test.it( 'Can click the plugin Activate button in the wp-admin updates page', function() {
-			const wpAdminUpdatesPage = new WPAdminUpdatesPage( driver );
-			return wpAdminUpdatesPage.activatePlugin();
-		} );
+			test.it( 'Can click the plugin Activate button in the wp-admin updates page', function() {
+				const wpAdminUpdatesPage = new WPAdminUpdatesPage( driver );
+				return wpAdminUpdatesPage.activatePlugin();
+			} );
 
-		test.it( 'Can click the Connect Jetpack button', function() {
-			const wpAdminPluginsPage = new WPAdminPluginsPage( driver );
-			return wpAdminPluginsPage.connectJetpackAfterActivation();
-		} );
+			test.it( 'Can click the Connect Jetpack button', function() {
+				const wpAdminPluginsPage = new WPAdminPluginsPage( driver );
+				return wpAdminPluginsPage.connectJetpackAfterActivation();
+			} );
 
-		test.it( 'Can log into WP.com', function() {
-			const user = dataHelper.getAccountConfig( 'jetpackConnectUser' );
-			const loginPage = new LoginPage( driver );
-			return loginPage.login( user[0], user[1] );
-		} );
+			test.it( 'Can log into WP.com', function() {
+				const user = dataHelper.getAccountConfig( 'jetpackConnectUser' );
+				const loginPage = new LoginPage( driver );
+				return loginPage.login( user[ 0 ], user[ 1 ] );
+			} );
 
-		test.it( 'Can select free plan', function() {
-			const pickAPlanPage = new PickAPlanPage( driver );
-			return pickAPlanPage.selectFreePlan();
-		} );
+			test.it( 'Can select free plan', function() {
+				const pickAPlanPage = new PickAPlanPage( driver );
+				return pickAPlanPage.selectFreePlan();
+			} );
 
-		test.it( 'Can confirm that current plan is Free', function() {
-			const plansPage = new PlansPage( driver );
-			assert( plansPage.confirmCurrentPlan( 'free' ) );
-		} );
-	} );
+			test.it( 'Can confirm that current plan is Free', function() {
+				const plansPage = new PlansPage( driver );
+				assert( plansPage.confirmCurrentPlan( 'free' ) );
+			} );
+		}
+	);
 
-	test.describe( 'Connect from Jetpack.com Pricing page and buy paid plan: @parallel @jetpack', function() {
-		this.bailSuite( true );
+	test.describe(
+		'Connect from Jetpack.com Pricing page and buy paid plan: @parallel @jetpack',
+		function() {
+			this.bailSuite( true );
 
-		test.before( function() {
-			return driverManager.ensureNotLoggedIn( driver );
-		} );
+			test.before( function() {
+				return driverManager.ensureNotLoggedIn( driver );
+			} );
 
-		test.it( 'We can set the sandbox cookie for payments', function() {
-			return ( new WPHomePage( driver, { visit: true, culture: locale } ).setSandboxModeForPayments( sandboxCookieValue ) );
-		} );
+			test.it( 'We can set the sandbox cookie for payments', function() {
+				return new WPHomePage( driver, { visit: true, culture: locale } ).setSandboxModeForPayments(
+					sandboxCookieValue
+				);
+			} );
 
-		test.it( 'Can create wporg site', function() {
-			this.jnFlow = new JetpackConnectFlow( driver, null, 'noJetpack' );
-			return this.jnFlow.createJNSite();
-		} );
+			test.it( 'Can create wporg site', function() {
+				this.jnFlow = new JetpackConnectFlow( driver, null, 'noJetpack' );
+				return this.jnFlow.createJNSite();
+			} );
 
-		test.it( 'Can select buy Premium on Pricing Page', function() {
-			const jetpackComPage = new JetpackComPricingPage( driver );
-			return jetpackComPage.buyPremium();
-		} );
+			test.it( 'Can select buy Premium on Pricing Page', function() {
+				const jetpackComPage = new JetpackComPricingPage( driver );
+				return jetpackComPage.buyPremium();
+			} );
 
-		test.it( 'Can start connection flow using JN site', function() {
-			const connectPage = new JetpackConnectPage( driver );
-			return connectPage.addSiteUrl( this.jnFlow.url );
-		} );
+			test.it( 'Can start connection flow using JN site', function() {
+				const connectPage = new JetpackConnectPage( driver );
+				return connectPage.addSiteUrl( this.jnFlow.url );
+			} );
 
-		test.it( 'Can click Install Jetpack button in the instructions page', function() {
-			const jetpackConnectInstall = new JetpackConnectInstallPage( driver, false );
-			return jetpackConnectInstall.clickInstallButton();
-		} );
+			test.it( 'Can click Install Jetpack button in the instructions page', function() {
+				const jetpackConnectInstall = new JetpackConnectInstallPage( driver, false );
+				return jetpackConnectInstall.clickInstallButton();
+			} );
 
-		test.it( 'Can click the install button in the wp-admin plugin iframe', function() {
-			const wpAdminPluginPopup = new WPAdminPluginPopup( driver );
-			return wpAdminPluginPopup.installPlugin();
-		} );
+			test.it( 'Can click the install button in the wp-admin plugin iframe', function() {
+				const wpAdminPluginPopup = new WPAdminPluginPopup( driver );
+				return wpAdminPluginPopup.installPlugin();
+			} );
 
-		test.it( 'Can click the plugin Activate button in the wp-admin updates page', function() {
-			const wpAdminUpdatesPage = new WPAdminUpdatesPage( driver );
-			return wpAdminUpdatesPage.activatePlugin();
-		} );
+			test.it( 'Can click the plugin Activate button in the wp-admin updates page', function() {
+				const wpAdminUpdatesPage = new WPAdminUpdatesPage( driver );
+				return wpAdminUpdatesPage.activatePlugin();
+			} );
 
-		test.it( 'Can click the Connect Jetpack button', function() {
-			const wpAdminPluginsPage = new WPAdminPluginsPage( driver );
-			return wpAdminPluginsPage.connectJetpackAfterActivation();
-		} );
+			test.it( 'Can click the Connect Jetpack button', function() {
+				const wpAdminPluginsPage = new WPAdminPluginsPage( driver );
+				return wpAdminPluginsPage.connectJetpackAfterActivation();
+			} );
 
-		test.it( 'Can log into WP.com', function() {
-			const user = dataHelper.getAccountConfig( 'jetpackConnectUser' );
-			return ( new LoginPage( driver ).login( user[0], user[1] ) );
-		} );
+			test.it( 'Can log into WP.com', function() {
+				const user = dataHelper.getAccountConfig( 'jetpackConnectUser' );
+				return new LoginPage( driver ).login( user[ 0 ], user[ 1 ] );
+			} );
 
-		test.it( 'Can wait for Jetpack get connected', function() {
-			return ( new JetpackAuthorizePage( driver ).waitToDisappear() );
-		} );
+			test.it( 'Can wait for Jetpack get connected', function() {
+				return new JetpackAuthorizePage( driver ).waitToDisappear();
+			} );
 
-		test.it( 'Can see the secure payment page and enter/submit test payment details', function() {
-			const securePaymentComponent = new SecurePaymentComponent( driver );
-			securePaymentComponent.payWithStoredCardIfPossible( testCreditCardDetails );
-			securePaymentComponent.waitForCreditCardPaymentProcessing();
-			return securePaymentComponent.waitForPageToDisappear();
-		} );
+			test.it( 'Can see the secure payment page and enter/submit test payment details', function() {
+				const securePaymentComponent = new SecurePaymentComponent( driver );
+				securePaymentComponent.payWithStoredCardIfPossible( testCreditCardDetails );
+				securePaymentComponent.waitForCreditCardPaymentProcessing();
+				return securePaymentComponent.waitForPageToDisappear();
+			} );
 
-		test.it( 'Can see Premium Thank You page', function() {
-			assert( new CheckOutThankyouPage( driver ).isPremiumPlan() );
-		} );
-	} );
+			test.it( 'Can see Premium Thank You page', function() {
+				assert( new CheckOutThankyouPage( driver ).isPremiumPlan() );
+			} );
+		}
+	);
+
+	test.describe(
+		'Connect From WooCommerce plugin when Jetpack is not installed: @parallel @jetpack',
+		function() {
+			this.bailSuite( true );
+			const countryStateCode = 'US:CO';
+			const address = '2101 Blake St';
+			const address2 = '';
+			const city = 'Denver';
+			const postalCode = '80205';
+			const currency = 'USD';
+			const productType = 'physical';
+
+			test.before( function() {
+				return driverManager.ensureNotLoggedIn( driver );
+			} );
+
+			test.it( 'Can create wporg site', function() {
+				this.jnFlow = new JetpackConnectFlow( driver, null, 'wooCommerceNoJetpack' );
+				return this.jnFlow.createJNSite();
+			} );
+
+			test.it( 'Can enter WooCommerce Wizard', function() {
+				return new WPAdminDashboardPage( driver ).enterWooCommerceWizard();
+			} );
+
+			test.it( 'Can fill out and submit store information form', function() {
+				return new WooWizardSetupPage( driver ).enterStoreDetailsAndSubmit( {
+					countryStateCode,
+					address,
+					address2,
+					city,
+					postalCode,
+					currency,
+					productType,
+				} );
+			} );
+
+			test.it( 'Can continue through payments information', function() {
+				return new WooWizardPaymentsPage( driver ).selectContinue();
+			} );
+
+			test.it( 'Can continue through shipping information', function() {
+				return new WooWizardShippingPage( driver ).selectContinue();
+			} );
+
+			test.it( 'Can continue through extras information', function() {
+				return new WooWizardExtrasPage( driver ).selectContinue();
+			} );
+
+			test.it( 'Can activate Jetpack', function() {
+				return new WooWizardJetpackPage( driver ).selectContinueWithJetpack();
+			} );
+
+			test.it( 'Can log into WP.com', function() {
+				const user = dataHelper.getAccountConfig( 'jetpackConnectUser' );
+				return new LoginPage( driver ).login( user[ 0 ], user[ 1 ] );
+			} );
+
+			test.it( 'Can wait for Jetpack get connected', function() {
+				return new JetpackAuthorizePage( driver ).waitToDisappear();
+			} );
+
+			test.it( 'Can see the Woo wizard ready page', function() {
+				return new WooWizardReadyPage( driver );
+			} );
+		}
+	);
 
 	// This can be enabled when remote installations are live - should we switch the base url in the meantime to use wpcalypso.wordpress.com ?
-	test.xdescribe( 'Remote Installation Connect From Calypso, when Jetpack not installed: @parallel @jetpack', function() {
-		this.bailSuite( true );
-		let jnFlow;
+	test.xdescribe(
+		'Remote Installation Connect From Calypso, when Jetpack not installed: @parallel @jetpack',
+		function() {
+			this.bailSuite( true );
+			let jnFlow;
 
-		test.before( function() {
-			return driverManager.ensureNotLoggedIn( driver );
-		} );
+			test.before( function() {
+				return driverManager.ensureNotLoggedIn( driver );
+			} );
 
-		test.it( 'Can create wporg site', function() {
-			jnFlow = new JetpackConnectFlow( driver, null, 'noJetpack' );
-			return jnFlow.createJNSite();
-		} );
+			test.it( 'Can create wporg site', function() {
+				jnFlow = new JetpackConnectFlow( driver, null, 'noJetpack' );
+				return jnFlow.createJNSite();
+			} );
 
-		test.it( 'Can log in', function() {
-			return new LoginFlow( driver, 'jetpackConnectUser' ).loginAndSelectMySite();
-		} );
+			test.it( 'Can log in', function() {
+				return new LoginFlow( driver, 'jetpackConnectUser' ).loginAndSelectMySite();
+			} );
 
-		test.it( 'Can add new site', function() {
-			new SidebarComponent( driver ).addNewSite();
-			return new AddNewSitePage( driver ).addSiteUrl( jnFlow.url );
-		} );
+			test.it( 'Can add new site', function() {
+				new SidebarComponent( driver ).addNewSite();
+				return new AddNewSitePage( driver ).addSiteUrl( jnFlow.url );
+			} );
 
-		test.it( 'Can enter the Jetpack credentials and install Jetpack', function() {
-			const jetpackConnectAddCredentialsPage = new JetpackConnectAddCredentialsPage( driver );
-			return jetpackConnectAddCredentialsPage.enterDetailsAndConnect( jnFlow.username, jnFlow.password );
-		} );
+			test.it( 'Can enter the Jetpack credentials and install Jetpack', function() {
+				const jetpackConnectAddCredentialsPage = new JetpackConnectAddCredentialsPage( driver );
+				return jetpackConnectAddCredentialsPage.enterDetailsAndConnect(
+					jnFlow.username,
+					jnFlow.password
+				);
+			} );
 
-		test.it( 'Can wait for Jetpack get connected', function() {
-			return new JetpackAuthorizePage( driver, { overrideABTests: false } ).waitToDisappear();
-		} );
+			test.it( 'Can wait for Jetpack get connected', function() {
+				return new JetpackAuthorizePage( driver, { overrideABTests: false } ).waitToDisappear();
+			} );
 
-		test.it( 'Can click the free plan button', function() {
-			return new PickAPlanPage( driver ).selectFreePlanJetpack();
-		} );
+			test.it( 'Can click the free plan button', function() {
+				return new PickAPlanPage( driver ).selectFreePlanJetpack();
+			} );
 
-		test.it( 'Can then see the Jetpack plan page in Calypso', function() {
-			return new PlansPage( driver ).displayed();
-		} );
-	} );
+			test.it( 'Can then see the Jetpack plan page in Calypso', function() {
+				return new PlansPage( driver ).displayed();
+			} );
+		}
+	);
 } );

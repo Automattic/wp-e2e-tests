@@ -22,34 +22,39 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
     - [To run a specific suite of specs](docs/running-tests.md#to-run-a-specific-suite-of-specs)
     - [To run headlessly](docs/running-tests.md#to-run-headlessly)
     - [To run inside a Docker container](docs/running-tests.md#to-run-inside-a-docker-container)
-    - [Jetpack Tests on CircleCI](docs/running-tests.md#jetpack-tests-on-circleci)  
+    - [Jetpack Tests on CircleCI](docs/running-tests.md#jetpack-tests-on-circleci)
 - [Style Guide](docs/style-guide.md)
-- [Other information](#other-information)    
+- [Other information](#other-information)
   - [NodeJS Version](docs/miscellaneous.md#nodejs-version)
   - [Git Pre-Commit Hook](docs/miscellaneous.md#git-pre-commit-hook)
   - [Launch Logged-In Window](docs/miscellaneous.md#launch-logged-in-window)
+  - [User account requirements](docs/miscellaneous.md#user-account-requirements)
+  - [List of wrapper repos & friends](docs/miscellaneous.md#list-wrapper-repos)
 
 ## Pre-requisites
 
-
 ### Install NodeJS
 
-```
+```bash
 brew install node #MacOS
+```
 
 Or use [nvm](https://github.com/creationix/nvm) (Recommended)
-```
 
 ### Install dependencies
-```
+
+```bash
 npm install
 ```
 
 ### Configuration
+
 See the [configuration documentation](docs/config.md) for details on setting configuration values and environment variables.
 
 ## Running tests
+
 See the information on [how to run tests](docs/running-tests.md) where you'll find information on the flags and commands used to run the tests.
 
 ## Other information
+
 See the [other information](docs/miscellaneous.md) documentation for other details that may be of interest.

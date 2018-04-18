@@ -15,6 +15,7 @@
   "checkForConsoleErrors": false,
   "reportWarningsToSlack": false,
   "closeBrowserOnComplete": true,
+  "highlightElements": false,
   "sauceConfigurations": {
     "osx-chrome": {
         "browserName": "chrome",
@@ -57,28 +58,24 @@
   },
   "knownABTestKeys": [
     "businessPlanDescriptionAT",
-    "inlineHelpWithContactForm",
     "skipThemesSelectionModal",
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser",
-    "domainSuggestionTestV6",
-    "siteGoalsShuffle",
     "upgradePricingDisplayV2",
     "redesignedSidebarBanner",
-    "domainSearchPrefill",
-    "mobilePlansTablesOnSignup"
+    "mobilePlansTablesOnSignup",
+    "springSale30PercentOff",
+    "showMoneyBackGuarantee"
   ],
   "overrideABTests": [
-    [ "domainSuggestionTestV6_20180301", "group_0" ],
-    [ "inlineHelpWithContactForm_20180306", "inlinecontact" ],
     [ "upgradePricingDisplayV2_20180305", "original" ],
     [ "skipThemesSelectionModal_20170904", "show" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
-    [ "siteGoalsShuffle_20180214", "control" ],
     [ "redesignedSidebarBanner_20180222", "oldBanner" ],
     [ "businessPlanDescriptionAT_20170605", "original" ],
-    [ "domainSearchPrefill_20180315", "noPrefill" ],
-    [ "mobilePlansTablesOnSignup_20180320", "original" ]
+    [ "mobilePlansTablesOnSignup_20180330", "original" ],
+    [ "springSale30PercentOff_20180413", "control" ],
+    [ "showMoneyBackGuarantee_20180409", "no" ]
   ]
 }

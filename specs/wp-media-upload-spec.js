@@ -1,3 +1,5 @@
+/** @format */
+
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 
@@ -22,7 +24,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Editor: Media Upload (${screenSize}) @parallel @jetpack`, function() {
+test.describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Image Upload:', function() {
@@ -69,9 +71,11 @@ test.describe( `[${host}] Editor: Media Upload (${screenSize}) @parallel @jetpac
 				let fileDetails;
 
 				test.it( 'Create image file for upload', function() {
-					mediaHelper.createFileWithFilename( 'filewith#?#?reservedurlchars.jpg', true ).then( function( details ) {
-						fileDetails = details;
-					} );
+					mediaHelper
+						.createFileWithFilename( 'filewith#?#?reservedurlchars.jpg', true )
+						.then( function( details ) {
+							fileDetails = details;
+						} );
 				} );
 
 				test.it( 'Can upload an image', function() {

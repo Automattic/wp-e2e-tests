@@ -1,3 +1,5 @@
+/** @format */
+
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 import assert from 'assert';
@@ -35,7 +37,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 		driverManager.clearCookiesAndDeleteLocalStorage( driver );
 
 		let testEnvironment = 'WordPress.com';
-		let testName = `Reader [${global.browserName}] [${screenSize}]`;
+		let testName = `Reader [${ global.browserName }] [${ screenSize }]`;
 		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 	} );
 
@@ -53,8 +55,12 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 
 			test.it( 'The latest post is on the expected test site', function() {
 				const testSiteForNotifications = dataHelper.configGet( 'testSiteForNotifications' );
-				return this.readerPage.siteOfLatestPost().then( ( siteOfLatestPost ) => {
-					assert.equal( siteOfLatestPost, testSiteForNotifications, 'The latest post is not on the expected test site' );
+				return this.readerPage.siteOfLatestPost().then( siteOfLatestPost => {
+					assert.equal(
+						siteOfLatestPost,
+						testSiteForNotifications,
+						'The latest post is not on the expected test site'
+					);
 				} );
 			} );
 
@@ -75,23 +81,36 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 					return this.loginFlow.login();
 				} );
 
-				test.it( 'Can delete the new comment (and wait for UNDO grace period so it is actually deleted)', function() {
-					eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
-					this.navBarComponent = new NavbarComponent( driver );
-					this.navBarComponent.openNotifications();
-					this.notificationsComponent = new NotificationsComponent( driver );
-					this.notificationsComponent.selectCommentByText( this.comment );
-					this.notificationsComponent.trashComment();
-					this.notificationsComponent.waitForUndoMessage();
-					return this.notificationsComponent.waitForUndoMessageToDisappear();
-				} );
+				test.it(
+					'Can delete the new comment (and wait for UNDO grace period so it is actually deleted)',
+					function() {
+						eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
+						this.navBarComponent = new NavbarComponent( driver );
+						this.navBarComponent.openNotifications();
+						this.notificationsComponent = new NotificationsComponent( driver );
+						this.notificationsComponent.selectCommentByText( this.comment );
+						this.notificationsComponent.trashComment();
+						this.notificationsComponent.waitForUndoMessage();
+						return this.notificationsComponent.waitForUndoMessageToDisappear();
+					}
+				);
 
 				test.describe( 'Manage Followed Sites', function() {
 					test.it( 'Can see the Manage page', function() {
 						this.readerManagePage = new ReaderManagePage( driver, true );
 						this.readerManagePage.waitForSites();
-						eyesHelper.eyesScreenshot( driver, eyes, 'Manage - Recommended Sites', this.readerManagePage.recommendedSitesSection );
-						eyesHelper.eyesScreenshot( driver, eyes, 'Manage - Followed Sites', this.readerManagePage.followedSitesSection );
+						eyesHelper.eyesScreenshot(
+							driver,
+							eyes,
+							'Manage - Recommended Sites',
+							this.readerManagePage.recommendedSitesSection
+						);
+						eyesHelper.eyesScreenshot(
+							driver,
+							eyes,
+							'Manage - Followed Sites',
+							this.readerManagePage.followedSitesSection
+						);
 					} );
 				} );
 			} );
