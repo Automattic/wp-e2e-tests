@@ -24,7 +24,6 @@ import NoticesComponent from '../lib/components/notices-component.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
 import NoSitesComponent from '../lib/components/no-sites-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
-import SidebarComponent from '../lib/components/sidebar-component.js'
 
 import * as dataHelper from '../lib/data-helper.js';
 
@@ -95,8 +94,8 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Sends an invite', function() {
-				 this.invitePeoplePage.inviteSent().then( sent => {
-				 return assert.equal( sent, true, 'The sent confirmation message was not displayed' );
+				this.invitePeoplePage.inviteSent().then( sent => {
+					return assert.equal( sent, true, 'The sent confirmation message was not displayed' );
 				} );
 			} );
 
