@@ -1,3 +1,3 @@
 --require @babel/register
---require lib/before.js
+lib/before.js
 lib/after.js
