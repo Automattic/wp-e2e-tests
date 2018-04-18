@@ -61,14 +61,14 @@
     "skipThemesSelectionModal",
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser",
-    "upgradePricingDisplayV2",
+    "upgradePricingDisplayV3",
     "redesignedSidebarBanner",
     "mobilePlansTablesOnSignup",
     "springSale30PercentOff",
     "showMoneyBackGuarantee"
   ],
   "overrideABTests": [
-    [ "upgradePricingDisplayV2_20180305", "original" ],
+    [ "upgradePricingDisplayV3_20180402", "original" ],
     [ "skipThemesSelectionModal_20170904", "show" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
