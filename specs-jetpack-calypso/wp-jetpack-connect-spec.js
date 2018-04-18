@@ -156,59 +156,6 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 	} );
 
-	test.describe(
-		'Connect From Calypso, when Jetpack not installed: @parallel @jetpack',
-		function() {
-			this.bailSuite( true );
-
-			test.before( function() {
-				return driverManager.ensureNotLoggedIn( driver );
-			} );
-
-			test.it( 'Can create wporg site', function() {
-				this.jnFlow = new JetpackConnectFlow( driver, null, 'noJetpack' );
-				return this.jnFlow.createJNSite();
-			} );
-
-			test.it( 'Can log in', function() {
-				const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
-				return loginFlow.loginAndSelectMySite();
-			} );
-
-			test.it( 'Can add new site', function() {
-				this.sidebarComponent = new SidebarComponent( driver );
-				this.sidebarComponent.addNewSite();
-				const addNewSitePage = new AddNewSitePage( driver );
-				return addNewSitePage.addSiteUrl( this.jnFlow.url );
-			} );
-
-			test.it( 'Can click Install Jetpack button in the instructions page', function() {
-				this.jetpackConnectInstall = new JetpackConnectInstallPage( driver );
-				return this.jetpackConnectInstall.clickInstallButton();
-			} );
-
-			test.it( 'Can click the install button in the wp-admin plugin iframe', function() {
-				const wpAdminPluginPopup = new WPAdminPluginPopup( driver );
-				return wpAdminPluginPopup.installPlugin();
-			} );
-
-			test.it( 'Can click the plugin Activate button in the wp-admin updates page', function() {
-				const wpAdminUpdatesPage = new WPAdminUpdatesPage( driver );
-				return wpAdminUpdatesPage.activatePlugin();
-			} );
-
-			test.it( 'Can click the Connect Jetpack button', function() {
-				this.wpAdminPluginsPage = new WPAdminPluginsPage( driver );
-				return this.wpAdminPluginsPage.connectJetpackAfterActivation();
-			} );
-
-			test.it( 'Can click the free plan button', function() {
-				this.pickAPlanPage = new PickAPlanPage( driver );
-				return this.pickAPlanPage.selectFreePlanJetpack();
-			} );
-		}
-	);
-
 	test.describe( 'Connect from Jetpack.com using free plan: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
@@ -536,8 +483,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		}
 	);
 
-	// This can be enabled when remote installations are live - should we switch the base url in the meantime to use wpcalypso.wordpress.com ?
-	test.xdescribe(
+	test.describe(
 		'Remote Installation Connect From Calypso, when Jetpack not installed: @parallel @jetpack',
 		function() {
 			this.bailSuite( true );
