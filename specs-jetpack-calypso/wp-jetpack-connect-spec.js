@@ -367,7 +367,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can wait for Jetpack get connected', function() {
-				return new JetpackAuthorizePage( driver ).waitToDisappear();
+				return new JetpackAuthorizePage( driver, { overrideABTests: false } ).waitToDisappear();
 			} );
 
 			test.it( 'Can see the Woo wizard ready page', function() {
