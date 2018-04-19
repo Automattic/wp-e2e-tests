@@ -234,7 +234,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 			return signupFlow
 				.signupFreeAccount()
-				.then( () => this.signupFlow.activateAccount() )
+				.then( () => signupFlow.activateAccount() )
 				.then( () => driverManager.ensureNotLoggedIn( driver ) );
 		} );
 
