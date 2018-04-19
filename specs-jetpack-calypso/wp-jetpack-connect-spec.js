@@ -223,7 +223,6 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
-
 		test.it( 'Can register new Subscriber user', () => {
 			this.accountName = dataHelper.getNewBlogName();
 			this.emailAddress = dataHelper.getEmailAddress( this.accountName, signupInboxId );
@@ -233,7 +232,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 				emailAddress: this.emailAddress,
 				password: this.password,
 			} );
-			return this.signupFlow
+			return signupFlow
 				.signupFreeAccount()
 				.then( () => this.signupFlow.activateAccount() )
 				.then( () => driverManager.ensureNotLoggedIn( driver ) );
@@ -471,6 +470,52 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 
 			test.it( 'Can see the Woo wizard ready page', function() {
 				return new WooWizardReadyPage( driver );
+			} );
+		}
+	);
+
+	test.describe(
+		'Remote Installation Connect From Calypso, when Jetpack not installed: @parallel @jetpack',
+		function() {
+			this.bailSuite( true );
+			let jnFlow;
+
+			test.before( function() {
+				return driverManager.ensureNotLoggedIn( driver );
+			} );
+
+			test.it( 'Can create wporg site', function() {
+				jnFlow = new JetpackConnectFlow( driver, null, 'noJetpack' );
+				return jnFlow.createJNSite();
+			} );
+
+			test.it( 'Can log in', function() {
+				return new LoginFlow( driver, 'jetpackConnectUser' ).loginAndSelectMySite();
+			} );
+
+			test.it( 'Can add new site', function() {
+				new SidebarComponent( driver ).addNewSite();
+				return new AddNewSitePage( driver ).addSiteUrl( jnFlow.url );
+			} );
+
+			test.it( 'Can enter the Jetpack credentials and install Jetpack', function() {
+				const jetpackConnectAddCredentialsPage = new JetpackConnectAddCredentialsPage( driver );
+				return jetpackConnectAddCredentialsPage.enterDetailsAndConnect(
+					jnFlow.username,
+					jnFlow.password
+				);
+			} );
+
+			test.it( 'Can wait for Jetpack get connected', function() {
+				return new JetpackAuthorizePage( driver, { overrideABTests: false } ).waitToDisappear();
+			} );
+
+			test.it( 'Can click the free plan button', function() {
+				return new PickAPlanPage( driver ).selectFreePlanJetpack();
+			} );
+
+			test.it( 'Can then see the Jetpack plan page in Calypso', function() {
+				return new PlansPage( driver ).displayed();
 			} );
 		}
 	);
