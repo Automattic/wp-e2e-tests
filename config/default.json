@@ -61,14 +61,15 @@
     "skipThemesSelectionModal",
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser",
-    "upgradePricingDisplayV2",
+    "upgradePricingDisplayV3",
     "redesignedSidebarBanner",
     "mobilePlansTablesOnSignup",
     "springSale30PercentOff",
-    "showMoneyBackGuarantee"
+    "showMoneyBackGuarantee",
+    "multiyearSubscriptions"
   ],
   "overrideABTests": [
-    [ "upgradePricingDisplayV2_20180305", "original" ],
+    [ "upgradePricingDisplayV3_20180402", "original" ],
     [ "skipThemesSelectionModal_20170904", "show" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
@@ -76,6 +77,7 @@
     [ "businessPlanDescriptionAT_20170605", "original" ],
     [ "mobilePlansTablesOnSignup_20180330", "original" ],
     [ "springSale30PercentOff_20180413", "control" ],
-    [ "showMoneyBackGuarantee_20180409", "no" ]
+    [ "showMoneyBackGuarantee_20180409", "no" ],
+    [ "multiyearSubscriptions_20180417", "hide" ]
   ]
 }
