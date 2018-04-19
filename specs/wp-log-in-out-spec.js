@@ -33,9 +33,9 @@ let driver;
 
 let eyes = eyesHelper.eyesSetup( true );
 
-test.before( function() {
+test.before( async function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser();
+	driver = await driverManager.startBrowser();
 } );
 
 test.describe(
@@ -51,57 +51,55 @@ test.describe(
 		} );
 
 		test.describe( 'Logging In and Out:', function() {
-			test.before( function() {
-				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			test.before( async function() {
+				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			} );
 
 			test.describe( 'Can Log In', function() {
-				test.it( 'Can log in', function() {
+				test.it( 'Can log in', async function() {
 					let loginFlow = new LoginFlow( driver );
-					loginFlow.login( { screenshot: true }, eyes );
+					await loginFlow.login( { screenshot: true }, eyes );
 				} );
 
-				test.it( 'Can see Reader Page after logging in', function() {
+				test.it( 'Can see Reader Page after logging in', async function() {
 					let readerPage = new ReaderPage( driver );
-					readerPage.displayed().then( function( displayed ) {
-						assert.equal( displayed, true, 'The reader page is not displayed after log in' );
-					} );
+					let displayed = await readerPage.displayed();
+					assert.equal( displayed, true, 'The reader page is not displayed after log in' );
 				} );
 			} );
 
 			// Test Jetpack SSO
 			if ( host !== 'WPCOM' ) {
 				test.describe( 'Can Log via Jetpack SSO', function() {
-					test.it( 'Can log into site via Jetpack SSO', () => {
+					test.it( 'Can log into site via Jetpack SSO', async () => {
 						let loginFlow = new LoginFlow( driver );
-						return loginFlow.login( { jetpackSSO: true } );
+						return await loginFlow.login( { jetpackSSO: true } );
 					} );
 
-					test.it( 'Can return to Reader', () => {
+					test.it( 'Can return to Reader', async () => {
 						let readerPage = new ReaderPage( driver, true );
-						return readerPage.displayed();
+						return await readerPage.displayed();
 					} );
 				} );
 			}
 
 			test.describe( 'Can Log Out', function() {
-				test.it( 'Can view profile to log out', function() {
+				test.it( 'Can view profile to log out', async function() {
 					let navbarComponent = new NavbarComponent( driver );
-					navbarComponent.clickProfileLink();
+					await navbarComponent.clickProfileLink();
 				} );
 
-				test.it( 'Can logout from profile page', function() {
+				test.it( 'Can logout from profile page', async function() {
 					let profilePage = new ProfilePage( driver );
-					profilePage.waitForProfileLinks();
-					eyesHelper.eyesScreenshot( driver, eyes, 'Me Profile Page' );
-					profilePage.clickSignOut();
+					await profilePage.waitForProfileLinks();
+					await eyesHelper.eyesScreenshot( driver, eyes, 'Me Profile Page' );
+					await profilePage.clickSignOut();
 				} );
 
-				test.it( 'Can see wordpress.com home when after logging out', function() {
+				test.it( 'Can see wordpress.com home when after logging out', async function() {
 					const loggedOutMasterbarComponent = new LoggedOutMasterbarComponent( driver );
-					loggedOutMasterbarComponent.displayed().then( displayed => {
-						assert( displayed, "The logged out masterbar isn't displayed after logging out" );
-					} );
+					let displayed = await loggedOutMasterbarComponent.displayed();
+					assert( displayed, "The logged out masterbar isn't displayed after logging out" );
 				} );
 			} );
 		} );
@@ -403,8 +401,8 @@ test.describe(
 		// 	} );
 		// }
 
-		test.after( function() {
-			eyesHelper.eyesClose( eyes );
+		test.after( async function() {
+			await eyesHelper.eyesClose( eyes );
 		} );
 	}
 );
@@ -413,17 +411,16 @@ test.describe( `[${ host }] User Agent: (${ screenSize }) @parallel @jetpack`, f
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	test.before( async function() {
+		await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
-	test.it( 'Can see the correct user agent set', function() {
+	test.it( 'Can see the correct user agent set', async function() {
 		this.wpHomePage = new WPHomePage( driver, { visit: true } );
-		driver.executeScript( 'return navigator.userAgent;' ).then( userAgent => {
-			assert(
-				userAgent.match( 'wp-e2e-tests' ),
-				`User Agent does not contain 'wp-e2e-tests'.  [${ userAgent }]`
-			);
-		} );
+		let userAgent = await driver.executeScript( 'return navigator.userAgent;' );
+		assert(
+			userAgent.match( 'wp-e2e-tests' ),
+			`User Agent does not contain 'wp-e2e-tests'.  [${ userAgent }]`
+		);
 	} );
 } );
