@@ -153,55 +153,23 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 	} );
 
-	test.describe( 'Connect from Jetpack.com using free plan: @parallel @jetpack', function() {
+	test.describe( 'Pre-connect from Jetpack.com using free plan: @parallel @jetpack', function() {
 		this.bailSuite( true );
-		let jnFlow;
 
 		test.before( function() {
 			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.it( 'Can create wporg site', function() {
-			jnFlow = new JetpackConnectFlow( driver, null, 'noJetpack' );
-			return jnFlow.createJNSite();
-		} );
-
 		test.it( 'Can select Try it Free', function() {
-			const jetpackComPage = new JetpackComPage( driver );
-			return jetpackComPage.selectTryItFree();
+			return new JetpackComPage( driver ).selectTryItFree();
 		} );
 
 		test.it( 'Can select free plan', function() {
-			const pickAPlanPage = new PickAPlanPage( driver );
-			return pickAPlanPage.selectFreePlan();
+			return new PickAPlanPage( driver ).selectFreePlan();
 		} );
 
-		test.it( 'Can start connection flow using JN site', function() {
-			const connectPage = new JetpackConnectPage( driver );
-			return connectPage.addSiteUrl( jnFlow.url );
-		} );
-
-		test.it( 'Can enter the Jetpack credentials and install Jetpack', function() {
-			const jetpackConnectAddCredentialsPage = new JetpackConnectAddCredentialsPage( driver );
-			return jetpackConnectAddCredentialsPage.enterDetailsAndConnect(
-				jnFlow.username,
-				jnFlow.password
-			);
-		} );
-
-		test.it( 'Can wait for Jetpack get connected', function() {
-			return new JetpackAuthorizePage( driver, { overrideABTests: false } ).waitToDisappear();
-		} );
-
-		test.it( 'Can log into WP.com', function() {
-			const user = dataHelper.getAccountConfig( 'jetpackConnectUser' );
-			const loginPage = new LoginPage( driver );
-			return loginPage.login( user[ 0 ], user[ 1 ] );
-		} );
-
-		test.it( 'Can confirm that current plan is Free', function() {
-			const plansPage = new PlansPage( driver );
-			assert( plansPage.confirmCurrentPlan( 'free' ) );
+		test.it( 'Can see Jetpack connect page', function() {
+			return new JetpackConnectPage( driver, { overrideABTests: false } ).displayed();
 		} );
 	} );
 
@@ -263,53 +231,20 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 	} );
 
 	test.describe(
-		'Connect from Jetpack.com using "Install Jetpack" button: @parallel @jetpack',
+		'Pre-connect from Jetpack.com using "Install Jetpack" button: @parallel @jetpack',
 		function() {
 			this.bailSuite( true );
-			let jnFlow;
 
 			test.before( function() {
 				return driverManager.ensureNotLoggedIn( driver );
-			} );
-
-			test.it( 'Can create wporg site', function() {
-				jnFlow = new JetpackConnectFlow( driver, null, 'noJetpack' );
-				return jnFlow.createJNSite();
 			} );
 
 			test.it( 'Can select Install Jetpack on Design Page', function() {
 				return new JetpackComFeaturesDesignPage( driver ).installJetpack();
 			} );
 
-			test.it( 'Can start connection flow using JN site', function() {
-				return new JetpackConnectPage( driver ).addSiteUrl( jnFlow.url );
-			} );
-
-			test.it( 'Can enter the Jetpack credentials and install Jetpack', function() {
-				return new JetpackConnectAddCredentialsPage( driver ).enterDetailsAndConnect(
-					jnFlow.username,
-					jnFlow.password
-				);
-			} );
-
-			test.it( 'Can wait for Jetpack get connected', function() {
-				return new JetpackAuthorizePage( driver, { overrideABTests: false } ).waitToDisappear();
-			} );
-
-			test.it( 'Can log into WP.com', function() {
-				const user = dataHelper.getAccountConfig( 'jetpackConnectUser' );
-				const loginPage = new LoginPage( driver );
-				return loginPage.login( user[ 0 ], user[ 1 ] );
-			} );
-
-			test.it( 'Can select free plan', function() {
-				const pickAPlanPage = new PickAPlanPage( driver );
-				return pickAPlanPage.selectFreePlan();
-			} );
-
-			test.it( 'Can confirm that current plan is Free', function() {
-				const plansPage = new PlansPage( driver );
-				assert( plansPage.confirmCurrentPlan( 'free' ) );
+			test.it( 'Can see Jetpack connect page', function() {
+				return new JetpackConnectPage( driver, { overrideABTests: false } ).displayed();
 			} );
 		}
 	);
