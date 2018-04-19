@@ -223,7 +223,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			return driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.it( 'Can register new Subscriber user', () => {
+		test.it( 'Can register new Subscriber user', function() {
 			this.accountName = dataHelper.getNewBlogName();
 			this.emailAddress = dataHelper.getEmailAddress( this.accountName, signupInboxId );
 			this.password = config.get( 'passwordForNewTestSignUps' );
