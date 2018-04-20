@@ -478,11 +478,11 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				postEditorToolbarComponent.ensureSaved();
 				postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
-				postEditorToolbarComponent.waitForSuccessViewPostNotice();
-				return postEditorToolbarComponent.closeEditor();
+				return postEditorToolbarComponent.waitForSuccessViewPostNotice();
 			} );
 
 			test.it( 'Can see the post in the Activity log', function() {
+				new ReaderPage( driver, true ).displayed();
 				const sidebarComponent = new SidebarComponent( driver );
 				sidebarComponent.ensureSidebarMenuVisible();
 				sidebarComponent.selectStats();
