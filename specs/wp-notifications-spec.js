@@ -74,7 +74,7 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 			test.it( 'Can see the comment', async function() {
 				let shown = await this.viewPostPage.commentEventuallyShown( this.comment );
 				if ( shown === false ) {
-					slackNotifier.warn(
+					return slackNotifier.warn(
 						`Could not see newly added comment '${
 							this.comment
 						}' on blog page - most likely a refresh issue`
@@ -93,7 +93,7 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 						this.navBarComponent = new NavbarComponent( driver );
 						await this.navBarComponent.openNotificationsShortcut();
 						let present = await this.navBarComponent.confirmNotificationsOpen();
-						assert( present, 'Notifications tab is not open' );
+						return assert( present, 'Notifications tab is not open' );
 					} );
 
 					test.it( 'Can see the notification of the comment', async function() {
@@ -106,7 +106,7 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 						await this.notificationsComponent.selectComments();
 						let content = await this.notificationsComponent.allCommentsContent();
 						await eyesHelper.eyesScreenshot( driver, eyes, 'Notifications List' );
-						assert.equal(
+						return assert.equal(
 							content.includes( expectedContent ),
 							true,
 							`The actual notifications content '${ content }' does not contain expected content '${ expectedContent }'`
