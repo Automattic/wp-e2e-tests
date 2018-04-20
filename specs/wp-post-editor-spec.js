@@ -487,8 +487,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				sidebarComponent.ensureSidebarMenuVisible();
 				sidebarComponent.selectStats();
 				new StatsPage( driver ).openActivity();
-				const activityPage = new ActivityPage( driver );
-				return activityPage.postTitleDisplayed( blogPostTitle ).then( displayed => {
+				return new ActivityPage( driver ).postTitleDisplayed( blogPostTitle ).then( displayed => {
 					assert(
 						displayed,
 						`The published post title '${ blogPostTitle }' was not displayed in activity log after publishing`
