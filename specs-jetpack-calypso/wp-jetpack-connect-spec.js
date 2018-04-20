@@ -224,17 +224,16 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can register new Subscriber user', function() {
-			this.blogName = dataHelper.getNewBlogName();
-			this.emailAddress = dataHelper.getEmailAddress( this.blogName, signupInboxId );
+			this.accountName = dataHelper.getNewBlogName();
+			this.emailAddress = dataHelper.getEmailAddress( this.accountName, signupInboxId );
 			this.password = config.get( 'passwordForNewTestSignUps' );
-
 			const signupFlow = new SignUpFlow( driver, {
+				accountName: this.accountName,
 				emailAddress: this.emailAddress,
-				blogName: this.blogName,
 				password: this.password,
 			} );
 			return signupFlow
-				.signupFreePlan()
+				.signupFreeAccount()
 				.then( () => signupFlow.activateAccount() )
 				.then( () => driverManager.ensureNotLoggedIn( driver ) );
 		} );
@@ -260,7 +259,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can log in as Subscriber', function() {
-			return new LoginPage( driver, true ).login( this.blogName, this.password );
+			return new LoginPage( driver, true ).login( this.accountName, this.password );
 		} );
 
 		test.it( 'Can login via SSO into WP Admin', function() {
