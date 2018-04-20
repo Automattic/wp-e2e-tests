@@ -483,6 +483,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 			test.it( 'Can see the post in the Activity log', function() {
 				new ReaderPage( driver, true ).displayed();
+				new NavbarComponent( driver ).clickMySites();
 				const sidebarComponent = new SidebarComponent( driver );
 				sidebarComponent.ensureSidebarMenuVisible();
 				sidebarComponent.selectStats();
