@@ -106,8 +106,11 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 					this.peoplePage = new PeoplePage( driver );
 					this.peoplePage.selectInvites();
-					return this.peoplePage.pendingInviteLabelDisplayed().then( displayed => {
-						return assert.equal( displayed, true, 'The pending invite people page is not displayed' );
+					return this.peoplePage.getMostRecentPendingInviteEmail().then( mostRecentPendingInviteEmail => {
+						return assert.equal(
+							mostRecentPendingInviteEmail,
+							newInviteEmailAddress,
+							'The email address prefilled on the accept invite page is not correct' );
 					} );
 				}
 			);
@@ -331,8 +334,11 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 						this.peoplePage = new PeoplePage( driver );
 						this.peoplePage.selectInvites();
-						return this.peoplePage.pendingInviteLabelDisplayed().then( displayed => {
-							return assert.equal( displayed, true, 'The pending invite people page is not displayed' );
+						return this.peoplePage.getMostRecentPendingInviteEmail().then( mostRecentPendingInviteEmail => {
+							return assert.equal(
+								mostRecentPendingInviteEmail,
+								newInviteEmailAddress,
+								'The email address prefilled on the accept invite page is not correct' );
 						} );
 					}
 				);
@@ -557,8 +563,11 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 								this.peoplePage = new PeoplePage( driver );
 								this.peoplePage.selectInvites();
-								return this.peoplePage.pendingInviteLabelDisplayed().then( displayed => {
-									return assert.equal( displayed, true, 'The pending invite people page is not displayed' );
+								return this.peoplePage.getMostRecentPendingInviteEmail().then( mostRecentPendingInviteEmail => {
+									return assert.equal(
+										mostRecentPendingInviteEmail,
+										newInviteEmailAddress,
+										'The email address prefilled on the accept invite page is not correct' );
 								} );
 							}
 						);
@@ -827,8 +836,11 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 								this.peoplePage = new PeoplePage( driver );
 								this.peoplePage.selectInvites();
-								return this.peoplePage.pendingInviteLabelDisplayed().then( displayed => {
-									return assert.equal( displayed, true, 'The pending invite people page is not displayed' );
+								return this.peoplePage.getMostRecentPendingInviteEmail().then( mostRecentPendingInviteEmail => {
+									return assert.equal(
+										mostRecentPendingInviteEmail,
+										newInviteEmailAddress,
+										'The email address prefilled on the accept invite page is not correct' );
 								} );
 							}
 						);
