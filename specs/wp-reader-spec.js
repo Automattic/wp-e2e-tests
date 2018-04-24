@@ -24,17 +24,17 @@ let driver;
 
 let eyes = eyesHelper.eyesSetup( true );
 
-test.before( function() {
+test.before( async function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser();
+	driver = await driverManager.startBrowser();
 } );
 
 test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 	this.bailSuite( true );
 	this.timeout( mochaTimeOut );
 
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	test.before( async function() {
+		await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 
 		let testEnvironment = 'WordPress.com';
 		let testName = `Reader [${ global.browserName }] [${ screenSize }]`;
@@ -42,70 +42,68 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 	} );
 
 	test.describe( 'Log in as commenting user', function() {
-		test.it( 'Can log in as commenting user', function() {
+		test.it( 'Can log in as commenting user', async function() {
 			this.loginFlow = new LoginFlow( driver, 'commentingUser' );
-			return this.loginFlow.login();
+			return await this.loginFlow.login();
 		} );
 
 		test.describe( 'Leave a comment on the latest post in the Reader', function() {
-			test.it( 'Can see the Reader stream', function() {
+			test.it( 'Can see the Reader stream', async function() {
 				this.readerPage = new ReaderPage( driver );
-				return this.readerPage.waitForPage();
+				return await this.readerPage.waitForPage();
 			} );
 
-			test.it( 'The latest post is on the expected test site', function() {
+			test.it( 'The latest post is on the expected test site', async function() {
 				const testSiteForNotifications = dataHelper.configGet( 'testSiteForNotifications' );
-				return this.readerPage.siteOfLatestPost().then( siteOfLatestPost => {
-					assert.equal(
-						siteOfLatestPost,
-						testSiteForNotifications,
-						'The latest post is not on the expected test site'
-					);
-				} );
+				let siteOfLatestPost = await this.readerPage.siteOfLatestPost();
+				return assert.equal(
+					siteOfLatestPost,
+					testSiteForNotifications,
+					'The latest post is not on the expected test site'
+				);
 			} );
 
-			test.it( 'Can comment on the latest post', function() {
+			test.it( 'Can comment on the latest post', async function() {
 				this.comment = dataHelper.randomPhrase();
-				return this.readerPage.commentOnLatestPost( this.comment, eyes );
+				await this.readerPage.commentOnLatestPost( this.comment, eyes );
 			} );
 
 			test.describe( 'Delete the new comment', function() {
-				test.before( function() {
-					driverManager.clearCookiesAndDeleteLocalStorage( driver ).then( () => {
-						driver.get( dataHelper.configGet( 'calypsoBaseURL' ) );
-					} );
+				test.before( async function() {
+					await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+					driver.get( dataHelper.configGet( 'calypsoBaseURL' ) );
 				} );
 
-				test.it( 'Can log in as test site owner', function() {
+				test.it( 'Can log in as test site owner', async function() {
 					this.loginFlow = new LoginFlow( driver, 'notificationsUser' );
-					return this.loginFlow.login();
+					return await this.loginFlow.login();
 				} );
 
 				test.it(
 					'Can delete the new comment (and wait for UNDO grace period so it is actually deleted)',
-					function() {
-						eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
+					async function() {
+						await eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
 						this.navBarComponent = new NavbarComponent( driver );
-						this.navBarComponent.openNotifications();
+						await this.navBarComponent.openNotifications();
 						this.notificationsComponent = new NotificationsComponent( driver );
-						this.notificationsComponent.selectCommentByText( this.comment );
-						this.notificationsComponent.trashComment();
-						this.notificationsComponent.waitForUndoMessage();
-						return this.notificationsComponent.waitForUndoMessageToDisappear();
+						await this.notificationsComponent.selectCommentByText( this.comment );
+						await this.notificationsComponent.trashComment();
+						await this.notificationsComponent.waitForUndoMessage();
+						return await this.notificationsComponent.waitForUndoMessageToDisappear();
 					}
 				);
 
 				test.describe( 'Manage Followed Sites', function() {
-					test.it( 'Can see the Manage page', function() {
+					test.it( 'Can see the Manage page', async function() {
 						this.readerManagePage = new ReaderManagePage( driver, true );
-						this.readerManagePage.waitForSites();
-						eyesHelper.eyesScreenshot(
+						await this.readerManagePage.waitForSites();
+						await eyesHelper.eyesScreenshot(
 							driver,
 							eyes,
 							'Manage - Recommended Sites',
 							this.readerManagePage.recommendedSitesSection
 						);
-						eyesHelper.eyesScreenshot(
+						await eyesHelper.eyesScreenshot(
 							driver,
 							eyes,
 							'Manage - Followed Sites',
@@ -117,7 +115,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 		} );
 	} );
 
-	test.after( function() {
-		eyesHelper.eyesClose( eyes );
+	test.after( async function() {
+		await eyesHelper.eyesClose( eyes );
 	} );
 } );
