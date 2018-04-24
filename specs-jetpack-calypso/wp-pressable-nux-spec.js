@@ -8,14 +8,12 @@ import PressableSitesPage from '../lib/pages/pressable/pressable-sites-page';
 import PressableApprovePage from '../lib/pages/pressable/pressable-approve-page';
 import PressableSiteSettingsPage from '../lib/pages/pressable/pressable-site-settings-page';
 import JetpackAuthorizePage from '../lib/pages/jetpack-authorize-page';
-
 import * as driverManager from '../lib/driver-manager';
 import * as dataHelper from '../lib/data-helper';
 import PressableNUXFlow from '../lib/flows/pressable-nux-flow';
 import ReaderPage from '../lib/pages/reader-page';
 import SidebarComponent from '../lib/components/sidebar-component';
 import StatsPage from '../lib/pages/stats-page';
-import ActivityPage from '../lib/pages/stats/activity-page';
 import NavbarComponent from '../lib/components/navbar-component';
 import JetpackConnectFlow from '../lib/flows/jetpack-connect-flow';
 import LoginFlow from '../lib/flows/login-flow';
@@ -86,9 +84,9 @@ if ( host === 'PRESSABLE' ) {
 			} );
 
 			test.it(
-				'Can wait for 25 sec until Jetpack Rewind will be ready for configuration',
+				'Can wait for 30 sec until Jetpack Rewind will be ready for configuration',
 				function() {
-					return driver.sleep( 25000 );
+					return driver.sleep( 30000 );
 				}
 			);
 
@@ -97,7 +95,7 @@ if ( host === 'PRESSABLE' ) {
 			} );
 
 			test.it( 'Can open Rewind activity page', function() {
-				this.readerPage = new ReaderPage( driver, true );
+				new ReaderPage( driver, true ).displayed();
 				new NavbarComponent( driver ).clickMySites();
 				const sidebarComponent = new SidebarComponent( driver );
 				sidebarComponent.selectSiteSwitcher();
@@ -106,10 +104,11 @@ if ( host === 'PRESSABLE' ) {
 				return new StatsPage( driver ).openActivity();
 			} );
 
-			test.it( 'Can wait until Rewind backup is completed', function() {
-				const activityPage = new ActivityPage( driver );
-				return activityPage.expandDayCard().then( () => activityPage.waitUntilBackupCompleted() );
-			} );
+			// Disabled due to to longer time is required to make a backup.
+			// test.it( 'Can wait until Rewind backup is completed', function() {
+			// 	const activityPage = new ActivityPage( driver );
+			// 	return activityPage.waitUntilBackupCompleted();
+			// } );
 
 			test.after( function() {
 				return new PressableSitesPage( driver, true ).deleteFirstSite();

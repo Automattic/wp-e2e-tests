@@ -4,19 +4,18 @@ jobs:
     parallelism: 2
     working_directory: ~/wp-e2e-tests
     docker:
-      - image: circleci/node:8.11.0-browsers
+      - image: 'circleci/node:8.11.0-browsers'
         environment:
           NODE_ENV: test
-          NODE_CONFIG: {}
     steps:
       - checkout
       - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: 'dependency-cache-{{ checksum "package.json" }}'
       - run: npm install
       - run: npm run lint
       - run: npm run decryptconfig
       - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: 'dependency-cache-{{ checksum "package.json" }}'
           paths:
             - ./node_modules
       - run: ./scripts/randomize.sh specs
