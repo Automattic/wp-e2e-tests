@@ -8,7 +8,7 @@
   "max_workers": 3,
   "suiteTag": "parallel",
   "sauce": false,
-  "browser": "chrome",
+  "browser": "ie11",
   "framework": "testarmada-magellan-mocha-plugin",
   "reporters": [
 	  "./lib/reporter/magellan-reporter.js"
