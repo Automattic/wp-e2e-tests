@@ -110,7 +110,7 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 						return assert.equal(
 							mostRecentPendingInviteEmail,
 							newInviteEmailAddress,
-							'The email address prefilled on the accept invite page is not correct' );
+							'The email address on the pending invite does not match the latest invite sent' );
 					} );
 				}
 			);
@@ -338,7 +338,7 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 							return assert.equal(
 								mostRecentPendingInviteEmail,
 								newInviteEmailAddress,
-								'The email address prefilled on the accept invite page is not correct' );
+								'The email address on the pending invite does not match the latest invite sent' );
 						} );
 					}
 				);
@@ -567,7 +567,7 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 									return assert.equal(
 										mostRecentPendingInviteEmail,
 										newInviteEmailAddress,
-										'The email address prefilled on the accept invite page is not correct' );
+										'The email address on the pending invite does not match the latest invite sent' );
 								} );
 							}
 						);
@@ -840,7 +840,7 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 									return assert.equal(
 										mostRecentPendingInviteEmail,
 										newInviteEmailAddress,
-										'The email address prefilled on the accept invite page is not correct' );
+										'The email address on the pending invite does not match the latest invite sent' );
 								} );
 							}
 						);
