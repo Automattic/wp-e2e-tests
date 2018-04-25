@@ -96,21 +96,18 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				return assert.equal( sent, true, 'The sent confirmation message was not displayed' );
 			} );
 
-			test.it(
-				'Can see pending invite',
-				function() {
-					this.invitePeoplePage.backToPeopleMenu();
+			test.it( 'Can see pending invite', async function() {
+				await this.invitePeoplePage.backToPeopleMenu();
 
-					this.peoplePage = new PeoplePage( driver );
-					this.peoplePage.selectInvites();
-					return this.peoplePage.getMostRecentPendingInviteEmail().then( mostRecentPendingInviteEmail => {
-						return assert.equal(
-							mostRecentPendingInviteEmail,
-							newInviteEmailAddress,
-							'The email address on the pending invite does not match the latest invite sent' );
-					} );
-				}
-			);
+				this.peoplePage = new PeoplePage( driver );
+				await this.peoplePage.selectInvites();
+				let mostRecentPendingInviteEmail = await this.peoplePage.getMostRecentPendingInviteEmail();
+				return assert.equal(
+					mostRecentPendingInviteEmail,
+					newInviteEmailAddress,
+					'The email address on the pending invite does not match the latest invite sent'
+				);
+			} );
 
 			test.describe( 'Can see an invitation email received for the invite', function() {
 				test.before( function() {
@@ -311,21 +308,18 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 					return assert.equal( sent, true, 'The sent confirmation message was not displayed' );
 				} );
 
-				test.it(
-					'Can see pending invite',
-					function() {
-						this.invitePeoplePage.backToPeopleMenu();
+				test.it( 'Can see pending invite', async function() {
+					await this.invitePeoplePage.backToPeopleMenu();
 
-						this.peoplePage = new PeoplePage( driver );
-						this.peoplePage.selectInvites();
-						return this.peoplePage.getMostRecentPendingInviteEmail().then( mostRecentPendingInviteEmail => {
-							return assert.equal(
-								mostRecentPendingInviteEmail,
-								newInviteEmailAddress,
-								'The email address on the pending invite does not match the latest invite sent' );
-						} );
-					}
-				);
+					this.peoplePage = new PeoplePage( driver );
+					await this.peoplePage.selectInvites();
+					let mostRecentPendingInviteEmail = await this.peoplePage.getMostRecentPendingInviteEmail();
+					return assert.equal(
+						mostRecentPendingInviteEmail,
+						newInviteEmailAddress,
+						'The email address on the pending invite does not match the latest invite sent'
+					);
+				} );
 
 				test.describe( 'Can see an invitation email received for the invite', function() {
 					test.before( async function() {
@@ -536,21 +530,18 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 							return assert.equal( sent, true, 'The sent confirmation message was not displayed' );
 						} );
 
-						test.it(
-							'Can see pending invite',
-							function() {
-								this.invitePeoplePage.backToPeopleMenu();
+						test.it( 'Can see pending invite', async function() {
+							await this.invitePeoplePage.backToPeopleMenu();
 
-								this.peoplePage = new PeoplePage( driver );
-								this.peoplePage.selectInvites();
-								return this.peoplePage.getMostRecentPendingInviteEmail().then( mostRecentPendingInviteEmail => {
-									return assert.equal(
-										mostRecentPendingInviteEmail,
-										newInviteEmailAddress,
-										'The email address on the pending invite does not match the latest invite sent' );
-								} );
-							}
-						);
+							this.peoplePage = new PeoplePage( driver );
+							await this.peoplePage.selectInvites();
+							let mostRecentPendingInviteEmail = await this.peoplePage.getMostRecentPendingInviteEmail();
+							return assert.equal(
+								mostRecentPendingInviteEmail,
+								newInviteEmailAddress,
+								'The email address on the pending invite does not match the latest invite sent'
+							);
+						} );
 
 						test.describe( 'Can see an invitation email received for the invite', function() {
 							test.before( async function() {
@@ -796,21 +787,18 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 							return assert.equal( sent, true, 'The sent confirmation message was not displayed' );
 						} );
 
-						test.it(
-							'Can see pending invite',
-							function() {
-								this.invitePeoplePage.backToPeopleMenu();
+						test.it( 'Can see pending invite', async function() {
+							await this.invitePeoplePage.backToPeopleMenu();
 
-								this.peoplePage = new PeoplePage( driver );
-								this.peoplePage.selectInvites();
-								return this.peoplePage.getMostRecentPendingInviteEmail().then( mostRecentPendingInviteEmail => {
-									return assert.equal(
-										mostRecentPendingInviteEmail,
-										newInviteEmailAddress,
-										'The email address on the pending invite does not match the latest invite sent' );
-								} );
-							}
-						);
+							this.peoplePage = new PeoplePage( driver );
+							await this.peoplePage.selectInvites();
+							let mostRecentPendingInviteEmail = await this.peoplePage.getMostRecentPendingInviteEmail();
+							return assert.equal(
+								mostRecentPendingInviteEmail,
+								newInviteEmailAddress,
+								'The email address on the pending invite does not match the latest invite sent'
+							);
+						} );
 
 						test.describe( 'Can see an invitation email received for the invite', function() {
 							test.before( function() {
