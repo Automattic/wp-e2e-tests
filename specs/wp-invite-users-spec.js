@@ -12,6 +12,8 @@ import LoginFlow from '../lib/flows/login-flow.js';
 import AcceptInvitePage from '../lib/pages/accept-invite-page.js';
 import PostsPage from '../lib/pages/posts-page.js';
 import PeoplePage from '../lib/pages/people-page.js';
+import RevokePage from '../lib/pages/revoke-page.js';
+import InviteErrorPage from '../lib/pages/invite-error-page.js';
 import InvitePeoplePage from '../lib/pages/invite-people-page.js';
 import EditTeamMemberPage from '../lib/pages/edit-team-member-page.js';
 import LoginPage from '../lib/pages/login-page.js';
@@ -263,6 +265,142 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 								);
 							} );
 						} );
+					} );
+				} );
+			} );
+		} );
+	} );
+
+	test.describe.only( 'Inviting New User as an Editor And Revoke Invite: @parallel @jetpack', function() {
+		this.bailSuite( true );
+		const inviteInboxId = config.get( 'inviteInboxId' );
+		const newUserName = 'e2eflowtestingeditor' + new Date().getTime().toString();
+		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
+		let acceptInviteURL = '';
+
+		test.before( function() {
+			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.describe( 'Can Invite a New User as an Editor, then revoke the invite', function() {
+			// Can log in and select People
+			test.before( function() {
+				this.loginFlow = new LoginFlow( driver );
+				this.loginFlow.loginAndSelectPeople();
+				this.peoplePage = new PeoplePage( driver );
+				return this.peoplePage.displayed().then( displayed => {
+					return assert.equal( displayed, true, 'The people page is not displayed' );
+				} );
+			} );
+
+			test.it(
+				'Can choose invite user on People page which shows the Invite People page',
+				function() {
+					this.peoplePage = new PeoplePage( driver );
+					this.peoplePage.inviteUser();
+					this.invitePeoplePage = new InvitePeoplePage( driver );
+					return this.invitePeoplePage.displayed().then( displayed => {
+						return assert.equal( displayed, true, 'The invite people page is not displayed' );
+					} );
+				}
+			);
+
+			test.it( 'Can invite a new user as an editor', function() {
+				return this.invitePeoplePage.inviteNewUser(
+					newInviteEmailAddress,
+					'editor',
+					'Automated e2e testing'
+				);
+			} );
+
+			test.it( 'Sends an invite', function() {
+				this.invitePeoplePage.inviteSent().then( sent => {
+					return assert.equal( sent, true, 'The sent confirmation message was not displayed' );
+				} );
+			} );
+
+			test.it(
+				'Can see pending invite',
+				function() {
+					this.invitePeoplePage.backToPeopleMenu();
+
+					this.peoplePage = new PeoplePage( driver );
+					this.peoplePage.selectInvites();
+					return this.peoplePage.getMostRecentPendingInviteEmail().then( mostRecentPendingInviteEmail => {
+						return assert.equal(
+							mostRecentPendingInviteEmail,
+							newInviteEmailAddress,
+							'The email address on the pending invite does not match the latest invite sent' );
+					} );
+				}
+			);
+
+			test.it(
+				'Can revoke the pending invite',
+				function() {
+					this.peoplePage.goToRevokeInvitePage();
+					this.revokePage = new RevokePage( driver );
+					this.revokePage.revokeUser();
+
+					this.revokePage.revokeSent().then( sent => {
+						return assert.equal( sent, true, 'The sent confirmation message was not displayed' );
+					} );
+				} );
+
+			test.describe( 'Can see an invitation email received for the invite', function() {
+				test.before( function() {
+					this.emailClient = new EmailClient( inviteInboxId );
+				} );
+
+				test.it( 'Can see a single confirmation message', function() {
+					return this.emailClient
+						.pollEmailsByRecipient( newInviteEmailAddress )
+						.then( function( emails ) {
+							assert.equal( emails.length, 1, 'The number of invite emails is not equal to 1' );
+						} );
+				} );
+
+				test.it( 'Can capture the Accept Invite link from the email', function() {
+					return this.emailClient
+						.pollEmailsByRecipient( newInviteEmailAddress )
+						.then( function( emails ) {
+							let links = emails[ 0 ].html.links;
+							for ( let link of links ) {
+								if ( link.href.includes( 'accept-invite' ) ) {
+									acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
+								}
+							}
+							assert.notEqual(
+								acceptInviteURL,
+								'',
+								'Could not locate the accept invite URL in the invite email'
+							);
+						} );
+				} );
+
+				test.describe( 'Can open the invite page and see it has been revoked', function() {
+					test.before( function() {
+						driverManager.ensureNotLoggedIn( driver );
+					} );
+
+					test.it( 'Can visit invite link', function() {
+						driver.get( acceptInviteURL );
+						this.acceptInvitePage = new AcceptInvitePage( driver );
+					} );
+
+					test.describe( 'Can see the page that indicates the invite has been revoked', function() {
+						test.it(
+							'Can see the revoked invite error',
+							function() {
+								this.inviteErrorPage = new InviteErrorPage( driver );
+								this.inviteErrorPage.inviteErrorTitleDisplayed().then( displayed => {
+									return assert.equal(
+										displayed,
+										true,
+										'The invite was not successfully revoked'
+									);
+								} );
+							} );
 					} );
 				} );
 			} );
