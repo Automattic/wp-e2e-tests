@@ -450,51 +450,47 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	test.describe( 'Check Activity Log for Public Post @parallel', function() {
 		this.bailSuite( true );
 
-		test.it( 'Delete Cookies and Local Storage', function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		const blogPostTitle = dataHelper.randomPhrase();
+		const blogPostQuote =
+			'“We are what we pretend to be, so we must be careful about what we pretend to be.”\n- Kurt Vonnegut';
+
+		test.it( 'Delete Cookies and Local Storage', async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.describe( 'Publish a New Post', function() {
-			const blogPostTitle = dataHelper.randomPhrase();
-			const blogPostQuote =
-				'“We are what we pretend to be, so we must be careful about what we pretend to be.”\n- Kurt Vonnegut';
+		test.it( 'Can log in', async function() {
+			let loginFlow = new LoginFlow( driver );
+			return await loginFlow.loginAndStartNewPost();
+		} );
 
-			test.it( 'Can log in', function() {
-				this.loginFlow = new LoginFlow( driver );
-				return this.loginFlow.loginAndStartNewPost();
-			} );
+		test.it( 'Can enter post title and content', async function() {
+			let editorPage = new EditorPage( driver );
+			await editorPage.enterTitle( blogPostTitle );
+			await editorPage.enterContent( blogPostQuote + '\n' );
 
-			test.it( 'Can enter post title and content', function() {
-				this.editorPage = new EditorPage( driver );
-				this.editorPage.enterTitle( blogPostTitle );
-				this.editorPage.enterContent( blogPostQuote + '\n' );
+			let errorShown = await editorPage.errorDisplayed();
+			return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+		} );
 
-				return this.editorPage.errorDisplayed().then( errorShown => {
-					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
-				} );
-			} );
+		test.it( 'Can publish and view content', async function() {
+			let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			await postEditorToolbarComponent.ensureSaved();
+			await postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
+			return await postEditorToolbarComponent.waitForSuccessViewPostNotice();
+		} );
 
-			test.it( 'Can publish and view content', function() {
-				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-				postEditorToolbarComponent.ensureSaved();
-				postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
-				return postEditorToolbarComponent.waitForSuccessViewPostNotice();
-			} );
-
-			test.it( 'Can see the post in the Activity log', function() {
-				new ReaderPage( driver, true ).displayed();
-				new NavbarComponent( driver ).clickMySites();
-				const sidebarComponent = new SidebarComponent( driver );
-				sidebarComponent.ensureSidebarMenuVisible();
-				sidebarComponent.selectStats();
-				new StatsPage( driver ).openActivity();
-				return new ActivityPage( driver ).postTitleDisplayed( blogPostTitle ).then( displayed => {
-					assert(
-						displayed,
-						`The published post title '${ blogPostTitle }' was not displayed in activity log after publishing`
-					);
-				} );
-			} );
+		test.it( 'Can see the post in the Activity log', async function() {
+			await new ReaderPage( driver, true ).displayed();
+			await new NavbarComponent( driver ).clickMySites();
+			let sidebarComponent = new SidebarComponent( driver );
+			await sidebarComponent.ensureSidebarMenuVisible();
+			await sidebarComponent.selectStats();
+			await new StatsPage( driver ).openActivity();
+			let displayed = await new ActivityPage( driver ).postTitleDisplayed( blogPostTitle );
+			return assert(
+				displayed,
+				`The published post title '${ blogPostTitle }' was not displayed in activity log after publishing`
+			);
 		} );
 	} );
 
