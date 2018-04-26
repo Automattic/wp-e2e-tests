@@ -32,9 +32,9 @@ const host = dataHelper.getJetpackHost();
 
 let driver;
 
-test.before( function() {
+test.before( async function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser();
+	driver = await driverManager.startBrowser();
 } );
 
 test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function() {
@@ -48,55 +48,59 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		const expectedDomainName = blogName + '.com';
 		const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( domainEmailAddress );
 
-		test.before( function() {
-			return driverManager.ensureNotLoggedIn( driver );
+		test.before( async function() {
+			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.it( 'Log In and Select Domains', function() {
-			return new LoginFlow( driver ).loginAndSelectDomains();
+		test.it( 'Log In and Select Domains', async function() {
+			return await new LoginFlow( driver ).loginAndSelectDomains();
 		} );
 
-		test.it( 'Can see the Domains page and choose add a domain', function() {
+		test.it( 'Can see the Domains page and choose add a domain', async function() {
 			const domainsPage = new DomainsPage( driver );
-			driver.getCurrentUrl().then( urlDisplayed => {
-				domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
-			} );
-			return domainsPage.clickAddDomain();
+			let urlDisplayed = await driver.getCurrentUrl();
+			await domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
+			return await domainsPage.clickAddDomain();
 		} );
 
-		test.it( 'Can see the domain search component', function() {
-			return new FindADomainComponent( driver ).waitForResults();
+		test.it( 'Can see the domain search component', async function() {
+			return await new FindADomainComponent( driver ).waitForResults();
 		} );
 
-		test.it( 'Can search for a blog name', function() {
-			return new FindADomainComponent( driver ).searchForBlogNameAndWaitForResults( blogName );
+		test.it( 'Can search for a blog name', async function() {
+			return await new FindADomainComponent( driver ).searchForBlogNameAndWaitForResults(
+				blogName
+			);
 		} );
 
-		test.it( 'Can select the .com search result and decline Google Apps for email', function() {
-			const findADomainComponent = new FindADomainComponent( driver );
-			findADomainComponent.selectDomainAddress( expectedDomainName );
-			return findADomainComponent.declineGoogleApps();
-		} );
+		test.it(
+			'Can select the .com search result and decline Google Apps for email',
+			async function() {
+				const findADomainComponent = new FindADomainComponent( driver );
+				await findADomainComponent.selectDomainAddress( expectedDomainName );
+				return await findADomainComponent.declineGoogleApps();
+			}
+		);
 
-		test.it( 'Can see checkout page, choose privacy and enter registrar details', function() {
+		test.it( 'Can see checkout page, choose privacy and enter registrar details', async function() {
 			const checkOutPage = new CheckOutPage( driver );
-			checkOutPage.selectAddPrivacyProtectionCheckbox();
-			checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
-			return checkOutPage.submitForm();
+			await checkOutPage.selectAddPrivacyProtectionCheckbox();
+			await checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
+			return await checkOutPage.submitForm();
 		} );
 
-		test.it( 'Can then see secure payment component', function() {
-			return new SecurePaymentComponent( driver ).displayed();
+		test.it( 'Can then see secure payment component', async function() {
+			return await new SecurePaymentComponent( driver ).displayed();
 		} );
 
-		test.after( function() {
+		test.after( async function() {
 			// Empty the cart
-			new ReaderPage( driver, true ).displayed();
-			new NavbarComponent( driver ).clickMySites();
-			new StatsPage( driver, true ).displayed();
-			new SidebarComponent( driver ).selectDomains();
-			new DomainsPage( driver ).displayed();
-			return new ShoppingCartWidgetComponent( driver ).empty();
+			await new ReaderPage( driver, true ).displayed();
+			await new NavbarComponent( driver ).clickMySites();
+			await new StatsPage( driver, true ).displayed();
+			await new SidebarComponent( driver ).selectDomains();
+			await new DomainsPage( driver ).displayed();
+			return await new ShoppingCartWidgetComponent( driver ).empty();
 		} );
 	} );
 
@@ -105,62 +109,61 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 
 		const blogName = 'myawesomedomain.com';
 
-		test.before( function() {
-			return driverManager.ensureNotLoggedIn( driver );
+		test.before( async function() {
+			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.it( 'Log In and Select Domains', function() {
-			return new LoginFlow( driver ).loginAndSelectDomains();
+		test.it( 'Log In and Select Domains', async function() {
+			return await new LoginFlow( driver ).loginAndSelectDomains();
 		} );
 
-		test.it( 'Can see the Domains page and choose add a domain', function() {
+		test.it( 'Can see the Domains page and choose add a domain', async function() {
 			const domainsPage = new DomainsPage( driver );
-			driver.getCurrentUrl().then( urlDisplayed => {
-				domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
-			} );
-			return domainsPage.clickAddDomain();
+			let urlDisplayed = await driver.getCurrentUrl();
+			await domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
+			return await domainsPage.clickAddDomain();
 		} );
 
-		test.it( 'Can see the domain search component', function() {
-			return new FindADomainComponent( driver ).waitForResults();
+		test.it( 'Can see the domain search component', async function() {
+			return await new FindADomainComponent( driver ).waitForResults();
 		} );
 
-		test.it( 'Can select to use an existing domain', function() {
-			return new FindADomainComponent( driver ).selectUseOwnDomain();
+		test.it( 'Can select to use an existing domain', async function() {
+			return await new FindADomainComponent( driver ).selectUseOwnDomain();
 		} );
 
-		test.it( 'Can see use my own domain page', function() {
-			return new MyOwnDomainPage( driver ).displayed();
+		test.it( 'Can see use my own domain page', async function() {
+			return await new MyOwnDomainPage( driver ).displayed();
 		} );
 
-		test.it( 'Can select to manually connect existing domain component', function() {
-			return new MapADomainComponent( driver ).selectManuallyConnectExistingDomain();
+		test.it( 'Can select to manually connect existing domain component', async function() {
+			return await new MapADomainComponent( driver ).selectManuallyConnectExistingDomain();
 		} );
 
-		test.it( 'Can see enter a domain component', function() {
-			return new MapADomainPage( driver ).displayed();
+		test.it( 'Can see enter a domain component', async function() {
+			return await new MapADomainPage( driver ).displayed();
 		} );
 
-		test.it( 'Can enter the domain name', function() {
-			return new EnterADomainComponent( driver ).enterADomain( blogName );
+		test.it( 'Can enter the domain name', async function() {
+			return await new EnterADomainComponent( driver ).enterADomain( blogName );
 		} );
 
-		test.it( 'Can add domain to the cart', function() {
-			return new EnterADomainComponent( driver ).clickonAddButtonToAddDomainToTheCart();
+		test.it( 'Can add domain to the cart', async function() {
+			return await new EnterADomainComponent( driver ).clickonAddButtonToAddDomainToTheCart();
 		} );
 
-		test.it( 'Can see checkout page', function() {
-			return new MapADomainCheckoutPage( driver ).displayed();
+		test.it( 'Can see checkout page', async function() {
+			return await new MapADomainCheckoutPage( driver ).displayed();
 		} );
 
-		test.after( function() {
+		test.after( async function() {
 			// Empty the cart
-			new ReaderPage( driver, true ).displayed();
-			new NavbarComponent( driver ).clickMySites();
-			new StatsPage( driver, true ).displayed();
-			new SidebarComponent( driver ).selectDomains();
-			new DomainsPage( driver ).displayed();
-			return new ShoppingCartWidgetComponent( driver ).empty();
+			await new ReaderPage( driver, true ).displayed();
+			await new NavbarComponent( driver ).clickMySites();
+			await new StatsPage( driver, true ).displayed();
+			await new SidebarComponent( driver ).selectDomains();
+			await new DomainsPage( driver ).displayed();
+			return await new ShoppingCartWidgetComponent( driver ).empty();
 		} );
 	} );
 } );

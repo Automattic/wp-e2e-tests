@@ -54,9 +54,9 @@ let driver;
 
 let eyes = eyesHelper.eyesSetup( true );
 
-test.before( function() {
+test.before( async function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser();
+	driver = await driverManager.startBrowser();
 } );
 
 // Faked out test.describe function to enable dynamic skipping of e-mail tests
@@ -79,48 +79,50 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 			const password = config.get( 'passwordForNewTestSignUps' );
 			let magicLoginLink;
 
-			test.it( 'Ensure we are not logged in as anyone', function() {
-				return driverManager.ensureNotLoggedIn( driver );
+			test.it( 'Ensure we are not logged in as anyone', async function() {
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
-			test.it( 'Can visit the start page', function() {
-				return new StartPage( driver, {
+			test.it( 'Can visit the start page', async function() {
+				return await new StartPage( driver, {
 					visit: true,
 					culture: locale,
 				} ).displayed();
 			} );
 
-			test.it( 'Can see the "About" page, and enter some site information', function() {
+			test.it( 'Can see the "About" page, and enter some site information', async function() {
 				const aboutPage = new AboutPage( driver );
 				aboutPage.enterSiteDetails( blogName, 'Electronics', {
 					share: true,
 				} );
-				return aboutPage.submitForm();
+				return await aboutPage.submitForm();
 			} );
 
 			test.it(
 				'Can then see the domains page, and Can search for a blog name, can see and select a free .wordpress address in the results',
-				function() {
+				async function() {
 					const findADomainComponent = new FindADomainComponent( driver );
-					findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-					findADomainComponent.checkAndRetryForFreeBlogAddresses( expectedBlogAddresses, blogName );
-					findADomainComponent.freeBlogAddress().then( actualAddress => {
-						assert(
-							expectedBlogAddresses.indexOf( actualAddress ) > -1,
-							`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
-						);
-						newBlogAddress = actualAddress;
-					} );
-					return findADomainComponent.selectFreeAddress();
+					await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+					await findADomainComponent.checkAndRetryForFreeBlogAddresses(
+						expectedBlogAddresses,
+						blogName
+					);
+					let actualAddress = await findADomainComponent.freeBlogAddress();
+					assert(
+						expectedBlogAddresses.indexOf( actualAddress ) > -1,
+						`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+					);
+					newBlogAddress = actualAddress;
+					return await findADomainComponent.selectFreeAddress();
 				}
 			);
 
-			test.it( 'Can see the plans page and pick the free plan', function() {
-				return new PickAPlanPage( driver ).selectFreePlan();
+			test.it( 'Can see the plans page and pick the free plan', async function() {
+				return await new PickAPlanPage( driver ).selectFreePlan();
 			} );
 
-			test.it( 'Can see the account page and enter account details', function() {
-				return new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+			test.it( 'Can see the account page and enter account details', async function() {
+				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
 					emailAddress,
 					blogName,
 					password
@@ -129,63 +131,59 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 			test.it(
 				"Can see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
-				function() {
+				async function() {
 					const signupProcessingPage = new SignupProcessingPage( driver );
-					signupProcessingPage.waitForContinueButtonToBeEnabled();
+					await signupProcessingPage.waitForContinueButtonToBeEnabled();
 					return signupProcessingPage.continueAlong();
 				}
 			);
 
-			test.it( 'Can see expected Welcome message, URL, title, ', function() {
+			test.it( 'Can see expected Welcome message, URL, title, ', async function() {
 				const viewBlogPage = new ViewBlogPage( driver );
-				viewBlogPage.waitForTrampolineWelcomeMessage();
-				viewBlogPage
-					.isTrampolineWelcomeDisplayed()
-					.then( displayed =>
-						assert.equal( displayed, true, 'The trampoline welcome message is not displayed' )
-					);
-				viewBlogPage
-					.urlDisplayed()
-					.then( url =>
-						assert.equal(
-							url,
-							'https://' + newBlogAddress + '/',
-							'The displayed URL on the view blog page is not as expected'
-						)
-					);
-				return viewBlogPage.title().then( title => {
-					assert.equal( title, blogName, 'The expected blog title is not displaying correctly' );
-				} );
+				await viewBlogPage.waitForTrampolineWelcomeMessage();
+				let displayed = await viewBlogPage.isTrampolineWelcomeDisplayed();
+				assert.equal( displayed, true, 'The trampoline welcome message is not displayed' );
+				let url = await viewBlogPage.urlDisplayed();
+				assert.equal(
+					url,
+					'https://' + newBlogAddress + '/',
+					'The displayed URL on the view blog page is not as expected'
+				);
+				let title = await viewBlogPage.title();
+				return assert.equal(
+					title,
+					blogName,
+					'The expected blog title is not displaying correctly'
+				);
 			} );
 
-			test.it( 'Can log out and request a magic link', function() {
-				driverManager.clearCookiesAndDeleteLocalStorage( driver );
-				return new LoginPage( driver, true ).requestMagicLink( emailAddress );
+			test.it( 'Can log out and request a magic link', async function() {
+				await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				return await new LoginPage( driver, true ).requestMagicLink( emailAddress );
 			} );
 
-			test.it( 'Can see email containing magic link', function() {
+			test.it( 'Can see email containing magic link', async function() {
 				const emailClient = new EmailClient( signupInboxId );
 				const validator = emails =>
 					emails.find( email => email.subject.includes( 'WordPress.com' ) );
-				return emailClient.pollEmailsByRecipient( emailAddress, validator ).then( emails => {
-					//Disabled due to a/b test on activation email. See https://github.com/Automattic/wp-e2e-tests/issues/819
-					//assert.equal( emails.length, 2, 'The number of newly registered emails is not equal to 2 (activation and magic link)' );
-					for ( let email of emails ) {
-						if ( email.subject.includes( 'WordPress.com' ) ) {
-							return ( magicLoginLink = email.html.links[ 0 ].href );
-						}
+				let emails = await emailClient.pollEmailsByRecipient( emailAddress, validator );
+				//Disabled due to a/b test on activation email. See https://github.com/Automattic/wp-e2e-tests/issues/819
+				//assert.equal( emails.length, 2, 'The number of newly registered emails is not equal to 2 (activation and magic link)' );
+				for ( let email of emails ) {
+					if ( email.subject.includes( 'WordPress.com' ) ) {
+						return ( magicLoginLink = email.html.links[ 0 ].href );
 					}
-					assert(
-						magicLoginLink !== undefined,
-						'Could not locate the magic login link email link'
-					);
-				} );
+				}
+				return assert(
+					magicLoginLink !== undefined,
+					'Could not locate the magic login link email link'
+				);
 			} );
 
-			test.it( 'Can visit the magic link and we should be logged in', function() {
-				driver.get( magicLoginLink );
-				new MagicLoginPage( driver ).finishLogin();
-				return new ReaderPage( driver ).displayed();
+			test.it( 'Can visit the magic link and we should be logged in', async function() {
+				await driver.get( magicLoginLink );
+				await new MagicLoginPage( driver ).finishLogin();
+				return await new ReaderPage( driver ).displayed();
 			} );
 		}
 	);
@@ -209,97 +207,93 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 				eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 			} );
 
-			test.it( 'Ensure we are not logged in as anyone', function() {
-				return driverManager.ensureNotLoggedIn( driver );
+			test.it( 'Ensure we are not logged in as anyone', async function() {
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
-			test.it( 'We can set the sandbox cookie for payments', function() {
+			test.it( 'We can set the sandbox cookie for payments', async function() {
 				const wPHomePage = new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
 				} );
-				eyesHelper.eyesScreenshot( driver, eyes, 'Logged Out Homepage' );
-				return wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				await eyesHelper.eyesScreenshot( driver, eyes, 'Logged Out Homepage' );
+				return await wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 			} );
 
 			test.describe( `Step ${ stepNum }: About Page`, function() {
 				stepNum++;
 
-				test.it( 'Can visit the start page', function() {
-					return new StartPage( driver, {
+				test.it( 'Can visit the start page', async function() {
+					return await new StartPage( driver, {
 						visit: true,
 						culture: locale,
 					} ).displayed();
 				} );
 
-				test.it( 'Can see the "About" page, and enter some site information', function() {
+				test.it( 'Can see the "About" page, and enter some site information', async function() {
 					const aboutPage = new AboutPage( driver );
-					return aboutPage.displayed().then( displayed => {
-						eyesHelper.eyesScreenshot( driver, eyes, 'About Page' );
-						return assert.equal( displayed, true, 'The about page is not displayed' );
-					} );
+					let displayed = await aboutPage.displayed();
+					await eyesHelper.eyesScreenshot( driver, eyes, 'About Page' );
+					return assert.equal( displayed, true, 'The about page is not displayed' );
 				} );
 
-				test.it( 'Can accept defaults for about page', function() {
+				test.it( 'Can accept defaults for about page', async function() {
 					const aboutPage = new AboutPage( driver );
-					aboutPage.submitForm();
+					await aboutPage.submitForm();
 				} );
 
 				test.describe( `Step ${ stepNum }: Domains`, function() {
 					stepNum++;
 
-					test.it( 'Can then see the domains page ', function() {
+					test.it( 'Can then see the domains page ', async function() {
 						const findADomainComponent = new FindADomainComponent( driver );
 						const signupStepComponent = new SignupStepComponent( driver );
-						signupStepComponent.waitForSignupStepLoad();
-						return findADomainComponent.displayed().then( displayed => {
-							eyesHelper.eyesScreenshot( driver, eyes, 'Domains Page' );
-							return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
-						} );
+						await signupStepComponent.waitForSignupStepLoad();
+						let displayed = await findADomainComponent.displayed();
+						await eyesHelper.eyesScreenshot( driver, eyes, 'Domains Page' );
+						return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
 					} );
 
 					test.it(
 						'Can search for a blog name, can see and select a free WordPress.com blog address in results',
-						function() {
+						async function() {
 							const findADomainComponent = new FindADomainComponent( driver );
-							findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-							findADomainComponent.checkAndRetryForFreeBlogAddresses(
+							await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+							await findADomainComponent.checkAndRetryForFreeBlogAddresses(
 								expectedBlogAddresses,
 								blogName
 							);
-							findADomainComponent.freeBlogAddress().then( actualAddress => {
-								assert(
-									expectedBlogAddresses.indexOf( actualAddress ) > -1,
-									`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
-								);
-							} );
+							let actualAddress = await findADomainComponent.freeBlogAddress();
+							assert(
+								expectedBlogAddresses.indexOf( actualAddress ) > -1,
+								`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+							);
 
-							eyesHelper.eyesScreenshot( driver, eyes, 'Domains Page Site Address Search' );
-							return findADomainComponent.selectFreeAddress();
+							await eyesHelper.eyesScreenshot( driver, eyes, 'Domains Page Site Address Search' );
+							return await findADomainComponent.selectFreeAddress();
 						}
 					);
 
 					test.describe( `Step ${ stepNum }: Plans`, function() {
 						stepNum++;
 
-						test.it( 'Can then see the plans page and select the premium plan ', function() {
+						test.it( 'Can then see the plans page and select the premium plan ', async function() {
 							const pickAPlanPage = new PickAPlanPage( driver );
-							pickAPlanPage.displayed().then( displayed => {
-								eyesHelper.eyesScreenshot( driver, eyes, 'Plans Page' );
-								return assert.equal( displayed, true, 'The pick a plan page is not displayed' );
-							} );
-							return pickAPlanPage.selectPremiumPlan();
+							let displayed = await pickAPlanPage.displayed();
+							await eyesHelper.eyesScreenshot( driver, eyes, 'Plans Page' );
+							assert.equal( displayed, true, 'The pick a plan page is not displayed' );
+							return await pickAPlanPage.selectPremiumPlan();
 						} );
 
 						test.describe( `Step ${ stepNum }: Account`, function() {
 							stepNum++;
 
-							test.it( 'Can then enter account details', function() {
+							test.it( 'Can then enter account details', async function() {
 								const createYourAccountPage = new CreateYourAccountPage( driver );
 								const signupStepComponent = new SignupStepComponent( driver );
-								signupStepComponent.waitForSignupStepLoad();
-								eyesHelper.eyesScreenshot( driver, eyes, 'Create Account Page' );
-								return createYourAccountPage.enterAccountDetailsAndSubmit(
+								await signupStepComponent.waitForSignupStepLoad();
+								await eyesHelper.eyesScreenshot( driver, eyes, 'Create Account Page' );
+								return await createYourAccountPage.enterAccountDetailsAndSubmit(
 									emailAddress,
 									blogName,
 									password
@@ -311,46 +305,46 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 								test.it(
 									'Can then see the sign up processing page which will automatically move along',
-									function() {
-										return new SignupProcessingPage( driver ).waitToDisappear();
+									async function() {
+										return await new SignupProcessingPage( driver ).waitToDisappear();
 									}
 								);
 
 								test.describe( `Step ${ stepNum }: Secure Payment Page`, function() {
 									stepNum++;
 
-									test.it( 'Can then see the secure payment page', function() {
+									test.it( 'Can then see the secure payment page', async function() {
 										const securePaymentComponent = new SecurePaymentComponent( driver );
-										return securePaymentComponent.displayed().then( displayed => {
-											eyesHelper.eyesScreenshot( driver, eyes, 'Secure Payment Page' );
-											return assert.equal(
-												displayed,
-												true,
-												'The secure payment page is not displayed'
-											);
-										} );
+										let displayed = await securePaymentComponent.displayed();
+										await eyesHelper.eyesScreenshot( driver, eyes, 'Secure Payment Page' );
+										return assert.equal(
+											displayed,
+											true,
+											'The secure payment page is not displayed'
+										);
 									} );
 
-									test.it( 'Can enter and submit test payment details', function() {
+									test.it( 'Can enter and submit test payment details', async function() {
 										const securePaymentComponent = new SecurePaymentComponent( driver );
-										securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
-										securePaymentComponent.submitPaymentDetails();
-										return securePaymentComponent.waitForPageToDisappear();
+										await securePaymentComponent.enterTestCreditCardDetails(
+											testCreditCardDetails
+										);
+										await securePaymentComponent.submitPaymentDetails();
+										return await securePaymentComponent.waitForPageToDisappear();
 									} );
 
 									test.describe( `Step ${ stepNum }: Checkout Thank You Page`, function() {
 										stepNum++;
 
-										test.it( 'Can see the secure check out thank you page', function() {
+										test.it( 'Can see the secure check out thank you page', async function() {
 											const checkOutThankyouPage = new CheckOutThankyouPage( driver );
-											return checkOutThankyouPage.displayed().then( displayed => {
-												eyesHelper.eyesScreenshot( driver, eyes, 'Checkout Thank You Page' );
-												return assert.equal(
-													displayed,
-													true,
-													'The checkout thank you page is not displayed'
-												);
-											} );
+											let displayed = await checkOutThankyouPage.displayed();
+											await eyesHelper.eyesScreenshot( driver, eyes, 'Checkout Thank You Page' );
+											return assert.equal(
+												displayed,
+												true,
+												'The checkout thank you page is not displayed'
+											);
 										} );
 									} );
 								} );
@@ -360,8 +354,8 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 				} );
 			} );
 
-			test.after( function() {
-				eyesHelper.eyesClose( eyes );
+			test.after( async function() {
+				await eyesHelper.eyesClose( eyes );
 			} );
 		}
 	);
@@ -379,12 +373,12 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 			const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 			const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
 
-			test.it( 'Ensure we are not logged in as anyone', function() {
-				return driverManager.ensureNotLoggedIn( driver );
+			test.it( 'Ensure we are not logged in as anyone', async function() {
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
-			test.it( 'We can set the sandbox cookie for payments', function() {
-				return new WPHomePage( driver, {
+			test.it( 'We can set the sandbox cookie for payments', async function() {
+				return await new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
 				} ).setSandboxModeForPayments( sandboxCookieValue );
@@ -393,16 +387,16 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 			test.describe( `Step ${ stepNum }: About Page`, function() {
 				stepNum++;
 
-				test.it( 'Can visit the start page', function() {
-					return new StartPage( driver, {
+				test.it( 'Can visit the start page', async function() {
+					return await new StartPage( driver, {
 						visit: true,
 						culture: locale,
 						flow: 'premium',
 					} ).displayed();
 				} );
 
-				test.it( 'Can see the about page and accept defaults', function() {
-					return new AboutPage( driver ).submitForm();
+				test.it( 'Can see the about page and accept defaults', async function() {
+					return await new AboutPage( driver ).submitForm();
 				} );
 
 				test.describe( `Step ${ stepNum }: Themes`, function() {
@@ -410,8 +404,8 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 					test.it(
 						'Can see the choose a theme page as the starting page, and select the first theme',
-						function() {
-							return new ChooseAThemePage( driver ).selectFirstTheme();
+						async function() {
+							return await new ChooseAThemePage( driver ).selectFirstTheme();
 						}
 					);
 
@@ -420,43 +414,45 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 						test.it(
 							'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
-							function() {
+							async function() {
 								const findADomainComponent = new FindADomainComponent( driver );
-								findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-								findADomainComponent.checkAndRetryForFreeBlogAddresses(
+								await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+								await findADomainComponent.checkAndRetryForFreeBlogAddresses(
 									expectedBlogAddresses,
 									blogName
 								);
-								findADomainComponent.freeBlogAddress().then( actualAddress => {
-									assert(
-										expectedBlogAddresses.indexOf( actualAddress ) > -1,
-										`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
-									);
-								} );
-								return findADomainComponent.selectFreeAddress();
+								let actualAddress = await findADomainComponent.freeBlogAddress();
+								assert(
+									expectedBlogAddresses.indexOf( actualAddress ) > -1,
+									`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+								);
+								return await findADomainComponent.selectFreeAddress();
 							}
 						);
 
 						test.describe( `Step ${ stepNum }: Account`, function() {
 							stepNum++;
 
-							test.it( 'Can see the account details page and enter account details', function() {
-								return new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
-									emailAddress,
-									blogName,
-									password
-								);
-							} );
+							test.it(
+								'Can see the account details page and enter account details',
+								async function() {
+									return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+										emailAddress,
+										blogName,
+										password
+									);
+								}
+							);
 
 							test.describe( `Step ${ stepNum }: Processing`, function() {
 								stepNum++;
 
 								test.it(
 									"Can then see the sign up processing page and it will finish and show a 'Continue' button, which is clicked",
-									function() {
+									async function() {
 										const signupProcessingPage = new SignupProcessingPage( driver );
-										signupProcessingPage.waitForContinueButtonToBeEnabled();
-										return signupProcessingPage.continueAlong();
+										await signupProcessingPage.waitForContinueButtonToBeEnabled();
+										return await signupProcessingPage.continueAlong();
 									}
 								);
 
@@ -465,19 +461,21 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 									test.it(
 										'Can then see the secure payment page, and can enter and submit test payment details',
-										function() {
+										async function() {
 											const securePaymentComponent = new SecurePaymentComponent( driver );
-											securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
-											securePaymentComponent.submitPaymentDetails();
-											return securePaymentComponent.waitForPageToDisappear();
+											await securePaymentComponent.enterTestCreditCardDetails(
+												testCreditCardDetails
+											);
+											await securePaymentComponent.submitPaymentDetails();
+											return await securePaymentComponent.waitForPageToDisappear();
 										}
 									);
 
 									test.describe( `Step ${ stepNum }: Checkout Thank You Page`, function() {
 										stepNum++;
 
-										test.it( 'Can see the secure check out thank you page', function() {
-											return new CheckOutThankyouPage( driver ).displayed();
+										test.it( 'Can see the secure check out thank you page', async function() {
+											return await new CheckOutThankyouPage( driver ).displayed();
 										} );
 									} );
 								} );
@@ -502,12 +500,12 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 			const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
 			const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( emailAddress );
 
-			test.it( 'Ensure we are not logged in as anyone', function() {
-				return driverManager.ensureNotLoggedIn( driver );
+			test.it( 'Ensure we are not logged in as anyone', async function() {
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
-			test.it( 'We can visit set the sandbox cookie for payments', function() {
-				return new WPHomePage( driver, {
+			test.it( 'We can visit set the sandbox cookie for payments', async function() {
+				return await new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
 				} ).setSandboxModeForPayments( sandboxCookieValue );
@@ -516,8 +514,8 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 			test.describe( `Step ${ stepNum }: WordPress.com/domains page`, function() {
 				stepNum++;
 
-				test.it( 'Can visit the domains start page', function() {
-					return new StartPage( driver, {
+				test.it( 'Can visit the domains start page', async function() {
+					return await new StartPage( driver, {
 						visit: true,
 						culture: locale,
 						flow: 'domain-first',
@@ -526,15 +524,15 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 					} ).displayed();
 				} );
 
-				test.it( 'Can select domain only from the domain first choice page', function() {
-					return new DomainFirstPage( driver ).chooseJustBuyTheDomain();
+				test.it( 'Can select domain only from the domain first choice page', async function() {
+					return await new DomainFirstPage( driver ).chooseJustBuyTheDomain();
 				} );
 
 				test.describe( `Step ${ stepNum }: Account`, function() {
 					stepNum++;
 
-					test.it( 'Can then enter account details', function() {
-						return new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+					test.it( 'Can then enter account details', async function() {
+						return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
 							emailAddress,
 							siteName,
 							password
@@ -546,8 +544,8 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 						test.it(
 							'Can then see the sign up processing page which will finish automatically move along',
-							function() {
-								return new SignupProcessingPage( driver ).waitToDisappear();
+							async function() {
+								return await new SignupProcessingPage( driver ).waitToDisappear();
 							}
 						);
 
@@ -556,22 +554,22 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 							test.it(
 								'Can see checkout page, choose domain privacy option and enter registrar details',
-								() => {
+								async function() {
 									const checkOutPage = new CheckOutPage( driver );
-									checkOutPage.selectAddPrivacyProtectionCheckbox();
-									checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
-									return checkOutPage.submitForm();
+									await checkOutPage.selectAddPrivacyProtectionCheckbox();
+									await checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
+									return await checkOutPage.submitForm();
 								}
 							);
 
 							test.it(
 								'Can then see the secure payment page and enter/submit test payment details',
-								function() {
+								async function() {
 									const securePaymentComponent = new SecurePaymentComponent( driver );
-									securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
-									securePaymentComponent.submitPaymentDetails();
-									securePaymentComponent.waitForCreditCardPaymentProcessing();
-									return securePaymentComponent.waitForPageToDisappear();
+									await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+									await securePaymentComponent.submitPaymentDetails();
+									await securePaymentComponent.waitForCreditCardPaymentProcessing();
+									return await securePaymentComponent.waitForPageToDisappear();
 								}
 							);
 
@@ -580,10 +578,10 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 								test.it(
 									'Can see the secure check out thank you page and click "go to my domain" button to see the domain only settings page',
-									function() {
-										new CheckOutThankyouPage( driver ).goToMyDomain();
-										new DomainOnlySettingsPage( driver ).manageDomain();
-										return new DomainDetailsPage( driver ).displayed();
+									async function() {
+										await new CheckOutThankyouPage( driver ).goToMyDomain();
+										await new DomainOnlySettingsPage( driver ).manageDomain();
+										return await new DomainDetailsPage( driver ).displayed();
 									}
 								);
 
@@ -591,47 +589,44 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 									stepNum++;
 
 									// Open the sidebar
-									test.before( function() {
-										return new NavBarComponent( driver ).clickMySites();
+									test.before( async function() {
+										return await new NavBarComponent( driver ).clickMySites();
 									} );
 
-									test.it( 'We should only one option - the settings option', function() {
+									test.it( 'We should only one option - the settings option', async function() {
 										const sideBarComponent = new SideBarComponent( driver );
-										sideBarComponent.numberOfMenuItems().then( numberMenuItems => {
-											assert.equal(
-												numberMenuItems,
-												1,
-												'There is not a single menu item for a domain only site'
-											);
-										} );
-										return sideBarComponent.settingsOptionExists().then( exists => {
-											assert( exists, 'The settings menu option does not exist' );
-										} );
+										let numberMenuItems = await sideBarComponent.numberOfMenuItems();
+										assert.equal(
+											numberMenuItems,
+											1,
+											'There is not a single menu item for a domain only site'
+										);
+										let exists = await sideBarComponent.settingsOptionExists();
+										return assert( exists, 'The settings menu option does not exist' );
 									} );
 
 									test.describe( `Step ${ stepNum }: Cancel the domain via purchases`, function() {
 										stepNum++;
 
-										test.it( 'Cancel the domain', function() {
+										test.it( 'Cancel the domain', async function() {
 											try {
-												new SideBarComponent( driver ).selectSettings();
-												new DomainOnlySettingsPage( driver ).manageDomain();
-												new DomainDetailsPage( driver ).viewPaymentSettings();
+												await new SideBarComponent( driver ).selectSettings();
+												await new DomainOnlySettingsPage( driver ).manageDomain();
+												await new DomainDetailsPage( driver ).viewPaymentSettings();
 
 												const managePurchasePage = new ManagePurchasePage( driver );
-												managePurchasePage.domainDisplayed().then( domainDisplayed => {
-													assert.equal(
-														domainDisplayed,
-														expectedDomainName,
-														'The domain displayed on the manage purchase page is unexpected'
-													);
-												} );
-												managePurchasePage.chooseCancelAndRefund();
+												let domainDisplayed = await managePurchasePage.domainDisplayed();
+												assert.equal(
+													domainDisplayed,
+													expectedDomainName,
+													'The domain displayed on the manage purchase page is unexpected'
+												);
+												await managePurchasePage.chooseCancelAndRefund();
 
-												new CancelPurchasePage( driver ).clickCancelPurchase();
+												await new CancelPurchasePage( driver ).clickCancelPurchase();
 
 												const cancelDomainPage = new CancelDomainPage( driver );
-												return cancelDomainPage.completeSurveyAndConfirm();
+												return await cancelDomainPage.completeSurveyAndConfirm();
 											} catch ( err ) {
 												SlackNotifier.warn(
 													`There was an error in the hooks that clean up the test domains but since it is cleaning up we really don't care: '${ err }'`
@@ -662,12 +657,12 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 			const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
 			const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( emailAddress );
 
-			test.it( 'Ensure we are not logged in as anyone', function() {
-				return driverManager.ensureNotLoggedIn( driver );
+			test.it( 'Ensure we are not logged in as anyone', async function() {
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
-			test.it( 'We can set the sandbox cookie for payments', function() {
-				return new WPHomePage( driver, {
+			test.it( 'We can set the sandbox cookie for payments', async function() {
+				return await new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
 				} ).setSandboxModeForPayments( sandboxCookieValue );
@@ -676,16 +671,16 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 			test.describe( `Step ${ stepNum }: About Page`, function() {
 				stepNum++;
 
-				test.it( 'Can visit the start page', function() {
-					return new StartPage( driver, {
+				test.it( 'Can visit the start page', async function() {
+					return await new StartPage( driver, {
 						visit: true,
 						culture: locale,
 						flow: 'business',
 					} ).displayed();
 				} );
 
-				test.it( 'Can see the about page and accept defaults', function() {
-					return new AboutPage( driver ).submitForm();
+				test.it( 'Can see the about page and accept defaults', async function() {
+					return await new AboutPage( driver ).submitForm();
 				} );
 
 				test.describe( `Step ${ stepNum }: Themes`, function() {
@@ -693,8 +688,8 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 					test.it(
 						'Can see the choose a theme page as the starting page, and select the first theme',
-						function() {
-							return new ChooseAThemePage( driver ).selectFirstTheme();
+						async function() {
+							return await new ChooseAThemePage( driver ).selectFirstTheme();
 						}
 					);
 
@@ -703,18 +698,18 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 						test.it(
 							'Can then see the domains page, and can search for a blog name, can see and select a paid .live address in results ',
-							function() {
+							async function() {
 								const findADomainComponent = new FindADomainComponent( driver );
-								findADomainComponent.searchForBlogNameAndWaitForResults( expectedDomainName );
-								return findADomainComponent.selectDomainAddress( expectedDomainName );
+								await findADomainComponent.searchForBlogNameAndWaitForResults( expectedDomainName );
+								return await findADomainComponent.selectDomainAddress( expectedDomainName );
 							}
 						);
 
 						test.describe( `Step ${ stepNum }: Account`, function() {
 							stepNum++;
 
-							test.it( 'Can then enter account details and continue', function() {
-								return new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+							test.it( 'Can then enter account details and continue', async function() {
+								return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
 									emailAddress,
 									siteName,
 									password
@@ -726,8 +721,8 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 								test.it(
 									'Can then see the sign up processing page which will finish automatically move along',
-									function() {
-										return new SignupProcessingPage( driver ).waitToDisappear();
+									async function() {
+										return await new SignupProcessingPage( driver ).waitToDisappear();
 									}
 								);
 
@@ -736,37 +731,39 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 									test.it(
 										'Can see checkout page, choose domain privacy option and enter registrar details',
-										() => {
+										async function() {
 											const checkOutPage = new CheckOutPage( driver );
-											checkOutPage.selectAddPrivacyProtectionCheckbox();
-											checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
-											return checkOutPage.submitForm();
+											await checkOutPage.selectAddPrivacyProtectionCheckbox();
+											await checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
+											return await checkOutPage.submitForm();
 										}
 									);
 
 									test.it(
 										'Can then see the secure payment page and enter/submit test payment details',
-										function() {
+										async function() {
 											const securePaymentComponent = new SecurePaymentComponent( driver );
-											securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
-											securePaymentComponent.submitPaymentDetails();
-											securePaymentComponent.waitForCreditCardPaymentProcessing();
-											return securePaymentComponent.waitForPageToDisappear();
+											await securePaymentComponent.enterTestCreditCardDetails(
+												testCreditCardDetails
+											);
+											await securePaymentComponent.submitPaymentDetails();
+											await securePaymentComponent.waitForCreditCardPaymentProcessing();
+											return await securePaymentComponent.waitForPageToDisappear();
 										}
 									);
 
 									test.describe( `Step ${ stepNum }: GSuite Upsell Page`, function() {
 										stepNum++;
 
-										test.it( 'Can see the gsuite upsell page', function() {
-											return new GSuiteUpsellPage( driver ).declineEmail();
+										test.it( 'Can see the gsuite upsell page', async function() {
+											return await new GSuiteUpsellPage( driver ).declineEmail();
 										} );
 
 										test.describe( `Step ${ stepNum }: Checkout Thank You Page`, function() {
 											stepNum++;
 
-											test.it( 'Can see the secure check out thank you page', function() {
-												return new CheckOutThankyouPage( driver ).displayed();
+											test.it( 'Can see the secure check out thank you page', async function() {
+												return await new CheckOutThankyouPage( driver ).displayed();
 											} );
 
 											test.describe(
@@ -774,21 +771,21 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 												function() {
 													stepNum++;
 
-													test.it( 'Cancel the domain', function() {
+													test.it( 'Cancel the domain', async function() {
 														try {
-															new NavBarComponent( driver ).clickProfileLink();
-															new ProfilePage( driver ).chooseManagePurchases();
+															await new NavBarComponent( driver ).clickProfileLink();
+															await new ProfilePage( driver ).chooseManagePurchases();
 
 															let purchasesPage = new PurchasesPage( driver );
-															purchasesPage.dismissGuidedTour();
-															purchasesPage.selectBusinessPlan();
+															await purchasesPage.dismissGuidedTour();
+															await purchasesPage.selectBusinessPlan();
 
-															new ManagePurchasePage( driver ).chooseCancelAndRefund();
+															await new ManagePurchasePage( driver ).chooseCancelAndRefund();
 
 															const cancelPurchasePage = new CancelPurchasePage( driver );
-															cancelPurchasePage.chooseCancelPlanAndDomain();
-															cancelPurchasePage.clickCancelPurchase();
-															return cancelPurchasePage.completeCancellationSurvey();
+															await cancelPurchasePage.chooseCancelPlanAndDomain();
+															await cancelPurchasePage.clickCancelPurchase();
+															return await cancelPurchasePage.completeCancellationSurvey();
 														} catch ( err ) {
 															SlackNotifier.warn(
 																`There was an error in the hooks that clean up the test domains but since it is cleaning up we really don't care: '${ err }'`
@@ -818,22 +815,22 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const password = config.get( 'passwordForNewTestSignUps' );
 
-		test.it( 'Ensure we are not logged in as anyone', function() {
-			return driverManager.ensureNotLoggedIn( driver );
+		test.it( 'Ensure we are not logged in as anyone', async function() {
+			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.describe( `Step ${ stepNum }: About Page`, function() {
 			stepNum++;
 
-			test.it( 'Can visit the start page', function() {
-				return new StartPage( driver, {
+			test.it( 'Can visit the start page', async function() {
+				return await new StartPage( driver, {
 					visit: true,
 					culture: locale,
 				} ).displayed();
 			} );
 
-			test.it( 'Can see the about page and accept defaults', function() {
-				return new AboutPage( driver ).submitForm();
+			test.it( 'Can see the about page and accept defaults', async function() {
+				return await new AboutPage( driver ).submitForm();
 			} );
 
 			test.describe( `Step ${ stepNum }: Domains`, function() {
@@ -841,36 +838,35 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 				test.it(
 					'Can then see the domains page, and Can search for a blog name, can see and select a free .wordpress address in the results',
-					function() {
+					async function() {
 						const findADomainComponent = new FindADomainComponent( driver );
-						findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-						findADomainComponent.checkAndRetryForFreeBlogAddresses(
+						await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+						await findADomainComponent.checkAndRetryForFreeBlogAddresses(
 							expectedBlogAddresses,
 							blogName
 						);
-						findADomainComponent.freeBlogAddress().then( actualAddress => {
-							assert(
-								expectedBlogAddresses.indexOf( actualAddress ) > -1,
-								`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
-							);
-							newBlogAddress = actualAddress;
-						} );
-						return findADomainComponent.selectFreeAddress();
+						let actualAddress = await findADomainComponent.freeBlogAddress();
+						assert(
+							expectedBlogAddresses.indexOf( actualAddress ) > -1,
+							`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+						);
+						newBlogAddress = actualAddress;
+						return await findADomainComponent.selectFreeAddress();
 					}
 				);
 
 				test.describe( `Step ${ stepNum }: Plans`, function() {
 					stepNum++;
 
-					test.it( 'Can then see the plans page and pick the free plan', function() {
-						return new PickAPlanPage( driver ).selectFreePlan();
+					test.it( 'Can then see the plans page and pick the free plan', async function() {
+						return await new PickAPlanPage( driver ).selectFreePlan();
 					} );
 
 					test.describe( `Step ${ stepNum }: Account`, function() {
 						stepNum++;
 
-						test.it( 'Can then enter account details and continue', function() {
-							return new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+						test.it( 'Can then enter account details and continue', async function() {
+							return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
 								emailAddress,
 								blogName,
 								password
@@ -882,10 +878,10 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 							test.it(
 								"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
-								function() {
+								async function() {
 									const signupProcessingPage = new SignupProcessingPage( driver );
-									signupProcessingPage.waitForContinueButtonToBeEnabled();
-									return signupProcessingPage.continueAlong();
+									await signupProcessingPage.waitForContinueButtonToBeEnabled();
+									return await signupProcessingPage.continueAlong();
 								}
 							);
 
@@ -894,38 +890,35 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 								test.it(
 									'We are on the view blog page, can see trampoline, our URL and title',
-									function() {
+									async function() {
 										const viewBlogPage = new ViewBlogPage( driver );
 										viewBlogPage.waitForTrampolineWelcomeMessage();
-										return viewBlogPage.isTrampolineWelcomeDisplayed().then( displayed => {
-											return assert.equal(
-												displayed,
-												true,
-												'The trampoline welcome message is not displayed'
-											);
-										} );
+										let displayed = await viewBlogPage.isTrampolineWelcomeDisplayed();
+										return assert.equal(
+											displayed,
+											true,
+											'The trampoline welcome message is not displayed'
+										);
 									}
 								);
 
-								test.it( 'Can see the correct blog URL displayed', function() {
-									return new ViewBlogPage( driver ).urlDisplayed().then( url => {
-										return assert.equal(
-											url,
-											'https://' + newBlogAddress + '/',
-											'The displayed URL on the view blog page is not as expected'
-										);
-									} );
+								test.it( 'Can see the correct blog URL displayed', async function() {
+									let url = await new ViewBlogPage( driver ).urlDisplayed();
+									return assert.equal(
+										url,
+										'https://' + newBlogAddress + '/',
+										'The displayed URL on the view blog page is not as expected'
+									);
 								} );
 
 								if ( locale === 'en' ) {
-									test.it( 'Can see the correct blog title displayed', function() {
-										return new ViewBlogPage( driver ).title().then( title => {
-											return assert.equal(
-												title,
-												'Site Title',
-												'The expected blog title is not displaying correctly'
-											);
-										} );
+									test.it( 'Can see the correct blog title displayed', async function() {
+										let title = await new ViewBlogPage( driver ).title();
+										return assert.equal(
+											title,
+											'Site Title',
+											'The expected blog title is not displaying correctly'
+										);
 									} );
 								}
 							} );
@@ -946,22 +939,22 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 		const password = config.get( 'passwordForNewTestSignUps' );
 		let chosenThemeName = '';
 
-		test.it( 'Ensure we are not logged in as anyone', function() {
-			return driverManager.ensureNotLoggedIn( driver );
+		test.it( 'Ensure we are not logged in as anyone', async function() {
+			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.describe( `Step ${ stepNum }: Themes Page`, function() {
 			stepNum++;
 
-			test.it( 'Can see the themes page and select premium theme ', function() {
+			test.it( 'Can see the themes page and select premium theme ', async function() {
 				const themesPage = new ThemesPage( driver, true, 'with-theme' );
-				themesPage.showOnlyPremiumThemes();
-				themesPage.getFirstThemeName().then( name => ( chosenThemeName = name ) );
-				return themesPage.selectNewTheme();
+				await themesPage.showOnlyPremiumThemes();
+				chosenThemeName = await themesPage.getFirstThemeName();
+				return await themesPage.selectNewTheme();
 			} );
 
-			test.it( 'Can pick theme design', function() {
-				return new ThemeDetailPage( driver ).pickThisDesign();
+			test.it( 'Can pick theme design', async function() {
+				return await new ThemeDetailPage( driver ).pickThisDesign();
 			} );
 
 			test.describe( `Step ${ stepNum }: Domains`, function() {
@@ -969,35 +962,34 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 				test.it(
 					'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
-					function() {
+					async function() {
 						const findADomainComponent = new FindADomainComponent( driver );
-						findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-						findADomainComponent.checkAndRetryForFreeBlogAddresses(
+						await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+						await findADomainComponent.checkAndRetryForFreeBlogAddresses(
 							expectedBlogAddresses,
 							blogName
 						);
-						findADomainComponent.freeBlogAddress().then( actualAddress => {
-							assert(
-								expectedBlogAddresses.indexOf( actualAddress ) > -1,
-								`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
-							);
-						} );
-						return findADomainComponent.selectFreeAddress();
+						let actualAddress = await findADomainComponent.freeBlogAddress();
+						assert(
+							expectedBlogAddresses.indexOf( actualAddress ) > -1,
+							`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+						);
+						return await findADomainComponent.selectFreeAddress();
 					}
 				);
 
 				test.describe( `Step ${ stepNum }: Plans`, function() {
 					stepNum++;
 
-					test.it( 'Can then see the plans page and pick the free plan', function() {
-						return new PickAPlanPage( driver ).selectFreePlan();
+					test.it( 'Can then see the plans page and pick the free plan', async function() {
+						return await new PickAPlanPage( driver ).selectFreePlan();
 					} );
 
 					test.describe( `Step ${ stepNum }: Account`, function() {
 						stepNum++;
 
-						test.it( 'Can then enter account details and continue', function() {
-							return new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+						test.it( 'Can then enter account details and continue', async function() {
+							return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
 								emailAddress,
 								blogName,
 								password
@@ -1009,10 +1001,10 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 							test.it(
 								"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
-								function() {
+								async function() {
 									const signupProcessingPage = new SignupProcessingPage( driver );
-									signupProcessingPage.waitForContinueButtonToBeEnabled();
-									return signupProcessingPage.continueAlong();
+									await signupProcessingPage.waitForContinueButtonToBeEnabled();
+									return await signupProcessingPage.continueAlong();
 								}
 							);
 
@@ -1021,13 +1013,12 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 
 								test.it(
 									'Can then see the secure payment page with the chosen theme in the cart',
-									function() {
-										return new SecurePaymentComponent( driver ).getProductsNames().then( arry => {
-											assert(
-												arry[ 0 ].search( chosenThemeName ),
-												`First product in cart is not ${ chosenThemeName }`
-											);
-										} );
+									async function() {
+										let arry = await new SecurePaymentComponent( driver ).getProductsNames();
+										return assert(
+											arry[ 0 ].search( chosenThemeName ),
+											`First product in cart is not ${ chosenThemeName }`
+										);
 									}
 								);
 							} );

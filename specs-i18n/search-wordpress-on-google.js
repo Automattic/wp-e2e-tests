@@ -43,16 +43,18 @@ function doGoogleAdSearch( search_params ) {
 		this.timeout( mochaTimeOut );
 		this.bailSuite( true );
 
+		test.before( function() {
+			if ( locale === 'tr' || locale === 'ar' || locale === 'zh-tw' ) {
+				this.skip( 'Currently no advertising in this locale' );
+			}
+		} );
+
 		test.beforeEach( function() {
 			driver.manage().deleteAllCookies();
 			driverManager.deleteLocalStorage( driver );
 		} );
 
 		test.it( 'Google search contains our ad', function() {
-			if ( locale === 'tr' || locale === 'ar' || locale === 'zh-tw' ) {
-				this.skip( 'Currently no advertising in this locale' );
-			}
-
 			const googleFlow = new GoogleFlow( driver, 'desktop' );
 			const that = this;
 			googleFlow.search( search_params, test_data ).then( () => {
