@@ -44,6 +44,7 @@ Wrapper repo is basically the same Main repo but with parameterized `./run.sh` c
 1. [Canary tests](https://github.com/Automattic/wp-e2e-tests-canary) - `@canary` tagged tests which runs on every Calypso `master` merge
 1. [IE11 tests](https://github.com/Automattic/wp-e2e-tests-ie11) - IE11 tests running in Sauce Labs. Triggered by `cron` job
 1. [Jetpack stable](https://github.com/Automattic/wp-e2e-tests-jetpack) - Jetpack centric tests (specs tagged with `@jetpack` tag) which uses stable Jetpack releases and hosted on Pressable
+1. [Jetpack bleeding edge](https://github.com/Automattic/wp-e2e-tests-jetpack-be) - Jetpack centric tests (specs tagged with `@jetpack` tag) which uses 'bleeding edge' Jetpack releases and hosted on Pressable
 1. [Branches tests](https://github.com/Automattic/wp-e2e-tests-for-branches) - Repo which is used to run e2e tests both canary and full suite against Calypso PR's. Triggered by GitHub labels
 1. [Woo tests](https://github.com/Automattic/wp-e2e-tests-woocommerce) - Runs WooCommerce specs
 1. [Visdiff tests](https://github.com/Automattic/wp-e2e-tests-visdiff) - Runs VisDiff tests. Triggered by `cron` job
@@ -51,6 +52,5 @@ Wrapper repo is basically the same Main repo but with parameterized `./run.sh` c
 
 Friends:
 
-- [Jetpack master](https://github.com/Automattic/jetpack) - Not a wrapper. Same as 4 but uses Jetpack `master` and runs against Jurassic Ninja sites
 - [E2E tests Github bridge](https://github.com/Automattic/wp-e2e-tests-gh-bridge) - middleware used to trigger Branches repo by github labels
 - [WP-Desktop Github bridge](https://github.com/Automattic/wp-desktop-gh-bridge) - middleware used to trigger e2e tests to run against wp-desktop by github labels
