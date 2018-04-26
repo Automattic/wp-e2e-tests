@@ -12,6 +12,8 @@ import ViewPostPage from '../lib/pages/view-post-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
 import PostsPage from '../lib/pages/posts-page.js';
 import ReaderPage from '../lib/pages/reader-page';
+import StatsPage from '../lib/pages/stats-page';
+import ActivityPage from '../lib/pages/stats/activity-page';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
@@ -34,9 +36,9 @@ let driver;
 
 let eyes = eyesHelper.eyesSetup( true );
 
-test.before( function() {
+test.before( async function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser();
+	driver = await driverManager.startBrowser();
 } );
 
 test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
@@ -46,15 +48,14 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	test.describe( 'Public Posts: @parallel @jetpack', function() {
 		let fileDetails;
 
-		test.before( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		// Create image file for upload
-		test.before( function() {
-			return mediaHelper.createFile().then( function( details ) {
-				fileDetails = details;
-			} );
+		test.before( async function() {
+			fileDetails = await mediaHelper.createFile();
+			return fileDetails;
 		} );
 
 		test.describe( 'Preview and Publish a Public Post', function() {
@@ -68,135 +69,176 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				? config.get( 'publicizeTwitterAccount' )
 				: '';
 
-			test.it( 'Can log in', function() {
+			test.it( 'Can log in', async function() {
 				let loginFlow = new LoginFlow( driver );
-				return loginFlow.loginAndStartNewPost();
+				return await loginFlow.loginAndStartNewPost();
 			} );
 
 			test.describe( 'Create, Preview and Post', function() {
-				test.it( 'Can enter post title, content and image', function() {
+				test.it( 'Can enter post title, content and image', async function() {
 					let editorPage = new EditorPage( driver );
-					editorPage.enterTitle( blogPostTitle );
-					editorPage.enterContent( blogPostQuote + '\n' );
-					editorPage.enterPostImage( fileDetails );
-					editorPage.waitUntilImageInserted( fileDetails );
-					editorPage.errorDisplayed().then( errorShown => {
-						assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
-					} );
+					await editorPage.enterTitle( blogPostTitle );
+					await editorPage.enterContent( blogPostQuote + '\n' );
+					await editorPage.enterPostImage( fileDetails );
+					await editorPage.waitUntilImageInserted( fileDetails );
+					let errorShown = await editorPage.errorDisplayed();
+					assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 				} );
 
 				test.describe( 'Categories and Tags', function() {
-					test.it( 'Expand Categories and Tags', function() {
+					test.it( 'Expand Categories and Tags', async function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.expandCategoriesAndTags();
+						await postEditorSidebarComponent.expandCategoriesAndTags();
 					} );
 
-					test.it( 'Can add a new category', function() {
+					test.it( 'Can add a new category', async function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.addNewCategory( newCategoryName );
+						await postEditorSidebarComponent.addNewCategory( newCategoryName );
 					} );
 
-					test.it( 'Can add a new tag', function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.addNewTag( newTagName );
+					test.it( 'Can add a new tag', async function() {
+						let postEditorSidebarComponent = await new PostEditorSidebarComponent( driver );
+						await postEditorSidebarComponent.addNewTag( newTagName );
 					} );
 
-					test.it( 'Close categories and tags', function() {
+					test.it( 'Close categories and tags', async function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						postEditorSidebarComponent.closeCategoriesAndTags();
+						await postEditorSidebarComponent.closeCategoriesAndTags();
 					} );
 
-					test.it( 'Verify categories and tags present after save', function() {
+					test.it( 'Verify categories and tags present after save', async function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-
-						postEditorSidebarComponent.hideComponentIfNecessary();
-						postEditorToolbarComponent.ensureSaved();
-						postEditorSidebarComponent.displayComponentIfNecessary();
-						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
-							assert(
-								! subtitle.match( /Uncategorized/ ),
-								'Post still marked Uncategorized after adding new category AFTER SAVE'
-							);
-						} );
-						postEditorSidebarComponent.getCategoriesAndTags().then( function( subtitle ) {
-							assert(
-								subtitle.match( `#${ newTagName }` ),
-								`New tag #${ newTagName } not applied`
-							);
-						} );
+						await postEditorSidebarComponent.hideComponentIfNecessary();
+						await postEditorToolbarComponent.ensureSaved();
+						await postEditorSidebarComponent.displayComponentIfNecessary();
+						let subtitle = await postEditorSidebarComponent.getCategoriesAndTags();
+						assert(
+							! subtitle.match( /Uncategorized/ ),
+							'Post still marked Uncategorized after adding new category AFTER SAVE'
+						);
+						assert( subtitle.match( `#${ newTagName }` ), `New tag #${ newTagName } not applied` );
 					} );
 
 					test.describe( 'Publicize Options', function() {
-						test.it( 'Expand sharing section', function() {
+						test.it( 'Expand sharing section', async function() {
 							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-							postEditorSidebarComponent.expandSharingSection();
+							await postEditorSidebarComponent.expandSharingSection();
 						} );
 
 						if ( host !== 'CI' && host !== 'JN' ) {
-							test.it( 'Can see the publicise to twitter account', function() {
+							test.it( 'Can see the publicise to twitter account', async function() {
 								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-								postEditorSidebarComponent
-									.publicizeToTwitterAccountDisplayed()
-									.then( function( accountDisplayed ) {
-										assert.equal(
-											accountDisplayed,
-											publicizeTwitterAccount,
-											'Could not see see the publicize to twitter account ' +
-												publicizeTwitterAccount +
-												' in the editor'
-										);
-									} );
+								let accountDisplayed = await postEditorSidebarComponent.publicizeToTwitterAccountDisplayed();
+								assert.equal(
+									accountDisplayed,
+									publicizeTwitterAccount,
+									'Could not see see the publicize to twitter account ' +
+										publicizeTwitterAccount +
+										' in the editor'
+								);
 							} );
 
-							test.it( 'Can see the default publicise message', function() {
+							test.it( 'Can see the default publicise message', async function() {
 								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-
-								postEditorSidebarComponent
-									.publicizeMessageDisplayed()
-									.then( function( messageDisplayed ) {
-										assert.equal(
-											messageDisplayed,
-											blogPostTitle,
-											"The publicize message is not defaulting to the post's title"
-										);
-									} );
+								let messageDisplayed = await postEditorSidebarComponent.publicizeMessageDisplayed();
+								assert.equal(
+									messageDisplayed,
+									blogPostTitle,
+									"The publicize message is not defaulting to the post's title"
+								);
 							} );
 
-							test.it( 'Can set a custom publicise message', function() {
+							test.it( 'Can set a custom publicise message', async function() {
 								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-								postEditorSidebarComponent.setPublicizeMessage( publicizeMessage );
+								await postEditorSidebarComponent.setPublicizeMessage( publicizeMessage );
 							} );
 						}
 
-						test.it( 'Close sharing section', function() {
+						test.it( 'Close sharing section', async function() {
 							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-							postEditorSidebarComponent.closeSharingSection();
+							await postEditorSidebarComponent.closeSharingSection();
 						} );
 
 						test.describe( 'Preview (https only)', function() {
-							test.it( 'Can launch post preview', function() {
+							test.it( 'Can launch post preview', async function() {
 								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-								postEditorSidebarComponent.hideComponentIfNecessary();
+								await postEditorSidebarComponent.hideComponentIfNecessary();
 
 								this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-								this.postEditorToolbarComponent.ensureSaved();
-								this.postEditorToolbarComponent.launchPreview();
+								await this.postEditorToolbarComponent.ensureSaved();
+								await this.postEditorToolbarComponent.launchPreview();
 								this.postPreviewComponent = new PostPreviewComponent( driver );
+								await this.postPreviewComponent.displayed();
 							} );
 
-							test.it( 'Can see correct post title in preview', function() {
-								this.postPreviewComponent.postTitle().then( function( postTitle ) {
+							test.it( 'Can see correct post title in preview', async function() {
+								let postTitle = await this.postPreviewComponent.postTitle();
+								assert.equal(
+									postTitle.toLowerCase(),
+									blogPostTitle.toLowerCase(),
+									'The blog post preview title is not correct'
+								);
+							} );
+
+							test.it( 'Can see correct post content in preview', async function() {
+								let content = await this.postPreviewComponent.postContent();
+								assert.equal(
+									content.indexOf( blogPostQuote ) > -1,
+									true,
+									'The post preview content (' +
+										content +
+										') does not include the expected content (' +
+										blogPostQuote +
+										')'
+								);
+							} );
+
+							test.it( 'Can see the post category in preview', async function() {
+								let categoryDisplayed = await this.postPreviewComponent.categoryDisplayed();
+								assert.equal(
+									categoryDisplayed.toUpperCase(),
+									newCategoryName.toUpperCase(),
+									'The category: ' + newCategoryName + ' is not being displayed on the post'
+								);
+							} );
+
+							test.it( 'Can see the post tag in preview', async function() {
+								let tagDisplayed = await this.postPreviewComponent.tagDisplayed();
+								assert.equal(
+									tagDisplayed.toUpperCase(),
+									newTagName.toUpperCase(),
+									'The tag: ' + newTagName + ' is not being displayed on the post'
+								);
+							} );
+
+							test.it( 'Can see the image in preview', async function() {
+								let imageDisplayed = await this.postPreviewComponent.imageDisplayed( fileDetails );
+								assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
+							} );
+
+							test.it( 'Can close post preview', async function() {
+								await this.postPreviewComponent.close();
+							} );
+
+							test.describe( 'Publish and Preview Published Content', function() {
+								test.it( 'Can publish and view content', async function() {
+									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+									await postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
+								} );
+
+								test.it( 'Can see correct post title in preview', async function() {
+									this.postPreviewComponent = new PostPreviewComponent( driver );
+									let postTitle = await this.postPreviewComponent.postTitle();
 									assert.equal(
 										postTitle.toLowerCase(),
 										blogPostTitle.toLowerCase(),
 										'The blog post preview title is not correct'
 									);
 								} );
-							} );
 
-							test.it( 'Can see correct post content in preview', function() {
-								this.postPreviewComponent.postContent().then( function( content ) {
+								test.it( 'Can see correct post content in preview', async function() {
+									let content = await this.postPreviewComponent.postContent();
 									assert.equal(
 										content.indexOf( blogPostQuote ) > -1,
 										true,
@@ -207,180 +249,106 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 											')'
 									);
 								} );
-							} );
 
-							test.it( 'Can see the post category in preview', function() {
-								this.postPreviewComponent.categoryDisplayed().then( function( categoryDisplayed ) {
+								test.it( 'Can see the post category in preview', async function() {
+									let categoryDisplayed = await this.postPreviewComponent.categoryDisplayed();
 									assert.equal(
 										categoryDisplayed.toUpperCase(),
 										newCategoryName.toUpperCase(),
 										'The category: ' + newCategoryName + ' is not being displayed on the post'
 									);
 								} );
-							} );
 
-							test.it( 'Can see the post tag in preview', function() {
-								this.postPreviewComponent.tagDisplayed().then( function( tagDisplayed ) {
+								test.it( 'Can see the post tag in preview', async function() {
+									let tagDisplayed = await this.postPreviewComponent.tagDisplayed();
 									assert.equal(
 										tagDisplayed.toUpperCase(),
 										newTagName.toUpperCase(),
 										'The tag: ' + newTagName + ' is not being displayed on the post'
 									);
 								} );
-							} );
 
-							test.it( 'Can see the image in preview', function() {
-								this.postPreviewComponent.imageDisplayed( fileDetails ).then( imageDisplayed => {
+								test.it( 'Can see the image in preview', async function() {
+									let imageDisplayed = await this.postPreviewComponent.imageDisplayed(
+										fileDetails
+									);
 									assert.equal(
 										imageDisplayed,
 										true,
 										'Could not see the image in the web preview'
 									);
 								} );
-							} );
 
-							test.it( 'Can close post preview', function() {
-								this.postPreviewComponent.close();
-							} );
-
-							test.describe( 'Publish and Preview Published Content', function() {
-								test.it( 'Can publish and view content', function() {
-									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-									postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
-									this.postPreviewComponent = new PostPreviewComponent( driver );
-								} );
-
-								test.it( 'Can see correct post title in preview', function() {
-									this.postPreviewComponent.postTitle().then( function( postTitle ) {
-										assert.equal(
-											postTitle.toLowerCase(),
-											blogPostTitle.toLowerCase(),
-											'The blog post preview title is not correct'
-										);
-									} );
-								} );
-
-								test.it( 'Can see correct post content in preview', function() {
-									this.postPreviewComponent.postContent().then( function( content ) {
-										assert.equal(
-											content.indexOf( blogPostQuote ) > -1,
-											true,
-											'The post preview content (' +
-												content +
-												') does not include the expected content (' +
-												blogPostQuote +
-												')'
-										);
-									} );
-								} );
-
-								test.it( 'Can see the post category in preview', function() {
-									this.postPreviewComponent
-										.categoryDisplayed()
-										.then( function( categoryDisplayed ) {
-											assert.equal(
-												categoryDisplayed.toUpperCase(),
-												newCategoryName.toUpperCase(),
-												'The category: ' + newCategoryName + ' is not being displayed on the post'
-											);
-										} );
-								} );
-
-								test.it( 'Can see the post tag in preview', function() {
-									this.postPreviewComponent.tagDisplayed().then( function( tagDisplayed ) {
-										assert.equal(
-											tagDisplayed.toUpperCase(),
-											newTagName.toUpperCase(),
-											'The tag: ' + newTagName + ' is not being displayed on the post'
-										);
-									} );
-								} );
-
-								test.it( 'Can see the image in preview', function() {
-									this.postPreviewComponent.imageDisplayed( fileDetails ).then( imageDisplayed => {
-										assert.equal(
-											imageDisplayed,
-											true,
-											'Could not see the image in the web preview'
-										);
-									} );
-								} );
-
-								test.it( 'Can close post preview', function() {
-									return this.postPreviewComponent.edit();
+								test.it( 'Can close post preview', async function() {
+									return await this.postPreviewComponent.edit();
 								} );
 							} );
 
 							test.describe( 'View Published Content', function() {
-								test.it( 'Can publish and view content', function() {
+								test.it( 'Can publish and view content', async function() {
 									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-									postEditorToolbarComponent.viewPublishedPostOrPage();
+									await postEditorToolbarComponent.viewPublishedPostOrPage();
+								} );
+
+								test.it( 'Can see correct post title', async function() {
 									this.viewPostPage = new ViewPostPage( driver );
+									let postTitle = await this.viewPostPage.postTitle();
+									assert.equal(
+										postTitle.toLowerCase(),
+										blogPostTitle.toLowerCase(),
+										'The published blog post title is not correct'
+									);
 								} );
 
-								test.it( 'Can see correct post title', function() {
-									this.viewPostPage.postTitle().then( function( postTitle ) {
-										assert.equal(
-											postTitle.toLowerCase(),
-											blogPostTitle.toLowerCase(),
-											'The published blog post title is not correct'
-										);
-									} );
+								test.it( 'Can see correct post content', async function() {
+									let content = await this.viewPostPage.postContent();
+									assert.equal(
+										content.indexOf( blogPostQuote ) > -1,
+										true,
+										'The post content (' +
+											content +
+											') does not include the expected content (' +
+											blogPostQuote +
+											')'
+									);
 								} );
 
-								test.it( 'Can see correct post content', function() {
-									this.viewPostPage.postContent().then( function( content ) {
-										assert.equal(
-											content.indexOf( blogPostQuote ) > -1,
-											true,
-											'The post content (' +
-												content +
-												') does not include the expected content (' +
-												blogPostQuote +
-												')'
-										);
-									} );
+								test.it( 'Can see correct post category', async function() {
+									let categoryDisplayed = await this.viewPostPage.categoryDisplayed();
+									assert.equal(
+										categoryDisplayed.toUpperCase(),
+										newCategoryName.toUpperCase(),
+										'The category: ' + newCategoryName + ' is not being displayed on the post'
+									);
 								} );
 
-								test.it( 'Can see correct post category', function() {
-									this.viewPostPage.categoryDisplayed().then( function( categoryDisplayed ) {
-										assert.equal(
-											categoryDisplayed.toUpperCase(),
-											newCategoryName.toUpperCase(),
-											'The category: ' + newCategoryName + ' is not being displayed on the post'
-										);
-									} );
+								test.it( 'Can see correct post tag', async function() {
+									let tagDisplayed = await this.viewPostPage.tagDisplayed();
+									assert.equal(
+										tagDisplayed.toUpperCase(),
+										newTagName.toUpperCase(),
+										'The tag: ' + newTagName + ' is not being displayed on the post'
+									);
 								} );
 
-								test.it( 'Can see correct post tag', function() {
-									this.viewPostPage.tagDisplayed().then( function( tagDisplayed ) {
-										assert.equal(
-											tagDisplayed.toUpperCase(),
-											newTagName.toUpperCase(),
-											'The tag: ' + newTagName + ' is not being displayed on the post'
-										);
-									} );
-								} );
-
-								test.it( 'Can see the image published', function() {
-									this.viewPostPage.imageDisplayed( fileDetails ).then( imageDisplayed => {
-										assert.equal(
-											imageDisplayed,
-											true,
-											'Could not see the image in the published post'
-										);
-									} );
+								test.it( 'Can see the image published', async function() {
+									let imageDisplayed = await this.viewPostPage.imageDisplayed( fileDetails );
+									assert.equal(
+										imageDisplayed,
+										true,
+										'Could not see the image in the published post'
+									);
 								} );
 
 								if ( host !== 'CI' && host !== 'JN' ) {
 									test.describe( 'Can see post publicized on twitter', function() {
-										test.it( 'Can see post message', function() {
+										test.it( 'Can see post message', async function() {
 											let twitterFeedPage = new TwitterFeedPage(
 												driver,
 												publicizeTwitterAccount,
 												true
 											);
-											twitterFeedPage.checkLatestTweetsContain( publicizeMessage );
+											await twitterFeedPage.checkLatestTweetsContain( publicizeMessage );
 										} );
 									} );
 								}
@@ -391,9 +359,9 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 		} );
 
-		test.after( function() {
+		test.after( async function() {
 			if ( fileDetails ) {
-				mediaHelper.deleteFile( fileDetails ).then( function() {} );
+				await mediaHelper.deleteFile( fileDetails );
 			}
 		} );
 	} );
@@ -401,8 +369,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	test.describe( 'Basic Public Post @canary @parallel @jetpack', function() {
 		this.bailSuite( true );
 
-		test.it( 'Delete Cookies and Local Storage', function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.it( 'Delete Cookies and Local Storage', async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		test.describe( 'Publish a New Post', function() {
@@ -410,37 +378,83 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			const blogPostQuote =
 				'“Whenever you find yourself on the side of the majority, it is time to pause and reflect.”\n- Mark Twain';
 
-			test.it( 'Can log in', function() {
+			test.it( 'Can log in', async function() {
 				this.loginFlow = new LoginFlow( driver );
-				return this.loginFlow.loginAndStartNewPost();
+				return await this.loginFlow.loginAndStartNewPost();
 			} );
 
-			test.it( 'Can enter post title and content', function() {
+			test.it( 'Can enter post title and content', async function() {
 				this.editorPage = new EditorPage( driver );
-				this.editorPage.enterTitle( blogPostTitle );
-				this.editorPage.enterContent( blogPostQuote + '\n' );
+				await this.editorPage.enterTitle( blogPostTitle );
+				await this.editorPage.enterContent( blogPostQuote + '\n' );
 
-				return this.editorPage.errorDisplayed().then( errorShown => {
-					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
-				} );
+				let errorShown = await this.editorPage.errorDisplayed();
+				return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 			} );
 
-			test.it( 'Can publish and view content', function() {
+			test.it( 'Can publish and view content', async function() {
 				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-				postEditorToolbarComponent.ensureSaved();
-				return postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
+				await postEditorToolbarComponent.ensureSaved();
+				return await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 			} );
 
-			test.it( 'Can see correct post title', function() {
+			test.it( 'Can see correct post title', async function() {
 				this.viewPostPage = new ViewPostPage( driver );
-				this.viewPostPage.postTitle().then( function( postTitle ) {
-					assert.equal(
-						postTitle.toLowerCase(),
-						blogPostTitle.toLowerCase(),
-						'The published blog post title is not correct'
-					);
-				} );
+				let postTitle = await this.viewPostPage.postTitle();
+				assert.equal(
+					postTitle.toLowerCase(),
+					blogPostTitle.toLowerCase(),
+					'The published blog post title is not correct'
+				);
 			} );
+		} );
+	} );
+
+	// TODO: investigate why this doesn't show for Pressable Jetpack site
+	test.describe( 'Check Activity Log for Public Post @parallel', function() {
+		this.bailSuite( true );
+
+		const blogPostTitle = dataHelper.randomPhrase();
+		const blogPostQuote =
+			'“We are what we pretend to be, so we must be careful about what we pretend to be.”\n- Kurt Vonnegut';
+
+		test.it( 'Delete Cookies and Local Storage', async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.it( 'Can log in', async function() {
+			let loginFlow = new LoginFlow( driver );
+			return await loginFlow.loginAndStartNewPost();
+		} );
+
+		test.it( 'Can enter post title and content', async function() {
+			let editorPage = new EditorPage( driver );
+			await editorPage.enterTitle( blogPostTitle );
+			await editorPage.enterContent( blogPostQuote + '\n' );
+
+			let errorShown = await editorPage.errorDisplayed();
+			return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+		} );
+
+		test.it( 'Can publish and view content', async function() {
+			let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			await postEditorToolbarComponent.ensureSaved();
+			await postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
+			return await postEditorToolbarComponent.waitForSuccessViewPostNotice();
+		} );
+
+		test.it( 'Can see the post in the Activity log', async function() {
+			await new ReaderPage( driver, true ).displayed();
+			await new NavbarComponent( driver ).clickMySites();
+			let sidebarComponent = new SidebarComponent( driver );
+			await sidebarComponent.ensureSidebarMenuVisible();
+			await sidebarComponent.selectStats();
+			await new StatsPage( driver ).openActivity();
+			let displayed = await new ActivityPage( driver ).postTitleDisplayed( blogPostTitle );
+			return assert(
+				displayed,
+				`The published post title '${ blogPostTitle }' was not displayed in activity log after publishing`
+			);
 		} );
 	} );
 
@@ -448,75 +462,67 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		this.bailSuite( true );
 		let publishDate;
 
-		test.it( 'Delete Cookies and Local Storage', function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.it( 'Delete Cookies and Local Storage', async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		test.describe( 'Schedule a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = '“Worries shared are worries halved.”\n- Unknown';
 
-			test.it( 'Can log in', function() {
+			test.it( 'Can log in', async function() {
 				this.loginFlow = new LoginFlow( driver );
-				return this.loginFlow.loginAndStartNewPost();
+				return await this.loginFlow.loginAndStartNewPost();
 			} );
 
-			test.it( 'Can enter post title and content', function() {
+			test.it( 'Can enter post title and content', async function() {
 				this.editorPage = new EditorPage( driver );
-				this.editorPage.enterTitle( blogPostTitle );
-				this.editorPage.enterContent( blogPostQuote + '\n' );
+				await this.editorPage.enterTitle( blogPostTitle );
+				await this.editorPage.enterContent( blogPostQuote + '\n' );
 
-				return this.editorPage.errorDisplayed().then( errorShown => {
-					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
-				} );
+				let errorShown = await this.editorPage.errorDisplayed();
+				return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 			} );
 
 			test.it(
 				'Can schedule content for a future date (first day of second week next month)',
-				function() {
+				async function() {
 					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					postEditorToolbarComponent.ensureSaved( { clickSave: true } );
+					await postEditorToolbarComponent.ensureSaved( { clickSave: true } );
 					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.expandStatusSection();
-					postEditorSidebarComponent.chooseFutureDate();
-					postEditorSidebarComponent.getSelectedPublishDate().then( publishDateShown => {
-						publishDate = publishDateShown;
-					} );
-					postEditorSidebarComponent.closeStatusSection();
+					await postEditorSidebarComponent.expandStatusSection();
+					await postEditorSidebarComponent.chooseFutureDate();
+					publishDate = await postEditorSidebarComponent.getSelectedPublishDate();
+					await postEditorSidebarComponent.closeStatusSection();
 					let editorPage = new EditorPage( driver );
-					editorPage.waitForPage();
+					await editorPage.waitForPage();
 					postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					postEditorToolbarComponent.ensureSaved( { clickSave: true } );
-					return postEditorToolbarComponent.clickPublishPost();
+					await postEditorToolbarComponent.ensureSaved( { clickSave: true } );
+					return await postEditorToolbarComponent.clickPublishPost();
 				}
 			);
 
-			test.it( 'Can confirm scheduling post and see correct publish date', function() {
+			test.it( 'Can confirm scheduling post and see correct publish date', async function() {
 				let editorConfirmationSidebarComponent = new EditorConfirmationSidebarComponent( driver );
-				editorConfirmationSidebarComponent.publishDateShown().then( publishDateShown => {
-					assert.equal(
-						publishDateShown,
-						publishDate,
-						'The publish date shown is not the expected publish date'
-					);
-				} );
-				editorConfirmationSidebarComponent.confirmAndPublish();
+				let publishDateShown = await editorConfirmationSidebarComponent.publishDateShown();
+				assert.equal(
+					publishDateShown,
+					publishDate,
+					'The publish date shown is not the expected publish date'
+				);
+				await editorConfirmationSidebarComponent.confirmAndPublish();
 				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-				postEditorToolbarComponent.waitForPostSucessNotice();
+				await postEditorToolbarComponent.waitForPostSucessNotice();
 				let postEditorPage = new EditorPage( driver );
-				return postEditorPage.postIsScheduled().then( isScheduled => {
-					assert(
-						isScheduled,
-						'The newly scheduled post is not showing in the editor as scheduled'
-					);
-				} );
+				let isScheduled = await postEditorPage.postIsScheduled();
+				assert( isScheduled, 'The newly scheduled post is not showing in the editor as scheduled' );
 			} );
 		} );
 	} );
 
 	test.describe( 'Private Posts: @parallel @jetpack', function() {
-		test.before( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		test.describe( 'Publish a Private Post', function() {
@@ -524,124 +530,118 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			const blogPostQuote =
 				'If you’re not prepared to be wrong; you’ll never come up with anything original.\n— Sir Ken Robinson\n';
 
-			test.it( 'Can log in', function() {
+			test.it( 'Can log in', async function() {
 				let loginFlow = new LoginFlow( driver );
-				loginFlow.loginAndStartNewPost();
+				await loginFlow.loginAndStartNewPost();
 			} );
 
-			test.it( 'Can enter post title and content', function() {
+			test.it( 'Can enter post title and content', async function() {
 				let editorPage = new EditorPage( driver );
-				editorPage.enterTitle( blogPostTitle );
-				editorPage.enterContent( blogPostQuote );
+				await editorPage.enterTitle( blogPostTitle );
+				await editorPage.enterContent( blogPostQuote );
 			} );
 
-			test.it( 'Can disable sharing buttons', function() {
+			test.it( 'Can disable sharing buttons', async function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				postEditorSidebarComponent.expandSharingSection();
-				postEditorSidebarComponent.setSharingButtons( false );
-				postEditorSidebarComponent.closeSharingSection();
+				await postEditorSidebarComponent.expandSharingSection();
+				await postEditorSidebarComponent.setSharingButtons( false );
+				await postEditorSidebarComponent.closeSharingSection();
 			} );
 
-			test.it( 'Can allow comments', function() {
+			test.it( 'Can allow comments', async function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				postEditorSidebarComponent.expandMoreOptions();
-				postEditorSidebarComponent.setCommentsForPost( true );
+				await postEditorSidebarComponent.expandMoreOptions();
+				await postEditorSidebarComponent.setCommentsForPost( true );
 			} );
 
 			test.describe( 'Set to private which publishes it', function() {
-				test.it( 'Ensure the post is saved', function() {
+				test.it( 'Ensure the post is saved', async function() {
 					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					postEditorToolbarComponent.ensureSaved();
+					await postEditorToolbarComponent.ensureSaved();
 				} );
 
-				test.it( 'Can set visibility to private which immediately publishes it', function() {
+				test.it( 'Can set visibility to private which immediately publishes it', async function() {
 					const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					postEditorSidebarComponent.setVisibilityToPrivate();
+					await postEditorSidebarComponent.setVisibilityToPrivate();
 					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
-					this.postEditorToolbarComponent.viewPublishedPostOrPage();
+					await this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
+					await this.postEditorToolbarComponent.viewPublishedPostOrPage();
 				} );
 
 				if ( host === 'WPCOM' ) {
 					test.describe( 'As a logged in user ', function() {
-						test.it( 'Can see correct post title', function() {
+						test.it( 'Can see correct post title', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postTitle().then( function( postTitle ) {
-								assert.equal(
-									postTitle.toLowerCase(),
-									'private: ' + blogPostTitle.toLowerCase(),
-									'The published blog post title is not correct'
-								);
-							} );
+							let postTitle = await viewPostPage.postTitle();
+							assert.equal(
+								postTitle.toLowerCase(),
+								'private: ' + blogPostTitle.toLowerCase(),
+								'The published blog post title is not correct'
+							);
 						} );
 
-						test.it( 'Can see correct post content', function() {
+						test.it( 'Can see correct post content', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postContent().then( function( content ) {
-								assert.equal(
-									content.indexOf( blogPostQuote ) > -1,
-									true,
-									'The post content (' +
-										content +
-										') does not include the expected content (' +
-										blogPostQuote +
-										')'
-								);
-							} );
+							let content = await viewPostPage.postContent();
+							assert.equal(
+								content.indexOf( blogPostQuote ) > -1,
+								true,
+								'The post content (' +
+									content +
+									') does not include the expected content (' +
+									blogPostQuote +
+									')'
+							);
 						} );
 
-						test.it( 'Can see comments enabled', function() {
+						test.it( 'Can see comments enabled', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.commentsVisible().then( function( visible ) {
-								assert.equal(
-									visible,
-									true,
-									'Comments are not shown even though they were enabled when creating the post.'
-								);
-							} );
+							let visible = await viewPostPage.commentsVisible();
+							assert.equal(
+								visible,
+								true,
+								'Comments are not shown even though they were enabled when creating the post.'
+							);
 						} );
 
-						test.it( "Can't see sharing buttons", function() {
+						test.it( "Can't see sharing buttons", async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.sharingButtonsVisible().then( function( visible ) {
-								assert.equal(
-									visible,
-									false,
-									'Sharing buttons are shown even though they were disabled when creating the post.'
-								);
-							} );
+							let visible = await viewPostPage.sharingButtonsVisible();
+							assert.equal(
+								visible,
+								false,
+								'Sharing buttons are shown even though they were disabled when creating the post.'
+							);
 						} );
 
 						test.describe( 'As a non-logged in user ', function() {
-							test.it( 'Delete cookies (log out)', function() {
+							test.it( 'Delete cookies (log out)', async function() {
 								driverManager.clearCookiesAndDeleteLocalStorage( driver );
-								driver.navigate().refresh();
+								await driver.navigate().refresh();
 							} );
 
-							test.it( "Can't see post at all", function() {
+							test.it( "Can't see post at all", async function() {
 								let notFoundPage = new NotFoundPage( driver );
-								notFoundPage.displayed().then( function( displayed ) {
-									assert.equal(
-										displayed,
-										true,
-										'Could not see the not found (404) page. Check that it is displayed'
-									);
-								} );
-							} );
-						} );
-					} );
-				} else {
-					// Jetpack tests
-					test.describe( 'As a non-logged in user ', function() {
-						test.it( "Can't see post at all", function() {
-							let notFoundPage = new NotFoundPage( driver );
-							notFoundPage.displayed().then( function( displayed ) {
+								let displayed = await notFoundPage.displayed();
 								assert.equal(
 									displayed,
 									true,
 									'Could not see the not found (404) page. Check that it is displayed'
 								);
 							} );
+						} );
+					} );
+				} else {
+					// Jetpack tests
+					test.describe( 'As a non-logged in user ', function() {
+						test.it( "Can't see post at all", async function() {
+							let notFoundPage = new NotFoundPage( driver );
+							let displayed = await notFoundPage.displayed();
+							assert.equal(
+								displayed,
+								true,
+								'Could not see the not found (404) page. Check that it is displayed'
+							);
 						} );
 					} );
 					//TODO: Log in via SSO and verify content
@@ -653,440 +653,410 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	test.describe( 'Password Protected Posts: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
-		test.before( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		test.describe( 'Publish a Password Protected Post', function() {
-			var blogPostTitle = dataHelper.randomPhrase();
-			var blogPostQuote =
+			let blogPostTitle = dataHelper.randomPhrase();
+			let blogPostQuote =
 				'The best thing about the future is that it comes only one day at a time.\n— Abraham Lincoln\n';
-			var postPassword = 'e2e' + new Date().getTime().toString();
+			let postPassword = 'e2e' + new Date().getTime().toString();
 
-			test.it( 'Can log in', function() {
+			test.it( 'Can log in', async function() {
 				let loginFlow = new LoginFlow( driver );
-				loginFlow.loginAndStartNewPost();
+				await loginFlow.loginAndStartNewPost();
 			} );
 
-			test.it( 'Can enter post title and content and set to password protected', function() {
+			test.it( 'Can enter post title and content and set to password protected', async function() {
 				this.editorPage = new EditorPage( driver );
-				this.editorPage.enterTitle( blogPostTitle );
+				await this.editorPage.enterTitle( blogPostTitle );
 				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
+				await this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				this.editorPage = new EditorPage( driver );
-				this.editorPage.enterContent( blogPostQuote );
+				await this.editorPage.enterContent( blogPostQuote );
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-				this.postEditorToolbarComponent.ensureSaved();
+				await this.postEditorToolbarComponent.ensureSaved();
 			} );
 
-			test.it( 'Can enable sharing buttons', function() {
+			test.it( 'Can enable sharing buttons', async function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				postEditorSidebarComponent.expandSharingSection();
-				postEditorSidebarComponent.setSharingButtons( true );
-				postEditorSidebarComponent.closeSharingSection();
+				await postEditorSidebarComponent.expandSharingSection();
+				await postEditorSidebarComponent.setSharingButtons( true );
+				await postEditorSidebarComponent.closeSharingSection();
 			} );
 
-			test.it( 'Can disallow comments', function() {
+			test.it( 'Can disallow comments', async function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				postEditorSidebarComponent.expandMoreOptions();
-				postEditorSidebarComponent.setCommentsForPost( false );
-				postEditorSidebarComponent.closeMoreOptions();
+				await postEditorSidebarComponent.expandMoreOptions();
+				await postEditorSidebarComponent.setCommentsForPost( false );
+				await postEditorSidebarComponent.closeMoreOptions();
 			} );
 
 			test.describe( 'Publish and View', function() {
 				// Can publish and view content
-				test.before( function() {
+				test.before( async function() {
 					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
+					await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 				} );
 
 				test.describe( 'As a logged in user', function() {
 					test.describe( 'With no password entered', function() {
-						test.it( 'Can view post title', function() {
+						test.it( 'Can view post title', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postTitle().then( function( postTitle ) {
-								assert.equal(
-									postTitle.toLowerCase(),
-									( 'Protected: ' + blogPostTitle ).toLowerCase()
-								);
-							} );
+							let postTitle = await viewPostPage.postTitle();
+							assert.equal(
+								postTitle.toLowerCase(),
+								( 'Protected: ' + blogPostTitle ).toLowerCase()
+							);
 						} );
 
-						test.it( 'Can see password field', function() {
+						test.it( 'Can see password field', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.isPasswordProtected().then( function( isPasswordProtected ) {
-								assert.equal(
-									isPasswordProtected,
-									true,
-									'The blog post does not appear to be password protected'
-								);
-							} );
+							let isPasswordProtected = await viewPostPage.isPasswordProtected();
+							assert.equal(
+								isPasswordProtected,
+								true,
+								'The blog post does not appear to be password protected'
+							);
 						} );
 
-						test.it( "Can't see content when no password is entered", function() {
+						test.it( "Can't see content when no password is entered", async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postContent().then( function( content ) {
-								assert.equal(
-									content.indexOf( blogPostQuote ) === -1,
-									true,
-									'The post content (' +
-										content +
-										') displays the expected content (' +
-										blogPostQuote +
-										') when it should be password protected.'
-								);
-							} );
+							let content = await viewPostPage.postContent();
+							assert.equal(
+								content.indexOf( blogPostQuote ) === -1,
+								true,
+								'The post content (' +
+									content +
+									') displays the expected content (' +
+									blogPostQuote +
+									') when it should be password protected.'
+							);
 						} );
 
-						test.it( "Can't see comments", function() {
+						test.it( "Can't see comments", async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.commentsVisible().then( function( visible ) {
-								assert.equal(
-									visible,
-									false,
-									'Comments are shown even though they were disabled when creating the post.'
-								);
-							} );
+							let visible = await viewPostPage.commentsVisible();
+							assert.equal(
+								visible,
+								false,
+								'Comments are shown even though they were disabled when creating the post.'
+							);
 						} );
 
-						test.it( 'Can see sharing buttons', function() {
+						test.it( 'Can see sharing buttons', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.sharingButtonsVisible().then( function( visible ) {
-								assert.equal(
-									visible,
-									true,
-									'Sharing buttons are not shown even though they were enabled when creating the post.'
-								);
-							} );
+							let visible = await viewPostPage.sharingButtonsVisible();
+							return assert.equal(
+								visible,
+								true,
+								'Sharing buttons are not shown even though they were enabled when creating the post.'
+							);
 						} );
 					} );
 
 					test.describe( 'With incorrect password entered', function() {
 						// Enter incorrect password
-						test.before( function() {
+						test.before( async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.enterPassword( 'password' );
+							await viewPostPage.enterPassword( 'password' );
 						} );
 
-						test.it( 'Can view post title', function() {
+						test.it( 'Can view post title', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postTitle().then( function( postTitle ) {
-								assert.equal(
-									postTitle.toLowerCase(),
-									( 'Protected: ' + blogPostTitle ).toLowerCase()
-								);
-							} );
+							let postTitle = await viewPostPage.postTitle();
+							assert.equal(
+								postTitle.toLowerCase(),
+								( 'Protected: ' + blogPostTitle ).toLowerCase()
+							);
 						} );
 
-						test.it( 'Can see password field', function() {
+						test.it( 'Can see password field', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.isPasswordProtected().then( function( isPasswordProtected ) {
-								assert.equal(
-									isPasswordProtected,
-									true,
-									'The blog post does not appear to be password protected'
-								);
-							} );
+							let isPasswordProtected = await viewPostPage.isPasswordProtected();
+							assert.equal(
+								isPasswordProtected,
+								true,
+								'The blog post does not appear to be password protected'
+							);
 						} );
 
-						test.it( "Can't see content when incorrect password is entered", function() {
+						test.it( "Can't see content when incorrect password is entered", async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postContent().then( function( content ) {
-								assert.equal(
-									content.indexOf( blogPostQuote ) === -1,
-									true,
-									'The post content (' +
-										content +
-										') displays the expected content (' +
-										blogPostQuote +
-										') when it should be password protected.'
-								);
-							} );
+							let content = await viewPostPage.postContent();
+							assert.equal(
+								content.indexOf( blogPostQuote ) === -1,
+								true,
+								'The post content (' +
+									content +
+									') displays the expected content (' +
+									blogPostQuote +
+									') when it should be password protected.'
+							);
 						} );
 
-						test.it( "Can't see comments", function() {
+						test.it( "Can't see comments", async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.commentsVisible().then( function( visible ) {
-								assert.equal(
-									visible,
-									false,
-									'Comments are shown even though they were disabled when creating the post.'
-								);
-							} );
+							let visible = await viewPostPage.commentsVisible();
+							assert.equal(
+								visible,
+								false,
+								'Comments are shown even though they were disabled when creating the post.'
+							);
 						} );
 
-						test.it( 'Can see sharing buttons', function() {
+						test.it( 'Can see sharing buttons', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.sharingButtonsVisible().then( function( visible ) {
-								assert.equal(
-									visible,
-									true,
-									'Sharing buttons are not shown even though they were enabled when creating the post.'
-								);
-							} );
+							let visible = await viewPostPage.sharingButtonsVisible();
+							assert.equal(
+								visible,
+								true,
+								'Sharing buttons are not shown even though they were enabled when creating the post.'
+							);
 						} );
 					} );
 
 					test.describe( 'With correct password entered', function() {
 						// Enter correct password
-						test.before( function() {
+						test.before( async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.enterPassword( postPassword );
+							await viewPostPage.enterPassword( postPassword );
 						} );
 
-						test.it( 'Can view post title', function() {
+						test.it( 'Can view post title', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postTitle().then( function( postTitle ) {
-								assert.equal(
-									postTitle.toLowerCase(),
-									( 'Protected: ' + blogPostTitle ).toLowerCase()
-								);
-							} );
+							let postTitle = await viewPostPage.postTitle();
+							assert.equal(
+								postTitle.toLowerCase(),
+								( 'Protected: ' + blogPostTitle ).toLowerCase()
+							);
 						} );
 
-						test.it( "Can't see password field", function() {
+						test.it( "Can't see password field", async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.isPasswordProtected().then( function( isPasswordProtected ) {
-								assert.equal(
-									isPasswordProtected,
-									false,
-									'The blog post still appears to be password protected'
-								);
-							} );
+							let isPasswordProtected = await viewPostPage.isPasswordProtected();
+							assert.equal(
+								isPasswordProtected,
+								false,
+								'The blog post still appears to be password protected'
+							);
 						} );
 
-						test.it( 'Can see page content', function() {
+						test.it( 'Can see page content', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postContent().then( function( content ) {
-								assert.equal(
-									content.indexOf( blogPostQuote ) > -1,
-									true,
-									'The post content (' +
-										content +
-										') does not include the expected content (' +
-										blogPostQuote +
-										')'
-								);
-							} );
+							let content = await viewPostPage.postContent();
+							assert.equal(
+								content.indexOf( blogPostQuote ) > -1,
+								true,
+								'The post content (' +
+									content +
+									') does not include the expected content (' +
+									blogPostQuote +
+									')'
+							);
 						} );
 
-						test.it( "Can't see comments", function() {
+						test.it( "Can't see comments", async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.commentsVisible().then( function( visible ) {
-								assert.equal(
-									visible,
-									false,
-									'Comments are shown even though they were disabled when creating the post.'
-								);
-							} );
+							let visible = await viewPostPage.commentsVisible();
+							assert.equal(
+								visible,
+								false,
+								'Comments are shown even though they were disabled when creating the post.'
+							);
 						} );
 
-						test.it( 'Can see sharing buttons', function() {
+						test.it( 'Can see sharing buttons', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.sharingButtonsVisible().then( function( visible ) {
-								assert.equal(
-									visible,
-									true,
-									'Sharing buttons are not shown even though they were enabled when creating the post.'
-								);
-							} );
+							let visible = await viewPostPage.sharingButtonsVisible();
+							assert.equal(
+								visible,
+								true,
+								'Sharing buttons are not shown even though they were enabled when creating the post.'
+							);
 						} );
 					} );
 				} );
 				test.describe( 'As a non-logged in user', function() {
-					test.before( function() {
-						driverManager.clearCookiesAndDeleteLocalStorage( driver );
-						driver.navigate().refresh();
+					test.before( async function() {
+						await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+						await driver.navigate().refresh();
 					} );
 					test.describe( 'With no password entered', function() {
-						test.it( 'Can view post title', function() {
+						test.it( 'Can view post title', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postTitle().then( function( postTitle ) {
-								assert.equal(
-									postTitle.toLowerCase(),
-									( 'Protected: ' + blogPostTitle ).toLowerCase()
-								);
-							} );
+							let postTitle = await viewPostPage.postTitle();
+							assert.equal(
+								postTitle.toLowerCase(),
+								( 'Protected: ' + blogPostTitle ).toLowerCase()
+							);
 						} );
 
-						test.it( 'Can see password field', function() {
+						test.it( 'Can see password field', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.isPasswordProtected().then( function( isPasswordProtected ) {
-								assert.equal(
-									isPasswordProtected,
-									true,
-									'The blog post does not appear to be password protected'
-								);
-							} );
+							let isPasswordProtected = await viewPostPage.isPasswordProtected();
+							assert.equal(
+								isPasswordProtected,
+								true,
+								'The blog post does not appear to be password protected'
+							);
 						} );
 
-						test.it( "Can't see content when no password is entered", function() {
+						test.it( "Can't see content when no password is entered", async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postContent().then( function( content ) {
-								assert.equal(
-									content.indexOf( blogPostQuote ) === -1,
-									true,
-									'The post content (' +
-										content +
-										') displays the expected content (' +
-										blogPostQuote +
-										') when it should be password protected.'
-								);
-							} );
+							let content = await viewPostPage.postContent();
+							assert.equal(
+								content.indexOf( blogPostQuote ) === -1,
+								true,
+								'The post content (' +
+									content +
+									') displays the expected content (' +
+									blogPostQuote +
+									') when it should be password protected.'
+							);
 						} );
 
-						test.it( "Can't see comments", function() {
+						test.it( "Can't see comments", async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.commentsVisible().then( function( visible ) {
-								assert.equal(
-									visible,
-									false,
-									'Comments are shown even though they were disabled when creating the post.'
-								);
-							} );
+							let visible = await viewPostPage.commentsVisible();
+							assert.equal(
+								visible,
+								false,
+								'Comments are shown even though they were disabled when creating the post.'
+							);
 						} );
 
-						test.it( 'Can see sharing buttons', function() {
+						test.it( 'Can see sharing buttons', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.sharingButtonsVisible().then( function( visible ) {
-								assert.equal(
-									visible,
-									true,
-									'Sharing buttons are not shown even though they were enabled when creating the post.'
-								);
-							} );
+							let visible = await viewPostPage.sharingButtonsVisible();
+							return assert.equal(
+								visible,
+								true,
+								'Sharing buttons are not shown even though they were enabled when creating the post.'
+							);
 						} );
 					} );
 
 					test.describe( 'With incorrect password entered', function() {
 						// Enter incorrect password
-						test.before( function() {
+						test.before( async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.enterPassword( 'password' );
+							await viewPostPage.enterPassword( 'password' );
 						} );
 
-						test.it( 'Can view post title', function() {
+						test.it( 'Can view post title', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postTitle().then( function( postTitle ) {
-								assert.equal(
-									postTitle.toLowerCase(),
-									( 'Protected: ' + blogPostTitle ).toLowerCase()
-								);
-							} );
+							let postTitle = await viewPostPage.postTitle();
+							assert.equal(
+								postTitle.toLowerCase(),
+								( 'Protected: ' + blogPostTitle ).toLowerCase()
+							);
 						} );
 
-						test.it( 'Can see password field', function() {
+						test.it( 'Can see password field', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.isPasswordProtected().then( function( isPasswordProtected ) {
-								assert.equal(
-									isPasswordProtected,
-									true,
-									'The blog post does not appear to be password protected'
-								);
-							} );
+							let isPasswordProtected = await viewPostPage.isPasswordProtected();
+							assert.equal(
+								isPasswordProtected,
+								true,
+								'The blog post does not appear to be password protected'
+							);
 						} );
 
-						test.it( "Can't see content when incorrect password is entered", function() {
+						test.it( "Can't see content when incorrect password is entered", async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postContent().then( function( content ) {
-								assert.equal(
-									content.indexOf( blogPostQuote ) === -1,
-									true,
-									'The post content (' +
-										content +
-										') displays the expected content (' +
-										blogPostQuote +
-										') when it should be password protected.'
-								);
-							} );
+							let content = await viewPostPage.postContent();
+							assert.equal(
+								content.indexOf( blogPostQuote ) === -1,
+								true,
+								'The post content (' +
+									content +
+									') displays the expected content (' +
+									blogPostQuote +
+									') when it should be password protected.'
+							);
 						} );
 
-						test.it( "Can't see comments", function() {
+						test.it( "Can't see comments", async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.commentsVisible().then( function( visible ) {
-								assert.equal(
-									visible,
-									false,
-									'Comments are shown even though they were disabled when creating the post.'
-								);
-							} );
+							let visible = await viewPostPage.commentsVisible();
+							assert.equal(
+								visible,
+								false,
+								'Comments are shown even though they were disabled when creating the post.'
+							);
 						} );
 
-						test.it( 'Can see sharing buttons', function() {
+						test.it( 'Can see sharing buttons', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.sharingButtonsVisible().then( function( visible ) {
-								assert.equal(
-									visible,
-									true,
-									'Sharing buttons are not shown even though they were enabled when creating the post.'
-								);
-							} );
+							let visible = await viewPostPage.sharingButtonsVisible();
+							assert.equal(
+								visible,
+								true,
+								'Sharing buttons are not shown even though they were enabled when creating the post.'
+							);
 						} );
 					} );
 
 					test.describe( 'With correct password entered', function() {
 						// Enter correct password
-						test.before( function() {
+						test.before( async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.enterPassword( postPassword );
+							await viewPostPage.enterPassword( postPassword );
 						} );
 
-						test.it( 'Can view post title', function() {
+						test.it( 'Can view post title', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postTitle().then( function( postTitle ) {
-								assert.equal(
-									postTitle.toLowerCase(),
-									( 'Protected: ' + blogPostTitle ).toLowerCase()
-								);
-							} );
+							let postTitle = await viewPostPage.postTitle();
+							assert.equal(
+								postTitle.toLowerCase(),
+								( 'Protected: ' + blogPostTitle ).toLowerCase()
+							);
 						} );
 
-						test.it( "Can't see password field", function() {
+						test.it( "Can't see password field", async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.isPasswordProtected().then( function( isPasswordProtected ) {
-								assert.equal(
-									isPasswordProtected,
-									false,
-									'The blog post still appears to be password protected'
-								);
-							} );
+							let isPasswordProtected = await viewPostPage.isPasswordProtected();
+							assert.equal(
+								isPasswordProtected,
+								false,
+								'The blog post still appears to be password protected'
+							);
 						} );
 
-						test.it( 'Can see page content', function() {
+						test.it( 'Can see page content', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.postContent().then( function( content ) {
-								assert.equal(
-									content.indexOf( blogPostQuote ) > -1,
-									true,
-									'The post content (' +
-										content +
-										') does not include the expected content (' +
-										blogPostQuote +
-										')'
-								);
-							} );
+							let content = await viewPostPage.postContent();
+							assert.equal(
+								content.indexOf( blogPostQuote ) > -1,
+								true,
+								'The post content (' +
+									content +
+									') does not include the expected content (' +
+									blogPostQuote +
+									')'
+							);
 						} );
 
-						test.it( "Can't see comments", function() {
+						test.it( "Can't see comments", async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.commentsVisible().then( function( visible ) {
-								assert.equal(
-									visible,
-									false,
-									'Comments are shown even though they were disabled when creating the post.'
-								);
-							} );
+							let visible = await viewPostPage.commentsVisible();
+							assert.equal(
+								visible,
+								false,
+								'Comments are shown even though they were disabled when creating the post.'
+							);
 						} );
 
-						test.it( 'Can see sharing buttons', function() {
+						test.it( 'Can see sharing buttons', async function() {
 							let viewPostPage = new ViewPostPage( driver );
-							viewPostPage.sharingButtonsVisible().then( function( visible ) {
-								assert.equal(
-									visible,
-									true,
-									'Sharing buttons are not shown even though they were enabled when creating the post.'
-								);
-							} );
+							let visible = await viewPostPage.sharingButtonsVisible();
+							assert.equal(
+								visible,
+								true,
+								'Sharing buttons are not shown even though they were enabled when creating the post.'
+							);
 						} );
 					} );
 				} );
@@ -1097,8 +1067,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	test.describe( 'Trash Post: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
-		test.before( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		test.describe( 'Trash a New Post', function() {
@@ -1106,31 +1076,30 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			const blogPostQuote =
 				'The only victory that counts is the victory over yourself.\n— Jesse Owens\n';
 
-			test.it( 'Can log in', function() {
+			test.it( 'Can log in', async function() {
 				const loginFlow = new LoginFlow( driver );
-				return loginFlow.loginAndStartNewPost();
+				return await loginFlow.loginAndStartNewPost();
 			} );
 
-			test.it( 'Can enter post title and content', function() {
+			test.it( 'Can enter post title and content', async function() {
 				const editorPage = new EditorPage( driver );
-				editorPage.enterTitle( blogPostTitle );
-				return editorPage.enterContent( blogPostQuote );
+				await editorPage.enterTitle( blogPostTitle );
+				return await editorPage.enterContent( blogPostQuote );
 			} );
 
-			test.it( 'Can trash the new post', function() {
+			test.it( 'Can trash the new post', async function() {
 				const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				return postEditorSidebarComponent.trashPost();
+				return await postEditorSidebarComponent.trashPost();
 			} );
 
-			test.it( 'Can then see the Posts page with a confirmation message', function() {
+			test.it( 'Can then see the Posts page with a confirmation message', async function() {
 				const postsPage = new PostsPage( driver );
-				return postsPage.successNoticeDisplayed().then( displayed => {
-					return assert.equal(
-						displayed,
-						true,
-						'The Posts page success notice for deleting the post is not displayed'
-					);
-				} );
+				let displayed = await postsPage.successNoticeDisplayed();
+				return assert.equal(
+					displayed,
+					true,
+					'The Posts page success notice for deleting the post is not displayed'
+				);
 			} );
 		} );
 	} );
@@ -1138,8 +1107,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	test.describe( 'Edit a Post: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
-		test.it( 'Delete Cookies and Local Storage', function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.it( 'Delete Cookies and Local Storage', async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		test.describe( 'Publish a New Post', function() {
@@ -1148,85 +1117,83 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			const blogPostQuote =
 				'Science is organised knowledge. Wisdom is organised life..\n~ Immanuel Kant\n';
 
-			test.it( 'Can log in', function() {
+			test.it( 'Can log in', async function() {
 				this.loginFlow = new LoginFlow( driver );
-				return this.loginFlow.loginAndStartNewPost();
+				return await this.loginFlow.loginAndStartNewPost();
 			} );
 
-			test.it( 'Can enter post title and content', function() {
+			test.it( 'Can enter post title and content', async function() {
 				this.editorPage = new EditorPage( driver );
-				this.editorPage.enterTitle( originalBlogPostTitle );
-				this.editorPage.enterContent( blogPostQuote );
-				return this.editorPage.errorDisplayed().then( errorShown => {
-					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
-				} );
+				await this.editorPage.enterTitle( originalBlogPostTitle );
+				await this.editorPage.enterContent( blogPostQuote );
+				let errorShown = await this.editorPage.errorDisplayed();
+				return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 			} );
 
-			test.it( 'Can publish the post', function() {
+			test.it( 'Can publish the post', async function() {
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-				this.postEditorToolbarComponent.ensureSaved();
-				this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
-				return this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
+				await this.postEditorToolbarComponent.ensureSaved();
+				await this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
+				return await this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 			} );
 
 			test.describe( 'Edit the post via posts', function() {
-				test.it( 'Can view the posts list', function() {
+				test.it( 'Can view the posts list', async function() {
 					this.readerPage = new ReaderPage( driver, true );
 					this.navbarComponent = new NavbarComponent( driver );
-					this.navbarComponent.clickMySites();
+					await this.navbarComponent.clickMySites();
 					const jetpackSiteName = dataHelper.getJetpackSiteName();
 					this.sidebarComponent = new SidebarComponent( driver, jetpackSiteName );
-					this.sidebarComponent.selectPosts();
+					await this.sidebarComponent.selectPosts();
 					return ( this.postsPage = new PostsPage( driver ) );
 				} );
 
-				test.it( 'Can see and edit our new post', function() {
-					this.postsPage.waitForPostTitled( originalBlogPostTitle );
-					this.postsPage.isPostDisplayed( originalBlogPostTitle ).then( displayed => {
-						assert.equal(
-							displayed,
-							true,
-							`The blog post titled '${ originalBlogPostTitle }' is not displayed in the list of posts`
-						);
-					} );
-					this.postsPage.editPostWithTitle( originalBlogPostTitle );
+				test.it( 'Can see and edit our new post', async function() {
+					await this.postsPage.waitForPostTitled( originalBlogPostTitle );
+					let displayed = await this.postsPage.isPostDisplayed( originalBlogPostTitle );
+					assert.equal(
+						displayed,
+						true,
+						`The blog post titled '${ originalBlogPostTitle }' is not displayed in the list of posts`
+					);
+					await this.postsPage.editPostWithTitle( originalBlogPostTitle );
 					return ( this.editorPage = new EditorPage( driver ) );
 				} );
 
-				test.it( 'Can see the post title', function() {
-					this.editorPage.waitForTitle();
-					return this.editorPage.titleShown().then( titleShown => {
-						assert.equal(
-							titleShown,
-							originalBlogPostTitle,
-							'The blog post title shown was unexpected'
-						);
-					} );
+				test.it( 'Can see the post title', async function() {
+					await this.editorPage.waitForTitle();
+					let titleShown = await this.editorPage.titleShown();
+					assert.equal(
+						titleShown,
+						originalBlogPostTitle,
+						'The blog post title shown was unexpected'
+					);
 				} );
 
-				test.it( 'Can set the new title and update it, and link to the updated post', function() {
-					this.editorPage.enterTitle( updatedBlogPostTitle );
-					this.editorPage.errorDisplayed().then( errorShown => {
+				test.it(
+					'Can set the new title and update it, and link to the updated post',
+					async function() {
+						await this.editorPage.enterTitle( updatedBlogPostTitle );
+						let errorShown = await this.editorPage.errorDisplayed();
 						assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
-					} );
-					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					this.postEditorToolbarComponent.publishThePost();
-					return this.postEditorToolbarComponent.waitForSuccessAndViewPost();
-				} );
+						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+						await this.postEditorToolbarComponent.publishThePost();
+						return await this.postEditorToolbarComponent.waitForSuccessAndViewPost();
+					}
+				);
 
 				test.describe( 'Can view the post with the new title', function() {
 					test.it( 'Can view the post', function() {
 						return ( this.viewPostPage = new ViewPostPage( driver ) );
 					} );
 
-					test.it( 'Can see correct post title', function() {
-						return this.viewPostPage.postTitle().then( function( postTitle ) {
-							assert.equal(
-								postTitle.toLowerCase(),
-								updatedBlogPostTitle.toLowerCase(),
-								'The published blog post title is not correct'
-							);
-						} );
+					test.it( 'Can see correct post title', async function() {
+						let postTitle = await this.viewPostPage.postTitle();
+						return assert.equal(
+							postTitle.toLowerCase(),
+							updatedBlogPostTitle.toLowerCase(),
+							'The published blog post title is not correct'
+						);
 					} );
 				} );
 			} );
@@ -1236,44 +1203,42 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	test.describe( 'Insert a contact form: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
-		test.it( 'Delete Cookies and Local Storage', function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.it( 'Delete Cookies and Local Storage', async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		test.describe( 'Publish a New Post with a Contact Form', function() {
 			const originalBlogPostTitle = 'Contact Us: ' + dataHelper.randomPhrase();
 
-			test.it( 'Can log in', function() {
+			test.it( 'Can log in', async function() {
 				this.loginFlow = new LoginFlow( driver );
-				return this.loginFlow.loginAndStartNewPost();
+				return await this.loginFlow.loginAndStartNewPost();
 			} );
 
-			test.it( 'Can insert the contact form', function() {
+			test.it( 'Can insert the contact form', async function() {
 				this.editorPage = new EditorPage( driver );
-				this.editorPage.enterTitle( originalBlogPostTitle );
-				this.editorPage.insertContactForm();
+				await this.editorPage.enterTitle( originalBlogPostTitle );
+				await this.editorPage.insertContactForm();
 
-				return this.editorPage.errorDisplayed().then( errorShown => {
-					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
-				} );
+				let errorShown = await this.editorPage.errorDisplayed();
+				return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 			} );
 
-			test.it( 'Can see the contact form inserted into the visual editor', function() {
+			test.it( 'Can see the contact form inserted into the visual editor', async function() {
 				this.editorPage = new EditorPage( driver );
-				return this.editorPage.ensureContactFormDisplayedInPost();
+				return await this.editorPage.ensureContactFormDisplayedInPost();
 			} );
 
-			test.it( 'Can publish and view content', function() {
+			test.it( 'Can publish and view content', async function() {
 				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-				postEditorToolbarComponent.ensureSaved();
-				postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
-				this.viewPostPage = new ViewPostPage( driver );
+				await postEditorToolbarComponent.ensureSaved();
+				await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 			} );
 
-			test.it( 'Can see the contact form in our published post', function() {
-				this.viewPostPage.contactFormDisplayed().then( function( displayed ) {
-					assert.equal( displayed, true, 'The published post does not contain the contact form' );
-				} );
+			test.it( 'Can see the contact form in our published post', async function() {
+				this.viewPostPage = new ViewPostPage( driver );
+				let displayed = await this.viewPostPage.contactFormDisplayed();
+				assert.equal( displayed, true, 'The published post does not contain the contact form' );
 			} );
 		} );
 	} );
@@ -1281,63 +1246,61 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	test.describe( 'Insert a payment button: @parallel @visdiff', function() {
 		this.bailSuite( true );
 
-		test.before( function() {
+		test.before( async function() {
 			let testEnvironment = 'WordPress.com';
 			let testName = `Post Editor - Payment Button [${ global.browserName }] [${ screenSize }]`;
 			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 		} );
 
-		test.it( 'Delete Cookies and Local Storage', function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.it( 'Delete Cookies and Local Storage', async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		test.describe( 'Publish a New Post with a Payment Button', function() {
 			const originalBlogPostTitle = 'Payment Button: ' + dataHelper.randomPhrase();
 
-			test.it( 'Can log in', function() {
+			test.it( 'Can log in', async function() {
 				this.loginFlow = new LoginFlow( driver );
-				return this.loginFlow.loginAndStartNewPost();
+				return await this.loginFlow.loginAndStartNewPost();
 			} );
 
-			test.it( 'Can insert the payment button', function() {
+			test.it( 'Can insert the payment button', async function() {
 				this.editorPage = new EditorPage( driver );
-				this.editorPage.enterTitle( originalBlogPostTitle );
-				this.editorPage.insertPaymentButton( eyes );
+				await this.editorPage.enterTitle( originalBlogPostTitle );
+				await this.editorPage.insertPaymentButton( eyes );
 
-				return this.editorPage.errorDisplayed().then( errorShown => {
-					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
-				} );
+				let errorShown = await this.editorPage.errorDisplayed();
+				return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 			} );
 
-			test.it( 'Can see the payment button inserted into the visual editor', function() {
+			test.it( 'Can see the payment button inserted into the visual editor', async function() {
 				this.editorPage = new EditorPage( driver );
-				return this.editorPage.ensurePaymentButtonDisplayedInPost();
+				return await this.editorPage.ensurePaymentButtonDisplayedInPost();
 			} );
 
-			test.it( 'Can publish and view content', function() {
+			test.it( 'Can publish and view content', async function() {
 				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-				postEditorToolbarComponent.ensureSaved();
-				postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
-				this.viewPostPage = new ViewPostPage( driver );
+				await postEditorToolbarComponent.ensureSaved();
+				await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 			} );
 
-			test.it( 'Can see the payment button in our published post', function() {
-				this.viewPostPage.paymentButtonDisplayed().then( function( displayed ) {
-					assert.equal( displayed, true, 'The published post does not contain the payment button' );
-				} );
+			test.it( 'Can see the payment button in our published post', async function() {
+				this.viewPostPage = new ViewPostPage( driver );
+				let displayed = await this.viewPostPage.paymentButtonDisplayed();
+				assert.equal( displayed, true, 'The published post does not contain the payment button' );
 			} );
 		} );
 
-		test.after( function() {
-			eyesHelper.eyesClose( eyes );
+		test.after( async function() {
+			await eyesHelper.eyesClose( eyes );
 		} );
 	} );
 
 	test.describe( 'Revert a post to draft: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
-		test.before( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		test.describe( 'Publish a new post', function() {
@@ -1345,42 +1308,40 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			const blogPostQuote =
 				'To really be of help to others we need to be guided by compassion.\n— Dalai Lama\n';
 
-			test.it( 'Can log in', function() {
+			test.it( 'Can log in', async function() {
 				this.loginFlow = new LoginFlow( driver );
-				return this.loginFlow.loginAndStartNewPost();
+				return await this.loginFlow.loginAndStartNewPost();
 			} );
 
-			test.it( 'Can enter post title and content', function() {
+			test.it( 'Can enter post title and content', async function() {
 				this.editorPage = new EditorPage( driver );
-				this.editorPage.enterTitle( originalBlogPostTitle );
-				this.editorPage.enterContent( blogPostQuote );
+				await this.editorPage.enterTitle( originalBlogPostTitle );
+				await this.editorPage.enterContent( blogPostQuote );
 
-				return this.editorPage.errorDisplayed().then( errorShown => {
-					return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
-				} );
+				let errorShown = await this.editorPage.errorDisplayed();
+				return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
 			} );
 
-			test.it( 'Can publish the post', function() {
+			test.it( 'Can publish the post', async function() {
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-				this.postEditorToolbarComponent.ensureSaved();
-				this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
+				await this.postEditorToolbarComponent.ensureSaved();
+				await this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 
-				this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
+				await this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 				let postPreviewComponent = new PostPreviewComponent( driver );
 
-				return postPreviewComponent.edit();
+				return await postPreviewComponent.edit();
 			} );
 		} );
 
 		test.describe( 'Revert the post to draft', function() {
-			test.it( 'Can revert the post to draft', function() {
+			test.it( 'Can revert the post to draft', async function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-				postEditorSidebarComponent.revertToDraft();
-				postEditorToolbarComponent.waitForIsDraftStatus();
-				postEditorToolbarComponent.statusIsDraft().then( isDraft => {
-					assert.equal( isDraft, true, 'The post is not set as draft' );
-				} );
+				await postEditorSidebarComponent.revertToDraft();
+				await postEditorToolbarComponent.waitForIsDraftStatus();
+				let isDraft = await postEditorToolbarComponent.statusIsDraft();
+				assert.equal( isDraft, true, 'The post is not set as draft' );
 			} );
 		} );
 	} );
