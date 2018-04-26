@@ -12,6 +12,8 @@ import ViewPostPage from '../lib/pages/view-post-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
 import PostsPage from '../lib/pages/posts-page.js';
 import ReaderPage from '../lib/pages/reader-page';
+import StatsPage from '../lib/pages/stats-page';
+import ActivityPage from '../lib/pages/stats/activity-page';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
@@ -405,6 +407,54 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					'The published blog post title is not correct'
 				);
 			} );
+		} );
+	} );
+
+	// TODO: investigate why this doesn't show for Pressable Jetpack site
+	test.describe( 'Check Activity Log for Public Post @parallel', function() {
+		this.bailSuite( true );
+
+		const blogPostTitle = dataHelper.randomPhrase();
+		const blogPostQuote =
+			'“We are what we pretend to be, so we must be careful about what we pretend to be.”\n- Kurt Vonnegut';
+
+		test.it( 'Delete Cookies and Local Storage', async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.it( 'Can log in', async function() {
+			let loginFlow = new LoginFlow( driver );
+			return await loginFlow.loginAndStartNewPost();
+		} );
+
+		test.it( 'Can enter post title and content', async function() {
+			let editorPage = new EditorPage( driver );
+			await editorPage.enterTitle( blogPostTitle );
+			await editorPage.enterContent( blogPostQuote + '\n' );
+
+			let errorShown = await editorPage.errorDisplayed();
+			return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+		} );
+
+		test.it( 'Can publish and view content', async function() {
+			let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			await postEditorToolbarComponent.ensureSaved();
+			await postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
+			return await postEditorToolbarComponent.waitForSuccessViewPostNotice();
+		} );
+
+		test.it( 'Can see the post in the Activity log', async function() {
+			await new ReaderPage( driver, true ).displayed();
+			await new NavbarComponent( driver ).clickMySites();
+			let sidebarComponent = new SidebarComponent( driver );
+			await sidebarComponent.ensureSidebarMenuVisible();
+			await sidebarComponent.selectStats();
+			await new StatsPage( driver ).openActivity();
+			let displayed = await new ActivityPage( driver ).postTitleDisplayed( blogPostTitle );
+			return assert(
+				displayed,
+				`The published post title '${ blogPostTitle }' was not displayed in activity log after publishing`
+			);
 		} );
 	} );
 
