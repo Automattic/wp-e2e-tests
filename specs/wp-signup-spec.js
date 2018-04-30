@@ -361,128 +361,111 @@ testDescribe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() 
 	);
 
 	test.describe(
-		'Sign up for a site on a premium paid plan coming in via /create as premium flow @parallel',
+		'Sign up for a site on a premium paid plan coming in via /create as premium flow in JPY currency @parallel',
 		function() {
 			this.bailSuite( true );
-			let stepNum = 1;
-
 			const blogName = dataHelper.getNewBlogName();
 			const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 			const password = config.get( 'passwordForNewTestSignUps' );
-			const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
-			const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
+			const currencyValue = 'JPY';
+			const expectedCurrencySymbol = '¥';
 
-			test.it( 'Ensure we are not logged in as anyone', async function() {
+			test.before( async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				return await new WPHomePage( driver, {
+				const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
+				const wpHomePage = await new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
-				} ).setSandboxModeForPayments( sandboxCookieValue );
+				} );
+				await wpHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				return await wpHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
-			test.describe( `Step ${ stepNum }: About Page`, function() {
-				stepNum++;
+			test.it( 'Can visit the start page', async function() {
+				return await new StartPage( driver, {
+					visit: true,
+					culture: locale,
+					flow: 'premium',
+				} ).displayed();
+			} );
 
-				test.it( 'Can visit the start page', async function() {
-					return await new StartPage( driver, {
-						visit: true,
-						culture: locale,
-						flow: 'premium',
-					} ).displayed();
-				} );
+			test.it( 'Can see the about page and accept defaults', async function() {
+				return await new AboutPage( driver ).submitForm();
+			} );
 
-				test.it( 'Can see the about page and accept defaults', async function() {
-					return await new AboutPage( driver ).submitForm();
-				} );
+			test.it(
+				'Can see the choose a theme page as the starting page, and select the first theme',
+				async function() {
+					return await new ChooseAThemePage( driver ).selectFirstTheme();
+				}
+			);
 
-				test.describe( `Step ${ stepNum }: Themes`, function() {
-					stepNum++;
-
-					test.it(
-						'Can see the choose a theme page as the starting page, and select the first theme',
-						async function() {
-							return await new ChooseAThemePage( driver ).selectFirstTheme();
-						}
+			test.it(
+				'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
+				async function() {
+					const findADomainComponent = new FindADomainComponent( driver );
+					await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+					await findADomainComponent.checkAndRetryForFreeBlogAddresses(
+						expectedBlogAddresses,
+						blogName
 					);
+					let actualAddress = await findADomainComponent.freeBlogAddress();
+					assert(
+						expectedBlogAddresses.indexOf( actualAddress ) > -1,
+						`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+					);
+					return await findADomainComponent.selectFreeAddress();
+				}
+			);
 
-					test.describe( `Step ${ stepNum }: Domains`, function() {
-						stepNum++;
+			test.it( 'Can see the account details page and enter account details', async function() {
+				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+					emailAddress,
+					blogName,
+					password
+				);
+			} );
 
-						test.it(
-							'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
-							async function() {
-								const findADomainComponent = new FindADomainComponent( driver );
-								await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-								await findADomainComponent.checkAndRetryForFreeBlogAddresses(
-									expectedBlogAddresses,
-									blogName
-								);
-								let actualAddress = await findADomainComponent.freeBlogAddress();
-								assert(
-									expectedBlogAddresses.indexOf( actualAddress ) > -1,
-									`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
-								);
-								return await findADomainComponent.selectFreeAddress();
-							}
+			test.it(
+				"Can then see the sign up processing page and it will finish and show a 'Continue' button, which is clicked",
+				async function() {
+					const signupProcessingPage = new SignupProcessingPage( driver );
+					await signupProcessingPage.waitForContinueButtonToBeEnabled();
+					return await signupProcessingPage.continueAlong();
+				}
+			);
+
+			test.it(
+				'Can then see the secure payment page, and can enter and submit test payment details',
+				async function() {
+					const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
+
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					if ( driverManager.currentScreenSize() === 'desktop' ) {
+						const totalShown = await securePaymentComponent.cartTotalDisplayed();
+						assert.equal(
+							totalShown.indexOf( expectedCurrencySymbol ),
+							0,
+							`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
 						);
+					}
+					const paymentButtonText = await securePaymentComponent.paymentButtonText();
+					assert(
+						paymentButtonText.includes( expectedCurrencySymbol ),
+						`The payment button text '${ paymentButtonText }' does not contain the expected currency symbol: '${ expectedCurrencySymbol }'`
+					);
+					await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+					await securePaymentComponent.submitPaymentDetails();
+					return await securePaymentComponent.waitForPageToDisappear();
+				}
+			);
 
-						test.describe( `Step ${ stepNum }: Account`, function() {
-							stepNum++;
-
-							test.it(
-								'Can see the account details page and enter account details',
-								async function() {
-									return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
-										emailAddress,
-										blogName,
-										password
-									);
-								}
-							);
-
-							test.describe( `Step ${ stepNum }: Processing`, function() {
-								stepNum++;
-
-								test.it(
-									"Can then see the sign up processing page and it will finish and show a 'Continue' button, which is clicked",
-									async function() {
-										const signupProcessingPage = new SignupProcessingPage( driver );
-										await signupProcessingPage.waitForContinueButtonToBeEnabled();
-										return await signupProcessingPage.continueAlong();
-									}
-								);
-
-								test.describe( `Step ${ stepNum }: Secure Payment Page`, function() {
-									stepNum++;
-
-									test.it(
-										'Can then see the secure payment page, and can enter and submit test payment details',
-										async function() {
-											const securePaymentComponent = new SecurePaymentComponent( driver );
-											await securePaymentComponent.enterTestCreditCardDetails(
-												testCreditCardDetails
-											);
-											await securePaymentComponent.submitPaymentDetails();
-											return await securePaymentComponent.waitForPageToDisappear();
-										}
-									);
-
-									test.describe( `Step ${ stepNum }: Checkout Thank You Page`, function() {
-										stepNum++;
-
-										test.it( 'Can see the secure check out thank you page', async function() {
-											return await new CheckOutThankyouPage( driver ).displayed();
-										} );
-									} );
-								} );
-							} );
-						} );
-					} );
-				} );
+			test.it( 'Can see the secure check out thank you page', async function() {
+				return await new CheckOutThankyouPage( driver ).displayed();
 			} );
 		}
 	);
