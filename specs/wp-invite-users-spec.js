@@ -271,7 +271,7 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 	} );
 
-	test.describe.only( 'Inviting New User as an Editor And Revoke Invite: @parallel @jetpack', function() {
+	test.describe( 'Inviting New User as an Editor And Revoke Invite: @parallel @jetpack', function() {
 		this.bailSuite( true );
 		const inviteInboxId = config.get( 'inviteInboxId' );
 		const newUserName = 'e2eflowtestingeditor' + new Date().getTime().toString();
