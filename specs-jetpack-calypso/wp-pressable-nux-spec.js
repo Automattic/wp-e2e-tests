@@ -76,7 +76,9 @@ if ( host === 'PRESSABLE' ) {
 			} );
 
 			test.it( 'Can proceed to Jetpack activation', function() {
-				return new PressableSiteSettingsPage( driver ).activateJetpackPremium();
+				const siteSettings = new PressableSiteSettingsPage( driver );
+				siteSettings.waitForJetpackPremium();
+				return siteSettings.activateJetpackPremium();
 			} );
 
 			test.it( 'Can approve connection on the authorization page', function() {
