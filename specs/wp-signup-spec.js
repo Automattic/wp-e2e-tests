@@ -801,7 +801,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 	test.describe( 'Sign up while purchasing premium theme @parallel @email', function() {
 		this.bailSuite( true );
-		let stepNum = 1;
 
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
@@ -813,89 +812,65 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.describe( `Step ${ stepNum }: Themes Page`, function() {
-			stepNum++;
-
-			test.it( 'Can see the themes page and select premium theme ', async function() {
-				const themesPage = new ThemesPage( driver, true, 'with-theme' );
-				await themesPage.showOnlyPremiumThemes();
-				chosenThemeName = await themesPage.getFirstThemeName();
-				return await themesPage.selectNewTheme();
-			} );
-
-			test.it( 'Can pick theme design', async function() {
-				return await new ThemeDetailPage( driver ).pickThisDesign();
-			} );
-
-			test.describe( `Step ${ stepNum }: Domains`, function() {
-				stepNum++;
-
-				test.it(
-					'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
-					async function() {
-						const findADomainComponent = new FindADomainComponent( driver );
-						await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-						await findADomainComponent.checkAndRetryForFreeBlogAddresses(
-							expectedBlogAddresses,
-							blogName
-						);
-						let actualAddress = await findADomainComponent.freeBlogAddress();
-						assert(
-							expectedBlogAddresses.indexOf( actualAddress ) > -1,
-							`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
-						);
-						return await findADomainComponent.selectFreeAddress();
-					}
-				);
-
-				test.describe( `Step ${ stepNum }: Plans`, function() {
-					stepNum++;
-
-					test.it( 'Can then see the plans page and pick the free plan', async function() {
-						return await new PickAPlanPage( driver ).selectFreePlan();
-					} );
-
-					test.describe( `Step ${ stepNum }: Account`, function() {
-						stepNum++;
-
-						test.it( 'Can then enter account details and continue', async function() {
-							return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
-								emailAddress,
-								blogName,
-								password
-							);
-						} );
-
-						test.describe( `Step ${ stepNum }: Sign Up Processing`, function() {
-							stepNum++;
-
-							test.it(
-								"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
-								async function() {
-									const signupProcessingPage = new SignupProcessingPage( driver );
-									await signupProcessingPage.waitForContinueButtonToBeEnabled();
-									return await signupProcessingPage.continueAlong();
-								}
-							);
-
-							test.describe( `Step ${ stepNum }: Secure Payment Page`, function() {
-								stepNum++;
-
-								test.it(
-									'Can then see the secure payment page with the chosen theme in the cart',
-									async function() {
-										let arry = await new SecurePaymentComponent( driver ).getProductsNames();
-										return assert(
-											arry[ 0 ].search( chosenThemeName ),
-											`First product in cart is not ${ chosenThemeName }`
-										);
-									}
-								);
-							} );
-						} );
-					} );
-				} );
-			} );
+		test.it( 'Can see the themes page and select premium theme ', async function() {
+			const themesPage = new ThemesPage( driver, true, 'with-theme' );
+			await themesPage.showOnlyPremiumThemes();
+			chosenThemeName = await themesPage.getFirstThemeName();
+			return await themesPage.selectNewTheme();
 		} );
+
+		test.it( 'Can pick theme design', async function() {
+			return await new ThemeDetailPage( driver ).pickThisDesign();
+		} );
+
+		test.it(
+			'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
+			async function() {
+				const findADomainComponent = new FindADomainComponent( driver );
+				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
+					expectedBlogAddresses,
+					blogName
+				);
+				let actualAddress = await findADomainComponent.freeBlogAddress();
+				assert(
+					expectedBlogAddresses.indexOf( actualAddress ) > -1,
+					`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+				);
+				return await findADomainComponent.selectFreeAddress();
+			}
+		);
+
+		test.it( 'Can then see the plans page and pick the free plan', async function() {
+			return await new PickAPlanPage( driver ).selectFreePlan();
+		} );
+
+		test.it( 'Can then enter account details and continue', async function() {
+			return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+				emailAddress,
+				blogName,
+				password
+			);
+		} );
+
+		test.it(
+			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			async function() {
+				const signupProcessingPage = new SignupProcessingPage( driver );
+				await signupProcessingPage.waitForContinueButtonToBeEnabled();
+				return await signupProcessingPage.continueAlong();
+			}
+		);
+
+		test.it(
+			'Can then see the secure payment page with the chosen theme in the cart',
+			async function() {
+				let products = await new SecurePaymentComponent( driver ).getProductsNames();
+				return assert(
+					products[ 0 ].search( chosenThemeName ),
+					`First product in cart is not ${ chosenThemeName }`
+				);
+			}
+		);
 	} );
 } );
