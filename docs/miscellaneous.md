@@ -6,7 +6,7 @@
 - [Git Pre-Commit Hook](#git-pre-commit-hook)
 - [Launch Logged-In Window](#launch-logged-in-window)
 - [User account requirements](#user-account-requirements)
-- [List of wrapper repos & friends](#list-wrapper-repos)
+- [List of wrapper repos & friends](#list-of-wrapper-repos--friends)
 
 ## NodeJS Version
 
@@ -38,7 +38,7 @@ Example:
 
 ## List of wrapper repos & friends
 
-Wrapper repo is basically the same Main repo but with parameterized `./run.sh` command which provide variety of ways to run the tests.
+Wrapper repo is basically the same Main repo but with parameterized `./run.sh` command which provide variety of ways to run the tests.  We set things up this way to make it easy to differentiate build types on Circle CI, for example: [history of WooCommerce e2e test runs](https://circleci.com/build-insights/gh/Automattic/wp-e2e-tests-woocommerce/master).
 
 1. [Main repo](https://github.com/Automattic/wp-e2e-tests) - Main repo as it is :)
 1. [Canary tests](https://github.com/Automattic/wp-e2e-tests-canary) - `@canary` tagged tests which runs on every Calypso `master` merge
