@@ -53,8 +53,7 @@
         "browserName": "Internet Explorer",
         "platform": "Windows 10",
         "screenResolution": "2560x1600",
-        "version": "11.103",
-        "seleniumVersion": "3.3.1"
+        "version": "11.103"
     }
   },
   "knownABTestKeys": [
