@@ -188,7 +188,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 	);
 
 	test.describe(
-		'Sign up for a site on a premium paid plan through main flow @parallel @visdiff',
+		'Sign up for a site on a premium paid plan through main flow in USD currency @parallel @visdiff',
 		function() {
 			this.bailSuite( true );
 
@@ -196,6 +196,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 			const password = config.get( 'passwordForNewTestSignUps' );
+			const currencyValue = 'USD';
+			const expectedCurrencySymbol = '$';
 
 			test.before( function() {
 				let testEnvironment = 'WordPress.com';
@@ -214,7 +216,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					culture: locale,
 				} );
 				await eyesHelper.eyesScreenshot( driver, eyes, 'Logged Out Homepage' );
-				return await wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				await wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				return await wPHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
 			test.it( 'Can visit the start page', async function() {
@@ -306,6 +309,26 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 						numberOfProductsInCart,
 						1,
 						"The cart doesn't contain the expected number of products"
+					);
+				}
+			);
+
+			test.it(
+				'Can then see the secure payment page with the expected currency in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					if ( driverManager.currentScreenSize() === 'desktop' ) {
+						const totalShown = await securePaymentComponent.cartTotalDisplayed();
+						assert.equal(
+							totalShown.indexOf( expectedCurrencySymbol ),
+							0,
+							`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
+						);
+					}
+					const paymentButtonText = await securePaymentComponent.paymentButtonText();
+					return assert(
+						paymentButtonText.includes( expectedCurrencySymbol ),
+						`The payment button text '${ paymentButtonText }' does not contain the expected currency symbol: '${ expectedCurrencySymbol }'`
 					);
 				}
 			);
