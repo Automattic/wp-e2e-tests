@@ -1088,85 +1088,120 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		} );
 	} );
 
-	test.describe( 'Sign up while purchasing premium theme @parallel @email', function() {
-		this.bailSuite( true );
+	test.describe(
+		'Sign up while purchasing premium theme in AUD currency @parallel @email',
+		function() {
+			this.bailSuite( true );
 
-		const blogName = dataHelper.getNewBlogName();
-		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
-		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-		const password = config.get( 'passwordForNewTestSignUps' );
-		let chosenThemeName = '';
+			const blogName = dataHelper.getNewBlogName();
+			const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
+			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
+			const password = config.get( 'passwordForNewTestSignUps' );
+			const currencyValue = 'AUD';
+			const expectedCurrencySymbol = 'A$';
+			let chosenThemeName = '';
 
-		test.it( 'Ensure we are not logged in as anyone', async function() {
-			return await driverManager.ensureNotLoggedIn( driver );
-		} );
+			test.it( 'Ensure we are not logged in as anyone', async function() {
+				return await driverManager.ensureNotLoggedIn( driver );
+			} );
 
-		test.it( 'Can see the themes page and select premium theme ', async function() {
-			const themesPage = new ThemesPage( driver, true, 'with-theme' );
-			await themesPage.showOnlyPremiumThemes();
-			chosenThemeName = await themesPage.getFirstThemeName();
-			return await themesPage.selectNewTheme();
-		} );
+			test.it( 'We can set the sandbox cookie for payments', async function() {
+				const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
+				const wpHomePage = await new WPHomePage( driver, {
+					visit: true,
+					culture: locale,
+				} );
+				await wpHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				return await wpHomePage.setCurrencyForPayments( currencyValue );
+			} );
 
-		test.it( 'Can pick theme design', async function() {
-			return await new ThemeDetailPage( driver ).pickThisDesign();
-		} );
+			test.it( 'Can see the themes page and select premium theme ', async function() {
+				const themesPage = new ThemesPage( driver, true, 'with-theme' );
+				await themesPage.showOnlyPremiumThemes();
+				chosenThemeName = await themesPage.getFirstThemeName();
+				return await themesPage.selectNewTheme();
+			} );
 
-		test.it(
-			'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
-			async function() {
-				const findADomainComponent = new FindADomainComponent( driver );
-				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
-					expectedBlogAddresses,
-					blogName
-				);
-				let actualAddress = await findADomainComponent.freeBlogAddress();
-				assert(
-					expectedBlogAddresses.indexOf( actualAddress ) > -1,
-					`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
-				);
-				return await findADomainComponent.selectFreeAddress();
-			}
-		);
+			test.it( 'Can pick theme design', async function() {
+				return await new ThemeDetailPage( driver ).pickThisDesign();
+			} );
 
-		test.it( 'Can then see the plans page and pick the free plan', async function() {
-			return await new PickAPlanPage( driver ).selectFreePlan();
-		} );
-
-		test.it( 'Can then enter account details and continue', async function() {
-			return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
-				emailAddress,
-				blogName,
-				password
+			test.it(
+				'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
+				async function() {
+					const findADomainComponent = new FindADomainComponent( driver );
+					await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+					await findADomainComponent.checkAndRetryForFreeBlogAddresses(
+						expectedBlogAddresses,
+						blogName
+					);
+					let actualAddress = await findADomainComponent.freeBlogAddress();
+					assert(
+						expectedBlogAddresses.indexOf( actualAddress ) > -1,
+						`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+					);
+					return await findADomainComponent.selectFreeAddress();
+				}
 			);
-		} );
 
-		test.it(
-			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
-			async function() {
-				const signupProcessingPage = new SignupProcessingPage( driver );
-				await signupProcessingPage.waitForContinueButtonToBeEnabled();
-				return await signupProcessingPage.continueAlong();
-			}
-		);
+			test.it( 'Can then see the plans page and pick the free plan', async function() {
+				return await new PickAPlanPage( driver ).selectFreePlan();
+			} );
 
-		test.it(
-			'Can then see the secure payment page with the chosen theme in the cart',
-			async function() {
-				const securePaymentComponent = new SecurePaymentComponent( driver );
-				let products = await securePaymentComponent.getProductsNames();
-				assert(
-					products[ 0 ].search( chosenThemeName ),
-					`First product in cart is not ${ chosenThemeName }`
+			test.it( 'Can then enter account details and continue', async function() {
+				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+					emailAddress,
+					blogName,
+					password
 				);
-				const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
-				return assert.equal(
-					numberOfProductsInCart,
-					1,
-					"The cart doesn't contain the expected number of products"
-				);
-			}
-		);
-	} );
+			} );
+
+			test.it(
+				"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+				async function() {
+					const signupProcessingPage = new SignupProcessingPage( driver );
+					await signupProcessingPage.waitForContinueButtonToBeEnabled();
+					return await signupProcessingPage.continueAlong();
+				}
+			);
+
+			test.it(
+				'Can then see the secure payment page with the chosen theme in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					let products = await securePaymentComponent.getProductsNames();
+					assert(
+						products[ 0 ].search( chosenThemeName ),
+						`First product in cart is not ${ chosenThemeName }`
+					);
+					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
+					return assert.equal(
+						numberOfProductsInCart,
+						1,
+						"The cart doesn't contain the expected number of products"
+					);
+				}
+			);
+
+			test.it(
+				'Can then see the secure payment page with the expected currency in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					if ( driverManager.currentScreenSize() === 'desktop' ) {
+						const totalShown = await securePaymentComponent.cartTotalDisplayed();
+						assert.equal(
+							totalShown.indexOf( expectedCurrencySymbol ),
+							0,
+							`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
+						);
+					}
+					const paymentButtonText = await securePaymentComponent.paymentButtonText();
+					return assert(
+						paymentButtonText.includes( expectedCurrencySymbol ),
+						`The payment button text '${ paymentButtonText }' does not contain the expected currency symbol: '${ expectedCurrencySymbol }'`
+					);
+				}
+			);
+		}
+	);
 } );
