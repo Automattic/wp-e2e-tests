@@ -790,7 +790,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 	);
 
 	test.describe(
-		'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow @parallel',
+		'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow in CAD currency @parallel',
 		function() {
 			this.bailSuite( true );
 
@@ -798,19 +798,22 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const expectedDomainName = `${ siteName }.live`;
 			const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
 			const password = config.get( 'passwordForNewTestSignUps' );
-			const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
-			const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
 			const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( emailAddress );
+			const currencyValue = 'CAD';
+			const expectedCurrencySymbol = 'C$';
 
 			test.it( 'Ensure we are not logged in as anyone', async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				return await new WPHomePage( driver, {
+				const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
+				const wpHomePage = await new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
-				} ).setSandboxModeForPayments( sandboxCookieValue );
+				} );
+				await wpHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				return await wpHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
 			test.it( 'Can visit the start page', async function() {
@@ -899,7 +902,28 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				}
 			);
 
+			test.it(
+				'Can then see the secure payment page with the expected currency in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					if ( driverManager.currentScreenSize() === 'desktop' ) {
+						const totalShown = await securePaymentComponent.cartTotalDisplayed();
+						assert.equal(
+							totalShown.indexOf( expectedCurrencySymbol ),
+							0,
+							`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
+						);
+					}
+					const paymentButtonText = await securePaymentComponent.paymentButtonText();
+					return assert(
+						paymentButtonText.includes( expectedCurrencySymbol ),
+						`The payment button text '${ paymentButtonText }' does not contain the expected currency symbol: '${ expectedCurrencySymbol }'`
+					);
+				}
+			);
+
 			test.it( 'Can enter/submit test payment details', async function() {
+				const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
 				const securePaymentComponent = new SecurePaymentComponent( driver );
 				await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
 				await securePaymentComponent.submitPaymentDetails();
