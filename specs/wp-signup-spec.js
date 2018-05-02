@@ -49,6 +49,7 @@ const screenSize = driverManager.currentScreenSize();
 const signupInboxId = config.get( 'signupInboxId' );
 const host = dataHelper.getJetpackHost();
 const locale = driverManager.currentLocale();
+const personalPlanSlug = 'personal-bundle';
 const premiumPlanSlug = 'value_bundle';
 const businessPlanSlug = 'business-bundle';
 const dotLiveDomainSlug = 'dotlive_domain';
@@ -437,6 +438,136 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 						premiumPlanSlug
 					);
 					assert.equal( premiumPlanInCart, true, "The cart doesn't contain the premium plan" );
+					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
+					return assert.equal(
+						numberOfProductsInCart,
+						1,
+						"The cart doesn't contain the expected number of products"
+					);
+				}
+			);
+
+			test.it( 'Can submit test payment details', async function() {
+				const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
+				const securePaymentComponent = new SecurePaymentComponent( driver );
+				await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+				await securePaymentComponent.submitPaymentDetails();
+				return await securePaymentComponent.waitForPageToDisappear();
+			} );
+
+			test.it( 'Can see the secure check out thank you page', async function() {
+				return await new CheckOutThankyouPage( driver ).displayed();
+			} );
+		}
+	);
+
+	test.describe(
+		'Sign up for a site on a personal paid plan coming in via /create as personal flow in GBP currency @parallel',
+		function() {
+			this.bailSuite( true );
+			const blogName = dataHelper.getNewBlogName();
+			const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
+			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
+			const password = config.get( 'passwordForNewTestSignUps' );
+			const currencyValue = 'GBP';
+			const expectedCurrencySymbol = '£';
+
+			test.before( async function() {
+				return await driverManager.ensureNotLoggedIn( driver );
+			} );
+
+			test.it( 'We can set the sandbox cookie for payments', async function() {
+				const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
+				const wpHomePage = await new WPHomePage( driver, {
+					visit: true,
+					culture: locale,
+				} );
+				await wpHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				return await wpHomePage.setCurrencyForPayments( currencyValue );
+			} );
+
+			test.it( 'Can visit the start page', async function() {
+				return await new StartPage( driver, {
+					visit: true,
+					culture: locale,
+					flow: 'personal',
+				} ).displayed();
+			} );
+
+			test.it( 'Can see the about page and accept defaults', async function() {
+				return await new AboutPage( driver ).submitForm();
+			} );
+
+			test.it(
+				'Can see the choose a theme page as the starting page, and select the first theme',
+				async function() {
+					return await new ChooseAThemePage( driver ).selectFirstTheme();
+				}
+			);
+
+			test.it(
+				'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
+				async function() {
+					const findADomainComponent = new FindADomainComponent( driver );
+					await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+					await findADomainComponent.checkAndRetryForFreeBlogAddresses(
+						expectedBlogAddresses,
+						blogName
+					);
+					let actualAddress = await findADomainComponent.freeBlogAddress();
+					assert(
+						expectedBlogAddresses.indexOf( actualAddress ) > -1,
+						`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+					);
+					return await findADomainComponent.selectFreeAddress();
+				}
+			);
+
+			test.it( 'Can see the account details page and enter account details', async function() {
+				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+					emailAddress,
+					blogName,
+					password
+				);
+			} );
+
+			test.it(
+				"Can then see the sign up processing page and it will finish and show a 'Continue' button, which is clicked",
+				async function() {
+					const signupProcessingPage = new SignupProcessingPage( driver );
+					await signupProcessingPage.waitForContinueButtonToBeEnabled();
+					return await signupProcessingPage.continueAlong();
+				}
+			);
+
+			test.it(
+				'Can then see the secure payment page with the expected currency in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					if ( driverManager.currentScreenSize() === 'desktop' ) {
+						const totalShown = await securePaymentComponent.cartTotalDisplayed();
+						assert.equal(
+							totalShown.indexOf( expectedCurrencySymbol ),
+							0,
+							`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
+						);
+					}
+					const paymentButtonText = await securePaymentComponent.paymentButtonText();
+					return assert(
+						paymentButtonText.includes( expectedCurrencySymbol ),
+						`The payment button text '${ paymentButtonText }' does not contain the expected currency symbol: '${ expectedCurrencySymbol }'`
+					);
+				}
+			);
+
+			test.it(
+				'Can then see the secure payment page with the expected products in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const personalPlanInCart = await securePaymentComponent.cartContainsProduct(
+						personalPlanSlug
+					);
+					assert.equal( personalPlanInCart, true, "The cart doesn't contain the personal plan" );
 					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
 					return assert.equal(
 						numberOfProductsInCart,
