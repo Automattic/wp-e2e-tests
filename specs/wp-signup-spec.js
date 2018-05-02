@@ -407,10 +407,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			);
 
 			test.it(
-				'Can then see the secure payment page, and can enter and submit test payment details',
+				'Can then see the secure payment page with the expected currency in the cart',
 				async function() {
-					const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
-
 					const securePaymentComponent = new SecurePaymentComponent( driver );
 					if ( driverManager.currentScreenSize() === 'desktop' ) {
 						const totalShown = await securePaymentComponent.cartTotalDisplayed();
@@ -425,11 +423,33 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 						paymentButtonText.includes( expectedCurrencySymbol ),
 						`The payment button text '${ paymentButtonText }' does not contain the expected currency symbol: '${ expectedCurrencySymbol }'`
 					);
-					await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
-					await securePaymentComponent.submitPaymentDetails();
-					return await securePaymentComponent.waitForPageToDisappear();
 				}
 			);
+
+			test.it(
+				'Can then see the secure payment page with the expected products in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const premiumPlanInCart = await securePaymentComponent.cartContainsProduct(
+						premiumPlanSlug
+					);
+					assert.equal( premiumPlanInCart, true, "The cart doesn't contain the premium plan" );
+					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
+					assert.equal(
+						numberOfProductsInCart,
+						1,
+						"The cart doesn't contain the expected number of products"
+					);
+				}
+			);
+
+			test.it( 'Can submit test payment details', async function() {
+				const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
+				const securePaymentComponent = new SecurePaymentComponent( driver );
+				await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+				await securePaymentComponent.submitPaymentDetails();
+				return await securePaymentComponent.waitForPageToDisappear();
+			} );
 
 			test.it( 'Can see the secure check out thank you page', async function() {
 				return await new CheckOutThankyouPage( driver ).displayed();
