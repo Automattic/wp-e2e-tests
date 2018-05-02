@@ -615,7 +615,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 	);
 
 	test.describe(
-		'Sign up for a domain only purchase coming in from wordpress.com/domains @parallel',
+		'Sign up for a domain only purchase coming in from wordpress.com/domains in EUR currency @parallel',
 		function() {
 			this.bailSuite( true );
 			const siteName = dataHelper.getNewBlogName();
@@ -623,6 +623,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
 			const password = config.get( 'passwordForNewTestSignUps' );
 			const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( emailAddress );
+			const currencyValue = 'EUR';
+			const expectedCurrencySymbol = '€';
 
 			test.it( 'Ensure we are not logged in as anyone', async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
@@ -630,10 +632,12 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.it( 'We can visit set the sandbox cookie for payments', async function() {
 				const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
-				return await new WPHomePage( driver, {
+				const wpHomePage = await new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
-				} ).setSandboxModeForPayments( sandboxCookieValue );
+				} );
+				await wpHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				return await wpHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
 			test.it( 'Can visit the domains start page', async function() {
@@ -696,6 +700,26 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 						numberOfProductsInCart,
 						2,
 						"The cart doesn't contain the expected number of products"
+					);
+				}
+			);
+
+			test.it(
+				'Can then see the secure payment page with the expected currency in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					if ( driverManager.currentScreenSize() === 'desktop' ) {
+						const totalShown = await securePaymentComponent.cartTotalDisplayed();
+						assert.equal(
+							totalShown.indexOf( expectedCurrencySymbol ),
+							0,
+							`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
+						);
+					}
+					const paymentButtonText = await securePaymentComponent.paymentButtonText();
+					return assert(
+						paymentButtonText.includes( expectedCurrencySymbol ),
+						`The payment button text '${ paymentButtonText }' does not contain the expected currency symbol: '${ expectedCurrencySymbol }'`
 					);
 				}
 			);
