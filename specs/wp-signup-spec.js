@@ -49,6 +49,7 @@ const screenSize = driverManager.currentScreenSize();
 const signupInboxId = config.get( 'signupInboxId' );
 const host = dataHelper.getJetpackHost();
 const locale = driverManager.currentLocale();
+const premiumPlanSlug = 'value_bundle';
 
 let driver;
 
@@ -287,12 +288,23 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				}
 			);
 
-			test.it( 'Can then see the secure payment page', async function() {
-				const securePaymentComponent = new SecurePaymentComponent( driver );
-				let displayed = await securePaymentComponent.displayed();
-				await eyesHelper.eyesScreenshot( driver, eyes, 'Secure Payment Page' );
-				return assert.equal( displayed, true, 'The secure payment page is not displayed' );
-			} );
+			test.it(
+				'Can then see the secure payment page with the premium plan in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					await eyesHelper.eyesScreenshot( driver, eyes, 'Secure Payment Page' );
+					const premiumPlanInCart = await securePaymentComponent.cartContainsProduct(
+						premiumPlanSlug
+					);
+					assert.equal( premiumPlanInCart, true, "The cart doesn't contain the premium plan" );
+					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
+					assert.equal(
+						numberOfProductsInCart,
+						1,
+						"The cart doesn't contain the expected number of products"
+					);
+				}
+			);
 
 			test.it( 'Can enter and submit test payment details', async function() {
 				const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
