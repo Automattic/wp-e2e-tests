@@ -952,10 +952,17 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		test.it(
 			'Can then see the secure payment page with the chosen theme in the cart',
 			async function() {
-				let products = await new SecurePaymentComponent( driver ).getProductsNames();
-				return assert(
+				const securePaymentComponent = new SecurePaymentComponent( driver );
+				let products = await securePaymentComponent.getProductsNames();
+				assert(
 					products[ 0 ].search( chosenThemeName ),
 					`First product in cart is not ${ chosenThemeName }`
+				);
+				const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
+				return assert.equal(
+					numberOfProductsInCart,
+					1,
+					"The cart doesn't contain the expected number of products"
 				);
 			}
 		);
