@@ -50,6 +50,7 @@ const signupInboxId = config.get( 'signupInboxId' );
 const host = dataHelper.getJetpackHost();
 const locale = driverManager.currentLocale();
 const premiumPlanSlug = 'value_bundle';
+const businessPlanSlug = 'business-bundle';
 const dotLiveDomainSlug = 'dotlive_domain';
 const privateWhoisSlug = 'private_whois';
 
@@ -688,15 +689,45 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			);
 
 			test.it(
-				'Can then see the secure payment page and enter/submit test payment details',
+				'Can then see the secure payment page with the correct products in the cart',
 				async function() {
 					const securePaymentComponent = new SecurePaymentComponent( driver );
-					await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
-					await securePaymentComponent.submitPaymentDetails();
-					await securePaymentComponent.waitForCreditCardPaymentProcessing();
-					return await securePaymentComponent.waitForPageToDisappear();
+					const domainInCart = await securePaymentComponent.cartContainsProduct(
+						dotLiveDomainSlug
+					);
+					assert.equal( domainInCart, true, "The cart doesn't contain the .live domain product" );
+					const privateWhoISInCart = await securePaymentComponent.cartContainsProduct(
+						privateWhoisSlug
+					);
+					assert.equal(
+						privateWhoISInCart,
+						true,
+						"The cart doesn't contain the private domain product"
+					);
+					const businessPlanInCart = await securePaymentComponent.cartContainsProduct(
+						businessPlanSlug
+					);
+					assert.equal(
+						businessPlanInCart,
+						true,
+						"The cart doesn't contain the business plan product"
+					);
+					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
+					return assert.equal(
+						numberOfProductsInCart,
+						3,
+						"The cart doesn't contain the expected number of products"
+					);
 				}
 			);
+
+			test.it( 'Can enter/submit test payment details', async function() {
+				const securePaymentComponent = new SecurePaymentComponent( driver );
+				await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+				await securePaymentComponent.submitPaymentDetails();
+				await securePaymentComponent.waitForCreditCardPaymentProcessing();
+				return await securePaymentComponent.waitForPageToDisappear();
+			} );
 
 			test.it( 'Can see the gsuite upsell page', async function() {
 				return await new GSuiteUpsellPage( driver ).declineEmail();
