@@ -80,3 +80,33 @@ instead of:
 new StartPage( driver, true, 'en', '', true, '' ).displayed();
 ```
 
+## Nesting test.it blocks
+
+Since we have a bail suite option, it is not necessary to nest `test.it` blocks.
+
+This is a general structure of an e2e test scenario:
+
+```
+test.describe(
+	'An e2e test scenario @parallel',
+	function() {
+		this.bailSuite( true );
+		
+		test.before( async function() {
+			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		test.it( 'First step', async function() {
+			// Do something with a page
+		} );
+
+		test.it( 'Second step', async function() {
+			// Do something next - this will only execute if the first step doesn't fail
+		} );
+		
+		test.after( async function() {
+			// Do some cleanup
+		} );	
+	}
+);
+```
