@@ -49,6 +49,7 @@ const screenSize = driverManager.currentScreenSize();
 const signupInboxId = config.get( 'signupInboxId' );
 const host = dataHelper.getJetpackHost();
 const locale = driverManager.currentLocale();
+const passwordForTestAccounts = config.get( 'passwordForNewTestSignUps' );
 
 let driver;
 
@@ -70,7 +71,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			let newBlogAddress = '';
 			const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-			const password = config.get( 'passwordForNewTestSignUps' );
 			let magicLoginLink;
 
 			test.it( 'Ensure we are not logged in as anyone', async function() {
@@ -119,7 +119,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
 					emailAddress,
 					blogName,
-					password
+					passwordForTestAccounts
 				);
 			} );
 
@@ -190,7 +190,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const blogName = dataHelper.getNewBlogName();
 			const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-			const password = config.get( 'passwordForNewTestSignUps' );
 			const currencyValue = 'USD';
 			const expectedCurrencySymbol = '$';
 
@@ -279,7 +278,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await createYourAccountPage.enterAccountDetailsAndSubmit(
 					emailAddress,
 					blogName,
-					password
+					passwordForTestAccounts
 				);
 			} );
 
@@ -354,7 +353,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const blogName = dataHelper.getNewBlogName();
 			const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-			const password = config.get( 'passwordForNewTestSignUps' );
+
 			const currencyValue = 'JPY';
 			const expectedCurrencySymbol = '¥';
 
@@ -413,7 +412,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
 					emailAddress,
 					blogName,
-					password
+					passwordForTestAccounts
 				);
 			} );
 
@@ -482,7 +481,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const blogName = dataHelper.getNewBlogName();
 			const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-			const password = config.get( 'passwordForNewTestSignUps' );
 			const currencyValue = 'GBP';
 			const expectedCurrencySymbol = '£';
 
@@ -541,7 +539,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
 					emailAddress,
 					blogName,
-					password
+					passwordForTestAccounts
 				);
 			} );
 
@@ -610,7 +608,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const siteName = dataHelper.getNewBlogName();
 			const expectedDomainName = `${ siteName }.live`;
 			const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
-			const password = config.get( 'passwordForNewTestSignUps' );
 			const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( emailAddress );
 			const currencyValue = 'EUR';
 			const expectedCurrencySymbol = '€';
@@ -647,7 +644,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
 					emailAddress,
 					siteName,
-					password
+					passwordForTestAccounts
 				);
 			} );
 
@@ -782,7 +779,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const siteName = dataHelper.getNewBlogName();
 			const expectedDomainName = `${ siteName }.live`;
 			const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
-			const password = config.get( 'passwordForNewTestSignUps' );
 			const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( emailAddress );
 			const currencyValue = 'CAD';
 			const expectedCurrencySymbol = 'C$';
@@ -833,7 +829,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
 					emailAddress,
 					siteName,
-					password
+					passwordForTestAccounts
 				);
 			} );
 
@@ -951,7 +947,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		let newBlogAddress = '';
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-		const password = config.get( 'passwordForNewTestSignUps' );
 
 		test.it( 'Ensure we are not logged in as anyone', async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -1007,7 +1002,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 							return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
 								emailAddress,
 								blogName,
-								password
+								passwordForTestAccounts
 							);
 						} );
 
@@ -1075,7 +1070,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const blogName = dataHelper.getNewBlogName();
 			const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-			const password = config.get( 'passwordForNewTestSignUps' );
 			const currencyValue = 'AUD';
 			const expectedCurrencySymbol = 'A$';
 			let chosenThemeName = '';
@@ -1131,7 +1125,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
 					emailAddress,
 					blogName,
-					password
+					passwordForTestAccounts
 				);
 			} );
 
