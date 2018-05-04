@@ -61,7 +61,6 @@
     "skipThemesSelectionModal",
     "checklistThankYouForFreeUser",
     "checklistThankYouForPaidUser",
-    "upgradePricingDisplayV3",
     "redesignedSidebarBanner",
     "mobilePlansTablesOnSignup",
     "springSale30PercentOff",
@@ -70,7 +69,6 @@
     "signupDomainStrikethruPrice"
   ],
   "overrideABTests": [
-    [ "upgradePricingDisplayV3_20180402", "original" ],
     [ "skipThemesSelectionModal_20170904", "show" ],
     [ "checklistThankYouForFreeUser_20171204", "hide" ],
     [ "checklistThankYouForPaidUser_20171204", "hide" ],
