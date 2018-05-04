@@ -49,11 +49,6 @@ const screenSize = driverManager.currentScreenSize();
 const signupInboxId = config.get( 'signupInboxId' );
 const host = dataHelper.getJetpackHost();
 const locale = driverManager.currentLocale();
-const personalPlanSlug = 'personal-bundle';
-const premiumPlanSlug = 'value_bundle';
-const businessPlanSlug = 'business-bundle';
-const dotLiveDomainSlug = 'dotlive_domain';
-const privateWhoisSlug = 'private_whois';
 
 let driver;
 
@@ -300,9 +295,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				async function() {
 					const securePaymentComponent = new SecurePaymentComponent( driver );
 					await eyesHelper.eyesScreenshot( driver, eyes, 'Secure Payment Page' );
-					const premiumPlanInCart = await securePaymentComponent.cartContainsProduct(
-						premiumPlanSlug
-					);
+					const premiumPlanInCart = await securePaymentComponent.containsPremiumPlan();
 					assert.equal( premiumPlanInCart, true, "The cart doesn't contain the premium plan" );
 					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
 					return assert.equal(
@@ -457,9 +450,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				'Can then see the secure payment page with the expected products in the cart',
 				async function() {
 					const securePaymentComponent = new SecurePaymentComponent( driver );
-					const premiumPlanInCart = await securePaymentComponent.cartContainsProduct(
-						premiumPlanSlug
-					);
+					const premiumPlanInCart = await securePaymentComponent.containsPremiumPlan();
 					assert.equal( premiumPlanInCart, true, "The cart doesn't contain the premium plan" );
 					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
 					return assert.equal(
@@ -587,9 +578,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				'Can then see the secure payment page with the expected products in the cart',
 				async function() {
 					const securePaymentComponent = new SecurePaymentComponent( driver );
-					const personalPlanInCart = await securePaymentComponent.cartContainsProduct(
-						personalPlanSlug
-					);
+					const personalPlanInCart = await securePaymentComponent.containsPersonalPlan();
 					assert.equal( personalPlanInCart, true, "The cart doesn't contain the personal plan" );
 					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
 					return assert.equal(
@@ -683,13 +672,9 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				'Can then see the secure payment page with the correct products in the cart',
 				async function() {
 					const securePaymentComponent = new SecurePaymentComponent( driver );
-					const domainInCart = await securePaymentComponent.cartContainsProduct(
-						dotLiveDomainSlug
-					);
+					const domainInCart = await securePaymentComponent.containsDotLiveDomain();
 					assert.equal( domainInCart, true, "The cart doesn't contain the .live domain product" );
-					const privateWhoISInCart = await securePaymentComponent.cartContainsProduct(
-						privateWhoisSlug
-					);
+					const privateWhoISInCart = await securePaymentComponent.containsPrivateWhois();
 					assert.equal(
 						privateWhoISInCart,
 						true,
@@ -873,21 +858,15 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				'Can then see the secure payment page with the correct products in the cart',
 				async function() {
 					const securePaymentComponent = new SecurePaymentComponent( driver );
-					const domainInCart = await securePaymentComponent.cartContainsProduct(
-						dotLiveDomainSlug
-					);
+					const domainInCart = await securePaymentComponent.dotLiveDomainSlug();
 					assert.equal( domainInCart, true, "The cart doesn't contain the .live domain product" );
-					const privateWhoISInCart = await securePaymentComponent.cartContainsProduct(
-						privateWhoisSlug
-					);
+					const privateWhoISInCart = await securePaymentComponent.containsPrivateWhois();
 					assert.equal(
 						privateWhoISInCart,
 						true,
 						"The cart doesn't contain the private domain product"
 					);
-					const businessPlanInCart = await securePaymentComponent.cartContainsProduct(
-						businessPlanSlug
-					);
+					const businessPlanInCart = await securePaymentComponent.containsBusinessPlan();
 					assert.equal(
 						businessPlanInCart,
 						true,
