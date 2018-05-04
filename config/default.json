@@ -67,7 +67,7 @@
     "showMoneyBackGuarantee",
     "multiyearSubscriptions",
     "signupDomainStrikethruPrice",
-    "mothersDay2018Discount_20180411"
+    "mothersDay2018Discount"
   ],
   "overrideABTests": [
     [ "skipThemesSelectionModal_20170904", "show" ],
