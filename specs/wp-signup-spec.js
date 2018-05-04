@@ -768,7 +768,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		}
 	);
 
-	test.describe.only(
+	test.describe(
 		'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow in CAD currency @parallel',
 		function() {
 			this.bailSuite( true );
