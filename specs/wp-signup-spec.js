@@ -768,7 +768,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		}
 	);
 
-	test.describe(
+	test.describe.only(
 		'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow in CAD currency @parallel',
 		function() {
 			this.bailSuite( true );
@@ -850,7 +850,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				'Can then see the secure payment page with the correct products in the cart',
 				async function() {
 					const securePaymentComponent = new SecurePaymentComponent( driver );
-					const domainInCart = await securePaymentComponent.dotLiveDomainSlug();
+					const domainInCart = await securePaymentComponent.containsDotLiveDomain();
 					assert.equal( domainInCart, true, "The cart doesn't contain the .live domain product" );
 					const privateWhoISInCart = await securePaymentComponent.containsPrivateWhois();
 					assert.equal(
