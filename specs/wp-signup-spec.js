@@ -50,6 +50,7 @@ const signupInboxId = config.get( 'signupInboxId' );
 const host = dataHelper.getJetpackHost();
 const locale = driverManager.currentLocale();
 const passwordForTestAccounts = config.get( 'passwordForNewTestSignUps' );
+const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 
 let driver;
 
@@ -204,7 +205,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 				const wPHomePage = new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
@@ -362,7 +362,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 				const wpHomePage = await new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
@@ -489,7 +488,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 				const wpHomePage = await new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
@@ -617,7 +615,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can visit set the sandbox cookie for payments', async function() {
-				const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 				const wpHomePage = await new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
@@ -788,7 +785,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 				const wpHomePage = await new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
@@ -1079,7 +1075,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 				const wpHomePage = await new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
