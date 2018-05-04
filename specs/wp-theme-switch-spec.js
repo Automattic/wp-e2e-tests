@@ -147,7 +147,7 @@ test.describe(
 					test.it( 'Can customize the site from the theme thanks dialog', async function() {
 						let wpAdminCustomizerPage = new WPAdminCustomizerPage( driver );
 						let displayed = await wpAdminCustomizerPage.displayed();
-						await assert( displayed, 'The customizer page was not displayed' );
+						assert( displayed, 'The customizer page was not displayed' );
 					} );
 				}
 			} );
