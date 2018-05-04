@@ -49,6 +49,8 @@ const screenSize = driverManager.currentScreenSize();
 const signupInboxId = config.get( 'signupInboxId' );
 const host = dataHelper.getJetpackHost();
 const locale = driverManager.currentLocale();
+const passwordForTestAccounts = config.get( 'passwordForNewTestSignUps' );
+const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 
 let driver;
 
@@ -70,7 +72,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			let newBlogAddress = '';
 			const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-			const password = config.get( 'passwordForNewTestSignUps' );
 			let magicLoginLink;
 
 			test.it( 'Ensure we are not logged in as anyone', async function() {
@@ -119,7 +120,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
 					emailAddress,
 					blogName,
-					password
+					passwordForTestAccounts
 				);
 			} );
 
@@ -183,14 +184,15 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 	);
 
 	test.describe(
-		'Sign up for a site on a premium paid plan through main flow @parallel @visdiff',
+		'Sign up for a site on a premium paid plan through main flow in USD currency @parallel @visdiff',
 		function() {
 			this.bailSuite( true );
 
 			const blogName = dataHelper.getNewBlogName();
 			const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-			const password = config.get( 'passwordForNewTestSignUps' );
+			const currencyValue = 'USD';
+			const expectedCurrencySymbol = '$';
 
 			test.before( function() {
 				let testEnvironment = 'WordPress.com';
@@ -203,13 +205,13 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 				const wPHomePage = new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
 				} );
 				await eyesHelper.eyesScreenshot( driver, eyes, 'Logged Out Homepage' );
-				return await wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				await wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				return await wPHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
 			test.it( 'Can visit the start page', async function() {
@@ -276,7 +278,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await createYourAccountPage.enterAccountDetailsAndSubmit(
 					emailAddress,
 					blogName,
-					password
+					passwordForTestAccounts
 				);
 			} );
 
@@ -287,12 +289,41 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				}
 			);
 
-			test.it( 'Can then see the secure payment page', async function() {
-				const securePaymentComponent = new SecurePaymentComponent( driver );
-				let displayed = await securePaymentComponent.displayed();
-				await eyesHelper.eyesScreenshot( driver, eyes, 'Secure Payment Page' );
-				return assert.equal( displayed, true, 'The secure payment page is not displayed' );
-			} );
+			test.it(
+				'Can then see the secure payment page with the premium plan in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					await eyesHelper.eyesScreenshot( driver, eyes, 'Secure Payment Page' );
+					const premiumPlanInCart = await securePaymentComponent.containsPremiumPlan();
+					assert.equal( premiumPlanInCart, true, "The cart doesn't contain the premium plan" );
+					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
+					return assert.equal(
+						numberOfProductsInCart,
+						1,
+						"The cart doesn't contain the expected number of products"
+					);
+				}
+			);
+
+			test.it(
+				'Can then see the secure payment page with the expected currency in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					if ( driverManager.currentScreenSize() === 'desktop' ) {
+						const totalShown = await securePaymentComponent.cartTotalDisplayed();
+						assert.equal(
+							totalShown.indexOf( expectedCurrencySymbol ),
+							0,
+							`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
+						);
+					}
+					const paymentButtonText = await securePaymentComponent.paymentButtonText();
+					return assert(
+						paymentButtonText.includes( expectedCurrencySymbol ),
+						`The payment button text '${ paymentButtonText }' does not contain the expected currency symbol: '${ expectedCurrencySymbol }'`
+					);
+				}
+			);
 
 			test.it( 'Can enter and submit test payment details', async function() {
 				const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
@@ -322,7 +353,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const blogName = dataHelper.getNewBlogName();
 			const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-			const password = config.get( 'passwordForNewTestSignUps' );
+
 			const currencyValue = 'JPY';
 			const expectedCurrencySymbol = '¥';
 
@@ -331,7 +362,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 				const wpHomePage = await new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
@@ -381,7 +411,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
 					emailAddress,
 					blogName,
-					password
+					passwordForTestAccounts
 				);
 			} );
 
@@ -395,10 +425,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			);
 
 			test.it(
-				'Can then see the secure payment page, and can enter and submit test payment details',
+				'Can then see the secure payment page with the expected currency in the cart',
 				async function() {
-					const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
-
 					const securePaymentComponent = new SecurePaymentComponent( driver );
 					if ( driverManager.currentScreenSize() === 'desktop' ) {
 						const totalShown = await securePaymentComponent.cartTotalDisplayed();
@@ -409,15 +437,35 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 						);
 					}
 					const paymentButtonText = await securePaymentComponent.paymentButtonText();
-					assert(
+					return assert(
 						paymentButtonText.includes( expectedCurrencySymbol ),
 						`The payment button text '${ paymentButtonText }' does not contain the expected currency symbol: '${ expectedCurrencySymbol }'`
 					);
-					await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
-					await securePaymentComponent.submitPaymentDetails();
-					return await securePaymentComponent.waitForPageToDisappear();
 				}
 			);
+
+			test.it(
+				'Can then see the secure payment page with the expected products in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const premiumPlanInCart = await securePaymentComponent.containsPremiumPlan();
+					assert.equal( premiumPlanInCart, true, "The cart doesn't contain the premium plan" );
+					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
+					return assert.equal(
+						numberOfProductsInCart,
+						1,
+						"The cart doesn't contain the expected number of products"
+					);
+				}
+			);
+
+			test.it( 'Can submit test payment details', async function() {
+				const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
+				const securePaymentComponent = new SecurePaymentComponent( driver );
+				await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+				await securePaymentComponent.submitPaymentDetails();
+				return await securePaymentComponent.waitForPageToDisappear();
+			} );
 
 			test.it( 'Can see the secure check out thank you page', async function() {
 				return await new CheckOutThankyouPage( driver ).displayed();
@@ -426,25 +474,153 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 	);
 
 	test.describe(
-		'Sign up for a domain only purchase coming in from wordpress.com/domains @parallel',
+		'Sign up for a site on a personal paid plan coming in via /create as personal flow in GBP currency @parallel',
+		function() {
+			this.bailSuite( true );
+			const blogName = dataHelper.getNewBlogName();
+			const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
+			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
+			const currencyValue = 'GBP';
+			const expectedCurrencySymbol = '£';
+
+			test.before( async function() {
+				return await driverManager.ensureNotLoggedIn( driver );
+			} );
+
+			test.it( 'We can set the sandbox cookie for payments', async function() {
+				const wpHomePage = await new WPHomePage( driver, {
+					visit: true,
+					culture: locale,
+				} );
+				await wpHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				return await wpHomePage.setCurrencyForPayments( currencyValue );
+			} );
+
+			test.it( 'Can visit the start page', async function() {
+				return await new StartPage( driver, {
+					visit: true,
+					culture: locale,
+					flow: 'personal',
+				} ).displayed();
+			} );
+
+			test.it( 'Can see the about page and accept defaults', async function() {
+				return await new AboutPage( driver ).submitForm();
+			} );
+
+			test.it(
+				'Can see the choose a theme page as the starting page, and select the first theme',
+				async function() {
+					return await new ChooseAThemePage( driver ).selectFirstTheme();
+				}
+			);
+
+			test.it(
+				'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
+				async function() {
+					const findADomainComponent = new FindADomainComponent( driver );
+					await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+					await findADomainComponent.checkAndRetryForFreeBlogAddresses(
+						expectedBlogAddresses,
+						blogName
+					);
+					let actualAddress = await findADomainComponent.freeBlogAddress();
+					assert(
+						expectedBlogAddresses.indexOf( actualAddress ) > -1,
+						`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+					);
+					return await findADomainComponent.selectFreeAddress();
+				}
+			);
+
+			test.it( 'Can see the account details page and enter account details', async function() {
+				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+					emailAddress,
+					blogName,
+					passwordForTestAccounts
+				);
+			} );
+
+			test.it(
+				"Can then see the sign up processing page and it will finish and show a 'Continue' button, which is clicked",
+				async function() {
+					const signupProcessingPage = new SignupProcessingPage( driver );
+					await signupProcessingPage.waitForContinueButtonToBeEnabled();
+					return await signupProcessingPage.continueAlong();
+				}
+			);
+
+			test.it(
+				'Can then see the secure payment page with the expected currency in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					if ( driverManager.currentScreenSize() === 'desktop' ) {
+						const totalShown = await securePaymentComponent.cartTotalDisplayed();
+						assert.equal(
+							totalShown.indexOf( expectedCurrencySymbol ),
+							0,
+							`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
+						);
+					}
+					const paymentButtonText = await securePaymentComponent.paymentButtonText();
+					return assert(
+						paymentButtonText.includes( expectedCurrencySymbol ),
+						`The payment button text '${ paymentButtonText }' does not contain the expected currency symbol: '${ expectedCurrencySymbol }'`
+					);
+				}
+			);
+
+			test.it(
+				'Can then see the secure payment page with the expected products in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const personalPlanInCart = await securePaymentComponent.containsPersonalPlan();
+					assert.equal( personalPlanInCart, true, "The cart doesn't contain the personal plan" );
+					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
+					return assert.equal(
+						numberOfProductsInCart,
+						1,
+						"The cart doesn't contain the expected number of products"
+					);
+				}
+			);
+
+			test.it( 'Can submit test payment details', async function() {
+				const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
+				const securePaymentComponent = new SecurePaymentComponent( driver );
+				await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+				await securePaymentComponent.submitPaymentDetails();
+				return await securePaymentComponent.waitForPageToDisappear();
+			} );
+
+			test.it( 'Can see the secure check out thank you page', async function() {
+				return await new CheckOutThankyouPage( driver ).displayed();
+			} );
+		}
+	);
+
+	test.describe(
+		'Sign up for a domain only purchase coming in from wordpress.com/domains in EUR currency @parallel',
 		function() {
 			this.bailSuite( true );
 			const siteName = dataHelper.getNewBlogName();
 			const expectedDomainName = `${ siteName }.live`;
 			const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
-			const password = config.get( 'passwordForNewTestSignUps' );
 			const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( emailAddress );
+			const currencyValue = 'EUR';
+			const expectedCurrencySymbol = '€';
 
 			test.it( 'Ensure we are not logged in as anyone', async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			test.it( 'We can visit set the sandbox cookie for payments', async function() {
-				const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
-				return await new WPHomePage( driver, {
+				const wpHomePage = await new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
-				} ).setSandboxModeForPayments( sandboxCookieValue );
+				} );
+				await wpHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				return await wpHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
 			test.it( 'Can visit the domains start page', async function() {
@@ -465,7 +641,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
 					emailAddress,
 					siteName,
-					password
+					passwordForTestAccounts
 				);
 			} );
 
@@ -487,16 +663,54 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			);
 
 			test.it(
-				'Can then see the secure payment page and enter/submit test payment details',
+				'Can then see the secure payment page with the correct products in the cart',
 				async function() {
-					const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
 					const securePaymentComponent = new SecurePaymentComponent( driver );
-					await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
-					await securePaymentComponent.submitPaymentDetails();
-					await securePaymentComponent.waitForCreditCardPaymentProcessing();
-					return await securePaymentComponent.waitForPageToDisappear();
+					const domainInCart = await securePaymentComponent.containsDotLiveDomain();
+					assert.equal( domainInCart, true, "The cart doesn't contain the .live domain product" );
+					const privateWhoISInCart = await securePaymentComponent.containsPrivateWhois();
+					assert.equal(
+						privateWhoISInCart,
+						true,
+						"The cart doesn't contain the private domain product"
+					);
+					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
+					return assert.equal(
+						numberOfProductsInCart,
+						2,
+						"The cart doesn't contain the expected number of products"
+					);
 				}
 			);
+
+			test.it(
+				'Can then see the secure payment page with the expected currency in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					if ( driverManager.currentScreenSize() === 'desktop' ) {
+						const totalShown = await securePaymentComponent.cartTotalDisplayed();
+						assert.equal(
+							totalShown.indexOf( expectedCurrencySymbol ),
+							0,
+							`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
+						);
+					}
+					const paymentButtonText = await securePaymentComponent.paymentButtonText();
+					return assert(
+						paymentButtonText.includes( expectedCurrencySymbol ),
+						`The payment button text '${ paymentButtonText }' does not contain the expected currency symbol: '${ expectedCurrencySymbol }'`
+					);
+				}
+			);
+
+			test.it( 'Can enter/submit test payment details', async function() {
+				const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
+				const securePaymentComponent = new SecurePaymentComponent( driver );
+				await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+				await securePaymentComponent.submitPaymentDetails();
+				await securePaymentComponent.waitForCreditCardPaymentProcessing();
+				return await securePaymentComponent.waitForPageToDisappear();
+			} );
 
 			test.it(
 				'Can see the secure check out thank you page and click "go to my domain" button to see the domain only settings page',
@@ -555,27 +769,28 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 	);
 
 	test.describe(
-		'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow @parallel',
+		'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow in CAD currency @parallel',
 		function() {
 			this.bailSuite( true );
 
 			const siteName = dataHelper.getNewBlogName();
 			const expectedDomainName = `${ siteName }.live`;
 			const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
-			const password = config.get( 'passwordForNewTestSignUps' );
-			const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
-			const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
 			const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( emailAddress );
+			const currencyValue = 'CAD';
+			const expectedCurrencySymbol = 'C$';
 
 			test.it( 'Ensure we are not logged in as anyone', async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				return await new WPHomePage( driver, {
+				const wpHomePage = await new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
-				} ).setSandboxModeForPayments( sandboxCookieValue );
+				} );
+				await wpHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				return await wpHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
 			test.it( 'Can visit the start page', async function() {
@@ -610,7 +825,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
 					emailAddress,
 					siteName,
-					password
+					passwordForTestAccounts
 				);
 			} );
 
@@ -632,15 +847,60 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			);
 
 			test.it(
-				'Can then see the secure payment page and enter/submit test payment details',
+				'Can then see the secure payment page with the correct products in the cart',
 				async function() {
 					const securePaymentComponent = new SecurePaymentComponent( driver );
-					await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
-					await securePaymentComponent.submitPaymentDetails();
-					await securePaymentComponent.waitForCreditCardPaymentProcessing();
-					return await securePaymentComponent.waitForPageToDisappear();
+					const domainInCart = await securePaymentComponent.containsDotLiveDomain();
+					assert.equal( domainInCart, true, "The cart doesn't contain the .live domain product" );
+					const privateWhoISInCart = await securePaymentComponent.containsPrivateWhois();
+					assert.equal(
+						privateWhoISInCart,
+						true,
+						"The cart doesn't contain the private domain product"
+					);
+					const businessPlanInCart = await securePaymentComponent.containsBusinessPlan();
+					assert.equal(
+						businessPlanInCart,
+						true,
+						"The cart doesn't contain the business plan product"
+					);
+					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
+					return assert.equal(
+						numberOfProductsInCart,
+						3,
+						"The cart doesn't contain the expected number of products"
+					);
 				}
 			);
+
+			test.it(
+				'Can then see the secure payment page with the expected currency in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					if ( driverManager.currentScreenSize() === 'desktop' ) {
+						const totalShown = await securePaymentComponent.cartTotalDisplayed();
+						assert.equal(
+							totalShown.indexOf( expectedCurrencySymbol ),
+							0,
+							`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
+						);
+					}
+					const paymentButtonText = await securePaymentComponent.paymentButtonText();
+					return assert(
+						paymentButtonText.includes( expectedCurrencySymbol ),
+						`The payment button text '${ paymentButtonText }' does not contain the expected currency symbol: '${ expectedCurrencySymbol }'`
+					);
+				}
+			);
+
+			test.it( 'Can enter/submit test payment details', async function() {
+				const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
+				const securePaymentComponent = new SecurePaymentComponent( driver );
+				await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+				await securePaymentComponent.submitPaymentDetails();
+				await securePaymentComponent.waitForCreditCardPaymentProcessing();
+				return await securePaymentComponent.waitForPageToDisappear();
+			} );
 
 			test.it( 'Can see the gsuite upsell page', async function() {
 				return await new GSuiteUpsellPage( driver ).declineEmail();
@@ -683,7 +943,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		let newBlogAddress = '';
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-		const password = config.get( 'passwordForNewTestSignUps' );
 
 		test.it( 'Ensure we are not logged in as anyone', async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -739,7 +998,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 							return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
 								emailAddress,
 								blogName,
-								password
+								passwordForTestAccounts
 							);
 						} );
 
@@ -799,78 +1058,118 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		} );
 	} );
 
-	test.describe( 'Sign up while purchasing premium theme @parallel @email', function() {
-		this.bailSuite( true );
+	test.describe(
+		'Sign up while purchasing premium theme in AUD currency @parallel @email',
+		function() {
+			this.bailSuite( true );
 
-		const blogName = dataHelper.getNewBlogName();
-		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
-		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-		const password = config.get( 'passwordForNewTestSignUps' );
-		let chosenThemeName = '';
+			const blogName = dataHelper.getNewBlogName();
+			const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
+			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
+			const currencyValue = 'AUD';
+			const expectedCurrencySymbol = 'A$';
+			let chosenThemeName = '';
 
-		test.it( 'Ensure we are not logged in as anyone', async function() {
-			return await driverManager.ensureNotLoggedIn( driver );
-		} );
+			test.it( 'Ensure we are not logged in as anyone', async function() {
+				return await driverManager.ensureNotLoggedIn( driver );
+			} );
 
-		test.it( 'Can see the themes page and select premium theme ', async function() {
-			const themesPage = new ThemesPage( driver, true, 'with-theme' );
-			await themesPage.showOnlyPremiumThemes();
-			chosenThemeName = await themesPage.getFirstThemeName();
-			return await themesPage.selectNewTheme();
-		} );
+			test.it( 'We can set the sandbox cookie for payments', async function() {
+				const wpHomePage = await new WPHomePage( driver, {
+					visit: true,
+					culture: locale,
+				} );
+				await wpHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				return await wpHomePage.setCurrencyForPayments( currencyValue );
+			} );
 
-		test.it( 'Can pick theme design', async function() {
-			return await new ThemeDetailPage( driver ).pickThisDesign();
-		} );
+			test.it( 'Can see the themes page and select premium theme ', async function() {
+				const themesPage = new ThemesPage( driver, true, 'with-theme' );
+				await themesPage.showOnlyPremiumThemes();
+				chosenThemeName = await themesPage.getFirstThemeName();
+				return await themesPage.selectNewTheme();
+			} );
 
-		test.it(
-			'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
-			async function() {
-				const findADomainComponent = new FindADomainComponent( driver );
-				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
-					expectedBlogAddresses,
-					blogName
-				);
-				let actualAddress = await findADomainComponent.freeBlogAddress();
-				assert(
-					expectedBlogAddresses.indexOf( actualAddress ) > -1,
-					`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
-				);
-				return await findADomainComponent.selectFreeAddress();
-			}
-		);
+			test.it( 'Can pick theme design', async function() {
+				return await new ThemeDetailPage( driver ).pickThisDesign();
+			} );
 
-		test.it( 'Can then see the plans page and pick the free plan', async function() {
-			return await new PickAPlanPage( driver ).selectFreePlan();
-		} );
-
-		test.it( 'Can then enter account details and continue', async function() {
-			return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
-				emailAddress,
-				blogName,
-				password
+			test.it(
+				'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
+				async function() {
+					const findADomainComponent = new FindADomainComponent( driver );
+					await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+					await findADomainComponent.checkAndRetryForFreeBlogAddresses(
+						expectedBlogAddresses,
+						blogName
+					);
+					let actualAddress = await findADomainComponent.freeBlogAddress();
+					assert(
+						expectedBlogAddresses.indexOf( actualAddress ) > -1,
+						`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+					);
+					return await findADomainComponent.selectFreeAddress();
+				}
 			);
-		} );
 
-		test.it(
-			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
-			async function() {
-				const signupProcessingPage = new SignupProcessingPage( driver );
-				await signupProcessingPage.waitForContinueButtonToBeEnabled();
-				return await signupProcessingPage.continueAlong();
-			}
-		);
+			test.it( 'Can then see the plans page and pick the free plan', async function() {
+				return await new PickAPlanPage( driver ).selectFreePlan();
+			} );
 
-		test.it(
-			'Can then see the secure payment page with the chosen theme in the cart',
-			async function() {
-				let products = await new SecurePaymentComponent( driver ).getProductsNames();
-				return assert(
-					products[ 0 ].search( chosenThemeName ),
-					`First product in cart is not ${ chosenThemeName }`
+			test.it( 'Can then enter account details and continue', async function() {
+				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+					emailAddress,
+					blogName,
+					passwordForTestAccounts
 				);
-			}
-		);
-	} );
+			} );
+
+			test.it(
+				"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+				async function() {
+					const signupProcessingPage = new SignupProcessingPage( driver );
+					await signupProcessingPage.waitForContinueButtonToBeEnabled();
+					return await signupProcessingPage.continueAlong();
+				}
+			);
+
+			test.it(
+				'Can then see the secure payment page with the chosen theme in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					let products = await securePaymentComponent.getProductsNames();
+					assert(
+						products[ 0 ].search( chosenThemeName ),
+						`First product in cart is not ${ chosenThemeName }`
+					);
+					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
+					return assert.equal(
+						numberOfProductsInCart,
+						1,
+						"The cart doesn't contain the expected number of products"
+					);
+				}
+			);
+
+			test.it(
+				'Can then see the secure payment page with the expected currency in the cart',
+				async function() {
+					const securePaymentComponent = new SecurePaymentComponent( driver );
+					if ( driverManager.currentScreenSize() === 'desktop' ) {
+						const totalShown = await securePaymentComponent.cartTotalDisplayed();
+						assert.equal(
+							totalShown.indexOf( expectedCurrencySymbol ),
+							0,
+							`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
+						);
+					}
+					const paymentButtonText = await securePaymentComponent.paymentButtonText();
+					return assert(
+						paymentButtonText.includes( expectedCurrencySymbol ),
+						`The payment button text '${ paymentButtonText }' does not contain the expected currency symbol: '${ expectedCurrencySymbol }'`
+					);
+				}
+			);
+		}
+	);
 } );
