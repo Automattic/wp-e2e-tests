@@ -32,9 +32,9 @@ const onboardingUrlExt = '/wp-admin/admin.php?page=jetpack&action=onboard';
 
 let driver;
 
-test.before( function() {
+test.before( async function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser();
+	driver = await driverManager.startBrowser();
 } );
 
 test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
@@ -45,90 +45,81 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		const blogTitle = dataHelper.randomPhrase();
 		const blogTagline = dataHelper.randomPhrase();
 
-		test.before( function() {
-			return driverManager.ensureNotLoggedIn( driver );
+		test.before( async function() {
+			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.it( 'Can create wporg site', function() {
+		test.it( 'Can create wporg site', async function() {
 			this.jnFlow = new JetpackConnectFlow( driver, null );
-			return this.jnFlow.createJNSite();
+			return await this.jnFlow.createJNSite();
 		} );
 
-		test.it( 'Can navigate to onboarding flow', function() {
-			return driver.get( this.jnFlow.url + onboardingUrlExt );
+		test.it( 'Can navigate to onboarding flow', async function() {
+			return await driver.get( this.jnFlow.url + onboardingUrlExt );
 		} );
 
-		test.it( 'Can skip all steps', function() {
+		test.it( 'Can skip all steps', async function() {
 			const wizardNavigationComponent = new WizardNavigationComponent( driver );
-			return wizardNavigationComponent
-				.skipStep()
-				.then( () => wizardNavigationComponent.skipStep() )
-				.then( () => wizardNavigationComponent.skipStep() )
-				.then( () => wizardNavigationComponent.skipStep() )
-				.then( () => wizardNavigationComponent.skipStep() )
-				.then( () => new SummaryPage( driver ).countToDoSteps() )
-				.then( toDoCount =>
-					assert.equal( toDoCount, 4, 'Expected and actual steps are not equal.' )
-				);
+			await wizardNavigationComponent.skipStep();
+			await wizardNavigationComponent.skipStep();
+			await wizardNavigationComponent.skipStep();
+			await wizardNavigationComponent.skipStep();
+			await wizardNavigationComponent.skipStep();
+			let toDoCount = await new SummaryPage( driver ).countToDoSteps();
+			assert.equal( toDoCount, 4, 'Expected and actual steps are not equal.' );
 		} );
 
-		test.it( 'Can go back to first step in flow from summary page', function() {
-			return new SummaryPage( driver ).visitStep( 1 );
+		test.it( 'Can go back to first step in flow from summary page', async function() {
+			return await new SummaryPage( driver ).visitStep( 1 );
 		} );
 
-		test.it( 'Can fill out site title and tagline', function() {
+		test.it( 'Can fill out site title and tagline', async function() {
 			const siteTitleTaglinePage = new SiteTitleTaglinePage( driver );
-			siteTitleTaglinePage.enterTitle( blogTitle );
-			siteTitleTaglinePage.enterTagline( blogTagline );
-			return siteTitleTaglinePage.selectContinue();
+			await siteTitleTaglinePage.enterTitle( blogTitle );
+			await siteTitleTaglinePage.enterTagline( blogTagline );
+			return await siteTitleTaglinePage.selectContinue();
 		} );
 
-		test.it( 'Can select Personal Site', function() {
-			return new SiteTypePage( driver ).selectPersonalSite();
+		test.it( 'Can select Personal Site', async function() {
+			return await new SiteTypePage( driver ).selectPersonalSite();
 		} );
 
-		test.it( 'Can select static page homepage', function() {
-			return new SetHomepagePage( driver ).selectPage();
+		test.it( 'Can select static page homepage', async function() {
+			return await new SetHomepagePage( driver ).selectPage();
 		} );
 
-		test.it( 'Can select add a contact form', function() {
-			return new ContactFormPage( driver ).selectAddContactForm();
+		test.it( 'Can select add a contact form', async function() {
+			return await new ContactFormPage( driver ).selectAddContactForm();
 		} );
 
-		test.it( 'Can login into WordPress.com', function() {
+		test.it( 'Can login into WordPress.com', async function() {
 			const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
-			return loginFlow.loginUsingExistingForm();
+			return await loginFlow.loginUsingExistingForm();
 		} );
 
-		test.it( 'Can approve connection on the authorization page', function() {
-			return new JetpackAuthorizePage( driver ).approveConnection();
+		test.it( 'Can approve connection on the authorization page', async function() {
+			return await new JetpackAuthorizePage( driver ).approveConnection();
 		} );
 
-		test.it( 'Can select continue on add contact form', function() {
-			return new ContactFormPage( driver ).selectContinue();
+		test.it( 'Can select continue on add contact form', async function() {
+			return await new ContactFormPage( driver ).selectContinue();
 		} );
 
-		test.it( 'Can select continue on activate stats page', function() {
-			return new ActivateStatsPage( driver ).selectContinue();
+		test.it( 'Can select continue on activate stats page', async function() {
+			return await new ActivateStatsPage( driver ).selectContinue();
 		} );
 
-		test.it( 'Can see onboarding summary page', function() {
+		test.it( 'Can see onboarding summary page', async function() {
 			const summaryPage = new SummaryPage( driver );
-			return summaryPage
-				.countToDoSteps()
-				.then( toDoCount =>
-					assert.equal( toDoCount, 0, 'Expected and actual steps are not equal.' )
-				)
-				.then( () => summaryPage.selectVisitSite() );
+			let toDoCount = summaryPage.countToDoSteps();
+			assert.equal( toDoCount, 0, 'Expected and actual steps are not equal.' );
+			return await summaryPage.selectVisitSite();
 		} );
 
-		test.it( 'Can see site home page', function() {
+		test.it( 'Can see site home page', async function() {
 			const viewPagePage = new ViewPagePage( driver );
-			return viewPagePage
-				.pageTitle()
-				.then( title =>
-					assert.equal( title.toUpperCase(), 'HOME PAGE', 'Homepage not set to a static page' )
-				);
+			let title = await viewPagePage.pageTitle();
+			return assert.equal( title.toUpperCase(), 'HOME PAGE', 'Homepage not set to a static page' );
 		} );
 	} );
 
@@ -143,114 +134,103 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		const stateCode = 'QLD';
 		const postalCode = '4000';
 
-		test.before( function() {
-			return driverManager.ensureNotLoggedIn( driver );
+		test.before( async function() {
+			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.it( 'Can create wporg site', function() {
+		test.it( 'Can create wporg site', async function() {
 			this.jnFlow = new JetpackConnectFlow( driver, null );
-			return this.jnFlow.createJNSite();
+			return await this.jnFlow.createJNSite();
 		} );
 
-		test.it( 'Can navigate to onboarding flow', function() {
-			return driver.get( this.jnFlow.url + onboardingUrlExt );
+		test.it( 'Can navigate to onboarding flow', async function() {
+			return await driver.get( this.jnFlow.url + onboardingUrlExt );
 		} );
 
-		test.it( 'Can fill out site title and tagline', function() {
+		test.it( 'Can fill out site title and tagline', async function() {
 			const siteTitleTaglinePage = new SiteTitleTaglinePage( driver );
-			siteTitleTaglinePage.enterTitle( blogTitle );
-			siteTitleTaglinePage.enterTagline( blogTagline );
-			return siteTitleTaglinePage.selectContinue();
+			await siteTitleTaglinePage.enterTitle( blogTitle );
+			await siteTitleTaglinePage.enterTagline( blogTagline );
+			return await siteTitleTaglinePage.selectContinue();
 		} );
 
-		test.it( 'Can select Business Site', function() {
-			return new SiteTypePage( driver ).selectBusinessSite();
+		test.it( 'Can select Business Site', async function() {
+			return await new SiteTypePage( driver ).selectBusinessSite();
 		} );
 
-		test.it( 'Can select posts homepage', function() {
-			return new SetHomepagePage( driver ).selectPosts();
+		test.it( 'Can select posts homepage', async function() {
+			return await new SetHomepagePage( driver ).selectPosts();
 		} );
 
-		test.it( 'Can skip add a contact form', function() {
-			return new WizardNavigationComponent( driver ).skipStep();
+		test.it( 'Can skip add a contact form', async function() {
+			return await new WizardNavigationComponent( driver ).skipStep();
 		} );
 
-		test.it( 'Can select add a business address', function() {
-			return new BusinessAddressPage( driver ).selectAddBusinessAddress();
+		test.it( 'Can select add a business address', async function() {
+			return await new BusinessAddressPage( driver ).selectAddBusinessAddress();
 		} );
 
-		test.it( 'Can login into WordPress.com', function() {
+		test.it( 'Can login into WordPress.com', async function() {
 			const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
-			return loginFlow.loginUsingExistingForm();
+			return await loginFlow.loginUsingExistingForm();
 		} );
 
-		test.it( 'Can approve connection on the authorization page', function() {
-			return new JetpackAuthorizePage( driver ).approveConnection();
+		test.it( 'Can approve connection on the authorization page', async function() {
+			return await new JetpackAuthorizePage( driver ).approveConnection();
 		} );
 
-		test.it( 'Can enter address on business address page', function() {
+		test.it( 'Can enter address on business address page', async function() {
 			const businessAddressPage = new BusinessAddressPage( driver );
-			return businessAddressPage
-				.enterBusinessAddressAndSubmit(
-					businessName,
-					address,
-					city,
-					stateCode,
-					postalCode,
-					countryCode
-				)
-				.then( () => businessAddressPage.selectContinue() );
+			await businessAddressPage.enterBusinessAddressAndSubmit(
+				businessName,
+				address,
+				city,
+				stateCode,
+				postalCode,
+				countryCode
+			);
+			await businessAddressPage.selectContinue();
 		} );
 
-		test.it( 'Can make business an online store', function() {
-			return new InstallWooCommercePage( driver ).selectSellOnline();
+		test.it( 'Can make business an online store', async function() {
+			return await new InstallWooCommercePage( driver ).selectSellOnline();
 		} );
 
-		test.it( 'Can select continue on activate stats page', function() {
-			return new ActivateStatsPage( driver ).selectContinue();
+		test.it( 'Can select continue on activate stats page', async function() {
+			return await new ActivateStatsPage( driver ).selectContinue();
 		} );
 
-		test.it( 'Can see onboarding summary page', function() {
+		test.it( 'Can see onboarding summary page', async function() {
 			const summaryPage = new SummaryPage( driver );
-			return summaryPage
-				.countToDoSteps()
-				.then( toDoCount =>
-					assert.equal( toDoCount, 1, 'Expected and actual steps are not equal.' )
-				)
-				.then( () => summaryPage.selectVisitSite() );
+			let toDoCount = await summaryPage.countToDoSteps();
+			assert.equal( toDoCount, 1, 'Expected and actual steps are not equal.' );
+			return await summaryPage.selectVisitSite();
 		} );
 
-		test.it( 'Can see site home page', function() {
+		test.it( 'Can see site home page', async function() {
 			const viewSitePage = new ViewSitePage( driver );
 			const widgetContactInfoComponent = new WidgetContactInfoComponent( driver );
 			const businessAddress = [ address, city, stateCode, postalCode, countryCode ];
-			return viewSitePage
-				.siteTitle()
-				.then( title =>
-					assert.equal(
-						title.toUpperCase(),
-						blogTitle.toUpperCase(),
-						'Site title not is not correct'
-					)
-				)
-				.then( () => viewSitePage.siteTagline() )
-				.then( tagline => assert.equal( tagline, blogTagline, 'Site tagline not is not correct' ) )
-				.then( () => widgetContactInfoComponent.getName() )
-				.then( siteBusinessName =>
-					assert.equal(
-						siteBusinessName.toUpperCase(),
-						businessName.toUpperCase(),
-						'Business name not found on page'
-					)
-				)
-				.then( () => widgetContactInfoComponent.getAddress() )
-				.then( siteBusinessAddress =>
-					assert.equal(
-						siteBusinessAddress,
-						businessAddress.join( ' ' ),
-						'Business address not found on page'
-					)
-				);
+
+			let title = await viewSitePage.siteTitle();
+			assert.equal( title.toUpperCase(), blogTitle.toUpperCase(), 'Site title not is not correct' );
+
+			let tagline = await viewSitePage.siteTagline();
+			assert.equal( tagline, blogTagline, 'Site tagline not is not correct' );
+
+			let siteBusinessName = await widgetContactInfoComponent.getName();
+			assert.equal(
+				siteBusinessName.toUpperCase(),
+				businessName.toUpperCase(),
+				'Business name not found on page'
+			);
+
+			let siteBusinessAddress = await widgetContactInfoComponent.getAddress();
+			return assert.equal(
+				siteBusinessAddress,
+				businessAddress.join( ' ' ),
+				'Business address not found on page'
+			);
 		} );
 	} );
 
@@ -261,88 +241,80 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			const blogTitle = dataHelper.randomPhrase();
 			const blogTagline = dataHelper.randomPhrase();
 
-			test.before( function() {
-				return driverManager.ensureNotLoggedIn( driver );
+			test.before( async function() {
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
-			test.it( 'Can login into WordPress.com', function() {
+			test.it( 'Can login into WordPress.com', async function() {
 				const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
-				return loginFlow.login();
+				return await loginFlow.login();
 			} );
 
-			test.it( 'Can create wporg site', function() {
+			test.it( 'Can create wporg site', async function() {
 				this.jnFlow = new JetpackConnectFlow( driver, null );
-				return this.jnFlow.createJNSite();
+				return await this.jnFlow.createJNSite();
 			} );
 
-			test.it( 'Can navigate to onboarding flow', function() {
-				return driver.get( this.jnFlow.url + onboardingUrlExt );
+			test.it( 'Can navigate to onboarding flow', async function() {
+				return await driver.get( this.jnFlow.url + onboardingUrlExt );
 			} );
 
-			test.it( 'Can fill out site title and tagline', function() {
+			test.it( 'Can fill out site title and tagline', async function() {
 				const siteTitleTaglinePage = new SiteTitleTaglinePage( driver );
-				siteTitleTaglinePage.enterTitle( blogTitle );
-				siteTitleTaglinePage.enterTagline( blogTagline );
-				return siteTitleTaglinePage.selectContinue();
+				await siteTitleTaglinePage.enterTitle( blogTitle );
+				await siteTitleTaglinePage.enterTagline( blogTagline );
+				return await siteTitleTaglinePage.selectContinue();
 			} );
 
-			test.it( 'Can select Business Site', function() {
-				return new SiteTypePage( driver ).selectBusinessSite();
+			test.it( 'Can select Business Site', async function() {
+				return await new SiteTypePage( driver ).selectBusinessSite();
 			} );
 
-			test.it( 'Can select static homepage', function() {
-				return new SetHomepagePage( driver ).selectPage();
+			test.it( 'Can select static homepage', async function() {
+				return await new SetHomepagePage( driver ).selectPage();
 			} );
 
-			test.it( 'Can skip add a contact form', function() {
-				return new WizardNavigationComponent( driver ).skipStep();
+			test.it( 'Can skip add a contact form', async function() {
+				return await new WizardNavigationComponent( driver ).skipStep();
 			} );
 
-			test.it( 'Can skip add a business address', function() {
-				return new WizardNavigationComponent( driver ).skipStep();
+			test.it( 'Can skip add a business address', async function() {
+				return await new WizardNavigationComponent( driver ).skipStep();
 			} );
 
-			test.it( 'Can make business an online store', function() {
-				return new InstallWooCommercePage( driver ).selectSellOnline();
+			test.it( 'Can make business an online store', async function() {
+				return await new InstallWooCommercePage( driver ).selectSellOnline();
 			} );
 
-			test.it( 'Can select activate on activate stats page', function() {
-				return new ActivateStatsPage( driver ).selectActivateStats();
+			test.it( 'Can select activate on activate stats page', async function() {
+				return await new ActivateStatsPage( driver ).selectActivateStats();
 			} );
 
-			test.it( 'Can approve connection on the authorization page', function() {
-				return new JetpackAuthorizePage( driver ).approveConnection();
+			test.it( 'Can approve connection on the authorization page', async function() {
+				return await new JetpackAuthorizePage( driver ).approveConnection();
 			} );
 
-			test.it( 'Can select activate on activate stats page', function() {
-				return new ActivateStatsPage( driver ).selectContinue();
+			test.it( 'Can select activate on activate stats page', async function() {
+				return await new ActivateStatsPage( driver ).selectContinue();
 			} );
 
-			test.it( 'Can see onboarding summary page', function() {
+			test.it( 'Can see onboarding summary page', async function() {
 				const summaryPage = new SummaryPage( driver );
-				return summaryPage
-					.countToDoSteps()
-					.then( toDoCount =>
-						assert.equal( toDoCount, 2, 'Expected and actual steps are not equal.' )
-					)
-					.then( () => summaryPage.selectVisitSite() );
+				let toDoCount = await summaryPage.countToDoSteps();
+				assert.equal( toDoCount, 2, 'Expected and actual steps are not equal.' );
+				return await summaryPage.selectVisitSite();
 			} );
 
-			test.it( 'Can see site home page', function() {
+			test.it( 'Can see site home page', async function() {
 				const viewSitePage = new ViewSitePage( driver );
-				return viewSitePage
-					.siteTitle()
-					.then( title =>
-						assert.equal(
-							title.toUpperCase(),
-							blogTitle.toUpperCase(),
-							'Site title not is not correct'
-						)
-					)
-					.then( () => viewSitePage.siteTagline() )
-					.then( tagline =>
-						assert.equal( tagline, blogTagline, 'Site tagline not is not correct' )
-					);
+				let title = await viewSitePage.siteTitle();
+				assert.equal(
+					title.toUpperCase(),
+					blogTitle.toUpperCase(),
+					'Site title not is not correct'
+				);
+				let tagline = await viewSitePage.siteTagline();
+				return assert.equal( tagline, blogTagline, 'Site tagline not is not correct' );
 			} );
 		}
 	);
@@ -354,92 +326,84 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			const blogTitle = dataHelper.randomPhrase();
 			const blogTagline = dataHelper.randomPhrase();
 
-			test.before( function() {
-				return driverManager.ensureNotLoggedIn( driver );
+			test.before( async function() {
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
-			test.it( 'Can create wporg site', function() {
+			test.it( 'Can create wporg site', async function() {
 				this.jnFlow = new JetpackConnectFlow( driver, null );
-				return this.jnFlow.createJNSite();
+				return await this.jnFlow.createJNSite();
 			} );
 
-			test.it( 'Can navigate to the Jetpack dashboard', function() {
-				return new WPAdminSidebar( driver ).selectJetpack();
+			test.it( 'Can navigate to the Jetpack dashboard', async function() {
+				return await new WPAdminSidebar( driver ).selectJetpack();
 			} );
 
-			test.it( 'Can click the Connect Jetpack button', function() {
-				return new WPAdminJetpackPage( driver ).connectWordPressCom();
+			test.it( 'Can click the Connect Jetpack button', async function() {
+				return await new WPAdminJetpackPage( driver ).connectWordPressCom();
 			} );
 
-			test.it( 'Can login into WordPress.com', function() {
+			test.it( 'Can login into WordPress.com', async function() {
 				const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
-				return loginFlow.loginUsingExistingForm();
+				return await loginFlow.loginUsingExistingForm();
 			} );
 
-			test.it( 'Can approve connection on the authorization page', function() {
-				return new JetpackAuthorizePage( driver ).approveConnection();
+			test.it( 'Can approve connection on the authorization page', async function() {
+				return await new JetpackAuthorizePage( driver ).approveConnection();
 			} );
 
-			test.it( 'Can click the free plan button', function() {
-				return new PickAPlanPage( driver ).selectFreePlanJetpack();
+			test.it( 'Can click the free plan button', async function() {
+				return await new PickAPlanPage( driver ).selectFreePlanJetpack();
 			} );
 
-			test.it( 'Can navigate to onboarding flow', function() {
-				return driver.get( this.jnFlow.url + onboardingUrlExt );
+			test.it( 'Can navigate to onboarding flow', async function() {
+				return await driver.get( this.jnFlow.url + onboardingUrlExt );
 			} );
 
-			test.it( 'Can fill out site title and tagline', function() {
+			test.it( 'Can fill out site title and tagline', async function() {
 				const siteTitleTaglinePage = new SiteTitleTaglinePage( driver );
-				siteTitleTaglinePage.enterTitle( blogTitle );
-				siteTitleTaglinePage.enterTagline( blogTagline );
-				return siteTitleTaglinePage.selectContinue();
+				await siteTitleTaglinePage.enterTitle( blogTitle );
+				await siteTitleTaglinePage.enterTagline( blogTagline );
+				return await siteTitleTaglinePage.selectContinue();
 			} );
 
-			test.it( 'Can select personal Site', function() {
-				return new SiteTypePage( driver ).selectPersonalSite();
+			test.it( 'Can select personal Site', async function() {
+				return await new SiteTypePage( driver ).selectPersonalSite();
 			} );
 
-			test.it( 'Can select posts homepage', function() {
-				return new SetHomepagePage( driver ).selectPosts();
+			test.it( 'Can select posts homepage', async function() {
+				return await new SetHomepagePage( driver ).selectPosts();
 			} );
 
-			test.it( 'Can select add a contact form', function() {
-				return new ContactFormPage( driver ).selectAddContactForm();
+			test.it( 'Can select add a contact form', async function() {
+				return await new ContactFormPage( driver ).selectAddContactForm();
 			} );
 
-			test.it( 'Can continue on add a contact form', function() {
-				return new ContactFormPage( driver ).selectContinue();
+			test.it( 'Can continue on add a contact form', async function() {
+				return await new ContactFormPage( driver ).selectContinue();
 			} );
 
-			test.it( 'Can select continue on activate stats page', function() {
-				return new ActivateStatsPage( driver ).selectContinue();
+			test.it( 'Can select continue on activate stats page', async function() {
+				return await new ActivateStatsPage( driver ).selectContinue();
 			} );
 
-			test.it( 'Can see onboarding summary page', function() {
+			test.it( 'Can see onboarding summary page', async function() {
 				const summaryPage = new SummaryPage( driver );
-				return new SummaryPage( driver )
-					.countToDoSteps()
-					.then( toDoCount =>
-						assert.equal( toDoCount, 0, 'Expected and actual steps are not equal.' )
-					)
-					.then( () => summaryPage.selectVisitSite() );
+				let toDoCount = await new SummaryPage( driver ).countToDoSteps();
+				assert.equal( toDoCount, 0, 'Expected and actual steps are not equal.' );
+				return await summaryPage.selectVisitSite();
 			} );
 
-			test.it( 'Can see site home page', function() {
+			test.it( 'Can see site home page', async function() {
 				const viewSitePage = new ViewSitePage( driver );
-				return viewSitePage
-					.siteTitle()
-					.then( title =>
-						assert.equal(
-							title.toUpperCase(),
-							blogTitle.toUpperCase(),
-							'Site title not is not correct'
-						)
-					)
-					.then( () => viewSitePage.siteTagline() )
-					.then( tagline =>
-						assert.equal( tagline, blogTagline, 'Site tagline not is not correct' )
-					);
+				let title = await viewSitePage.siteTitle();
+				assert.equal(
+					title.toUpperCase(),
+					blogTitle.toUpperCase(),
+					'Site title not is not correct'
+				);
+				let tagline = await viewSitePage.siteTagline();
+				return assert.equal( tagline, blogTagline, 'Site tagline not is not correct' );
 			} );
 		}
 	);
