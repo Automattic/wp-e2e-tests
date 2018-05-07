@@ -20,7 +20,7 @@ const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 // call run.sh with -I to feed in the mag16
 const locale = driverManager.currentLocale();
 
-var driver;
+let driver;
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -29,11 +29,11 @@ test.before( function() {
 test.describe( `Logged out homepage redirect test @i18n (${ locale })`, function() {
 	this.timeout( mochaTimeOut );
 
-	test.it( `should redirect to the correct url for wordpress.com (${ locale })`, function() {
-		driver = driverManager.startBrowser();
+	test.it( `should redirect to the correct url for wordpress.com (${ locale })`, async function() {
+		driver = await driverManager.startBrowser();
 
 		// No culture here implies 'en'
 		this.wpHomePage = new WPHomePage( driver, { visit: true } );
-		this.wpHomePage.checkURL( locale );
+		await this.wpHomePage.checkURL( locale );
 	} );
 } );
