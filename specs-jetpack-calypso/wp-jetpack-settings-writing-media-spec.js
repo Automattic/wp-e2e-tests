@@ -18,52 +18,48 @@ const host = dataHelper.getJetpackHost();
 
 let driver;
 
-test.before( function() {
+test.before( async function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser();
+	driver = await driverManager.startBrowser();
 } );
 
 test.describe( `[${ host }] Jetpack Settings on Calypso: (${ screenSize }) @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	test.before( async function() {
+		await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
-	test.before( function() {
+	test.before( async function() {
 		let loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
-		loginFlow.loginAndSelectSettings();
+		await loginFlow.loginAndSelectSettings();
 		this.settingsPage = new SettingsPage( driver );
-		return this.settingsPage.selectWriting();
+		return await this.settingsPage.selectWriting();
 	} );
 
 	test.describe( 'Can see Media Settings', function() {
-		test.it( 'Can see media settings section', function() {
-			this.settingsPage.mediaSettingsSectionDisplayed().then( shown => {
-				assert( shown, "Can't see the media settings section under the Writing settings" );
-			} );
+		test.it( 'Can see media settings section', async function() {
+			let shown = await this.settingsPage.mediaSettingsSectionDisplayed();
+			assert( shown, "Can't see the media settings section under the Writing settings" );
 		} );
 
-		test.it( 'Can see the Photon toggle switch', function() {
-			this.settingsPage.photonToggleDisplayed().then( shown => {
-				assert( shown, "Can't see the Photon setting toggle under the Writing settings" );
-			} );
+		test.it( 'Can see the Photon toggle switch', async function() {
+			let shown = await this.settingsPage.photonToggleDisplayed();
+			assert( shown, "Can't see the Photon setting toggle under the Writing settings" );
 		} );
 
-		test.it( 'Can see the Carousel toggle switch', function() {
-			this.settingsPage.carouselToggleDisplayed().then( shown => {
-				assert( shown, "Can't see the carousel setting toggle under the Writing settings" );
-			} );
+		test.it( 'Can see the Carousel toggle switch', async function() {
+			let shown = await this.settingsPage.carouselToggleDisplayed();
+			assert( shown, "Can't see the carousel setting toggle under the Writing settings" );
 		} );
 
-		test.it( 'Can see the Carousel background color drop down', function() {
-			this.settingsPage.carouseBackgroundColorDisplayed().then( shown => {
-				assert(
-					shown,
-					"Can't see the carousel background color setting toggle under the Writing settings"
-				);
-			} );
+		test.it( 'Can see the Carousel background color drop down', async function() {
+			let shown = await this.settingsPage.carouseBackgroundColorDisplayed();
+			assert(
+				shown,
+				"Can't see the carousel background color setting toggle under the Writing settings"
+			);
 		} );
 	} );
 } );
