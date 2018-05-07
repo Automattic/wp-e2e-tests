@@ -16,22 +16,22 @@ const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const locale = driverManager.currentLocale();
 const test_data = localization_data[ locale ];
 
-var driver;
+let driver;
 
-test.before( function() {
+test.before( async function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser();
+	driver = await driverManager.startBrowser();
 } );
 
 test.after( function( done ) {
 	// Wait between tests to not overload Google
-	var wait_seconds = 10;
+	let wait_seconds = 10;
 	this.timeout( ( wait_seconds + 2 ) * 1e3 );
 	setTimeout( done, wait_seconds * 1e3 );
 } );
 
 function doGoogleAdSearch( search_params ) {
-	var description =
+	let description =
 		'Search for "' +
 		search_params.query +
 		'" on ' +
@@ -49,31 +49,29 @@ function doGoogleAdSearch( search_params ) {
 			}
 		} );
 
-		test.beforeEach( function() {
-			driver.manage().deleteAllCookies();
-			driverManager.deleteLocalStorage( driver );
+		test.beforeEach( async function() {
+			await driver.manage().deleteAllCookies();
+			await driverManager.deleteLocalStorage( driver );
 		} );
 
-		test.it( 'Google search contains our ad', function() {
+		test.it( 'Google search contains our ad', async function() {
 			const googleFlow = new GoogleFlow( driver, 'desktop' );
 			const that = this;
-			googleFlow.search( search_params, test_data ).then( () => {
-				const searchPage = new GoogleSearchPage( driver, 'https://' + test_data.wpcom_base_url );
-				if ( searchPage.adExists() ) {
-					that.searchPage = searchPage;
-				}
-			} );
+			await googleFlow.search( search_params, test_data );
+			const searchPage = new GoogleSearchPage( driver, 'https://' + test_data.wpcom_base_url );
+			if ( await searchPage.adExists() ) {
+				that.searchPage = searchPage;
+			}
 		} );
 
-		test.it( 'Our landing page exists', function() {
+		test.it( 'Our landing page exists', async function() {
 			const that = this;
-			this.searchPage.getAdUrl().then( url => {
-				that.landingPage = new LandingPage( driver, url );
-			} );
+			let url = await this.searchPage.getAdUrl();
+			that.landingPage = new LandingPage( driver, url );
 		} );
 
-		test.it( 'Localized string found on landing page', function() {
-			this.landingPage.checkLocalizedString( test_data.wpcom_landing_page_string );
+		test.it( 'Localized string found on landing page', async function() {
+			await this.landingPage.checkLocalizedString( test_data.wpcom_landing_page_string );
 		} );
 	} );
 }
