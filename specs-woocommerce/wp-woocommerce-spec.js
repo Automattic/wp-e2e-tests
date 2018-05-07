@@ -11,7 +11,6 @@ import * as dataHelper from '../lib/data-helper';
 import NavBarComponent from '../lib/components/navbar-component';
 import SidebarComponent from '../lib/components/sidebar-component';
 import StoreSidebarComponent from '../lib/components/store-sidebar-component';
-import StoreDashboardPage from '../lib/pages/woocommerce/store-dashboard-page';
 import StoreSettingsPage from '../lib/pages/woocommerce/store-settings-page';
 import StoreOrdersPage from '../lib/pages/woocommerce/store-orders-page';
 import StoreOrderDetailsPage from '../lib/pages/woocommerce/store-order-details-page';
@@ -26,9 +25,9 @@ const screenSize = driverManager.currentScreenSize();
 
 let driver;
 
-test.before( function() {
+test.before( async function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser();
+	driver = await driverManager.startBrowser();
 } );
 
 test.describe(
@@ -37,39 +36,36 @@ test.describe(
 		this.timeout( mochaTimeOut );
 		this.bailSuite( true );
 
-		test.before( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		// Login as WooCommerce store user and open the sidebar
-		test.before( function() {
+		test.before( async function() {
 			this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-			this.loginFlow.login();
+			await this.loginFlow.login();
 			this.navBarComponent = new NavBarComponent( driver );
-			this.navBarComponent.clickMySites();
+			await this.navBarComponent.clickMySites();
 		} );
 
 		test.it(
 			"Can see 'Store' option in main Calypso menu for an AT WooCommerce site set to the US",
-			function() {
+			async function() {
 				this.sideBarComponent = new SidebarComponent( driver );
-				this.sideBarComponent.storeOptionDisplayed().then( displayed => {
-					assert(
-						displayed,
-						'The Store menu option is not displayed for the AT WooCommerce site set to the US'
-					);
-				} );
+				let displayed = await this.sideBarComponent.storeOptionDisplayed();
+				assert(
+					displayed,
+					'The Store menu option is not displayed for the AT WooCommerce site set to the US'
+				);
 			}
 		);
 
-		test.it( "The 'Store' option opens the store dashboard with its own sidebar", function() {
+		test.it( "The 'Store' option opens the store dashboard with its own sidebar", async function() {
 			this.sideBarComponent = new SidebarComponent( driver );
-			this.sideBarComponent.selectStoreOption();
-			this.storeDashboardPage = new StoreDashboardPage( driver );
+			await this.sideBarComponent.selectStoreOption();
 			this.storeSidebarComponent = new StoreSidebarComponent( driver );
-			this.storeSidebarComponent.displayed().then( d => {
-				assert( d, 'The store sidebar is not displayed' );
-			} );
+			let d = await this.storeSidebarComponent.displayed();
+			assert( d, 'The store sidebar is not displayed' );
 		} );
 	}
 );
@@ -78,34 +74,30 @@ test.describe( `Can see WooCommerce products in Calypso '${ screenSize }' @paral
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	test.before( async function() {
+		await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
 	// Login as WooCommerce store user and open the woo store
-	test.before( function() {
+	test.before( async function() {
 		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		return this.loginFlow.loginAndOpenWooStore();
+		return await this.loginFlow.loginAndOpenWooStore();
 	} );
 
-	test.it( "Can see 'Products' option in the Woo store sidebar", function() {
-		this.storeDashboardPage = new StoreDashboardPage( driver );
+	test.it( "Can see 'Products' option in the Woo store sidebar", async function() {
 		this.storeSidebarComponent = new StoreSidebarComponent( driver );
-		this.storeSidebarComponent.productsLinkDisplayed().then( d => {
-			assert( d, 'The store sidebar products link is not displayed' );
-		} );
+		let d = await this.storeSidebarComponent.productsLinkDisplayed();
+		assert( d, 'The store sidebar products link is not displayed' );
 	} );
 
 	test.it(
 		'Can see the products page with at least one product when selecting the products option in the Woo store sidebar',
-		function() {
-			this.storeDashboardPage = new StoreDashboardPage( driver );
+		async function() {
 			this.storeSidebarComponent = new StoreSidebarComponent( driver );
-			this.storeSidebarComponent.selectProducts();
+			await this.storeSidebarComponent.selectProducts();
 			this.storeProductsPage = new StoreProductsPage( driver );
-			this.storeProductsPage.atLeastOneProductDisplayed().then( displayed => {
-				assert( displayed, 'No Woo products are displayed on the product page' );
-			} );
+			let displayed = await this.storeProductsPage.atLeastOneProductDisplayed();
+			assert( displayed, 'No Woo products are displayed on the product page' );
 		}
 	);
 } );
@@ -117,64 +109,62 @@ test.describe(
 		this.bailSuite( true );
 		let fileDetails;
 
-		test.before( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		// 'Create image file for upload'
-		test.before( function() {
-			mediaHelper.createFile( false, 'image-uploads-store' ).then( function( details ) {
-				fileDetails = details;
-			} );
+		test.before( async function() {
+			fileDetails = await mediaHelper.createFile( false, 'image-uploads-store' );
 		} );
 
 		// Login as WooCommerce store user and open the woo store
-		test.before( function() {
+		test.before( async function() {
 			this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-			return this.loginFlow.loginAndOpenWooStore();
+			return await this.loginFlow.loginAndOpenWooStore();
 		} );
 
-		test.it( 'Can add a new product via the Products Menu in the Woo store sidebar', function() {
-			const productTitle = dataHelper.randomPhrase();
-			const productDescription = 'Another test e2e product';
-			this.storeDashboardPage = new StoreDashboardPage( driver );
-			this.storeSidebarComponent = new StoreSidebarComponent( driver );
-			this.storeSidebarComponent.addProduct();
-			this.addProductPage = new AddEditProductPage( driver );
-			this.addProductPage.enterTitle( productTitle );
-			// this.addProductPage.addImage( fileDetails );
-			this.addProductPage.enterDescription( productDescription );
-			this.addProductPage.setPrice( '888.00' );
-			this.addProductPage.setDimensions( '6', '7', '8' );
-			this.addProductPage.setWeight( '2.2' );
-			this.addProductPage.addQuantity( '80' );
-			this.addProductPage.allowBackorders();
-			this.addProductPage.addCategory( 'Art' ); //Adding a category at the end to prevent errors being thrown on save
-			this.addProductPage.saveAndPublish();
-			this.addProductPage.waitForSuccessNotice();
-			this.storeProductsPage = new StoreProductsPage( driver );
-			this.storeProductsPage.productDisplayed( productTitle ).then( displayed => {
+		test.it(
+			'Can add a new product via the Products Menu in the Woo store sidebar',
+			async function() {
+				const productTitle = dataHelper.randomPhrase();
+				const productDescription = 'Another test e2e product';
+				this.storeSidebarComponent = new StoreSidebarComponent( driver );
+				await this.storeSidebarComponent.addProduct();
+				this.addProductPage = new AddEditProductPage( driver );
+				await this.addProductPage.enterTitle( productTitle );
+				// this.addProductPage.addImage( fileDetails );
+				await this.addProductPage.enterDescription( productDescription );
+				await this.addProductPage.setPrice( '888.00' );
+				await this.addProductPage.setDimensions( '6', '7', '8' );
+				await this.addProductPage.setWeight( '2.2' );
+				await this.addProductPage.addQuantity( '80' );
+				await this.addProductPage.allowBackorders();
+				await this.addProductPage.addCategory( 'Art' ); //Adding a category at the end to prevent errors being thrown on save
+				await this.addProductPage.saveAndPublish();
+				await this.addProductPage.waitForSuccessNotice();
+				this.storeProductsPage = new StoreProductsPage( driver );
+				let displayed = await this.storeProductsPage.productDisplayed( productTitle );
 				assert(
 					displayed,
 					`The product '${ productTitle }' isn't being displayed on the products page after being added`
 				);
-			} );
-			this.storeProductsPage.selectProduct( productTitle );
-			this.editProductPage = new AddEditProductPage( driver );
-			this.editProductPage.deleteProduct();
-			this.editProductPage.waitForSuccessNotice();
-			this.storeProductsPage = new StoreProductsPage( driver );
-			this.storeProductsPage.productDisplayed( productTitle ).then( displayed => {
+				await this.storeProductsPage.selectProduct( productTitle );
+				this.editProductPage = new AddEditProductPage( driver );
+				await this.editProductPage.deleteProduct();
+				await this.editProductPage.waitForSuccessNotice();
+				this.storeProductsPage = new StoreProductsPage( driver );
+				displayed = await this.storeProductsPage.productDisplayed( productTitle );
 				assert(
 					! displayed,
 					`The product '${ productTitle }' isn't still being displayed on the products page after being deleted`
 				);
-			} );
-		} );
+			}
+		);
 
-		test.after( function() {
+		test.after( async function() {
 			if ( fileDetails ) {
-				mediaHelper.deleteFile( fileDetails ).then( function() {} );
+				await mediaHelper.deleteFile( fileDetails );
 			}
 		} );
 	}
@@ -184,46 +174,42 @@ test.describe( `Can see WooCommerce orders in Calypso '${ screenSize }' @paralle
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	test.before( async function() {
+		await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
 	// Login as WooCommerce store user and open the woo store
-	test.before( function() {
+	test.before( async function() {
 		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		return this.loginFlow.loginAndOpenWooStore();
+		return await this.loginFlow.loginAndOpenWooStore();
 	} );
 
-	test.it( "Can see 'Orders' option in the Woo store sidebar", function() {
-		this.storeDashboardPage = new StoreDashboardPage( driver );
+	test.it( "Can see 'Orders' option in the Woo store sidebar", async function() {
 		this.storeSidebarComponent = new StoreSidebarComponent( driver );
-		this.storeSidebarComponent.productsLinkDisplayed().then( d => {
-			assert( d, 'The store sidebar orders link is not displayed' );
-		} );
+		let d = await this.storeSidebarComponent.productsLinkDisplayed();
+		assert( d, 'The store sidebar orders link is not displayed' );
 	} );
 
 	test.it(
 		'Can see the orders page with at least one order when selecting the orders option in the Woo store sidebar',
-		function() {
-			this.storeDashboardPage = new StoreDashboardPage( driver );
+		async function() {
 			this.storeSidebarComponent = new StoreSidebarComponent( driver );
-			this.storeSidebarComponent.selectOrders();
+			await this.storeSidebarComponent.selectOrders();
 			this.storeOrdersPage = new StoreOrdersPage( driver );
-			this.storeOrdersPage.atLeastOneOrderDisplayed().then( displayed => {
-				assert( displayed, 'No Woo orders are displayed on the orders page' );
-			} );
+			let displayed = await this.storeOrdersPage.atLeastOneOrderDisplayed();
+			assert( displayed, 'No Woo orders are displayed on the orders page' );
 		}
 	);
 
 	test.it(
 		'Can see the order details page when opening an order, product details page when clicking a product in an order',
-		function() {
+		async function() {
 			this.storeSidebarComponent = new StoreSidebarComponent( driver );
-			this.storeSidebarComponent.selectOrders();
+			await this.storeSidebarComponent.selectOrders();
 			this.storeOrdersPage = new StoreOrdersPage( driver );
-			this.storeOrdersPage.clickFirstOrder();
+			await this.storeOrdersPage.clickFirstOrder();
 			this.storeOrderDetailsPage = new StoreOrderDetailsPage( driver );
-			this.storeOrderDetailsPage.clickFirstProduct();
+			await this.storeOrderDetailsPage.clickFirstProduct();
 			this.editProductPage = new AddEditProductPage( driver );
 		}
 	);
@@ -233,49 +219,42 @@ test.describe( `Can see WooCommerce settings in Calypso '${ screenSize }' @paral
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
 
-	test.before( function() {
-		driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	test.before( async function() {
+		await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 	} );
 
 	// Login as WooCommerce store user and open the woo store
-	test.before( function() {
+	test.before( async function() {
 		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		return this.loginFlow.loginAndOpenWooStore();
+		return await this.loginFlow.loginAndOpenWooStore();
 	} );
 
-	test.it( "Can see 'Settings' option in the Woo store sidebar", function() {
-		this.storeDashboardPage = new StoreDashboardPage( driver );
+	test.it( "Can see 'Settings' option in the Woo store sidebar", async function() {
 		this.storeSidebarComponent = new StoreSidebarComponent( driver );
-		this.storeSidebarComponent.settingsLinkDisplayed().then( d => {
-			assert( d, 'The store sidebar settings link is not displayed' );
-		} );
+		let d = await this.storeSidebarComponent.settingsLinkDisplayed();
+		assert( d, 'The store sidebar settings link is not displayed' );
 	} );
 
 	test.it(
 		'Can see the settings page when selecting the settings option in the Woo store sidebar',
-		function() {
-			this.storeDashboardPage = new StoreDashboardPage( driver );
+		async function() {
 			this.storeSidebarComponent = new StoreSidebarComponent( driver );
-			this.storeSidebarComponent.selectSettings();
-			this.storeSettingsPage = new StoreSettingsPage( driver );
+			await this.storeSidebarComponent.selectSettings();
 		}
 	);
 
-	test.it( 'Can select payments, shipping, and taxes tabs on the settings page', function() {
+	test.it( 'Can select payments, shipping, and taxes tabs on the settings page', async function() {
 		this.storeSidebarComponent = new StoreSidebarComponent( driver );
-		this.storeSidebarComponent.selectSettings();
+		await this.storeSidebarComponent.selectSettings();
 		this.storeSettingsPage = new StoreSettingsPage( driver );
-		this.storeSettingsPage.selectPaymentsTab();
-		this.storeSettingsPage.paymentsSettingsDisplayed().then( displayed => {
-			assert( displayed, 'The payment settings were not displayed' );
-		} );
-		this.storeSettingsPage.selectShippingTab();
-		this.storeSettingsPage.shippingSettingsDisplayed().then( displayed => {
-			assert( displayed, 'The shipping settings were not displayed' );
-		} );
-		this.storeSettingsPage.selectTaxesTab();
-		this.storeSettingsPage.taxesSettingsDisplayed().then( displayed => {
-			assert( displayed, 'The taxes settings were not displayed' );
-		} );
+		await this.storeSettingsPage.selectPaymentsTab();
+		let displayed = await this.storeSettingsPage.paymentsSettingsDisplayed();
+		assert( displayed, 'The payment settings were not displayed' );
+		await this.storeSettingsPage.selectShippingTab();
+		displayed = await this.storeSettingsPage.shippingSettingsDisplayed();
+		assert( displayed, 'The shipping settings were not displayed' );
+		await this.storeSettingsPage.selectTaxesTab();
+		displayed = await this.storeSettingsPage.taxesSettingsDisplayed();
+		assert( displayed, 'The taxes settings were not displayed' );
 	} );
 } );
