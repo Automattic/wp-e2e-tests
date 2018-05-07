@@ -2,10 +2,7 @@
 
 import assert from 'assert';
 import test from 'selenium-webdriver/testing';
-
 import config from 'config';
-import * as driverManager from '../lib/driver-manager.js';
-import * as mediaHelper from '../lib/media-helper.js';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
@@ -28,7 +25,7 @@ import NoSitesComponent from '../lib/components/no-sites-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
 
 import * as dataHelper from '../lib/data-helper.js';
-
+import * as driverManager from '../lib/driver-manager.js';
 import EmailClient from '../lib/email-client.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
@@ -37,7 +34,6 @@ const inviteInboxId = config.get( 'inviteInboxId' );
 const password = config.get( 'passwordForNewTestSignUps' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
-
 const emailClient = new EmailClient( inviteInboxId );
 
 let driver;
