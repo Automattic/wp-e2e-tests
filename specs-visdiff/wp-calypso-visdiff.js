@@ -25,7 +25,7 @@ const screenSize = driverManager.currentScreenSize();
 
 const eyes = eyesHelper.eyesSetup( true );
 
-test.before( function() {
+test.before( async function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
@@ -35,179 +35,175 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Site Pages: @visdiff', function() {
-		test.before( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 
 			let testEnvironment = 'WordPress.com';
 			let testName = `Site Pages [${ global.browserName }] [${ screenSize }]`;
 			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 		} );
 
-		test.it( 'Log in as visdiff user', function() {
+		test.it( 'Log in as visdiff user', async function() {
 			let loginFlow = new LoginFlow( driver, 'visdiffUser' );
-			return loginFlow.loginAndSelectMySite();
+			return await loginFlow.loginAndSelectMySite();
 		} );
 
-		test.it( 'Can open the Site Pages section', function() {
+		test.it( 'Can open the Site Pages section', async function() {
 			this.sidebarComponent = new SidebarComponent( driver );
-			this.sidebarComponent.ensureSidebarMenuVisible();
-			return this.sidebarComponent.selectPages();
+			await this.sidebarComponent.ensureSidebarMenuVisible();
+			return await this.sidebarComponent.selectPages();
 		} );
 
-		test.it( 'Can view the site pages list', function() {
+		test.it( 'Can view the site pages list', async function() {
 			this.pagesPage = new PagesPage( driver );
-			this.pagesPage.waitForPages();
-			eyesHelper.eyesScreenshot( driver, eyes, 'Site Pages List' );
+			await this.pagesPage.waitForPages();
+			await eyesHelper.eyesScreenshot( driver, eyes, 'Site Pages List' );
 		} );
 
-		test.it( 'Can edit a default page', function() {
+		test.it( 'Can edit a default page', async function() {
 			const defaultPageTitle = 'About';
-			this.pagesPage.editPageWithTitle( defaultPageTitle );
+			await this.pagesPage.editPageWithTitle( defaultPageTitle );
 			this.editorPage = new EditorPage( driver );
-			this.editorPage.waitForTitle();
-			this.editorPage.titleShown().then( titleShown => {
-				assert.equal( titleShown, defaultPageTitle, 'The page title shown was unexpected' );
-			} );
+			await this.editorPage.waitForTitle();
+			let titleShown = await this.editorPage.titleShown();
+			assert.equal( titleShown, defaultPageTitle, 'The page title shown was unexpected' );
 		} );
 
-		test.it( 'Close sidebar for editor screenshot', function() {
+		test.it( 'Close sidebar for editor screenshot', async function() {
 			this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-			this.postEditorSidebarComponent.hideComponentIfNecessary();
-			eyesHelper.eyesScreenshot( driver, eyes, 'Page Editor' );
+			await this.postEditorSidebarComponent.hideComponentIfNecessary();
+			await eyesHelper.eyesScreenshot( driver, eyes, 'Page Editor' );
 		} );
 
-		test.it( 'Open all sidebar sections for screenshot', function() {
-			this.postEditorSidebarComponent.displayComponentIfNecessary();
-			this.postEditorSidebarComponent.expandMoreOptions();
-			this.postEditorSidebarComponent.expandSharingSection();
-			this.postEditorSidebarComponent.expandPageOptions();
-			this.postEditorSidebarComponent.expandFeaturedImage();
-			this.postEditorSidebarComponent.expandStatusSection();
-			eyesHelper.eyesScreenshot( driver, eyes, 'Page Editor Settings' );
+		test.it( 'Open all sidebar sections for screenshot', async function() {
+			await this.postEditorSidebarComponent.displayComponentIfNecessary();
+			await this.postEditorSidebarComponent.expandMoreOptions();
+			await this.postEditorSidebarComponent.expandSharingSection();
+			await this.postEditorSidebarComponent.expandPageOptions();
+			await this.postEditorSidebarComponent.expandFeaturedImage();
+			await this.postEditorSidebarComponent.expandStatusSection();
+			await eyesHelper.eyesScreenshot( driver, eyes, 'Page Editor Settings' );
 		} );
 
-		test.it( 'Close editor', function() {
+		test.it( 'Close editor', async function() {
 			this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-			return this.postEditorToolbarComponent.closeEditor();
+			return await this.postEditorToolbarComponent.closeEditor();
 		} );
 
-		test.after( function() {
-			eyesHelper.eyesClose( eyes );
+		test.after( async function() {
+			await eyesHelper.eyesClose( eyes );
 		} );
 	} );
 
 	test.describe( 'Blog Posts: @visdiff', function() {
-		test.before( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 
 			let testEnvironment = 'WordPress.com';
 			let testName = `Blog Posts [${ global.browserName }] [${ screenSize }]`;
 			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 		} );
 
-		test.it( 'Log in as visdiff user', function() {
+		test.it( 'Log in as visdiff user', async function() {
 			let loginFlow = new LoginFlow( driver, 'visdiffUser' );
-			return loginFlow.loginAndSelectMySite();
+			return await loginFlow.loginAndSelectMySite();
 		} );
 
-		test.it( 'Can open the Blog Posts section', function() {
+		test.it( 'Can open the Blog Posts section', async function() {
 			this.sidebarComponent = new SidebarComponent( driver );
-			this.sidebarComponent.ensureSidebarMenuVisible();
-			return this.sidebarComponent.selectPosts();
+			await this.sidebarComponent.ensureSidebarMenuVisible();
+			return await this.sidebarComponent.selectPosts();
 		} );
 
-		test.it( 'Can view the blog posts list', function() {
+		test.it( 'Can view the blog posts list', async function() {
 			this.postsPage = new PostsPage( driver );
-			this.postsPage.waitForPosts();
-			eyesHelper.eyesScreenshot( driver, eyes, 'Blog Posts List' );
+			await this.postsPage.waitForPosts();
+			await eyesHelper.eyesScreenshot( driver, eyes, 'Blog Posts List' );
 		} );
 
-		test.it( 'Can edit the default post', function() {
+		test.it( 'Can edit the default post', async function() {
 			const defaultPostTitle = 'The Journey Begins';
-			this.postsPage.editPostWithTitle( defaultPostTitle );
+			await this.postsPage.editPostWithTitle( defaultPostTitle );
 			this.editorPage = new EditorPage( driver );
-			this.editorPage.waitForTitle();
-			this.editorPage.titleShown().then( titleShown => {
-				assert.equal( titleShown, defaultPostTitle, 'The post title shown was unexpected' );
-			} );
+			await this.editorPage.waitForTitle();
+			let titleShown = await this.editorPage.titleShown();
+			assert.equal( titleShown, defaultPostTitle, 'The post title shown was unexpected' );
 		} );
 
-		test.it( 'Can open the editor media modal', function() {
-			this.editorPage.chooseInsertMediaOption();
-			this.editorPage.selectImageByNumber( 0 ).then( () => {
-				eyesHelper.eyesScreenshot( driver, eyes, 'Editor Media Modal' );
-			} );
+		test.it( 'Can open the editor media modal', async function() {
+			await this.editorPage.chooseInsertMediaOption();
+			await this.editorPage.selectImageByNumber( 0 );
+			await eyesHelper.eyesScreenshot( driver, eyes, 'Editor Media Modal' );
 		} );
 
-		test.it( 'Can edit an image', function() {
-			this.editorPage.openImageDetails();
-			this.editorPage.selectEditImage();
-			this.editorPage.waitForImageEditor();
-			eyesHelper.eyesScreenshot( driver, eyes, 'Image Editor Media Modal' );
+		test.it( 'Can edit an image', async function() {
+			await this.editorPage.openImageDetails();
+			await this.editorPage.selectEditImage();
+			await this.editorPage.waitForImageEditor();
+			await eyesHelper.eyesScreenshot( driver, eyes, 'Image Editor Media Modal' );
 		} );
 
-		test.it( 'Can close image editor and media modal', function() {
-			this.editorPage.dismissImageEditor();
-			this.editorPage.dismissImageDetails();
-			this.editorPage.dismissMediaModal();
+		test.it( 'Can close image editor and media modal', async function() {
+			await this.editorPage.dismissImageEditor();
+			await this.editorPage.dismissImageDetails();
+			await this.editorPage.dismissMediaModal();
 		} );
 
-		test.it( 'Close sidebar for editor screenshot', function() {
+		test.it( 'Close sidebar for editor screenshot', async function() {
 			this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-			this.postEditorSidebarComponent.hideComponentIfNecessary().then( () => {
-				eyesHelper.eyesScreenshot( driver, eyes, 'Post Editor' );
-			} );
+			await this.postEditorSidebarComponent.hideComponentIfNecessary();
+			await eyesHelper.eyesScreenshot( driver, eyes, 'Post Editor' );
 		} );
 
-		test.it( 'Open all sidebar sections for screenshot', function() {
-			this.postEditorSidebarComponent.displayComponentIfNecessary();
-			this.postEditorSidebarComponent.expandMoreOptions();
-			this.postEditorSidebarComponent.expandPostFormat();
-			this.postEditorSidebarComponent.expandSharingSection();
-			this.postEditorSidebarComponent.expandFeaturedImage();
-			this.postEditorSidebarComponent.expandCategoriesAndTags();
-			this.postEditorSidebarComponent.expandStatusSection();
-			eyesHelper.eyesScreenshot( driver, eyes, 'Post Editor Settings' );
+		test.it( 'Open all sidebar sections for screenshot', async function() {
+			await this.postEditorSidebarComponent.displayComponentIfNecessary();
+			await this.postEditorSidebarComponent.expandMoreOptions();
+			await this.postEditorSidebarComponent.expandPostFormat();
+			await this.postEditorSidebarComponent.expandSharingSection();
+			await this.postEditorSidebarComponent.expandFeaturedImage();
+			await this.postEditorSidebarComponent.expandCategoriesAndTags();
+			await this.postEditorSidebarComponent.expandStatusSection();
+			await eyesHelper.eyesScreenshot( driver, eyes, 'Post Editor Settings' );
 		} );
 
-		test.it( 'Close editor', function() {
+		test.it( 'Close editor', async function() {
 			this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-			return this.postEditorToolbarComponent.closeEditor();
+			return await this.postEditorToolbarComponent.closeEditor();
 		} );
 
-		test.after( function() {
-			eyesHelper.eyesClose( eyes );
+		test.after( async function() {
+			await eyesHelper.eyesClose( eyes );
 		} );
 	} );
 
 	test.describe( 'Comments: @visdiff', function() {
-		test.before( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 
 			let testEnvironment = 'WordPress.com';
 			let testName = `Comments [${ global.browserName }] [${ screenSize }]`;
 			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 		} );
 
-		test.it( 'Log in as visdiff user', function() {
+		test.it( 'Log in as visdiff user', async function() {
 			let loginFlow = new LoginFlow( driver, 'visdiffUser' );
-			return loginFlow.loginAndSelectMySite();
+			return await loginFlow.loginAndSelectMySite();
 		} );
 
-		test.it( 'Can open the Comments section', function() {
+		test.it( 'Can open the Comments section', async function() {
 			this.sidebarComponent = new SidebarComponent( driver );
-			this.sidebarComponent.ensureSidebarMenuVisible();
-			return this.sidebarComponent.selectComments();
+			await this.sidebarComponent.ensureSidebarMenuVisible();
+			return await this.sidebarComponent.selectComments();
 		} );
 
-		test.it( 'Can view the comments list', function() {
+		test.it( 'Can view the comments list', async function() {
 			this.commentsPage = new CommentsPage( driver );
-			this.commentsPage.waitForComments();
-			eyesHelper.eyesScreenshot( driver, eyes, 'Comments List' );
+			await this.commentsPage.waitForComments();
+			await eyesHelper.eyesScreenshot( driver, eyes, 'Comments List' );
 		} );
 
-		test.after( function() {
-			eyesHelper.eyesClose( eyes );
+		test.after( async function() {
+			await eyesHelper.eyesClose( eyes );
 		} );
 	} );
 } );
