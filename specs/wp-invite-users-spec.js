@@ -43,13 +43,7 @@ test.before( async function() {
 	driver = await driverManager.startBrowser();
 } );
 
-// Faked out test.describe function to enable dynamic skipping of e-mail tests
-let testDescribe = test.describe;
-if ( process.env.DISABLE_EMAIL === 'true' ) {
-	testDescribe = test.xdescribe;
-}
-
-testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
+test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Inviting new user as an Editor: @parallel @jetpack', function() {
@@ -457,155 +451,149 @@ testDescribe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		);
 	}
 
-	// Unsupported on Jetpack until https://github.com/Automattic/wp-calypso/issues/15456 is fixed
-	if ( host === 'WPCOM' ) {
-		test.describe(
-			'Inviting New User as an Contributor, then change them to Author: @parallel @jetpack',
-			function() {
-				this.bailSuite( true );
+	test.describe(
+		'Inviting New User as an Contributor, then change them to Author: @parallel @jetpack',
+		function() {
+			this.bailSuite( true );
 
-				const newUserName = 'e2eflowtestingcontributor' + new Date().getTime().toString();
-				const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
-				const reviewPostTitle = dataHelper.randomPhrase();
-				const publishPostTitle = dataHelper.randomPhrase();
-				const postQuote =
-					'We are all in the gutter, but some of us are looking at the stars.\n— Oscar Wilde, Lady Windermere’s Fan';
-				let acceptInviteURL = '';
+			const newUserName = 'e2eflowtestingcontributor' + new Date().getTime().toString();
+			const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
+			const reviewPostTitle = dataHelper.randomPhrase();
+			const publishPostTitle = dataHelper.randomPhrase();
+			const postQuote =
+				'We are all in the gutter, but some of us are looking at the stars.\n— Oscar Wilde, Lady Windermere’s Fan';
+			let acceptInviteURL = '';
 
-				test.before( async function() {
-					await driverManager.clearCookiesAndDeleteLocalStorage( driver );
-				} );
+			test.before( async function() {
+				await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			} );
 
-				test.it( 'Can log in and navigate to Invite People page', async function() {
-					await new LoginFlow( driver ).loginAndSelectPeople();
-					await new PeoplePage( driver ).inviteUser();
-				} );
+			test.it( 'Can log in and navigate to Invite People page', async function() {
+				await new LoginFlow( driver ).loginAndSelectPeople();
+				await new PeoplePage( driver ).inviteUser();
+			} );
 
-				test.it( 'Can invite a new user as an editor and see its pending', async function() {
-					const invitePeoplePage = new InvitePeoplePage( driver );
-					await invitePeoplePage.inviteNewUser(
-						newInviteEmailAddress,
-						'contributor',
-						'Automated e2e testing'
-					);
-					await invitePeoplePage.inviteSent();
-					await invitePeoplePage.backToPeopleMenu();
-
-					const peoplePage = new PeoplePage( driver );
-					await peoplePage.selectInvites();
-					await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
-				} );
-
-				test.it( 'Can see an invitation email received for the invite', async function() {
-					let emails = await emailClient.pollEmailsByRecipient( newInviteEmailAddress );
-					let links = emails[ 0 ].html.links;
-					let link = links.find( l => l.href.includes( 'accept-invite' ) );
-					acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
-					return assert.notEqual(
-						acceptInviteURL,
-						'',
-						'Could not locate the accept invite URL in the invite email'
-					);
-				} );
-
-				test.it( 'Can sign up as new user for the blog via invite link', async function() {
-					await driverManager.ensureNotLoggedIn( driver );
-
-					await driver.get( acceptInviteURL );
-					const acceptInvitePage = new AcceptInvitePage( driver );
-
-					let actualEmailAddress = await acceptInvitePage.getEmailPreFilled();
-					let headerInviteText = await acceptInvitePage.getHeaderInviteText();
-					assert.equal( actualEmailAddress, newInviteEmailAddress );
-					assert( headerInviteText.includes( 'contributor' ) );
-
-					await acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
-					return await acceptInvitePage.waitUntilNotVisible();
-				} );
-
-				test.it( 'Can see a notice welcoming the new user as an contributor', async function() {
-					await new PostsPage( driver );
-					let invitesMessageTitleDisplayed = await new NoticesComponent(
-						driver
-					).inviteMessageTitle();
-					assert(
-						invitesMessageTitleDisplayed.includes( 'Contributor' ),
-						`The invite message '${ invitesMessageTitleDisplayed }' does not include 'Contributor'`
-					);
-				} );
-
-				test.it( 'New user can create a new post', async function() {
-					const navbarComponent = await new NavbarComponent( driver );
-					await navbarComponent.dismissGuidedTours();
-					await navbarComponent.clickCreateNewPost();
-
-					const editorPage = new EditorPage( driver );
-					let urlDisplayed = await driver.getCurrentUrl();
-					await editorPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
-					await editorPage.enterTitle( reviewPostTitle );
-					return await editorPage.enterContent( postQuote );
-				} );
-
-				test.it( 'New user can submit the new post for review as pending status', async function() {
-					const postEditorToolbar = new PostEditorToolbarComponent( driver );
-					await postEditorToolbar.ensureSaved();
-					await postEditorToolbar.submitForReview();
-					await postEditorToolbar.waitForIsPendingStatus();
-					let isPending = await postEditorToolbar.statusIsPending();
-					assert( isPending, 'The post is not showing as pending' );
-				} );
-
-				test.it( 'As the original user, can see new user added to site', async function() {
-					await driverManager.ensureNotLoggedIn( driver );
-					await new LoginFlow( driver ).loginAndSelectPeople();
-					const peoplePage = new PeoplePage( driver );
-					await peoplePage.selectTeam();
-					await peoplePage.searchForUser( newUserName );
-					let numberPeopleShown = await peoplePage.numberSearchResults();
-					assert.equal(
-						numberPeopleShown,
-						1,
-						`The number of people search results for '${ newUserName }' was incorrect`
-					);
-				} );
-
-				test.it(
-					'As the original user, I can change the contributor user to an author user',
-					async function() {
-						const peoplePage = new PeoplePage( driver );
-
-						await peoplePage.selectOnlyPersonDisplayed();
-						const editTeamMemberPage = new EditTeamMemberPage( driver );
-						await editTeamMemberPage.changeToNewRole( 'author' );
-						let displayed = await editTeamMemberPage.successNoticeDisplayed();
-						assert.equal(
-							displayed,
-							true,
-							'The update successful notice was not shown on the edit team member page.'
-						);
-					}
+			test.it( 'Can invite a new user as an editor and see its pending', async function() {
+				const invitePeoplePage = new InvitePeoplePage( driver );
+				await invitePeoplePage.inviteNewUser(
+					newInviteEmailAddress,
+					'contributor',
+					'Automated e2e testing'
 				);
+				await invitePeoplePage.inviteSent();
+				await invitePeoplePage.backToPeopleMenu();
 
-				test.it( 'As the invited user, I can now publish a post', async function() {
-					await driverManager.ensureNotLoggedIn( driver );
+				const peoplePage = new PeoplePage( driver );
+				await peoplePage.selectInvites();
+				await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
+			} );
 
-					await new LoginPage( driver, true ).login( newUserName, password );
-					await new ReaderPage( driver );
+			test.it( 'Can see an invitation email received for the invite', async function() {
+				let emails = await emailClient.pollEmailsByRecipient( newInviteEmailAddress );
+				let links = emails[ 0 ].html.links;
+				let link = links.find( l => l.href.includes( 'accept-invite' ) );
+				acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
+				return assert.notEqual(
+					acceptInviteURL,
+					'',
+					'Could not locate the accept invite URL in the invite email'
+				);
+			} );
 
-					const navbarComponent = new NavbarComponent( driver );
-					await navbarComponent.clickCreateNewPost();
+			test.it( 'Can sign up as new user for the blog via invite link', async function() {
+				await driverManager.ensureNotLoggedIn( driver );
 
-					const editorPage = new EditorPage( driver );
-					let urlDisplayed = await driver.getCurrentUrl();
-					await editorPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
-					await editorPage.enterTitle( publishPostTitle );
-					await editorPage.enterContent( postQuote );
+				await driver.get( acceptInviteURL );
+				const acceptInvitePage = new AcceptInvitePage( driver );
 
-					const postEditorToolbar = new PostEditorToolbarComponent( driver );
-					await postEditorToolbar.ensureSaved();
-					return await postEditorToolbar.publishAndViewContent( { useConfirmStep: true } );
-				} );
-			}
-		);
-	}
+				let actualEmailAddress = await acceptInvitePage.getEmailPreFilled();
+				let headerInviteText = await acceptInvitePage.getHeaderInviteText();
+				assert.equal( actualEmailAddress, newInviteEmailAddress );
+				assert( headerInviteText.includes( 'contributor' ) );
+
+				await acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
+				return await acceptInvitePage.waitUntilNotVisible();
+			} );
+
+			test.it( 'Can see a notice welcoming the new user as an contributor', async function() {
+				await new PostsPage( driver );
+				let invitesMessageTitleDisplayed = await new NoticesComponent(
+					driver
+				).inviteMessageTitle();
+				assert(
+					invitesMessageTitleDisplayed.includes( 'Contributor' ),
+					`The invite message '${ invitesMessageTitleDisplayed }' does not include 'Contributor'`
+				);
+			} );
+
+			test.it( 'New user can create a new post', async function() {
+				const navbarComponent = await new NavbarComponent( driver );
+				await navbarComponent.dismissGuidedTours();
+				await navbarComponent.clickCreateNewPost();
+
+				const editorPage = new EditorPage( driver );
+				let urlDisplayed = await driver.getCurrentUrl();
+				await editorPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
+				await editorPage.enterTitle( reviewPostTitle );
+				return await editorPage.enterContent( postQuote );
+			} );
+
+			test.it( 'New user can submit the new post for review as pending status', async function() {
+				const postEditorToolbar = new PostEditorToolbarComponent( driver );
+				await postEditorToolbar.ensureSaved();
+				await postEditorToolbar.submitForReview();
+				await postEditorToolbar.waitForIsPendingStatus();
+				let isPending = await postEditorToolbar.statusIsPending();
+				assert( isPending, 'The post is not showing as pending' );
+			} );
+
+			test.it( 'As the original user, can see new user added to site', async function() {
+				await driverManager.ensureNotLoggedIn( driver );
+				await new LoginFlow( driver ).loginAndSelectPeople();
+				const peoplePage = new PeoplePage( driver );
+				await peoplePage.selectTeam();
+				await peoplePage.searchForUser( newUserName );
+				let numberPeopleShown = await peoplePage.numberSearchResults();
+				assert.equal(
+					numberPeopleShown,
+					1,
+					`The number of people search results for '${ newUserName }' was incorrect`
+				);
+			} );
+
+			test.it(
+				'As the original user, I can change the contributor user to an author user',
+				async function() {
+					const peoplePage = new PeoplePage( driver );
+
+					await peoplePage.selectOnlyPersonDisplayed();
+					const editTeamMemberPage = new EditTeamMemberPage( driver );
+					await editTeamMemberPage.changeToNewRole( 'author' );
+					let displayed = await editTeamMemberPage.successNoticeDisplayed();
+					assert(
+						displayed,
+						'The update successful notice was not shown on the edit team member page.'
+					);
+				}
+			);
+
+			test.it( 'As the invited user, I can now publish a post', async function() {
+				await driverManager.ensureNotLoggedIn( driver );
+
+				await new LoginPage( driver, true ).login( newUserName, password );
+				await new ReaderPage( driver ).displayed();
+				await new NavbarComponent( driver ).clickCreateNewPost();
+
+				const editorPage = new EditorPage( driver );
+				let urlDisplayed = await driver.getCurrentUrl();
+				await editorPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
+				await editorPage.enterTitle( publishPostTitle );
+				await editorPage.enterContent( postQuote );
+
+				const postEditorToolbar = new PostEditorToolbarComponent( driver );
+				await postEditorToolbar.ensureSaved();
+				return await postEditorToolbar.publishAndViewContent( { useConfirmStep: true } );
+			} );
+		}
+	);
 } );
