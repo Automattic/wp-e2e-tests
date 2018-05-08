@@ -111,7 +111,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 
 		test.it( 'Can see onboarding summary page', async function() {
 			const summaryPage = new SummaryPage( driver );
-			let toDoCount = summaryPage.countToDoSteps();
+			let toDoCount = await summaryPage.countToDoSteps();
 			assert.equal( toDoCount, 0, 'Expected and actual steps are not equal.' );
 			return await summaryPage.selectVisitSite();
 		} );
