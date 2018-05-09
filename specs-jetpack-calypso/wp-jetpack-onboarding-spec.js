@@ -291,7 +291,9 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can approve connection on the authorization page', async function() {
-				return await new JetpackAuthorizePage( driver ).approveConnection();
+				return await new JetpackAuthorizePage( driver, {
+					overrideABTests: false,
+				} ).approveConnection();
 			} );
 
 			test.it( 'Can select activate on activate stats page', async function() {
