@@ -29,9 +29,9 @@ const host = dataHelper.getJetpackHost();
 
 let driver;
 
-test.before( function() {
+test.before( async function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser();
+	driver = await driverManager.startBrowser();
 } );
 
 test.describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function() {
@@ -40,62 +40,61 @@ test.describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function
 	test.describe( 'Purchase Premium Plan:', function() {
 		this.bailSuite( true );
 
-		test.before( function() {
-			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.it( 'Can log into WordPress.com', () => {
+		test.it( 'Can log into WordPress.com', async function() {
 			this.loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
-			return this.loginFlow.login();
+			return await this.loginFlow.login();
 		} );
 
-		test.it( 'Can log into site via Jetpack SSO', () => {
-			return this.loginFlow.login( { jetpackSSO: true } );
+		test.it( 'Can log into site via Jetpack SSO', async function() {
+			return await this.loginFlow.login( { jetpackSSO: true } );
 		} );
 
-		test.it( 'Can open Jetpack dashboard', () => {
+		test.it( 'Can open Jetpack dashboard', async function() {
 			this.wpAdminSidebar = new WPAdminSidebar( driver );
-			return this.wpAdminSidebar.selectJetpack();
+			return await this.wpAdminSidebar.selectJetpack();
 		} );
 
-		test.it( 'Can find and click Upgrade nudge button', () => {
+		test.it( 'Can find and click Upgrade nudge button', async function() {
 			this.jetpackDashboard = new WPAdminJetpackPage( driver );
 			// The nudge buttons are loaded after the page, and there's no good loaded status indicator to key off of
-			return driver.sleep( 3000 ).then( () => {
-				return this.jetpackDashboard.clickUpgradeNudge();
+			return driver.sleep( 3000 ).then( async () => {
+				return await this.jetpackDashboard.clickUpgradeNudge();
 			} );
 		} );
 
-		test.it( 'Can click the Proceed button', () => {
+		test.it( 'Can click the Proceed button', async function() {
 			this.jetpackPlanSalesPage = new JetpackPlanSalesPage( driver );
 			// The upgrade buttons are loaded after the page, and there's no good loaded status indicator to key off of
-			return driver.sleep( 3000 ).then( () => {
-				return this.jetpackPlanSalesPage.clickPurchaseButton();
+			return driver.sleep( 3000 ).then( async () => {
+				return await this.jetpackPlanSalesPage.clickPurchaseButton();
 			} );
 		} );
 
-		test.it( 'Can then see secure payment component', () => {
+		test.it( 'Can then see secure payment component', async function() {
 			const securePaymentComponent = new SecurePaymentComponent( driver );
-			securePaymentComponent.displayed().then( displayed => {
-				assert.equal( displayed, true, 'Could not see the secure payment component' );
-			} );
+			let displayed = await securePaymentComponent.displayed();
+			assert.equal( displayed, true, 'Could not see the secure payment component' );
 		} );
 
 		// Remove all items from basket for clean up
-		test.after( () => {
+		test.after( async function() {
 			this.readerPage = new ReaderPage( driver, true );
 
 			this.navbarComponent = new NavbarComponent( driver );
-			this.navbarComponent.clickMySites();
+			await this.navbarComponent.clickMySites();
 
 			this.statsPage = new StatsPage( driver, true );
 
 			this.sideBarComponent = new SidebarComponent( driver );
-			this.sideBarComponent.selectPlan();
+			await this.sideBarComponent.selectPlan();
 
 			this.domainsPage = new PlansPage( driver );
 			this.shoppingCartWidgetComponent = new ShoppingCartWidgetComponent( driver );
-			this.shoppingCartWidgetComponent.empty();
+			await this.shoppingCartWidgetComponent.empty();
 		} );
 	} );
 } );

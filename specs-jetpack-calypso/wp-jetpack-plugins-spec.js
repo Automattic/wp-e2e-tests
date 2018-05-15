@@ -18,11 +18,11 @@ const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
 
-var driver;
+let driver;
 
-test.before( function() {
+test.before( async function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = driverManager.startBrowser();
+	driver = await driverManager.startBrowser();
 } );
 
 test.describe(
@@ -31,44 +31,43 @@ test.describe(
 		this.timeout( mochaTimeOut );
 		this.bailSuite( true );
 
-		test.before( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.before( function() {
+		test.before( async function() {
 			let loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
-			loginFlow.loginAndSelectManagePlugins();
+			await loginFlow.loginAndSelectManagePlugins();
 		} );
 
 		test.describe( 'Can activate Hello Dolly', function() {
-			test.it( 'Ensure Hello Dolly is deactivated', function() {
+			test.it( 'Ensure Hello Dolly is deactivated', async function() {
 				this.pluginsPage = new PluginsPage( driver );
-				this.pluginsPage.viewPlugin( 'hello' );
+				await this.pluginsPage.viewPlugin( 'hello' );
 				this.pluginDetailsPage = new PluginDetailsPage( driver );
-				this.pluginDetailsPage.waitForPlugin();
-				this.pluginDetailsPage.ensureDeactivated();
-				return this.pluginDetailsPage.goBack();
+				await this.pluginDetailsPage.waitForPlugin();
+				await this.pluginDetailsPage.ensureDeactivated();
+				return await this.pluginDetailsPage.goBack();
 			} );
 
-			test.it( 'Can view the plugin details to activate Hello Dolly', function() {
+			test.it( 'Can view the plugin details to activate Hello Dolly', async function() {
 				this.pluginsPage = new PluginsPage( driver );
-				this.pluginsPage.viewPlugin( 'hello' );
+				await this.pluginsPage.viewPlugin( 'hello' );
 				this.pluginDetailsPage = new PluginDetailsPage( driver );
-				this.pluginDetailsPage.waitForPlugin();
-				return this.pluginDetailsPage.clickActivateToggleForPlugin();
+				await this.pluginDetailsPage.waitForPlugin();
+				return await this.pluginDetailsPage.clickActivateToggleForPlugin();
 			} );
 
-			test.it( 'Success message contains Hello Dolly', function() {
+			test.it( 'Success message contains Hello Dolly', async function() {
 				const expectedPartialText = 'Successfully activated Hello Dolly';
 				this.pluginDetailsPage = new PluginDetailsPage( driver );
-				this.pluginDetailsPage.waitForSuccessNotice();
-				return this.pluginDetailsPage.getSuccessNoticeText().then( function( successMessageText ) {
-					assert.equal(
-						successMessageText.indexOf( expectedPartialText ) > -1,
-						true,
-						`The success message '${ successMessageText }' does not include '${ expectedPartialText }'`
-					);
-				} );
+				await this.pluginDetailsPage.waitForSuccessNotice();
+				let successMessageText = await this.pluginDetailsPage.getSuccessNoticeText();
+				return assert.equal(
+					successMessageText.indexOf( expectedPartialText ) > -1,
+					true,
+					`The success message '${ successMessageText }' does not include '${ expectedPartialText }'`
+				);
 			} );
 		} );
 	}
@@ -80,28 +79,28 @@ test.describe(
 		this.timeout( mochaTimeOut );
 		this.bailSuite( true );
 
-		test.before( function() {
-			driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.before( function() {
+		test.before( async function() {
 			let loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
-			loginFlow.loginAndSelectPlugins();
+			await loginFlow.loginAndSelectPlugins();
 		} );
 
 		test.describe( 'Can use the plugins browser to find Automattic plugins', function() {
 			test.it(
 				'Open the plugins browser and find WP Job Manager by searching for Automattic',
-				function() {
+				async function() {
 					const pluginVendor = 'WP Job Manager';
 					const pluginTitle = 'WP Job Manager';
 					this.pluginsBrowserPage = new PluginsBrowserPage( driver );
-					this.pluginsBrowserPage.searchForPlugin( pluginVendor );
-					this.pluginsBrowserPage
-						.pluginTitledShown( pluginTitle, pluginVendor )
-						.then( pluginDisplayed => {
-							assert( pluginDisplayed, `The plugin titled ${ pluginTitle } was not displayed` );
-						} );
+					await this.pluginsBrowserPage.searchForPlugin( pluginVendor );
+					let pluginDisplayed = await this.pluginsBrowserPage.pluginTitledShown(
+						pluginTitle,
+						pluginVendor
+					);
+					assert( pluginDisplayed, `The plugin titled ${ pluginTitle } was not displayed` );
 				}
 			);
 		} );
