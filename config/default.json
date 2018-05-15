@@ -66,7 +66,8 @@
     "springSale30PercentOff",
     "showMoneyBackGuarantee",
     "multiyearSubscriptions",
-    "signupDomainStrikethruPrice"
+    "signupDomainStrikethruPrice",
+    "mothersDay2018Discount"
   ],
   "overrideABTests": [
     [ "skipThemesSelectionModal_20170904", "show" ],
@@ -78,6 +79,7 @@
     [ "springSale30PercentOff_20180413", "control" ],
     [ "showMoneyBackGuarantee_20180409", "no" ],
     [ "multiyearSubscriptions_20180417", "hide" ],
-    [ "signupDomainStrikethruPrice_20180507", "disabled" ]
+    [ "signupDomainStrikethruPrice_20180507", "disabled" ],
+    [ "mothersDay2018Discount_20180411", "control" ]
   ]
 }
