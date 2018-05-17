@@ -527,7 +527,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			} );
 
 			test.it( 'New user can create a new post', async function() {
-				const navbarComponent = await new NavbarComponent( driver );
+				const navbarComponent = new NavbarComponent( driver );
 				await navbarComponent.dismissGuidedTours();
 				await navbarComponent.clickCreateNewPost();
 
