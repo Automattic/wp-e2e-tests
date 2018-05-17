@@ -87,7 +87,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.it( 'Can see the "About" page, and enter some site information', async function() {
 				const aboutPage = new AboutPage( driver );
-				aboutPage.enterSiteDetails( blogName, 'Electronics', {
+				await aboutPage.enterSiteDetails( blogName, 'Electronics', {
 					share: true,
 				} );
 				return await aboutPage.submitForm();
@@ -362,7 +362,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				const wpHomePage = await new WPHomePage( driver, {
+				const wpHomePage = new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
 				} );
@@ -488,7 +488,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				const wpHomePage = await new WPHomePage( driver, {
+				const wpHomePage = new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
 				} );
@@ -615,7 +615,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can visit set the sandbox cookie for payments', async function() {
-				const wpHomePage = await new WPHomePage( driver, {
+				const wpHomePage = new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
 				} );
@@ -785,7 +785,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				const wpHomePage = await new WPHomePage( driver, {
+				const wpHomePage = new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
 				} );
@@ -1075,7 +1075,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				const wpHomePage = await new WPHomePage( driver, {
+				const wpHomePage = new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
 				} );
