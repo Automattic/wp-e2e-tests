@@ -1245,7 +1245,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	test.describe( 'Insert a payment button: @parallel', function() {
+	test.describe( 'Insert a payment button: @parallel @visdiff', function() {
 		this.bailSuite( true );
 
 		const paymentButtonDetails = {
@@ -1253,7 +1253,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			description: 'Description',
 			symbol: '$',
 			price: '1.99',
-			currency: 'AUD',
+			currency: 'USD',
 			allowQuantity: true,
 			email: 'test@wordpress.com',
 		};
