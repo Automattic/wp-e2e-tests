@@ -1312,7 +1312,6 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				await viewPostPage.clickPaymentButton();
 				await driverHelper.waitForNumberOfWindows( driver, 2 );
 				await driverHelper.switchToWindowByIndex( driver, 1 );
-				await driverHelper.switchToWindowByIndex( driver, 1 );
 				const paypalCheckoutPage = new PaypalCheckoutPage( driver );
 				const amountDisplayed = await paypalCheckoutPage.priceDisplayed();
 				assert.equal(
