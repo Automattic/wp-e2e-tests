@@ -17,6 +17,8 @@ import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-co
 import * as driverManager from '../lib/driver-manager.js';
 import * as mediaHelper from '../lib/media-helper.js';
 import * as dataHelper from '../lib/data-helper.js';
+import * as driverHelper from '../lib/driver-helper';
+import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -578,6 +580,93 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 					} );
 				} );
 			} );
+		} );
+	} );
+
+	test.describe( 'Insert a payment button into a page: @parallel', function() {
+		this.bailSuite( true );
+
+		const paymentButtonDetails = {
+			title: 'Button',
+			description: 'Description',
+			symbol: '¥',
+			price: '980',
+			currency: 'JPY',
+			allowQuantity: false,
+			email: 'test@wordpress.com',
+		};
+
+		test.it( 'Delete Cookies and Local Storage', async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		test.it( 'Can log in', async function() {
+			return await new LoginFlow( driver ).loginAndStartNewPage();
+		} );
+
+		test.it( 'Can insert the payment button', async function() {
+			const pageTitle = 'Payment Button Page: ' + dataHelper.randomPhrase();
+
+			const editorPage = new EditorPage( driver );
+			await editorPage.enterTitle( pageTitle );
+			await editorPage.insertPaymentButton( null, paymentButtonDetails );
+
+			let errorShown = await editorPage.errorDisplayed();
+			return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+		} );
+
+		test.it( 'Can see the payment button inserted into the visual editor', async function() {
+			return await new EditorPage( driver ).ensurePaymentButtonDisplayedInPost();
+		} );
+
+		test.it( 'Can publish and view content', async function() {
+			const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			await postEditorToolbarComponent.ensureSaved();
+			await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
+		} );
+
+		test.it( 'Can see the payment button in our published page', async function() {
+			const viewPagePage = new ViewPagePage( driver );
+			let displayed = await viewPagePage.paymentButtonDisplayed();
+			assert.equal( displayed, true, 'The published page does not contain the payment button' );
+		} );
+
+		test.it(
+			'The payment button in our published page opens a new Paypal window for payment',
+			async function() {
+				let numberOfOpenBrowserWindows = await driverHelper.numberOfOpenWindows( driver );
+				assert.equal(
+					numberOfOpenBrowserWindows,
+					1,
+					'There is more than one open browser window before clicking payment button'
+				);
+				let viewPagePage = new ViewPagePage( driver );
+				await viewPagePage.clickPaymentButton();
+				numberOfOpenBrowserWindows = await driverHelper.numberOfOpenWindows( driver );
+				assert.equal(
+					numberOfOpenBrowserWindows,
+					2,
+					'There are not two open browser windows after clicking the payment button'
+				);
+				await driverHelper.switchToWindowByIndex( driver, 1 );
+				const paypalCheckoutPage = new PaypalCheckoutPage( driver );
+				const amountDisplayed = await paypalCheckoutPage.priceDisplayed();
+				assert.equal(
+					amountDisplayed,
+					`${ paymentButtonDetails.symbol }${ paymentButtonDetails.price } ${
+						paymentButtonDetails.currency
+					}`,
+					"The amount displayed on Paypal isn't correct"
+				);
+				await driverHelper.closeCurrentWindow( driver );
+				await driverHelper.switchToWindowByIndex( driver, 0 );
+				viewPagePage = new ViewPagePage( driver );
+				assert( await viewPagePage.displayed(), 'view page page is not displayed' );
+			}
+		);
+
+		test.after( async function() {
+			await driverHelper.ensurePopupsClosed( driver );
 		} );
 	} );
 } );
