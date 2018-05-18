@@ -642,12 +642,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				);
 				let viewPagePage = new ViewPagePage( driver );
 				await viewPagePage.clickPaymentButton();
-				numberOfOpenBrowserWindows = await driverHelper.numberOfOpenWindows( driver );
-				assert.equal(
-					numberOfOpenBrowserWindows,
-					2,
-					'There are not two open browser windows after clicking the payment button'
-				);
+				await driverHelper.waitForNumberOfWindows( driver, 2 );
 				await driverHelper.switchToWindowByIndex( driver, 1 );
 				const paypalCheckoutPage = new PaypalCheckoutPage( driver );
 				const amountDisplayed = await paypalCheckoutPage.priceDisplayed();
