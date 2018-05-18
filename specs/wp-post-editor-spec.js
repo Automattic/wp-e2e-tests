@@ -14,6 +14,7 @@ import PostsPage from '../lib/pages/posts-page.js';
 import ReaderPage from '../lib/pages/reader-page';
 import StatsPage from '../lib/pages/stats-page';
 import ActivityPage from '../lib/pages/stats/activity-page';
+import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
@@ -23,6 +24,7 @@ import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-co
 import EditorConfirmationSidebarComponent from '../lib/components/editor-confirmation-sidebar-component';
 
 import * as driverManager from '../lib/driver-manager';
+import * as driverHelper from '../lib/driver-helper';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
 import * as eyesHelper from '../lib/eyes-helper.js';
@@ -1246,6 +1248,16 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	test.describe( 'Insert a payment button: @parallel', function() {
 		this.bailSuite( true );
 
+		const paymentButtonDetails = {
+			title: 'Button',
+			description: 'Description',
+			symbol: '$',
+			price: '1.99',
+			currency: 'AUD',
+			allowQuantity: true,
+			email: 'test@wordpress.com',
+		};
+
 		test.before( async function() {
 			const testEnvironment = 'WordPress.com';
 			const testName = `Post Editor - Payment Button [${ global.browserName }] [${ screenSize }]`;
@@ -1262,9 +1274,10 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 		test.it( 'Can insert the payment button', async function() {
 			const blogPostTitle = 'Payment Button: ' + dataHelper.randomPhrase();
+
 			const editorPage = new EditorPage( driver );
 			await editorPage.enterTitle( blogPostTitle );
-			await editorPage.insertPaymentButton( eyes );
+			await editorPage.insertPaymentButton( eyes, paymentButtonDetails );
 
 			let errorShown = await editorPage.errorDisplayed();
 			return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
@@ -1286,7 +1299,42 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			assert.equal( displayed, true, 'The published post does not contain the payment button' );
 		} );
 
+		test.it(
+			'The payment button in our published post opens a new Paypal window for payment',
+			async function() {
+				let numberOfOpenBrowserWindows = await driverHelper.numberOfOpenWindows( driver );
+				assert.equal(
+					numberOfOpenBrowserWindows,
+					1,
+					'There is more than one open browser window before clicking payment button'
+				);
+				let viewPostPage = new ViewPostPage( driver );
+				await viewPostPage.clickPaymentButton();
+				numberOfOpenBrowserWindows = await driverHelper.numberOfOpenWindows( driver );
+				assert.equal(
+					numberOfOpenBrowserWindows,
+					2,
+					'There are not two open browser windows after clicking the payment button'
+				);
+				await driverHelper.switchToWindowByIndex( driver, 1 );
+				const paypalCheckoutPage = new PaypalCheckoutPage( driver );
+				const amountDisplayed = await paypalCheckoutPage.priceDisplayed();
+				assert.equal(
+					amountDisplayed,
+					`${ paymentButtonDetails.symbol }${ paymentButtonDetails.price } ${
+						paymentButtonDetails.currency
+					}`,
+					"The amount displayed on Paypal isn't correct"
+				);
+				await driverHelper.closeCurrentWindow( driver );
+				await driverHelper.switchToWindowByIndex( driver, 0 );
+				viewPostPage = new ViewPostPage( driver );
+				assert( await viewPostPage.displayed(), 'view post page is not displayed' );
+			}
+		);
+
 		test.after( async function() {
+			await driverHelper.ensurePopupsClosed( driver );
 			await eyesHelper.eyesClose( eyes );
 		} );
 	} );
