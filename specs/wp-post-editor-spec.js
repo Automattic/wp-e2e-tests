@@ -1243,56 +1243,41 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	test.describe( 'Insert a payment button: @parallel @visdiff', function() {
+	test.describe( 'Insert a payment button: @parallel', function() {
 		this.bailSuite( true );
-
-		test.before( async function() {
-			let testEnvironment = 'WordPress.com';
-			let testName = `Post Editor - Payment Button [${ global.browserName }] [${ screenSize }]`;
-			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
-		} );
 
 		test.it( 'Delete Cookies and Local Storage', async function() {
 			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.describe( 'Publish a New Post with a Payment Button', function() {
-			const originalBlogPostTitle = 'Payment Button: ' + dataHelper.randomPhrase();
-
-			test.it( 'Can log in', async function() {
-				this.loginFlow = new LoginFlow( driver );
-				return await this.loginFlow.loginAndStartNewPost();
-			} );
-
-			test.it( 'Can insert the payment button', async function() {
-				this.editorPage = new EditorPage( driver );
-				await this.editorPage.enterTitle( originalBlogPostTitle );
-				await this.editorPage.insertPaymentButton( eyes );
-
-				let errorShown = await this.editorPage.errorDisplayed();
-				return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
-			} );
-
-			test.it( 'Can see the payment button inserted into the visual editor', async function() {
-				this.editorPage = new EditorPage( driver );
-				return await this.editorPage.ensurePaymentButtonDisplayedInPost();
-			} );
-
-			test.it( 'Can publish and view content', async function() {
-				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-				await postEditorToolbarComponent.ensureSaved();
-				await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
-			} );
-
-			test.it( 'Can see the payment button in our published post', async function() {
-				this.viewPostPage = new ViewPostPage( driver );
-				let displayed = await this.viewPostPage.paymentButtonDisplayed();
-				assert.equal( displayed, true, 'The published post does not contain the payment button' );
-			} );
+		test.it( 'Can log in', async function() {
+			return await new LoginFlow( driver ).loginAndStartNewPost();
 		} );
 
-		test.after( async function() {
-			await eyesHelper.eyesClose( eyes );
+		test.it( 'Can insert the payment button', async function() {
+			const blogPostTitle = 'Payment Button: ' + dataHelper.randomPhrase();
+			const editorPage = new EditorPage( driver );
+			await editorPage.enterTitle( blogPostTitle );
+			await editorPage.insertPaymentButton( eyes );
+
+			let errorShown = await editorPage.errorDisplayed();
+			return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+		} );
+
+		test.it( 'Can see the payment button inserted into the visual editor', async function() {
+			return await new EditorPage( driver ).ensurePaymentButtonDisplayedInPost();
+		} );
+
+		test.it( 'Can publish and view content', async function() {
+			const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			await postEditorToolbarComponent.ensureSaved();
+			await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
+		} );
+
+		test.it( 'Can see the payment button in our published post', async function() {
+			const viewPostPage = new ViewPostPage( driver );
+			let displayed = await viewPostPage.paymentButtonDisplayed();
+			assert.equal( displayed, true, 'The published post does not contain the payment button' );
 		} );
 	} );
 
