@@ -1246,6 +1246,12 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	test.describe( 'Insert a payment button: @parallel', function() {
 		this.bailSuite( true );
 
+		test.before( async function() {
+			const testEnvironment = 'WordPress.com';
+			const testName = `Post Editor - Payment Button [${ global.browserName }] [${ screenSize }]`;
+			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
+		} );
+
 		test.it( 'Delete Cookies and Local Storage', async function() {
 			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
@@ -1278,6 +1284,10 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			const viewPostPage = new ViewPostPage( driver );
 			let displayed = await viewPostPage.paymentButtonDisplayed();
 			assert.equal( displayed, true, 'The published post does not contain the payment button' );
+		} );
+
+		test.after( async function() {
+			await eyesHelper.eyesClose( eyes );
 		} );
 	} );
 
