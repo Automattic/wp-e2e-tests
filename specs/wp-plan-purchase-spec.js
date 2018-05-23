@@ -56,9 +56,8 @@ test.describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, functi
 
 			test.it( 'Can Compare Plans', async function() {
 				this.plansPage = new PlansPage( driver );
-				await this.plansPage.openPlansTab();
-
 				if ( host === 'WPCOM' ) {
+					await this.plansPage.openPlansTab();
 					return await this.plansPage.waitForComparison();
 				}
 
@@ -67,11 +66,13 @@ test.describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, functi
 				return assert( displayed, 'The Jetpack plans are NOT displayed' );
 			} );
 
-			test.it( 'Can Verify Current Plan', async function() {
-				const planName = 'premium';
-				let present = await this.plansPage.confirmCurrentPlan( planName );
-				return assert( present, `Failed to detect correct plan (${ planName })` );
-			} );
+			if ( host === 'WPCOM' ) {
+				test.it( 'Can Verify Current Plan', async function() {
+					const planName = 'premium';
+					let present = await this.plansPage.confirmCurrentPlan( planName );
+					return assert( present, `Failed to detect correct plan (${ planName })` );
+				} );
+			}
 		} );
 
 		//test.describe( 'Can purchase plans', function() {
