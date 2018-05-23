@@ -740,7 +740,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			// 'Cancel the domain'
 			test.after( async function() {
 				try {
-					await new ReaderPage( driver, true );
+					await new ReaderPage( driver, true ).displayed();
 					await new NavBarComponent( driver ).clickMySites();
 					await new SideBarComponent( driver ).selectSettings();
 					await new DomainOnlySettingsPage( driver ).manageDomain();
