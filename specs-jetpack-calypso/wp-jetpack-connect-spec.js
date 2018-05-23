@@ -64,8 +64,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can disconnect any expired sites', async function() {
-			const jnFlow = new JetpackConnectFlow( driver, 'jetpackConnectUser' );
-			return await jnFlow.removeSites();
+			return await new JetpackConnectFlow( driver, 'jetpackConnectUser' ).removeSites();
 		} );
 	} );
 
