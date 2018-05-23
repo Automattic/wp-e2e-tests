@@ -65,7 +65,8 @@
     "mobilePlansTablesOnSignup",
     "springSale30PercentOff",
     "showMoneyBackGuarantee",
-    "multiyearSubscriptions"
+    "multiyearSubscriptions",
+    "domainSearchFilterOnClose"
   ],
   "overrideABTests": [
     [ "skipThemesSelectionModal_20170904", "show" ],
@@ -76,6 +77,7 @@
     [ "mobilePlansTablesOnSignup_20180330", "original" ],
     [ "springSale30PercentOff_20180413", "control" ],
     [ "showMoneyBackGuarantee_20180409", "no" ],
-    [ "multiyearSubscriptions_20180417", "hide" ]
+    [ "multiyearSubscriptions_20180417", "hide" ],
+    [ "domainSearchFilterOnClose_20180524", "disabled" ]
   ]
 }
