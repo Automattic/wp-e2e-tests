@@ -126,6 +126,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 				test.it( 'Can see correct page title in preview', async function() {
 					this.pagePreviewComponent = new PagePreviewComponent( driver );
+					await this.pagePreviewComponent.displayed();
 					let actualPageTitle = await this.pagePreviewComponent.pageTitle();
 					assert.equal(
 						actualPageTitle.toUpperCase(),
@@ -160,6 +161,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			test.describe( 'View published content', function() {
 				test.it( 'Can view content', async function() {
 					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					await this.postEditorToolbarComponent.displayed();
 					await this.postEditorToolbarComponent.viewPublishedPostOrPage();
 				} );
 
