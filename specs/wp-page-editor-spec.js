@@ -86,6 +86,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 				test.it( 'Can see correct page title in preview', async function() {
 					this.pagePreviewComponent = new PagePreviewComponent( driver );
+					await this.pagePreviewComponent.displayed();
 					let actualPageTitle = await this.pagePreviewComponent.pageTitle();
 					assert.equal(
 						actualPageTitle.toUpperCase(),
