@@ -583,7 +583,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 	} );
 
-	test.describe( 'Insert a payment button into a page: @parallel', function() {
+	test.describe( 'Insert a payment button into a page: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		const paymentButtonDetails = {
@@ -601,7 +601,11 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can log in', async function() {
-			return await new LoginFlow( driver ).loginAndStartNewPage();
+			if ( host === 'WPCOM' ) {
+				return await new LoginFlow( driver ).loginAndStartNewPage();
+			}
+			const jetpackUrl = `jetpackpro${ host.toLowerCase() }.mystagingwebsite.com`;
+			await new LoginFlow( driver, 'jetpackUserPREMIUM' ).loginAndStartNewPage( jetpackUrl );
 		} );
 
 		test.it( 'Can insert the payment button', async function() {
