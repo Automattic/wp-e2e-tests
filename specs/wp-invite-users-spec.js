@@ -77,8 +77,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see an invitation email received for the invite', async function() {
-			let emails = await emailClient.pollEmailsByRecipient( newInviteEmailAddress );
-			let links = emails[ 0 ].html.links;
+			let email = await emailClient.waitForEmailByRecipient( newInviteEmailAddress );
+			let links = email.html.links;
 			let link = links.find( l => l.href.includes( 'accept-invite' ) );
 			acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 			return assert.notEqual(
@@ -188,8 +188,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see an invitation email received for the invite', async function() {
-				let emails = await emailClient.pollEmailsByRecipient( newInviteEmailAddress );
-				let links = emails[ 0 ].html.links;
+				let email = await emailClient.waitForEmailByRecipient( newInviteEmailAddress );
+				let links = email.html.links;
 				let link = links.find( l => l.href.includes( 'accept-invite' ) );
 				acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 				return assert.notEqual(
@@ -242,8 +242,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see an invitation email received for the invite', async function() {
-			let emails = await emailClient.pollEmailsByRecipient( newInviteEmailAddress );
-			let links = emails[ 0 ].html.links;
+			let email = await emailClient.waitForEmailByRecipient( newInviteEmailAddress );
+			let links = email.html.links;
 			let link = links.find( l => l.href.includes( 'accept-invite' ) );
 			acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 			return assert.notEqual(
@@ -362,8 +362,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				} );
 
 				test.it( 'Can see an invitation email received for the invite', async function() {
-					let emails = await emailClient.pollEmailsByRecipient( newInviteEmailAddress );
-					let links = emails[ 0 ].html.links;
+					let email = await emailClient.waitForEmailByRecipient( newInviteEmailAddress );
+					let links = email.html.links;
 					let link = links.find( l => l.href.includes( 'accept-invite' ) );
 					acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 					return assert.notEqual(
@@ -489,8 +489,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see an invitation email received for the invite', async function() {
-				let emails = await emailClient.pollEmailsByRecipient( newInviteEmailAddress );
-				let links = emails[ 0 ].html.links;
+				let email = await emailClient.waitForEmailByRecipient( newInviteEmailAddress );
+				let links = email.html.links;
 				let link = links.find( l => l.href.includes( 'accept-invite' ) );
 				acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 				return assert.notEqual(
