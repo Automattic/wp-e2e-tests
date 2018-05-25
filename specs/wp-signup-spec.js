@@ -276,14 +276,15 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				);
 			} );
 
-			if ( global.browserName !== 'Internet Explorer' ) {
-				test.it(
-					'Can then see the sign up processing page which will automatically move along',
-					async function() {
-						return await new SignupProcessingPage( driver ).waitToDisappear();
+			test.it(
+				'Can then see the sign up processing page which will automatically move along',
+				async function() {
+					if ( global.browserName === 'Internet Explorer' ) {
+						return;
 					}
-				);
-			}
+					return await new SignupProcessingPage( driver ).waitToDisappear();
+				}
+			);
 
 			test.it(
 				'Can then see the secure payment page with the premium plan in the cart',
@@ -641,14 +642,15 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				);
 			} );
 
-			if ( global.browserName !== 'Internet Explorer' ) {
-				test.it(
-					'Can then see the sign up processing page which will finish automatically move along',
-					async function() {
-						return await new SignupProcessingPage( driver ).waitToDisappear();
+			test.it(
+				'Can then see the sign up processing page which will finish automatically move along',
+				async function() {
+					if ( global.browserName === 'Internet Explorer' ) {
+						return;
 					}
-				);
-			}
+					return await new SignupProcessingPage( driver ).waitToDisappear();
+				}
+			);
 
 			test.it(
 				'Can see checkout page, choose domain privacy option and enter registrar details',
@@ -827,14 +829,15 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				);
 			} );
 
-			if ( global.browserName !== 'Internet Explorer' ) {
-				test.it(
-					'Can then see the sign up processing page which will finish automatically move along',
-					async function() {
-						return await new SignupProcessingPage( driver ).waitToDisappear();
+			test.it(
+				'Can then see the sign up processing page which will finish automatically move along',
+				async function() {
+					if ( global.browserName === 'Internet Explorer' ) {
+						return;
 					}
-				);
-			}
+					return await new SignupProcessingPage( driver ).waitToDisappear();
+				}
+			);
 
 			test.it(
 				'Can see checkout page, choose domain privacy option and enter registrar details',
