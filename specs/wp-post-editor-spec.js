@@ -14,6 +14,7 @@ import PostsPage from '../lib/pages/posts-page.js';
 import ReaderPage from '../lib/pages/reader-page';
 import StatsPage from '../lib/pages/stats-page';
 import ActivityPage from '../lib/pages/stats/activity-page';
+import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavbarComponent from '../lib/components/navbar-component.js';
@@ -23,6 +24,7 @@ import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-co
 import EditorConfirmationSidebarComponent from '../lib/components/editor-confirmation-sidebar-component';
 
 import * as driverManager from '../lib/driver-manager';
+import * as driverHelper from '../lib/driver-helper';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
 import * as eyesHelper from '../lib/eyes-helper.js';
@@ -1247,12 +1249,22 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	test.describe( 'Insert a payment button: @parallel @visdiff', function() {
+	test.describe( 'Insert a payment button: @parallel @jetpack @visdiff', function() {
 		this.bailSuite( true );
 
+		const paymentButtonDetails = {
+			title: 'Button',
+			description: 'Description',
+			symbol: '$',
+			price: '1.99',
+			currency: 'USD',
+			allowQuantity: true,
+			email: 'test@wordpress.com',
+		};
+
 		test.before( async function() {
-			let testEnvironment = 'WordPress.com';
-			let testName = `Post Editor - Payment Button [${ global.browserName }] [${ screenSize }]`;
+			const testEnvironment = 'WordPress.com';
+			const testName = `Post Editor - Payment Button [${ global.browserName }] [${ screenSize }]`;
 			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 		} );
 
@@ -1260,42 +1272,72 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.describe( 'Publish a New Post with a Payment Button', function() {
-			const originalBlogPostTitle = 'Payment Button: ' + dataHelper.randomPhrase();
-
-			test.it( 'Can log in', async function() {
-				this.loginFlow = new LoginFlow( driver );
-				return await this.loginFlow.loginAndStartNewPost();
-			} );
-
-			test.it( 'Can insert the payment button', async function() {
-				this.editorPage = new EditorPage( driver );
-				await this.editorPage.enterTitle( originalBlogPostTitle );
-				await this.editorPage.insertPaymentButton( eyes );
-
-				let errorShown = await this.editorPage.errorDisplayed();
-				return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
-			} );
-
-			test.it( 'Can see the payment button inserted into the visual editor', async function() {
-				this.editorPage = new EditorPage( driver );
-				return await this.editorPage.ensurePaymentButtonDisplayedInPost();
-			} );
-
-			test.it( 'Can publish and view content', async function() {
-				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-				await postEditorToolbarComponent.ensureSaved();
-				await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
-			} );
-
-			test.it( 'Can see the payment button in our published post', async function() {
-				this.viewPostPage = new ViewPostPage( driver );
-				let displayed = await this.viewPostPage.paymentButtonDisplayed();
-				assert.equal( displayed, true, 'The published post does not contain the payment button' );
-			} );
+		test.it( 'Can log in', async function() {
+			if ( host === 'WPCOM' ) {
+				return await new LoginFlow( driver ).loginAndStartNewPost();
+			}
+			const jetpackUrl = `jetpackpro${ host.toLowerCase() }.mystagingwebsite.com`;
+			await new LoginFlow( driver, 'jetpackUserPREMIUM' ).loginAndStartNewPost( jetpackUrl );
 		} );
 
+		test.it( 'Can insert the payment button', async function() {
+			const blogPostTitle = 'Payment Button: ' + dataHelper.randomPhrase();
+
+			const editorPage = new EditorPage( driver );
+			await editorPage.enterTitle( blogPostTitle );
+			await editorPage.insertPaymentButton( eyes, paymentButtonDetails );
+
+			let errorShown = await editorPage.errorDisplayed();
+			return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+		} );
+
+		test.it( 'Can see the payment button inserted into the visual editor', async function() {
+			return await new EditorPage( driver ).ensurePaymentButtonDisplayedInPost();
+		} );
+
+		test.it( 'Can publish and view content', async function() {
+			const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			await postEditorToolbarComponent.ensureSaved();
+			await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
+		} );
+
+		test.it( 'Can see the payment button in our published post', async function() {
+			const viewPostPage = new ViewPostPage( driver );
+			let displayed = await viewPostPage.paymentButtonDisplayed();
+			assert.equal( displayed, true, 'The published post does not contain the payment button' );
+		} );
+
+		test.it(
+			'The payment button in our published post opens a new Paypal window for payment',
+			async function() {
+				let numberOfOpenBrowserWindows = await driverHelper.numberOfOpenWindows( driver );
+				assert.equal(
+					numberOfOpenBrowserWindows,
+					1,
+					'There is more than one open browser window before clicking payment button'
+				);
+				let viewPostPage = new ViewPostPage( driver );
+				await viewPostPage.clickPaymentButton();
+				await driverHelper.waitForNumberOfWindows( driver, 2 );
+				await driverHelper.switchToWindowByIndex( driver, 1 );
+				const paypalCheckoutPage = new PaypalCheckoutPage( driver );
+				const amountDisplayed = await paypalCheckoutPage.priceDisplayed();
+				assert.equal(
+					amountDisplayed,
+					`${ paymentButtonDetails.symbol }${ paymentButtonDetails.price } ${
+						paymentButtonDetails.currency
+					}`,
+					"The amount displayed on Paypal isn't correct"
+				);
+				await driverHelper.closeCurrentWindow( driver );
+				await driverHelper.switchToWindowByIndex( driver, 0 );
+				viewPostPage = new ViewPostPage( driver );
+				assert( await viewPostPage.displayed(), 'view post page is not displayed' );
+			}
+		);
+
 		test.after( async function() {
+			await driverHelper.ensurePopupsClosed( driver );
 			await eyesHelper.eyesClose( eyes );
 		} );
 	} );

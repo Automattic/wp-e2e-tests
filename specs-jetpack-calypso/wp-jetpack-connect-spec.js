@@ -64,8 +64,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can disconnect any expired sites', async function() {
-			const jnFlow = new JetpackConnectFlow( driver, 'jetpackConnectUser' );
-			return await jnFlow.removeSites();
+			return await new JetpackConnectFlow( driver, 'jetpackConnectUser' ).removeSites();
 		} );
 	} );
 
@@ -315,7 +314,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		'Connect From WooCommerce plugin when Jetpack is not installed: @parallel @jetpack',
 		function() {
 			this.bailSuite( true );
-			const countryStateCode = 'US:CO';
+			const countryCode = 'US';
+			const stateCode = 'CO';
 			const address = '2101 Blake St';
 			const address2 = '';
 			const city = 'Denver';
@@ -338,7 +338,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 
 			test.it( 'Can fill out and submit store information form', async function() {
 				return await new WooWizardSetupPage( driver ).enterStoreDetailsAndSubmit( {
-					countryStateCode,
+					countryCode,
+					stateCode,
 					address,
 					address2,
 					city,

@@ -159,15 +159,9 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.it( 'Can see email containing magic link', async function() {
 				const emailClient = new EmailClient( signupInboxId );
-				const validator = emails =>
-					emails.find( email => email.subject.includes( 'WordPress.com' ) );
-				let emails = await emailClient.pollEmailsByRecipient( emailAddress, validator );
-				//Disabled due to a/b test on activation email. See https://github.com/Automattic/wp-e2e-tests/issues/819
-				//assert.equal( emails.length, 2, 'The number of newly registered emails is not equal to 2 (activation and magic link)' );
-				for ( let email of emails ) {
-					if ( email.subject.includes( 'WordPress.com' ) ) {
-						return ( magicLoginLink = email.html.links[ 0 ].href );
-					}
+				let email = await emailClient.waitForEmailByRecipient( emailAddress );
+				if ( email.subject.includes( 'WordPress.com' ) ) {
+					return ( magicLoginLink = email.html.links[ 0 ].href );
 				}
 				return assert(
 					magicLoginLink !== undefined,
@@ -740,7 +734,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			// 'Cancel the domain'
 			test.after( async function() {
 				try {
-					await new ReaderPage( driver, true );
+					await new ReaderPage( driver, true ).displayed();
 					await new NavBarComponent( driver ).clickMySites();
 					await new SideBarComponent( driver ).selectSettings();
 					await new DomainOnlySettingsPage( driver ).manageDomain();
