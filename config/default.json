@@ -65,7 +65,8 @@
 		"springSale30PercentOff",
 		"multiyearSubscriptions",
 		"domainSearchFilterOnClose",
-		"jetpackSignupGoogleTop"
+		"jetpackSignupGoogleTop",
+		"domainSuggestionKrakenV321"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -76,6 +77,7 @@
 		[ "springSale30PercentOff_20180413", "control" ],
 		[ "multiyearSubscriptions_20180417", "hide" ],
 		[ "domainSearchFilterOnClose_20180524", "disabled" ],
-		[ "jetpackSignupGoogleTop_20180427", "original" ]
+		[ "jetpackSignupGoogleTop_20180427", "original" ],
+		[ "domainSuggestionKrakenV321": "domainsbot" ]
 	]
 }
