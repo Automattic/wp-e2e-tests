@@ -31,8 +31,6 @@ const host = dataHelper.getJetpackHost();
 
 let driver;
 
-import ScreenRecorder from '../lib/screen-recorder';
-
 let eyes = eyesHelper.eyesSetup( true );
 
 test.before( async function() {
@@ -53,8 +51,6 @@ test.describe(
 		} );
 
 		test.describe( 'Logging In and Out:', function() {
-			ScreenRecorder.applyMochaHooks();
-
 			test.before( async function() {
 				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			} );

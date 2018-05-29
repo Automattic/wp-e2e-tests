@@ -11,7 +11,8 @@
   "browser": "chrome",
   "framework": "testarmada-magellan-mocha-plugin",
   "reporters": [
-	  "./lib/reporter/magellan-reporter.js"
+	  "./lib/reporter/magellan-reporter.js",
+	  "./lib/reporter/screencast-reporter.js"
   ],
   "bail_time": 300000
 }
