@@ -11,7 +11,7 @@ jobs:
       - checkout
       - restore_cache:
           key: 'dependency-cache-{{ checksum "package.json" }}'
-      - run: apt-get install ffmpeg
+      - run: sudo apt-get install ffmpeg xvfb
       - run: npm install
       - run: npm run lint
       - run: npm run decryptconfig
