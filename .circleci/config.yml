@@ -4,13 +4,14 @@ jobs:
     parallelism: 2
     working_directory: ~/wp-e2e-tests
     docker:
-      - image: 'circleci/node:8.11.0-browsers'
+      - image: 'circleci/node:8.11.0-browsers-jessie'
         environment:
           NODE_ENV: test
     steps:
       - checkout
       - restore_cache:
           key: 'dependency-cache-{{ checksum "package.json" }}'
+      - run: apt-get install ffmpeg
       - run: npm install
       - run: npm run lint
       - run: npm run decryptconfig
