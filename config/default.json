@@ -64,7 +64,6 @@
 		"mobilePlansTablesOnSignup",
 		"springSale30PercentOff",
 		"multiyearSubscriptions",
-		"domainSearchFilterOnClose",
 		"jetpackSignupGoogleTop",
 		"domainSuggestionKrakenV321"
 	],
@@ -76,7 +75,6 @@
 		[ "mobilePlansTablesOnSignup_20180330", "original" ],
 		[ "springSale30PercentOff_20180413", "control" ],
 		[ "multiyearSubscriptions_20180417", "hide" ],
-		[ "domainSearchFilterOnClose_20180524", "disabled" ],
 		[ "jetpackSignupGoogleTop_20180427", "original" ],
 		[ "domainSuggestionKrakenV321_20180524", "domainsbot" ]
 	]
