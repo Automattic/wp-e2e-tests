@@ -279,6 +279,9 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the sign up processing page which will automatically move along',
 				async function() {
+					if ( global.browserName === 'Internet Explorer' ) {
+						return;
+					}
 					return await new SignupProcessingPage( driver ).waitToDisappear();
 				}
 			);
@@ -642,6 +645,9 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the sign up processing page which will finish automatically move along',
 				async function() {
+					if ( global.browserName === 'Internet Explorer' ) {
+						return;
+					}
 					return await new SignupProcessingPage( driver ).waitToDisappear();
 				}
 			);
@@ -826,6 +832,9 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the sign up processing page which will finish automatically move along',
 				async function() {
+					if ( global.browserName === 'Internet Explorer' ) {
+						return;
+					}
 					return await new SignupProcessingPage( driver ).waitToDisappear();
 				}
 			);
