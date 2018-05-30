@@ -320,7 +320,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 	} );
 
-	// We don't currently have a Private Jetpack site configured for testing
+	// Jetpack doesn't have private sites
 	if ( host === 'WPCOM' ) {
 		test.describe(
 			'Inviting New User as a Viewer of a Private Site: @parallel @jetpack',
