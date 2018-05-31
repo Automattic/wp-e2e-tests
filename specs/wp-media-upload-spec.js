@@ -155,10 +155,6 @@ test.describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @je
 					await editorSidebar.closeFeaturedImage();
 				} );
 			} );
-			// FIXME: Workaround of https://github.com/Automattic/wp-calypso/issues/17701
-			test.after( async function() {
-				await editorPage.cleanDirtyState();
-			} );
 		} );
 	} );
 } );
