@@ -23,6 +23,7 @@ import EnterADomainComponent from '../lib/components/enter-a-domain-component';
 import MapADomainCheckoutPage from '../lib/pages/domain-map-checkout-page';
 
 import LoginFlow from '../lib/flows/login-flow.js';
+import ScreenRecorder from '../lib/screen-recorder.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -39,6 +40,7 @@ test.before( async function() {
 
 test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function() {
 	this.timeout( mochaTimeOut );
+	ScreenRecorder.applyMochaHooks();
 
 	test.describe( 'Adding a domain to an existing site ', function() {
 		this.bailSuite( true );

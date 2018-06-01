@@ -27,6 +27,7 @@ import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-co
 import * as dataHelper from '../lib/data-helper.js';
 import * as driverManager from '../lib/driver-manager.js';
 import EmailClient from '../lib/email-client.js';
+import ScreenRecorder from '../lib/screen-recorder.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -45,6 +46,7 @@ test.before( async function() {
 
 test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
+	ScreenRecorder.applyMochaHooks();
 
 	test.describe( 'Inviting new user as an Editor: @parallel @jetpack', function() {
 		this.bailSuite( true );

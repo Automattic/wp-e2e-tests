@@ -11,6 +11,7 @@ import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-co
 import * as driverManager from '../lib/driver-manager.js';
 import * as mediaHelper from '../lib/media-helper.js';
 import * as dataHelper from '../lib/data-helper';
+import ScreenRecorder from '../lib/screen-recorder.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -26,6 +27,7 @@ test.before( async function() {
 
 test.describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
+	ScreenRecorder.applyMochaHooks();
 
 	test.describe( 'Image Upload:', function() {
 		this.bailSuite( true );

@@ -19,6 +19,7 @@ import * as mediaHelper from '../lib/media-helper.js';
 import * as dataHelper from '../lib/data-helper.js';
 import * as driverHelper from '../lib/driver-helper';
 import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
+import ScreenRecorder from '../lib/screen-recorder.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -34,6 +35,7 @@ test.before( async function() {
 
 test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
+	ScreenRecorder.applyMochaHooks();
 
 	test.describe( 'Public Pages: @parallel @jetpack', function() {
 		this.bailSuite( true );
