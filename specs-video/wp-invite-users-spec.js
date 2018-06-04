@@ -39,6 +39,16 @@ const emailClient = new EmailClient( inviteInboxId );
 
 let driver;
 
+// ScreenRecorder.applyMochaHooks();
+
+// test.beforeEach( function() {
+// 	if ( this.currentTest && this.currentTest.parent && this.currentTest.parent.title && this.currentTest.parent.title.includes( '@parallel' ) ) {
+// 		console.log( '>>>>>>>>>>>>>>>>>>>>>' );
+// 		// console.log( this.currentTest.parent );
+// 		console.log( '<<<<<<<<<<<<<<<<<<<<<<' );
+// 	}
+// } );
+
 test.before( async function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = await driverManager.startBrowser();
@@ -46,10 +56,11 @@ test.before( async function() {
 
 test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
-	ScreenRecorder.applyMochaHooks();
 
 	test.describe( 'Inviting new user as an Editor: @parallel @jetpack', function() {
 		this.bailSuite( true );
+		ScreenRecorder.applyMochaHooks();
+
 		const newUserName = 'e2eflowtestingeditor' + new Date().getTime().toString();
 		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		let acceptInviteURL = '';
@@ -154,6 +165,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		'Inviting new user as an Editor and revoke invite: @parallel @jetpack',
 		function() {
 			this.bailSuite( true );
+			ScreenRecorder.applyMochaHooks();
+
 			const newUserName = 'e2eflowtestingeditor' + new Date().getTime().toString();
 			const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 			let acceptInviteURL = '';
@@ -328,6 +341,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			'Inviting New User as a Viewer of a Private Site: @parallel @jetpack',
 			function() {
 				this.bailSuite( true );
+				ScreenRecorder.applyMochaHooks();
+
 				const newUserName = 'e2eflowtestingviewer' + new Date().getTime().toString();
 				const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 				const siteName = config.get( 'privateSiteForInvites' );
@@ -457,6 +472,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		'Inviting New User as an Contributor, then change them to Author: @parallel @jetpack',
 		function() {
 			this.bailSuite( true );
+			ScreenRecorder.applyMochaHooks();
 
 			const newUserName = 'e2eflowtestingcontributor' + new Date().getTime().toString();
 			const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
