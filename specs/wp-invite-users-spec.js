@@ -79,8 +79,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see an invitation email received for the invite', async function() {
-			let email = await emailClient.waitForEmailByRecipient( newInviteEmailAddress );
-			let links = email.html.links;
+			let emails = await emailClient.pollEmailsByRecipient( newInviteEmailAddress );
+			let links = emails[ 0 ].html.links;
 			let link = links.find( l => l.href.includes( 'accept-invite' ) );
 			acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 			return assert.notEqual(
@@ -190,8 +190,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see an invitation email received for the invite', async function() {
-				let email = await emailClient.waitForEmailByRecipient( newInviteEmailAddress );
-				let links = email.html.links;
+				let emails = await emailClient.pollEmailsByRecipient( newInviteEmailAddress );
+				let links = emails[ 0 ].html.links;
 				let link = links.find( l => l.href.includes( 'accept-invite' ) );
 				acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 				return assert.notEqual(
@@ -244,8 +244,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see an invitation email received for the invite', async function() {
-			let email = await emailClient.waitForEmailByRecipient( newInviteEmailAddress );
-			let links = email.html.links;
+			let emails = await emailClient.pollEmailsByRecipient( newInviteEmailAddress );
+			let links = emails[ 0 ].html.links;
 			let link = links.find( l => l.href.includes( 'accept-invite' ) );
 			acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 			return assert.notEqual(
@@ -322,7 +322,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 	} );
 
-	// We don't currently have a Private Jetpack site configured for testing
+	// Jetpack doesn't have private sites
 	if ( host === 'WPCOM' ) {
 		test.describe(
 			'Inviting New User as a Viewer of a Private Site: @parallel @jetpack',
@@ -360,12 +360,12 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 					const peoplePage = new PeoplePage( driver );
 					await peoplePage.selectInvites();
-					await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
+					return await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
 				} );
 
 				test.it( 'Can see an invitation email received for the invite', async function() {
-					let email = await emailClient.waitForEmailByRecipient( newInviteEmailAddress );
-					let links = email.html.links;
+					let emails = await emailClient.pollEmailsByRecipient( newInviteEmailAddress );
+					let links = emails[ 0 ].html.links;
 					let link = links.find( l => l.href.includes( 'accept-invite' ) );
 					acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 					return assert.notEqual(
@@ -417,7 +417,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 					await peoplePage.removeUserByName( newUserName );
 					await peoplePage.waitForSearchResults();
 					displayed = await peoplePage.viewerDisplayed( newUserName );
-					assert.equal(
+					return assert.equal(
 						displayed,
 						false,
 						`The username of '${ newUserName }' was still displayed as a site viewer`
@@ -491,8 +491,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see an invitation email received for the invite', async function() {
-				let email = await emailClient.waitForEmailByRecipient( newInviteEmailAddress );
-				let links = email.html.links;
+				let emails = await emailClient.pollEmailsByRecipient( newInviteEmailAddress );
+				let links = emails[ 0 ].html.links;
 				let link = links.find( l => l.href.includes( 'accept-invite' ) );
 				acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
 				return assert.notEqual(
@@ -522,14 +522,14 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				let invitesMessageTitleDisplayed = await new NoticesComponent(
 					driver
 				).inviteMessageTitle();
-				assert(
+				return assert(
 					invitesMessageTitleDisplayed.includes( 'Contributor' ),
 					`The invite message '${ invitesMessageTitleDisplayed }' does not include 'Contributor'`
 				);
 			} );
 
 			test.it( 'New user can create a new post', async function() {
-				const navbarComponent = await new NavbarComponent( driver );
+				const navbarComponent = new NavbarComponent( driver );
 				await navbarComponent.dismissGuidedTours();
 				await navbarComponent.clickCreateNewPost();
 
@@ -546,7 +546,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await postEditorToolbar.submitForReview();
 				await postEditorToolbar.waitForIsPendingStatus();
 				let isPending = await postEditorToolbar.statusIsPending();
-				assert( isPending, 'The post is not showing as pending' );
+				return assert( isPending, 'The post is not showing as pending' );
 			} );
 
 			test.it( 'As the original user, can see new user added to site', async function() {
@@ -556,7 +556,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await peoplePage.selectTeam();
 				await peoplePage.searchForUser( newUserName );
 				let numberPeopleShown = await peoplePage.numberSearchResults();
-				assert.equal(
+				return assert.equal(
 					numberPeopleShown,
 					1,
 					`The number of people search results for '${ newUserName }' was incorrect`
@@ -572,7 +572,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 					const editTeamMemberPage = new EditTeamMemberPage( driver );
 					await editTeamMemberPage.changeToNewRole( 'author' );
 					let displayed = await editTeamMemberPage.successNoticeDisplayed();
-					assert(
+					return assert(
 						displayed,
 						'The update successful notice was not shown on the edit team member page.'
 					);

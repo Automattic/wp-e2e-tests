@@ -40,6 +40,9 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 	test.describe( 'Public Pages: @parallel @jetpack', function() {
 		this.bailSuite( true );
 		let fileDetails;
+		const pageTitle = dataHelper.randomPhrase();
+		const pageQuote =
+			'If you have the same problem for a long time, maybe it’s not a problem. Maybe it’s a fact..\n— Itzhak Rabin';
 
 		test.before( async function() {
 			return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
@@ -51,158 +54,158 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			return fileDetails;
 		} );
 
-		test.describe( 'Publish a Public Page', function() {
-			let pageTitle = dataHelper.randomPhrase();
-			let pageQuote =
-				'If you have the same problem for a long time, maybe it’s not a problem. Maybe it’s a fact..\n— Itzhak Rabin';
+		test.it( 'Can log in', async function() {
+			const loginFlow = new LoginFlow( driver );
+			await loginFlow.loginAndStartNewPage();
+		} );
 
-			test.it( 'Can log in', async function() {
-				let loginFlow = new LoginFlow( driver );
-				await loginFlow.loginAndStartNewPage();
-			} );
+		test.it( 'Can enter page title, content and image', async function() {
+			const editorPage = new EditorPage( driver );
+			await editorPage.enterTitle( pageTitle );
+			await editorPage.enterContent( pageQuote + '\n' );
+			await editorPage.enterPostImage( fileDetails );
+			await editorPage.waitUntilImageInserted( fileDetails );
+			let errorShown = await editorPage.errorDisplayed();
+			assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+		} );
 
-			test.it( 'Can enter page title, content and image', async function() {
-				let editorPage = new EditorPage( driver );
-				await editorPage.enterTitle( pageTitle );
-				await editorPage.enterContent( pageQuote + '\n' );
-				await editorPage.enterPostImage( fileDetails );
-				await editorPage.waitUntilImageInserted( fileDetails );
-				let errorShown = await editorPage.errorDisplayed();
-				assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
-			} );
+		test.it( 'Can disable sharing buttons', async function() {
+			const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+			await postEditorSidebarComponent.expandSharingSection();
+			await postEditorSidebarComponent.setSharingButtons( false );
+			await postEditorSidebarComponent.closeSharingSection();
+		} );
 
-			test.it( 'Can disable sharing buttons', async function() {
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				await postEditorSidebarComponent.expandSharingSection();
-				await postEditorSidebarComponent.setSharingButtons( false );
-				await postEditorSidebarComponent.closeSharingSection();
-			} );
+		test.it( 'Can launch page preview', async function() {
+			const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+			await postEditorSidebarComponent.hideComponentIfNecessary();
 
-			test.describe( 'Preview', function() {
-				test.it( 'Can launch page preview', async function() {
-					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-					await postEditorSidebarComponent.hideComponentIfNecessary();
+			const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			await postEditorToolbarComponent.ensureSaved();
+			await postEditorToolbarComponent.launchPreview();
+		} );
 
-					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					await postEditorToolbarComponent.ensureSaved();
-					await postEditorToolbarComponent.launchPreview();
-				} );
+		test.it( 'Can see correct page title in preview', async function() {
+			const pagePreviewComponent = new PagePreviewComponent( driver );
+			await pagePreviewComponent.displayed();
+			let actualPageTitle = await pagePreviewComponent.pageTitle();
+			assert.equal(
+				actualPageTitle.toUpperCase(),
+				pageTitle.toUpperCase(),
+				'The page preview title is not correct'
+			);
+		} );
 
-				test.it( 'Can see correct page title in preview', async function() {
-					this.pagePreviewComponent = new PagePreviewComponent( driver );
-					let actualPageTitle = await this.pagePreviewComponent.pageTitle();
-					assert.equal(
-						actualPageTitle.toUpperCase(),
-						pageTitle.toUpperCase(),
-						'The page preview title is not correct'
-					);
-				} );
+		test.it( 'Can see correct page content in preview', async function() {
+			const pagePreviewComponent = new PagePreviewComponent( driver );
+			let content = await pagePreviewComponent.pageContent();
+			assert.equal(
+				content.indexOf( pageQuote ) > -1,
+				true,
+				'The page preview content (' +
+					content +
+					') does not include the expected content (' +
+					pageQuote +
+					')'
+			);
+		} );
 
-				test.it( 'Can see correct page content in preview', async function() {
-					let content = await this.pagePreviewComponent.pageContent();
-					assert.equal(
-						content.indexOf( pageQuote ) > -1,
-						true,
-						'The page preview content (' +
-							content +
-							') does not include the expected content (' +
-							pageQuote +
-							')'
-					);
-				} );
+		test.it( 'Can see the image uploaded in the preview', async function() {
+			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const imageDisplayed = await pagePreviewComponent.imageDisplayed( fileDetails );
+			return assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
+		} );
 
-				test.it( 'Can see the image uploaded in the preview', async function() {
-					let imageDisplayed = await this.pagePreviewComponent.imageDisplayed( fileDetails );
-					return assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
-				} );
+		test.it( 'Can close page preview', async function() {
+			const pagePreviewComponent = new PagePreviewComponent( driver );
+			await pagePreviewComponent.close();
+		} );
 
-				test.it( 'Can close page preview', async function() {
-					await this.pagePreviewComponent.close();
-				} );
-			} );
+		test.it( 'Can publish and preview published content', async function() {
+			const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			await postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
+		} );
 
-			test.describe( 'Publish and Preview Published Content', function() {
-				test.it( 'Can publish and preview published content', async function() {
-					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					await this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
-				} );
+		test.it( 'Can see correct page title in preview', async function() {
+			const pagePreviewComponent = new PagePreviewComponent( driver );
+			await pagePreviewComponent.displayed();
+			let actualPageTitle = await pagePreviewComponent.pageTitle();
+			assert.equal(
+				actualPageTitle.toUpperCase(),
+				pageTitle.toUpperCase(),
+				'The page preview title is not correct'
+			);
+		} );
 
-				test.it( 'Can see correct page title in preview', async function() {
-					this.pagePreviewComponent = new PagePreviewComponent( driver );
-					let actualPageTitle = await this.pagePreviewComponent.pageTitle();
-					assert.equal(
-						actualPageTitle.toUpperCase(),
-						pageTitle.toUpperCase(),
-						'The page preview title is not correct'
-					);
-				} );
+		test.it( 'Can see correct page content in preview', async function() {
+			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const content = await pagePreviewComponent.pageContent();
+			assert.equal(
+				content.indexOf( pageQuote ) > -1,
+				true,
+				'The page preview content (' +
+					content +
+					') does not include the expected content (' +
+					pageQuote +
+					')'
+			);
+		} );
 
-				test.it( 'Can see correct page content in preview', async function() {
-					let content = await this.pagePreviewComponent.pageContent();
-					assert.equal(
-						content.indexOf( pageQuote ) > -1,
-						true,
-						'The page preview content (' +
-							content +
-							') does not include the expected content (' +
-							pageQuote +
-							')'
-					);
-				} );
+		test.it( 'Can see the image uploaded in the preview', async function() {
+			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const imageDisplayed = await pagePreviewComponent.imageDisplayed( fileDetails );
+			assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
+		} );
 
-				test.it( 'Can see the image uploaded in the preview', async function() {
-					let imageDisplayed = await this.pagePreviewComponent.imageDisplayed( fileDetails );
-					assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
-				} );
+		test.it( 'Can close page preview', async function() {
+			const pagePreviewComponent = new PagePreviewComponent( driver );
+			return await pagePreviewComponent.edit();
+		} );
 
-				test.it( 'Can close page preview', async function() {
-					return await this.pagePreviewComponent.edit();
-				} );
-			} );
+		test.it( 'Can view content', async function() {
+			const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			await postEditorToolbarComponent.displayed();
+			await postEditorToolbarComponent.viewPublishedPostOrPage();
+		} );
 
-			test.describe( 'View published content', function() {
-				test.it( 'Can view content', async function() {
-					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					await this.postEditorToolbarComponent.viewPublishedPostOrPage();
-				} );
+		test.it( 'Can see correct page title', async function() {
+			const viewPagePage = new ViewPagePage( driver );
+			let actualPageTitle = await viewPagePage.pageTitle();
+			assert.equal(
+				actualPageTitle.toUpperCase(),
+				pageTitle.toUpperCase(),
+				'The published blog page title is not correct'
+			);
+		} );
 
-				test.it( 'Can see correct page title', async function() {
-					this.viewPagePage = new ViewPagePage( driver );
-					let actualPageTitle = await this.viewPagePage.pageTitle();
-					assert.equal(
-						actualPageTitle.toUpperCase(),
-						pageTitle.toUpperCase(),
-						'The published blog page title is not correct'
-					);
-				} );
+		test.it( 'Can see correct page content', async function() {
+			const viewPagePage = new ViewPagePage( driver );
+			let content = await viewPagePage.pageContent();
+			assert.equal(
+				content.indexOf( pageQuote ) > -1,
+				true,
+				'The page content (' +
+					content +
+					') does not include the expected content (' +
+					pageQuote +
+					')'
+			);
+		} );
 
-				test.it( 'Can see correct page content', async function() {
-					let content = await this.viewPagePage.pageContent();
-					assert.equal(
-						content.indexOf( pageQuote ) > -1,
-						true,
-						'The page content (' +
-							content +
-							') does not include the expected content (' +
-							pageQuote +
-							')'
-					);
-				} );
+		test.it( "Can't see sharing buttons", async function() {
+			const viewPagePage = new ViewPagePage( driver );
+			let visible = await viewPagePage.sharingButtonsVisible();
+			assert.equal(
+				visible,
+				false,
+				'Sharing buttons are shown even though they were disabled when creating the page.'
+			);
+		} );
 
-				test.it( "Can't see sharing buttons", async function() {
-					let visible = await this.viewPagePage.sharingButtonsVisible();
-					assert.equal(
-						visible,
-						false,
-						'Sharing buttons are shown even though they were disabled when creating the page.'
-					);
-				} );
-
-				test.it( 'Can see the image uploaded displayed', async function() {
-					let imageDisplayed = await this.viewPagePage.imageDisplayed( fileDetails );
-					assert.equal( imageDisplayed, true, 'Could not see the image in the published page' );
-				} );
-			} );
+		test.it( 'Can see the image uploaded displayed', async function() {
+			const viewPagePage = new ViewPagePage( driver );
+			let imageDisplayed = await viewPagePage.imageDisplayed( fileDetails );
+			assert.equal( imageDisplayed, true, 'Could not see the image in the published page' );
 		} );
 
 		test.after( async function() {
@@ -214,372 +217,365 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 	test.describe( 'Private Pages: @parallel @jetpack', function() {
 		this.bailSuite( true );
+		let pageTitle = dataHelper.randomPhrase();
+		let pageQuote =
+			'Few people know how to take a walk. The qualifications are endurance, plain clothes, old shoes, an eye for nature, good humor, vast curiosity, good speech, good silence and nothing too much.\n— Ralph Waldo Emerson\n';
 
 		test.before( async function() {
 			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.describe( 'Publish a Private Page', function() {
-			let pageTitle = dataHelper.randomPhrase();
-			let pageQuote =
-				'Few people know how to take a walk. The qualifications are endurance, plain clothes, old shoes, an eye for nature, good humor, vast curiosity, good speech, good silence and nothing too much.\n— Ralph Waldo Emerson\n';
-
-			test.it( 'Can log in', async function() {
-				let loginFlow = new LoginFlow( driver );
-				await loginFlow.loginAndStartNewPage();
-			} );
-
-			test.it( 'Can enter page title and content', async function() {
-				let editorPage = new EditorPage( driver );
-				await editorPage.enterTitle( pageTitle );
-				await editorPage.enterContent( pageQuote );
-				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-				return await postEditorToolbarComponent.ensureSaved();
-			} );
-
-			test.it( 'Can set visibility to private which immediately publishes it', async function() {
-				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				await this.postEditorSidebarComponent.setVisibilityToPrivate();
-				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-				return await this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
-			} );
-
-			if ( host === 'WPCOM' ) {
-				test.describe( 'View content as logged in user', function() {
-					test.it( 'Can view content', async function() {
-						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-						await postEditorToolbarComponent.viewPublishedPostOrPage();
-					} );
-
-					test.it( 'Can view page title as logged in user', async function() {
-						let viewPagePage = new ViewPagePage( driver );
-						let actualPageTitle = await viewPagePage.pageTitle();
-						assert.equal(
-							actualPageTitle.toUpperCase(),
-							( 'Private: ' + pageTitle ).toUpperCase(),
-							'The published blog page title is not correct'
-						);
-					} );
-
-					test.it( 'Can view page content as logged in user', async function() {
-						let viewPagePage = new ViewPagePage( driver );
-						let content = await viewPagePage.pageContent();
-						assert.equal(
-							content.indexOf( pageQuote ) > -1,
-							true,
-							'The page content (' +
-								content +
-								') does not include the expected content (' +
-								pageQuote +
-								')'
-						);
-					} );
-
-					test.it( "Can't view page title or content as non-logged in user", async function() {
-						await driver.manage().deleteAllCookies();
-						await driver.navigate().refresh();
-
-						let notFoundPage = new NotFoundPage( driver );
-						let displayed = await notFoundPage.displayed();
-						assert.equal(
-							displayed,
-							true,
-							'Could not see the not found (404) page. Check that it is displayed'
-						);
-					} );
-				} );
-			} else {
-				// Jetpack tests
-				test.describe( 'Cannot view content before logging in', function() {
-					test.it( 'Open published page', async function() {
-						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-						await postEditorToolbarComponent.viewPublishedPostOrPage();
-					} );
-
-					test.it( "Can't view page title or content as non-logged in user", async function() {
-						let notFoundPage = new NotFoundPage( driver );
-						let displayed = await notFoundPage.displayed();
-						assert.equal(
-							displayed,
-							true,
-							'Could not see the not found (404) page. Check that it is displayed'
-						);
-					} );
-				} );
-				//TODO: Add Jetpack SSO and verify content actually published
-			}
+		test.it( 'Can log in', async function() {
+			const loginFlow = new LoginFlow( driver );
+			await loginFlow.loginAndStartNewPage();
 		} );
+
+		test.it( 'Can enter page title and content', async function() {
+			const editorPage = new EditorPage( driver );
+			await editorPage.enterTitle( pageTitle );
+			await editorPage.enterContent( pageQuote );
+			const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			return await postEditorToolbarComponent.ensureSaved();
+		} );
+
+		test.it( 'Can set visibility to private which immediately publishes it', async function() {
+			const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+			await postEditorSidebarComponent.setVisibilityToPrivate();
+			const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			return await postEditorToolbarComponent.waitForSuccessViewPostNotice();
+		} );
+
+		if ( host === 'WPCOM' ) {
+			test.it( 'Can view content', async function() {
+				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				await postEditorToolbarComponent.viewPublishedPostOrPage();
+			} );
+
+			test.it( 'Can view page title as logged in user', async function() {
+				const viewPagePage = new ViewPagePage( driver );
+				const actualPageTitle = await viewPagePage.pageTitle();
+				assert.equal(
+					actualPageTitle.toUpperCase(),
+					( 'Private: ' + pageTitle ).toUpperCase(),
+					'The published blog page title is not correct'
+				);
+			} );
+
+			test.it( 'Can view page content as logged in user', async function() {
+				const viewPagePage = new ViewPagePage( driver );
+				const content = await viewPagePage.pageContent();
+				assert.equal(
+					content.indexOf( pageQuote ) > -1,
+					true,
+					'The page content (' +
+						content +
+						') does not include the expected content (' +
+						pageQuote +
+						')'
+				);
+			} );
+
+			test.it( "Can't view page title or content as non-logged in user", async function() {
+				await driver.manage().deleteAllCookies();
+				await driver.navigate().refresh();
+
+				const notFoundPage = new NotFoundPage( driver );
+				const displayed = await notFoundPage.displayed();
+				assert.equal(
+					displayed,
+					true,
+					'Could not see the not found (404) page. Check that it is displayed'
+				);
+			} );
+		} else {
+			// Jetpack tests
+			test.it( 'Open published page', async function() {
+				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				await postEditorToolbarComponent.viewPublishedPostOrPage();
+			} );
+
+			test.it( "Can't view page title or content as non-logged in user", async function() {
+				const notFoundPage = new NotFoundPage( driver );
+				const displayed = await notFoundPage.displayed();
+				assert.equal(
+					displayed,
+					true,
+					'Could not see the not found (404) page. Check that it is displayed'
+				);
+			} );
+			//TODO: Add Jetpack SSO and verify content actually published
+		}
 	} );
 
 	test.describe( 'Password Protected Pages: @parallel @jetpack', function() {
 		this.bailSuite( true );
+		const pageTitle = dataHelper.randomPhrase();
+		const pageQuote =
+			'If you don’t like something, change it. If you can’t change it, change the way you think about it.\n— Mary Engelbreit\n';
+		const postPassword = 'e2e' + new Date().getTime().toString();
+
 		test.before( async function() {
 			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		test.describe( 'Publish a Password Protected Page', function() {
-			let pageTitle = dataHelper.randomPhrase();
-			let pageQuote =
-				'If you don’t like something, change it. If you can’t change it, change the way you think about it.\n— Mary Engelbreit\n';
-			let postPassword = 'e2e' + new Date().getTime().toString();
-
 			test.it( 'Can log in', async function() {
-				let loginFlow = new LoginFlow( driver );
+				const loginFlow = new LoginFlow( driver );
 				await loginFlow.loginAndStartNewPage();
 			} );
 
 			test.it( 'Can enter page title and content and set to password protected', async function() {
-				this.editorPage = new EditorPage( driver );
-				await this.editorPage.enterTitle( pageTitle );
-				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				await this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
-				this.editorPage = new EditorPage( driver );
-				await this.editorPage.enterContent( pageQuote );
-				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-				await this.postEditorToolbarComponent.ensureSaved();
+				let editorPage = new EditorPage( driver );
+				await editorPage.enterTitle( pageTitle );
+				const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				await postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
+				editorPage = new EditorPage( driver );
+				await editorPage.enterContent( pageQuote );
+				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				await postEditorToolbarComponent.ensureSaved();
 			} );
 
-			test.describe( 'Publish and View', function() {
-				test.it( 'Can publish and view content', async function() {
-					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
-					await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
+			test.it( 'Can publish and view content', async function() {
+				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
+			} );
+		} );
+
+		test.describe( 'As a logged in user', function() {
+			test.describe( 'With no password entered', function() {
+				test.it( 'Can view page title', async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const actualPageTitle = await viewPagePage.pageTitle();
+					assert.equal(
+						actualPageTitle.toUpperCase(),
+						( 'Protected: ' + pageTitle ).toUpperCase()
+					);
 				} );
 
-				test.describe( 'As a logged in user', function() {
-					test.describe( 'With no password entered', function() {
-						test.it( 'Can view page title', async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let actualPageTitle = await viewPagePage.pageTitle();
-							assert.equal(
-								actualPageTitle.toUpperCase(),
-								( 'Protected: ' + pageTitle ).toUpperCase()
-							);
-						} );
-
-						test.it( 'Can see password field', async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let isPasswordProtected = await viewPagePage.isPasswordProtected();
-							assert.equal(
-								isPasswordProtected,
-								true,
-								'The page does not appear to be password protected'
-							);
-						} );
-
-						test.it( "Can't see content when no password is entered", async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let content = await viewPagePage.pageContent();
-							assert.equal(
-								content.indexOf( pageQuote ) === -1,
-								true,
-								'The page content (' +
-									content +
-									') displays the expected content (' +
-									pageQuote +
-									') when it should be password protected.'
-							);
-						} );
-					} );
-
-					test.describe( 'With incorrect password entered', function() {
-						test.it( 'Enter incorrect password', async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							await viewPagePage.enterPassword( 'password' );
-						} );
-
-						test.it( 'Can view page title', async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let actualPageTitle = await viewPagePage.pageTitle();
-							assert.equal(
-								actualPageTitle.toUpperCase(),
-								( 'Protected: ' + pageTitle ).toUpperCase()
-							);
-						} );
-
-						test.it( 'Can see password field', async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let isPasswordProtected = await viewPagePage.isPasswordProtected();
-							assert.equal(
-								isPasswordProtected,
-								true,
-								'The page does not appear to be password protected'
-							);
-						} );
-
-						test.it( "Can't see content when incorrect password is entered", async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let content = await viewPagePage.pageContent();
-							assert.equal(
-								content.indexOf( pageQuote ) === -1,
-								true,
-								'The page content (' +
-									content +
-									') displays the expected content (' +
-									pageQuote +
-									') when it should be password protected.'
-							);
-						} );
-					} );
-
-					test.describe( 'With correct password entered', function() {
-						test.it( 'Enter correct password', async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							await viewPagePage.enterPassword( postPassword );
-						} );
-
-						test.it( 'Can view page title', async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let actualPageTitle = await viewPagePage.pageTitle();
-							assert.equal(
-								actualPageTitle.toUpperCase(),
-								( 'Protected: ' + pageTitle ).toUpperCase()
-							);
-						} );
-
-						test.it( "Can't see password field", async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let isPasswordProtected = await viewPagePage.isPasswordProtected();
-							assert.equal(
-								isPasswordProtected,
-								false,
-								'The page still seems to be password protected'
-							);
-						} );
-
-						test.it( 'Can see page content', async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let content = await viewPagePage.pageContent();
-							assert.equal(
-								content.indexOf( pageQuote ) > -1,
-								true,
-								'The page content (' +
-									content +
-									') does not include the expected content (' +
-									pageQuote +
-									')'
-							);
-						} );
-					} );
+				test.it( 'Can see password field', async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const isPasswordProtected = await viewPagePage.isPasswordProtected();
+					assert.equal(
+						isPasswordProtected,
+						true,
+						'The page does not appear to be password protected'
+					);
 				} );
-				test.describe( 'As a non-logged in user', function() {
-					test.it( 'Clear cookies (log out)', async function() {
-						await driver.manage().deleteAllCookies();
-						await driver.navigate().refresh();
-					} );
-					test.describe( 'With no password entered', function() {
-						test.it( 'Can view page title', async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let actualPageTitle = await viewPagePage.pageTitle();
-							assert.equal(
-								actualPageTitle.toUpperCase(),
-								( 'Protected: ' + pageTitle ).toUpperCase()
-							);
-						} );
 
-						test.it( 'Can see password field', async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let isPasswordProtected = await viewPagePage.isPasswordProtected();
-							assert.equal(
-								isPasswordProtected,
-								true,
-								'The page does not appear to be password protected'
-							);
-						} );
+				test.it( "Can't see content when no password is entered", async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const content = await viewPagePage.pageContent();
+					assert.equal(
+						content.indexOf( pageQuote ) === -1,
+						true,
+						'The page content (' +
+							content +
+							') displays the expected content (' +
+							pageQuote +
+							') when it should be password protected.'
+					);
+				} );
+			} );
 
-						test.it( "Can't see content when no password is entered", async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let content = await viewPagePage.pageContent();
-							assert.equal(
-								content.indexOf( pageQuote ) === -1,
-								true,
-								'The page content (' +
-									content +
-									') displays the expected content (' +
-									pageQuote +
-									') when it should be password protected.'
-							);
-						} );
-					} );
+			test.describe( 'With incorrect password entered', function() {
+				test.it( 'Enter incorrect password', async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					await viewPagePage.enterPassword( 'password' );
+				} );
 
-					test.describe( 'With incorrect password entered', function() {
-						test.it( 'Enter incorrect password', async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							await viewPagePage.enterPassword( 'password' );
-						} );
+				test.it( 'Can view page title', async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const actualPageTitle = await viewPagePage.pageTitle();
+					assert.equal(
+						actualPageTitle.toUpperCase(),
+						( 'Protected: ' + pageTitle ).toUpperCase()
+					);
+				} );
 
-						test.it( 'Can view page title', async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let actualPageTitle = await viewPagePage.pageTitle();
-							assert.equal(
-								actualPageTitle.toUpperCase(),
-								( 'Protected: ' + pageTitle ).toUpperCase()
-							);
-						} );
+				test.it( 'Can see password field', async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const isPasswordProtected = await viewPagePage.isPasswordProtected();
+					assert.equal(
+						isPasswordProtected,
+						true,
+						'The page does not appear to be password protected'
+					);
+				} );
 
-						test.it( 'Can see password field', async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let isPasswordProtected = await viewPagePage.isPasswordProtected();
-							assert.equal(
-								isPasswordProtected,
-								true,
-								'The page does not appear to be password protected'
-							);
-						} );
+				test.it( "Can't see content when incorrect password is entered", async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const content = await viewPagePage.pageContent();
+					assert.equal(
+						content.indexOf( pageQuote ) === -1,
+						true,
+						'The page content (' +
+							content +
+							') displays the expected content (' +
+							pageQuote +
+							') when it should be password protected.'
+					);
+				} );
+			} );
 
-						test.it( "Can't see content when incorrect password is entered", async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let content = await viewPagePage.pageContent();
-							assert.equal(
-								content.indexOf( pageQuote ) === -1,
-								true,
-								'The page content (' +
-									content +
-									') displays the expected content (' +
-									pageQuote +
-									') when it should be password protected.'
-							);
-						} );
-					} );
+			test.describe( 'With correct password entered', function() {
+				test.it( 'Enter correct password', async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					await viewPagePage.enterPassword( postPassword );
+				} );
 
-					test.describe( 'With correct password entered', function() {
-						test.it( 'Enter correct password', async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							await viewPagePage.enterPassword( postPassword );
-						} );
+				test.it( 'Can view page title', async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const actualPageTitle = await viewPagePage.pageTitle();
+					assert.equal(
+						actualPageTitle.toUpperCase(),
+						( 'Protected: ' + pageTitle ).toUpperCase()
+					);
+				} );
 
-						test.it( 'Can view page title', async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let actualPageTitle = await viewPagePage.pageTitle();
-							assert.equal(
-								actualPageTitle.toUpperCase(),
-								( 'Protected: ' + pageTitle ).toUpperCase()
-							);
-						} );
+				test.it( "Can't see password field", async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const isPasswordProtected = await viewPagePage.isPasswordProtected();
+					assert.equal(
+						isPasswordProtected,
+						false,
+						'The page still seems to be password protected'
+					);
+				} );
 
-						test.it( "Can't see password field", async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let isPasswordProtected = await viewPagePage.isPasswordProtected();
-							assert.equal(
-								isPasswordProtected,
-								false,
-								'The page still seems to be password protected'
-							);
-						} );
+				test.it( 'Can see page content', async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const content = await viewPagePage.pageContent();
+					assert.equal(
+						content.indexOf( pageQuote ) > -1,
+						true,
+						'The page content (' +
+							content +
+							') does not include the expected content (' +
+							pageQuote +
+							')'
+					);
+				} );
+			} );
+		} );
 
-						test.it( 'Can see page content', async function() {
-							let viewPagePage = new ViewPagePage( driver );
-							let content = await viewPagePage.pageContent();
-							assert.equal(
-								content.indexOf( pageQuote ) > -1,
-								true,
-								'The page content (' +
-									content +
-									') does not include the expected content (' +
-									pageQuote +
-									')'
-							);
-						} );
-					} );
+		test.describe( 'As a non-logged in user', function() {
+			test.it( 'Clear cookies (log out)', async function() {
+				await driver.manage().deleteAllCookies();
+				await driver.navigate().refresh();
+			} );
+
+			test.describe( 'With no password entered', function() {
+				test.it( 'Can view page title', async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const actualPageTitle = await viewPagePage.pageTitle();
+					assert.equal(
+						actualPageTitle.toUpperCase(),
+						( 'Protected: ' + pageTitle ).toUpperCase()
+					);
+				} );
+
+				test.it( 'Can see password field', async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const isPasswordProtected = await viewPagePage.isPasswordProtected();
+					assert.equal(
+						isPasswordProtected,
+						true,
+						'The page does not appear to be password protected'
+					);
+				} );
+
+				test.it( "Can't see content when no password is entered", async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const content = await viewPagePage.pageContent();
+					assert.equal(
+						content.indexOf( pageQuote ) === -1,
+						true,
+						'The page content (' +
+							content +
+							') displays the expected content (' +
+							pageQuote +
+							') when it should be password protected.'
+					);
+				} );
+			} );
+
+			test.describe( 'With incorrect password entered', function() {
+				test.it( 'Enter incorrect password', async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					await viewPagePage.enterPassword( 'password' );
+				} );
+
+				test.it( 'Can view page title', async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const actualPageTitle = await viewPagePage.pageTitle();
+					assert.equal(
+						actualPageTitle.toUpperCase(),
+						( 'Protected: ' + pageTitle ).toUpperCase()
+					);
+				} );
+
+				test.it( 'Can see password field', async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const isPasswordProtected = await viewPagePage.isPasswordProtected();
+					assert.equal(
+						isPasswordProtected,
+						true,
+						'The page does not appear to be password protected'
+					);
+				} );
+
+				test.it( "Can't see content when incorrect password is entered", async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const content = await viewPagePage.pageContent();
+					assert.equal(
+						content.indexOf( pageQuote ) === -1,
+						true,
+						'The page content (' +
+							content +
+							') displays the expected content (' +
+							pageQuote +
+							') when it should be password protected.'
+					);
+				} );
+			} );
+
+			test.describe( 'With correct password entered', function() {
+				test.it( 'Enter correct password', async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					await viewPagePage.enterPassword( postPassword );
+				} );
+
+				test.it( 'Can view page title', async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const actualPageTitle = await viewPagePage.pageTitle();
+					assert.equal(
+						actualPageTitle.toUpperCase(),
+						( 'Protected: ' + pageTitle ).toUpperCase()
+					);
+				} );
+
+				test.it( "Can't see password field", async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const isPasswordProtected = await viewPagePage.isPasswordProtected();
+					assert.equal(
+						isPasswordProtected,
+						false,
+						'The page still seems to be password protected'
+					);
+				} );
+
+				test.it( 'Can see page content', async function() {
+					const viewPagePage = new ViewPagePage( driver );
+					const content = await viewPagePage.pageContent();
+					assert.equal(
+						content.indexOf( pageQuote ) > -1,
+						true,
+						'The page content (' +
+							content +
+							') does not include the expected content (' +
+							pageQuote +
+							')'
+					);
 				} );
 			} );
 		} );

@@ -37,52 +37,41 @@ test.describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, functi
 		} );
 
 		test.it( 'Login and Select My Site', async function() {
-			this.loginFlow = new LoginFlow( driver );
-			return await this.loginFlow.loginAndSelectMySite();
+			const loginFlow = new LoginFlow( driver );
+			return await loginFlow.loginAndSelectMySite();
 		} );
 
-		test.describe( 'Can compare plans', function() {
-			test.it( 'Can Select Plans', async function() {
-				this.statsPage = new StatsPage( driver );
-				await this.statsPage.waitForPage();
-				this.sideBarComponent = new SidebarComponent( driver );
-				return await this.sideBarComponent.selectPlan();
-			} );
+		test.it( 'Can Select Plans', async function() {
+			const statsPage = new StatsPage( driver );
+			await statsPage.waitForPage();
+			const sideBarComponent = new SidebarComponent( driver );
+			return await sideBarComponent.selectPlan();
+		} );
 
-			test.it( 'Can See Plans', async function() {
-				this.plansPage = new PlansPage( driver );
-				return await this.plansPage.waitForPage();
-			} );
+		test.it( 'Can See Plans', async function() {
+			const plansPage = new PlansPage( driver );
+			return await plansPage.waitForPage();
+		} );
 
-			test.it( 'Can Compare Plans', async function() {
-				this.plansPage = new PlansPage( driver );
-				if ( host === 'WPCOM' ) {
-					await this.plansPage.openPlansTab();
-					return await this.plansPage.waitForComparison();
-				}
-
-				// Jetpack
-				let displayed = await this.plansPage.planTypesShown( 'jetpack' );
-				return assert( displayed, 'The Jetpack plans are NOT displayed' );
-			} );
-
+		test.it( 'Can Compare Plans', async function() {
+			const plansPage = new PlansPage( driver );
 			if ( host === 'WPCOM' ) {
-				test.it( 'Can Verify Current Plan', async function() {
-					const planName = 'premium';
-					let present = await this.plansPage.confirmCurrentPlan( planName );
-					return assert( present, `Failed to detect correct plan (${ planName })` );
-				} );
+				await plansPage.openPlansTab();
+				return await plansPage.waitForComparison();
 			}
+
+			// Jetpack
+			const displayed = await plansPage.planTypesShown( 'jetpack' );
+			return assert( displayed, 'The Jetpack plans are NOT displayed' );
 		} );
 
-		//test.describe( 'Can purchase plans', function() {
-		//	test.it( 'Can purchase premium', function() {
-		//		let plansPage = new PlansPage( driver );
-		//		let shoppingCart = new ShoppingCartWidgetComponent( driver );
-		//
-		//		shoppingCart.empty();
-		//		//plansPage.purchasePremium(); //TODO: make this repeatable
-		//	} );
-		//} );
+		if ( host === 'WPCOM' ) {
+			test.it( 'Can Verify Current Plan', async function() {
+				const planName = 'premium';
+				const plansPage = new PlansPage( driver );
+				const present = await plansPage.confirmCurrentPlan( planName );
+				return assert( present, `Failed to detect correct plan (${ planName })` );
+			} );
+		}
 	} );
 } );

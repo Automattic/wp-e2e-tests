@@ -35,19 +35,17 @@ test.describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @je
 
 		test.before( async function() {
 			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			const loginFlow = new LoginFlow( driver );
+			await loginFlow.loginAndStartNewPage();
+			editorPage = new EditorPage( driver );
+			await editorPage.displayed();
 		} );
 
 		test.describe( 'Can upload many media types', function() {
-			test.it( 'Can log in', async function() {
-				const loginFlow = new LoginFlow( driver );
-				await loginFlow.loginAndStartNewPage();
-			} );
-
 			test.describe( 'Can upload a normal image', function() {
 				let fileDetails;
 
 				test.it( 'Navigate to Editor page and create image file for upload', async function() {
-					editorPage = new EditorPage( driver );
 					fileDetails = await mediaHelper.createFileWithFilename( 'normal.jpg' );
 				} );
 
@@ -60,7 +58,7 @@ test.describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @je
 				} );
 
 				test.after( async function() {
-					editorPage.dismissMediaModal();
+					await editorPage.dismissMediaModal();
 					if ( fileDetails ) {
 						await mediaHelper.deleteFile( fileDetails );
 					}
@@ -86,7 +84,7 @@ test.describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @je
 				} );
 
 				test.after( async function() {
-					editorPage.dismissMediaModal();
+					await editorPage.dismissMediaModal();
 					if ( fileDetails ) {
 						await mediaHelper.deleteFile( fileDetails );
 					}
@@ -126,6 +124,7 @@ test.describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @je
 
 				test.it( 'Can open Featured Image upload modal', async function() {
 					editorSidebar = new PostEditorSidebarComponent( driver );
+					await editorSidebar.displayed();
 					await editorSidebar.expandFeaturedImage();
 					await editorSidebar.openFeaturedImageDialog();
 				} );
@@ -156,10 +155,6 @@ test.describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @je
 					}
 					await editorSidebar.closeFeaturedImage();
 				} );
-			} );
-			// FIXME: Workaround of https://github.com/Automattic/wp-calypso/issues/17701
-			test.after( async function() {
-				await editorPage.cleanDirtyState();
 			} );
 		} );
 	} );

@@ -16,6 +16,9 @@ if [ "$NODE_ENV_OVERRIDE" != "" ]; then
   NODE_ENV=$NODE_ENV_OVERRIDE
 fi
 
+#disable selenium promise manager
+#export SELENIUM_PROMISE_MANAGER=0
+
 export TESTARGS="-R -p"
 
 if [ "$RUN_SPECIFIED" == "true" ]; then
