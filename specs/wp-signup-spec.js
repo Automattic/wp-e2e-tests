@@ -159,9 +159,15 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.it( 'Can see email containing magic link', async function() {
 				const emailClient = new EmailClient( signupInboxId );
-				let email = await emailClient.waitForEmailByRecipient( emailAddress );
-				if ( email.subject.includes( 'WordPress.com' ) ) {
-					return ( magicLoginLink = email.html.links[ 0 ].href );
+				const validator = emails =>
+					emails.find( email => email.subject.includes( 'WordPress.com' ) );
+				let emails = await emailClient.pollEmailsByRecipient( emailAddress, validator );
+				//Disabled due to a/b test on activation email. See https://github.com/Automattic/wp-e2e-tests/issues/819
+				//assert.equal( emails.length, 2, 'The number of newly registered emails is not equal to 2 (activation and magic link)' );
+				for ( let email of emails ) {
+					if ( email.subject.includes( 'WordPress.com' ) ) {
+						return ( magicLoginLink = email.html.links[ 0 ].href );
+					}
 				}
 				return assert(
 					magicLoginLink !== undefined,
@@ -596,7 +602,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		}
 	);
 
-	test.describe(
+	test.xdescribe(
 		'Sign up for a domain only purchase coming in from wordpress.com/domains in EUR currency @parallel',
 		function() {
 			this.bailSuite( true );
@@ -768,7 +774,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		}
 	);
 
-	test.describe(
+	test.xdescribe(
 		'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow in CAD currency @parallel',
 		function() {
 			this.bailSuite( true );
