@@ -602,7 +602,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		}
 	);
 
-	test.describe(
+	test.xdescribe(
 		'Sign up for a domain only purchase coming in from wordpress.com/domains in EUR currency @parallel',
 		function() {
 			this.bailSuite( true );
