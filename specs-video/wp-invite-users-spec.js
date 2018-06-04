@@ -39,7 +39,7 @@ const emailClient = new EmailClient( inviteInboxId );
 
 let driver;
 
-// ScreenRecorder.applyMochaHooks();
+// ScreenRecorder.applyMochaHooks(driver, driverManager, startBrowserTimeoutMS);
 
 // test.beforeEach( function() {
 // 	if ( this.currentTest && this.currentTest.parent && this.currentTest.parent.title && this.currentTest.parent.title.includes( '@parallel' ) ) {
@@ -49,17 +49,17 @@ let driver;
 // 	}
 // } );
 
-test.before( async function() {
-	this.timeout( startBrowserTimeoutMS );
-	driver = await driverManager.startBrowser();
-} );
+// test.before( async function() {
+// 	this.timeout( startBrowserTimeoutMS );
+// 	driver = await driverManager.startBrowser();
+// } );
 
 test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Inviting new user as an Editor: @parallel @jetpack', function() {
 		this.bailSuite( true );
-		ScreenRecorder.applyMochaHooks();
+		driver = ScreenRecorder.applyMochaHooks( test, driverManager, startBrowserTimeoutMS );
 
 		const newUserName = 'e2eflowtestingeditor' + new Date().getTime().toString();
 		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
@@ -165,7 +165,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		'Inviting new user as an Editor and revoke invite: @parallel @jetpack',
 		function() {
 			this.bailSuite( true );
-			ScreenRecorder.applyMochaHooks();
+			driver = ScreenRecorder.applyMochaHooks( test, driverManager, startBrowserTimeoutMS );
 
 			const newUserName = 'e2eflowtestingeditor' + new Date().getTime().toString();
 			const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
@@ -341,7 +341,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			'Inviting New User as a Viewer of a Private Site: @parallel @jetpack',
 			function() {
 				this.bailSuite( true );
-				ScreenRecorder.applyMochaHooks();
+				driver = ScreenRecorder.applyMochaHooks( test, driverManager, startBrowserTimeoutMS );
 
 				const newUserName = 'e2eflowtestingviewer' + new Date().getTime().toString();
 				const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
@@ -472,7 +472,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		'Inviting New User as an Contributor, then change them to Author: @parallel @jetpack',
 		function() {
 			this.bailSuite( true );
-			ScreenRecorder.applyMochaHooks();
+			driver = ScreenRecorder.applyMochaHooks( test, driverManager, startBrowserTimeoutMS );
 
 			const newUserName = 'e2eflowtestingcontributor' + new Date().getTime().toString();
 			const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
