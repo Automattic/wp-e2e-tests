@@ -17,7 +17,7 @@ if [ "$NODE_ENV_OVERRIDE" != "" ]; then
 fi
 
 #disable selenium promise manager
-export SELENIUM_PROMISE_MANAGER=0
+#export SELENIUM_PROMISE_MANAGER=0
 
 export TESTARGS="-R -p"
 
