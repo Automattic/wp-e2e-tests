@@ -1025,124 +1025,106 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 	test.describe( 'Basic sign up for a free site @parallel @email @canary @ie11canary', function() {
 		this.bailSuite( true );
-		let stepNum = 1;
 
 		const blogName = dataHelper.getNewBlogName();
 		let newBlogAddress = '';
-		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
-		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 
 		test.it( 'Ensure we are not logged in as anyone', async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.describe( `Step ${ stepNum }: About Page`, function() {
-			stepNum++;
+		test.it( 'Can visit the start page', async function() {
+			return await new StartPage( driver, {
+				visit: true,
+				culture: locale,
+			} ).displayed();
+		} );
 
-			test.it( 'Can visit the start page', async function() {
-				return await new StartPage( driver, {
-					visit: true,
-					culture: locale,
-				} ).displayed();
-			} );
+		test.it( 'Can see the about page and accept defaults', async function() {
+			return await new AboutPage( driver ).submitForm();
+		} );
 
-			test.it( 'Can see the about page and accept defaults', async function() {
-				return await new AboutPage( driver ).submitForm();
-			} );
-
-			test.describe( `Step ${ stepNum }: Domains`, function() {
-				stepNum++;
-
-				test.it(
-					'Can then see the domains page, and Can search for a blog name, can see and select a free .wordpress address in the results',
-					async function() {
-						const findADomainComponent = new FindADomainComponent( driver );
-						await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-						await findADomainComponent.checkAndRetryForFreeBlogAddresses(
-							expectedBlogAddresses,
-							blogName
-						);
-						let actualAddress = await findADomainComponent.freeBlogAddress();
-						assert(
-							expectedBlogAddresses.indexOf( actualAddress ) > -1,
-							`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
-						);
-						newBlogAddress = actualAddress;
-						return await findADomainComponent.selectFreeAddress();
-					}
+		test.it(
+			'Can then see the domains page, and Can search for a blog name, can see and select a free .wordpress address in the results',
+			async function() {
+				const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
+				const findADomainComponent = new FindADomainComponent( driver );
+				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
+					expectedBlogAddresses,
+					blogName
 				);
+				let actualAddress = await findADomainComponent.freeBlogAddress();
+				assert(
+					expectedBlogAddresses.indexOf( actualAddress ) > -1,
+					`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+				);
+				newBlogAddress = actualAddress;
+				return await findADomainComponent.selectFreeAddress();
+			}
+		);
 
-				test.describe( `Step ${ stepNum }: Plans`, function() {
-					stepNum++;
+		test.it( 'Can then see the plans page and pick the free plan', async function() {
+			return await new PickAPlanPage( driver ).selectFreePlan();
+		} );
 
-					test.it( 'Can then see the plans page and pick the free plan', async function() {
-						return await new PickAPlanPage( driver ).selectFreePlan();
-					} );
+		test.it( 'Can then enter account details and continue', async function() {
+			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
+			return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+				emailAddress,
+				blogName,
+				passwordForTestAccounts
+			);
+		} );
 
-					test.describe( `Step ${ stepNum }: Account`, function() {
-						stepNum++;
+		test.it(
+			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			async function() {
+				const signupProcessingPage = new SignupProcessingPage( driver );
+				await signupProcessingPage.waitForContinueButtonToBeEnabled();
+				return await signupProcessingPage.continueAlong();
+			}
+		);
 
-						test.it( 'Can then enter account details and continue', async function() {
-							return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
-								emailAddress,
-								blogName,
-								passwordForTestAccounts
-							);
-						} );
+		test.it(
+			'We are on the view blog page, can see trampoline, our URL and title',
+			async function() {
+				const viewBlogPage = new ViewBlogPage( driver );
+				viewBlogPage.waitForTrampolineWelcomeMessage();
+				let displayed = await viewBlogPage.isTrampolineWelcomeDisplayed();
+				return assert.equal( displayed, true, 'The trampoline welcome message is not displayed' );
+			}
+		);
 
-						test.describe( `Step ${ stepNum }: Sign Up Processing`, function() {
-							stepNum++;
+		test.it( 'Can see the correct blog URL displayed', async function() {
+			let url = await new ViewBlogPage( driver ).urlDisplayed();
+			return assert.equal(
+				url,
+				'https://' + newBlogAddress + '/',
+				'The displayed URL on the view blog page is not as expected'
+			);
+		} );
 
-							test.it(
-								"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
-								async function() {
-									const signupProcessingPage = new SignupProcessingPage( driver );
-									await signupProcessingPage.waitForContinueButtonToBeEnabled();
-									return await signupProcessingPage.continueAlong();
-								}
-							);
-
-							test.describe( `Step ${ stepNum }: View Site/Trampoline`, function() {
-								stepNum++;
-
-								test.it(
-									'We are on the view blog page, can see trampoline, our URL and title',
-									async function() {
-										const viewBlogPage = new ViewBlogPage( driver );
-										viewBlogPage.waitForTrampolineWelcomeMessage();
-										let displayed = await viewBlogPage.isTrampolineWelcomeDisplayed();
-										return assert.equal(
-											displayed,
-											true,
-											'The trampoline welcome message is not displayed'
-										);
-									}
-								);
-
-								test.it( 'Can see the correct blog URL displayed', async function() {
-									let url = await new ViewBlogPage( driver ).urlDisplayed();
-									return assert.equal(
-										url,
-										'https://' + newBlogAddress + '/',
-										'The displayed URL on the view blog page is not as expected'
-									);
-								} );
-
-								if ( locale === 'en' ) {
-									test.it( 'Can see the correct blog title displayed', async function() {
-										let title = await new ViewBlogPage( driver ).title();
-										return assert.equal(
-											title,
-											'Site Title',
-											'The expected blog title is not displaying correctly'
-										);
-									} );
-								}
-							} );
-						} );
-					} );
-				} );
+		if ( locale === 'en' ) {
+			test.it( 'Can see the correct blog title displayed', async function() {
+				let title = await new ViewBlogPage( driver ).title();
+				return assert.equal(
+					title,
+					'Site Title',
+					'The expected blog title is not displaying correctly'
+				);
 			} );
+		}
+
+		test.it( 'Can delete our newly created account', async function() {
+			await new ReaderPage( driver, true ).displayed();
+			await new NavBarComponent( driver ).clickProfileLink();
+			await new ProfilePage( driver ).chooseAccountSettings();
+			await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+			const closeAccountPage = new CloseAccountPage( driver );
+			await closeAccountPage.chooseCloseAccount();
+			await closeAccountPage.enterAccountNameAndClose( blogName );
+			return await new LoggedOutMasterbarComponent( driver ).displayed();
 		} );
 	} );
 
