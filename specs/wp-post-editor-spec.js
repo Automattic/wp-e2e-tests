@@ -762,6 +762,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						// Enter incorrect password
 						test.before( async function() {
 							let viewPostPage = new ViewPostPage( driver );
+							await viewPostPage.displayed();
 							await viewPostPage.enterPassword( 'password' );
 						} );
 
@@ -823,6 +824,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						// Enter correct password
 						test.before( async function() {
 							let viewPostPage = new ViewPostPage( driver );
+							await viewPostPage.displayed();
 							await viewPostPage.enterPassword( postPassword );
 						} );
 
@@ -944,6 +946,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						// Enter incorrect password
 						test.before( async function() {
 							let viewPostPage = new ViewPostPage( driver );
+							await viewPostPage.displayed();
 							await viewPostPage.enterPassword( 'password' );
 						} );
 
@@ -1005,6 +1008,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						// Enter correct password
 						test.before( async function() {
 							let viewPostPage = new ViewPostPage( driver );
+							await viewPostPage.displayed();
 							await viewPostPage.enterPassword( postPassword );
 						} );
 
