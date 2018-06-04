@@ -30,18 +30,21 @@ import ManagePurchasePage from '../lib/pages/manage-purchase-page';
 import CancelPurchasePage from '../lib/pages/cancel-purchase-page';
 import CancelDomainPage from '../lib/pages/cancel-domain-page';
 import GSuiteUpsellPage from '../lib/pages/gsuite-upsell-page';
+import ThemesPage from '../lib/pages/themes-page';
+import ThemeDetailPage from '../lib/pages/theme-detail-page';
+import AccountSettingsPage from '../lib/pages/account/account-settings-page';
+import CloseAccountPage from '../lib/pages/account/close-account-page';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
 import NavBarComponent from '../lib/components/navbar-component';
 import SideBarComponent from '../lib/components/sidebar-component';
 import SignupStepComponent from '../lib/components/signup-step-component.js';
+import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component';
 
 import * as SlackNotifier from '../lib/slack-notifier';
 
 import EmailClient from '../lib/email-client.js';
-import ThemesPage from '../lib/pages/themes-page';
-import ThemeDetailPage from '../lib/pages/theme-detail-page';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -179,6 +182,16 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				await driver.get( magicLoginLink );
 				await new MagicLoginPage( driver ).finishLogin();
 				return await new ReaderPage( driver ).displayed();
+			} );
+
+			test.it( 'Can delete our newly created account', async function() {
+				await new NavBarComponent( driver ).clickProfileLink();
+				await new ProfilePage( driver ).chooseAccountSettings();
+				await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+				const closeAccountPage = new CloseAccountPage( driver );
+				await closeAccountPage.chooseCloseAccount();
+				await closeAccountPage.enterAccountNameAndClose( blogName );
+				return await new LoggedOutMasterbarComponent( driver ).displayed();
 			} );
 		}
 	);
