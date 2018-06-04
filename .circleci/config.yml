@@ -13,6 +13,7 @@ jobs:
           key: 'dependency-cache-{{ checksum "package.json" }}'
       - run: npm install
       - run: npm run lint
+      - run: sudo apt-add-repository ppa:qameta/allure && sudo apt-get update && sudo apt-get install allure
       - run: npm run decryptconfig
       - save_cache:
           key: 'dependency-cache-{{ checksum "package.json" }}'
@@ -20,9 +21,12 @@ jobs:
             - ./node_modules
       - run: ./scripts/randomize.sh specs
       - run: ./scripts/run-wrapper.sh
+      - run: allure serve
       - store_test_results:
           path: reports/
       - store_artifacts:
           path: reports/
+      - store_artifacts:
+          path: allure_report/
       - store_artifacts:
           path: screenshots/
