@@ -1,6 +1,6 @@
 {
   "mocha_tests": [
-    "specs"
+    "specs-video"
   ],
   "mocha_opts": "test/mocha.opts",
   "mocha_args": "-R spec-xunit-reporter",
@@ -11,8 +11,7 @@
   "browser": "chrome",
   "framework": "testarmada-magellan-mocha-plugin",
   "reporters": [
-	  "./lib/reporter/magellan-reporter.js",
-	  "./lib/reporter/screencast-reporter.js"
+	  "./lib/reporter/magellan-reporter.js"
   ],
 	"bail_time": 300000
 }
