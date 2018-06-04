@@ -356,6 +356,28 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
 			} );
 
+			test.it( 'Can delete the plan', async function() {
+				await new NavBarComponent( driver ).clickProfileLink();
+				await new ProfilePage( driver ).chooseManagePurchases();
+				const purchasesPage = new PurchasesPage( driver );
+				await purchasesPage.dismissGuidedTour();
+				await purchasesPage.selectPremiumPlan();
+				await new ManagePurchasePage( driver ).chooseCancelAndRefund();
+				const cancelPurchasePage = new CancelPurchasePage( driver );
+				await cancelPurchasePage.clickCancelPurchase();
+				return await cancelPurchasePage.completeCancellationSurvey();
+			} );
+
+			test.it( 'Can delete our newly created account', async function() {
+				await new NavBarComponent( driver ).clickProfileLink();
+				await new ProfilePage( driver ).chooseAccountSettings();
+				await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+				const closeAccountPage = new CloseAccountPage( driver );
+				await closeAccountPage.chooseCloseAccount();
+				await closeAccountPage.enterAccountNameAndClose( blogName );
+				return await new LoggedOutMasterbarComponent( driver ).displayed();
+			} );
+
 			test.after( async function() {
 				await eyesHelper.eyesClose( eyes );
 			} );
