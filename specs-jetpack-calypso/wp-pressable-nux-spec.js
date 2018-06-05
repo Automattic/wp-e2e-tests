@@ -82,7 +82,9 @@ if ( host === 'PRESSABLE' ) {
 			} );
 
 			test.it( 'Can approve connection on the authorization page', async function() {
-				return await new JetpackAuthorizePage( driver ).approveConnection();
+				return await new JetpackAuthorizePage( driver, {
+					overrideABTests: false,
+				} ).approveConnection();
 			} );
 
 			test.it(
