@@ -24,6 +24,8 @@ import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
+import ScreenRecorder from '../lib/screen-recorder';
+
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
@@ -43,6 +45,7 @@ test.describe(
 	function() {
 		this.timeout( mochaTimeOut );
 		this.bailSuite( true );
+		ScreenRecorder.applyMochaHooks();
 
 		test.before( function() {
 			let testEnvironment = 'WordPress.com';
@@ -410,6 +413,7 @@ test.describe(
 test.describe( `[${ host }] User Agent: (${ screenSize }) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
+	ScreenRecorder.applyMochaHooks();
 
 	test.before( async function() {
 		await driverManager.clearCookiesAndDeleteLocalStorage( driver );

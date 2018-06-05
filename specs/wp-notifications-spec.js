@@ -16,6 +16,7 @@ import ViewPostPage from '../lib/pages/view-post-page.js';
 
 import NavbarComponent from '../lib/components/navbar-component.js';
 import NotificationsComponent from '../lib/components/notifications-component.js';
+import ScreenRecorder from '../lib/screen-recorder.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -34,6 +35,7 @@ test.before( async function() {
 test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`, function() {
 	this.timeout( mochaTimeOut );
 	this.bailSuite( true );
+	ScreenRecorder.applyMochaHooks();
 
 	const commentingUser = dataHelper.getAccountConfig( 'commentingUser' )[ 0 ];
 	const comment = dataHelper.randomPhrase() + ' TBD';

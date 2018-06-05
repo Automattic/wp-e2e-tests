@@ -54,6 +54,7 @@
     "parallel-mocha": "~0.0.7",
     "png-itxt": "1.3.0",
     "prettier": "github:automattic/calypso-prettier#503d7779",
+    "push-receiver": "git+https://github.com/yurynix/push-receiver#815334144b6335a9663c1134fee89683016fd807",
     "random-qoutes-generator": "0.0.1",
     "request-promise": "^4.2.2",
     "sanitize-filename": "1.6.0",
@@ -68,7 +69,8 @@
     "wpcom": "5.4.0",
     "xml2json-command": "^0.0.3",
     "xmpp.js": "^0.3.0",
-    "xunit-viewer": "5.0.3"
+    "xunit-viewer": "5.0.3",
+    "xvfb": "^0.2.3"
   },
   "devDependencies": {
     "babel-eslint": "^5.0.0-beta6",
