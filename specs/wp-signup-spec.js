@@ -737,6 +737,12 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const currencyValue = 'EUR';
 			const expectedCurrencySymbol = '€';
 
+			test.before( async function() {
+				if ( process.env.SKIP_DOMAIN_TESTS ) {
+					return this.skip();
+				}
+			} );
+
 			test.it( 'Ensure we are not logged in as anyone', async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
@@ -908,6 +914,12 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( emailAddress );
 			const currencyValue = 'CAD';
 			const expectedCurrencySymbol = 'C$';
+
+			test.before( async function() {
+				if ( process.env.SKIP_DOMAIN_TESTS ) {
+					return this.skip();
+				}
+			} );
 
 			test.it( 'Ensure we are not logged in as anyone', async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
