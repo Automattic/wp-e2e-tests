@@ -1149,7 +1149,10 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					this.navbarComponent = new NavbarComponent( driver );
 					await this.navbarComponent.clickMySites();
 					const jetpackSiteName = dataHelper.getJetpackSiteName();
-					this.sidebarComponent = new SidebarComponent( driver, jetpackSiteName );
+					this.sidebarComponent = new SidebarComponent( driver );
+					if ( host !== 'WPCOM' ) {
+						await this.sidebarComponent.selectSite( jetpackSiteName );
+					}
 					await this.sidebarComponent.selectPosts();
 					return ( this.postsPage = new PostsPage( driver ) );
 				} );
