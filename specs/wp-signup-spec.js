@@ -681,7 +681,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		}
 	);
 
-	test.xdescribe(
+	test.describe(
 		'Sign up for a domain only purchase coming in from wordpress.com/domains in EUR currency @parallel',
 		function() {
 			this.bailSuite( true );
@@ -853,7 +853,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		}
 	);
 
-	test.xdescribe(
+	test.describe(
 		'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow in CAD currency @parallel',
 		function() {
 			this.bailSuite( true );
