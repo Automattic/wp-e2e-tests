@@ -188,7 +188,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				await new NavBarComponent( driver ).clickProfileLink();
 				await new ProfilePage( driver ).chooseAccountSettings();
 				await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-				const closeAccountPage = new CloseAccountPage( driver );
+				const closeAccountPage = await new CloseAccountPage( driver );
 				await closeAccountPage.chooseCloseAccount();
 				await closeAccountPage.enterAccountNameAndClose( blogName );
 				return await new LoggedOutMasterbarComponent( driver ).displayed();
@@ -372,7 +372,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				await new NavBarComponent( driver ).clickProfileLink();
 				await new ProfilePage( driver ).chooseAccountSettings();
 				await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-				const closeAccountPage = new CloseAccountPage( driver );
+				const closeAccountPage = await new CloseAccountPage( driver );
 				await closeAccountPage.chooseCloseAccount();
 				await closeAccountPage.enterAccountNameAndClose( blogName );
 				return await new LoggedOutMasterbarComponent( driver ).displayed();
@@ -525,7 +525,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				await new NavBarComponent( driver ).clickProfileLink();
 				await new ProfilePage( driver ).chooseAccountSettings();
 				await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-				const closeAccountPage = new CloseAccountPage( driver );
+				const closeAccountPage = await new CloseAccountPage( driver );
 				await closeAccountPage.chooseCloseAccount();
 				await closeAccountPage.enterAccountNameAndClose( blogName );
 				return await new LoggedOutMasterbarComponent( driver ).displayed();
@@ -673,7 +673,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				await new NavBarComponent( driver ).clickProfileLink();
 				await new ProfilePage( driver ).chooseAccountSettings();
 				await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-				const closeAccountPage = new CloseAccountPage( driver );
+				const closeAccountPage = await new CloseAccountPage( driver );
 				await closeAccountPage.chooseCloseAccount();
 				await closeAccountPage.enterAccountNameAndClose( blogName );
 				return await new LoggedOutMasterbarComponent( driver ).displayed();
@@ -1121,7 +1121,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			await new NavBarComponent( driver ).clickProfileLink();
 			await new ProfilePage( driver ).chooseAccountSettings();
 			await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-			const closeAccountPage = new CloseAccountPage( driver );
+			const closeAccountPage = await new CloseAccountPage( driver );
 			await closeAccountPage.chooseCloseAccount();
 			await closeAccountPage.enterAccountNameAndClose( blogName );
 			return await new LoggedOutMasterbarComponent( driver ).displayed();
@@ -1245,7 +1245,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				await new NavBarComponent( driver ).clickProfileLink();
 				await new ProfilePage( driver ).chooseAccountSettings();
 				await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-				const closeAccountPage = new CloseAccountPage( driver );
+				const closeAccountPage = await new CloseAccountPage( driver );
 				await closeAccountPage.chooseCloseAccount();
 				await closeAccountPage.enterAccountNameAndClose( blogName );
 				return await new LoggedOutMasterbarComponent( driver ).displayed();
