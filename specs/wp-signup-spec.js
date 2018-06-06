@@ -81,7 +81,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
-			test.it( 'Can Visit the start page', async function() {
+			test.it( 'driver the start page', async function() {
 				return await new StartPage( driver, {
 					visit: true,
 					culture: locale,
@@ -178,7 +178,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				);
 			} );
 
-			test.it( 'Can Visit the magic link and we should be logged in', async function() {
+			test.it( 'Can visit the magic link and we should be logged in', async function() {
 				await driver.get( magicLoginLink );
 				await new MagicLoginPage( driver ).finishLogin();
 				return await new ReaderPage( driver ).displayed();
@@ -237,7 +237,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await wPHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
-			test.it( 'Can Visit the start page', async function() {
+			test.it( 'Can visit the start page', async function() {
 				return await new StartPage( driver, {
 					visit: true,
 					culture: locale,
@@ -436,7 +436,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await wpHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
-			test.it( 'Can Visit the start page', async function() {
+			test.it( 'Can visit the start page', async function() {
 				return await new StartPage( driver, {
 					visit: true,
 					culture: locale,
@@ -602,7 +602,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await wpHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
-			test.it( 'Can Visit the start page', async function() {
+			test.it( 'Can visit the start page', async function() {
 				return await new StartPage( driver, {
 					visit: true,
 					culture: locale,
@@ -769,7 +769,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await wpHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
-			test.it( 'Can Visit the domains start page', async function() {
+			test.it( 'Can visit the domains start page', async function() {
 				return await new StartPage( driver, {
 					visit: true,
 					culture: locale,
@@ -942,7 +942,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await wpHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
-			test.it( 'Can Visit the start page', async function() {
+			test.it( 'Can visit the start page', async function() {
 				return await new StartPage( driver, {
 					visit: true,
 					culture: locale,
@@ -1096,7 +1096,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.it( 'Can Visit the start page', async function() {
+		test.it( 'Can visit the start page', async function() {
 			return await new StartPage( driver, {
 				visit: true,
 				culture: locale,
