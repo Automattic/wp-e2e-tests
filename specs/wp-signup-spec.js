@@ -185,13 +185,19 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can delete our newly created account', async function() {
-				await new NavBarComponent( driver ).clickProfileLink();
-				await new ProfilePage( driver ).chooseAccountSettings();
-				await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-				const closeAccountPage = await new CloseAccountPage( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				return await new LoggedOutMasterbarComponent( driver ).displayed();
+				return ( async () => {
+					await new NavBarComponent( driver ).clickProfileLink();
+					await new ProfilePage( driver ).chooseAccountSettings();
+					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+					const closeAccountPage = await new CloseAccountPage( driver );
+					await closeAccountPage.chooseCloseAccount();
+					await closeAccountPage.enterAccountNameAndClose( blogName );
+					return await new LoggedOutMasterbarComponent( driver ).displayed();
+				} )().catch( err => {
+					SlackNotifier.warn(
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+					);
+				} );
 			} );
 		}
 	);
@@ -357,25 +363,38 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can delete the plan', async function() {
-				await new NavBarComponent( driver ).clickProfileLink();
-				await new ProfilePage( driver ).chooseManagePurchases();
-				const purchasesPage = new PurchasesPage( driver );
-				await purchasesPage.dismissGuidedTour();
-				await purchasesPage.selectPremiumPlan();
-				await new ManagePurchasePage( driver ).chooseCancelAndRefund();
-				const cancelPurchasePage = new CancelPurchasePage( driver );
-				await cancelPurchasePage.clickCancelPurchase();
-				return await cancelPurchasePage.completeCancellationSurvey();
+				return ( async () => {
+					await new NavBarComponent( driver ).clickProfileLink();
+					await new ProfilePage( driver ).chooseManagePurchases();
+					const purchasesPage = new PurchasesPage( driver );
+					await purchasesPage.dismissGuidedTour();
+					await purchasesPage.selectPremiumPlan();
+					await new ManagePurchasePage( driver ).chooseCancelAndRefund();
+					const cancelPurchasePage = new CancelPurchasePage( driver );
+					await cancelPurchasePage.clickCancelPurchase();
+					await cancelPurchasePage.completeCancellationSurvey();
+					return await cancelPurchasePage.waitAndDismissSuccessNotice();
+				} )().catch( err => {
+					SlackNotifier.warn(
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+					);
+				} );
 			} );
 
 			test.it( 'Can delete our newly created account', async function() {
-				await new NavBarComponent( driver ).clickProfileLink();
-				await new ProfilePage( driver ).chooseAccountSettings();
-				await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-				const closeAccountPage = await new CloseAccountPage( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				return await new LoggedOutMasterbarComponent( driver ).displayed();
+				return ( async () => {
+					await new NavBarComponent( driver ).clickProfileLink();
+					await new ProfilePage( driver ).chooseAccountSettings();
+					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+					const closeAccountPage = await new CloseAccountPage( driver );
+					await closeAccountPage.chooseCloseAccount();
+					await closeAccountPage.enterAccountNameAndClose( blogName );
+					return await new LoggedOutMasterbarComponent( driver ).displayed();
+				} )().catch( err => {
+					SlackNotifier.warn(
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+					);
+				} );
 			} );
 
 			test.after( async function() {
@@ -510,25 +529,38 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can delete the plan', async function() {
-				await new NavBarComponent( driver ).clickProfileLink();
-				await new ProfilePage( driver ).chooseManagePurchases();
-				const purchasesPage = new PurchasesPage( driver );
-				await purchasesPage.dismissGuidedTour();
-				await purchasesPage.selectPremiumPlan();
-				await new ManagePurchasePage( driver ).chooseCancelAndRefund();
-				const cancelPurchasePage = new CancelPurchasePage( driver );
-				await cancelPurchasePage.clickCancelPurchase();
-				return await cancelPurchasePage.completeCancellationSurvey();
+				return ( async () => {
+					await new NavBarComponent( driver ).clickProfileLink();
+					await new ProfilePage( driver ).chooseManagePurchases();
+					const purchasesPage = new PurchasesPage( driver );
+					await purchasesPage.dismissGuidedTour();
+					await purchasesPage.selectPremiumPlan();
+					await new ManagePurchasePage( driver ).chooseCancelAndRefund();
+					const cancelPurchasePage = new CancelPurchasePage( driver );
+					await cancelPurchasePage.clickCancelPurchase();
+					await cancelPurchasePage.completeCancellationSurvey();
+					return await cancelPurchasePage.waitAndDismissSuccessNotice();
+				} )().catch( err => {
+					SlackNotifier.warn(
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+					);
+				} );
 			} );
 
 			test.it( 'Can delete our newly created account', async function() {
-				await new NavBarComponent( driver ).clickProfileLink();
-				await new ProfilePage( driver ).chooseAccountSettings();
-				await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-				const closeAccountPage = await new CloseAccountPage( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				return await new LoggedOutMasterbarComponent( driver ).displayed();
+				return ( async () => {
+					await new NavBarComponent( driver ).clickProfileLink();
+					await new ProfilePage( driver ).chooseAccountSettings();
+					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+					const closeAccountPage = await new CloseAccountPage( driver );
+					await closeAccountPage.chooseCloseAccount();
+					await closeAccountPage.enterAccountNameAndClose( blogName );
+					return await new LoggedOutMasterbarComponent( driver ).displayed();
+				} )().catch( err => {
+					SlackNotifier.warn(
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+					);
+				} );
 			} );
 		}
 	);
@@ -658,25 +690,38 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can delete the plan', async function() {
-				await new NavBarComponent( driver ).clickProfileLink();
-				await new ProfilePage( driver ).chooseManagePurchases();
-				const purchasesPage = new PurchasesPage( driver );
-				await purchasesPage.dismissGuidedTour();
-				await purchasesPage.selectPersonalPlan();
-				await new ManagePurchasePage( driver ).chooseCancelAndRefund();
-				const cancelPurchasePage = new CancelPurchasePage( driver );
-				await cancelPurchasePage.clickCancelPurchase();
-				return await cancelPurchasePage.completeCancellationSurvey();
+				return ( async () => {
+					await new NavBarComponent( driver ).clickProfileLink();
+					await new ProfilePage( driver ).chooseManagePurchases();
+					const purchasesPage = new PurchasesPage( driver );
+					await purchasesPage.dismissGuidedTour();
+					await purchasesPage.selectPersonalPlan();
+					await new ManagePurchasePage( driver ).chooseCancelAndRefund();
+					const cancelPurchasePage = new CancelPurchasePage( driver );
+					await cancelPurchasePage.clickCancelPurchase();
+					await cancelPurchasePage.completeCancellationSurvey();
+					return await cancelPurchasePage.waitAndDismissSuccessNotice();
+				} )().catch( err => {
+					SlackNotifier.warn(
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+					);
+				} );
 			} );
 
 			test.it( 'Can delete our newly created account', async function() {
-				await new NavBarComponent( driver ).clickProfileLink();
-				await new ProfilePage( driver ).chooseAccountSettings();
-				await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-				const closeAccountPage = await new CloseAccountPage( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				return await new LoggedOutMasterbarComponent( driver ).displayed();
+				return ( async () => {
+					await new NavBarComponent( driver ).clickProfileLink();
+					await new ProfilePage( driver ).chooseAccountSettings();
+					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+					const closeAccountPage = await new CloseAccountPage( driver );
+					await closeAccountPage.chooseCloseAccount();
+					await closeAccountPage.enterAccountNameAndClose( blogName );
+					return await new LoggedOutMasterbarComponent( driver ).displayed();
+				} )().catch( err => {
+					SlackNotifier.warn(
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+					);
+				} );
 			} );
 		}
 	);
@@ -822,9 +867,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return assert( exists, 'The settings menu option does not exist' );
 			} );
 
-			// 'Cancel the domain'
-			test.after( async function() {
-				try {
+			test.it( 'We can cancel the domain', async function() {
+				return ( async () => {
 					await new ReaderPage( driver, true ).displayed();
 					await new NavBarComponent( driver ).clickMySites();
 					await new SideBarComponent( driver ).selectSettings();
@@ -844,11 +888,11 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 					const cancelDomainPage = new CancelDomainPage( driver );
 					return await cancelDomainPage.completeSurveyAndConfirm();
-				} catch ( err ) {
+				} )().catch( err => {
 					SlackNotifier.warn(
-						`There was an error in the hooks that clean up the test domains but since it is cleaning up we really don't care: '${ err }'`
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
 					);
-				}
+				} );
 			} );
 		}
 	);
@@ -998,9 +1042,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await new CheckOutThankyouPage( driver ).displayed();
 			} );
 
-			// 'Cancel the domain'
-			test.after( async function() {
-				try {
+			test.it( 'Can cancel the domain', async function() {
+				return ( async () => {
 					await new NavBarComponent( driver ).clickProfileLink();
 					await new ProfilePage( driver ).chooseManagePurchases();
 
@@ -1013,12 +1056,11 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const cancelPurchasePage = new CancelPurchasePage( driver );
 					await cancelPurchasePage.chooseCancelPlanAndDomain();
 					await cancelPurchasePage.clickCancelPurchase();
-					return await cancelPurchasePage.completeCancellationSurvey();
-				} catch ( err ) {
+				} )().catch( err => {
 					SlackNotifier.warn(
-						`There was an error in the hooks that clean up the test domains but since it is cleaning up we really don't care: '${ err }'`
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
 					);
-				}
+				} );
 			} );
 		}
 	);
@@ -1117,14 +1159,20 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		}
 
 		test.it( 'Can delete our newly created account', async function() {
-			await new ReaderPage( driver, true ).displayed();
-			await new NavBarComponent( driver ).clickProfileLink();
-			await new ProfilePage( driver ).chooseAccountSettings();
-			await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-			const closeAccountPage = await new CloseAccountPage( driver );
-			await closeAccountPage.chooseCloseAccount();
-			await closeAccountPage.enterAccountNameAndClose( blogName );
-			return await new LoggedOutMasterbarComponent( driver ).displayed();
+			return ( async () => {
+				await new ReaderPage( driver, true ).displayed();
+				await new NavBarComponent( driver ).clickProfileLink();
+				await new ProfilePage( driver ).chooseAccountSettings();
+				await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+				const closeAccountPage = await new CloseAccountPage( driver );
+				await closeAccountPage.chooseCloseAccount();
+				await closeAccountPage.enterAccountNameAndClose( blogName );
+				return await new LoggedOutMasterbarComponent( driver ).displayed();
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+				);
+			} );
 		} );
 	} );
 
@@ -1242,13 +1290,19 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			);
 
 			test.it( 'Can delete our newly created account', async function() {
-				await new NavBarComponent( driver ).clickProfileLink();
-				await new ProfilePage( driver ).chooseAccountSettings();
-				await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-				const closeAccountPage = await new CloseAccountPage( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				return await new LoggedOutMasterbarComponent( driver ).displayed();
+				return ( async () => {
+					await new NavBarComponent( driver ).clickProfileLink();
+					await new ProfilePage( driver ).chooseAccountSettings();
+					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+					const closeAccountPage = await new CloseAccountPage( driver );
+					await closeAccountPage.chooseCloseAccount();
+					await closeAccountPage.enterAccountNameAndClose( blogName );
+					return await new LoggedOutMasterbarComponent( driver ).displayed();
+				} )().catch( err => {
+					SlackNotifier.warn(
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+					);
+				} );
 			} );
 		}
 	);
