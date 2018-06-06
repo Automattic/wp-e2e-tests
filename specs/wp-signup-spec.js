@@ -157,7 +157,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.it( 'Can log out and request a magic link', async function() {
 				await driverManager.clearCookiesAndDeleteLocalStorage( driver );
-				return await LoginPage.Visit( driver ).requestMagicLink( emailAddress );
+				const loginPage = await LoginPage.Visit( driver );
+				return await loginPage.requestMagicLink( emailAddress );
 			} );
 
 			test.it( 'Can see email containing magic link', async function() {
