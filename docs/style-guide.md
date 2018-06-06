@@ -110,3 +110,19 @@ test.describe(
 	}
 );
 ```
+
+## Catching errors in a test.it block
+
+Sometimes we don't want a `test.it` block to fail on error - say if we're cleaning up after doing an action and it doesn't matter what happens. As we use async methods using a standard try/catch won't work as the promise itself will still fail. Instead, return an async method that catches the error result:
+```
+test.it( 'Can delete our newly created account', async function() {
+	return ( async () => {
+		const closeAccountPage = await new CloseAccountPage( driver );
+		await closeAccountPage.chooseCloseAccount();
+		await closeAccountPage.enterAccountNameAndClose( blogName );
+		return await new LoggedOutMasterbarComponent( driver ).displayed();
+	} )().catch( err => {
+		SlackNotifier.warn( `There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'` );
+	} );
+} );
+```
