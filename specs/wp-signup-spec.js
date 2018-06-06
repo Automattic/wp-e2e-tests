@@ -81,7 +81,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
-			test.it( 'Can visit the start page', async function() {
+			test.it( 'Can Visit the start page', async function() {
 				return await new StartPage( driver, {
 					visit: true,
 					culture: locale,
@@ -157,7 +157,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.it( 'Can log out and request a magic link', async function() {
 				await driverManager.clearCookiesAndDeleteLocalStorage( driver );
-				return await new LoginPage( driver, true ).requestMagicLink( emailAddress );
+				return await LoginPage.Visit( driver ).requestMagicLink( emailAddress );
 			} );
 
 			test.it( 'Can see email containing magic link', async function() {
@@ -178,7 +178,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				);
 			} );
 
-			test.it( 'Can visit the magic link and we should be logged in', async function() {
+			test.it( 'Can Visit the magic link and we should be logged in', async function() {
 				await driver.get( magicLoginLink );
 				await new MagicLoginPage( driver ).finishLogin();
 				return await new ReaderPage( driver ).displayed();
@@ -192,7 +192,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					return await new LoggedOutMasterbarComponent( driver ).displayed();
+					return await LoggedOutMasterbarComponent.IsExpected( driver ).displayed();
 				} )().catch( err => {
 					SlackNotifier.warn(
 						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
@@ -233,7 +233,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await wPHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
-			test.it( 'Can visit the start page', async function() {
+			test.it( 'Can Visit the start page', async function() {
 				return await new StartPage( driver, {
 					visit: true,
 					culture: locale,
@@ -389,7 +389,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					return await new LoggedOutMasterbarComponent( driver ).displayed();
+					return await LoggedOutMasterbarComponent.IsExpected( driver ).displayed();
 				} )().catch( err => {
 					SlackNotifier.warn(
 						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
@@ -427,7 +427,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await wpHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
-			test.it( 'Can visit the start page', async function() {
+			test.it( 'Can Visit the start page', async function() {
 				return await new StartPage( driver, {
 					visit: true,
 					culture: locale,
@@ -555,7 +555,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					return await new LoggedOutMasterbarComponent( driver ).displayed();
+					return await LoggedOutMasterbarComponent.IsExpected( driver ).displayed();
 				} )().catch( err => {
 					SlackNotifier.warn(
 						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
@@ -588,7 +588,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await wpHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
-			test.it( 'Can visit the start page', async function() {
+			test.it( 'Can Visit the start page', async function() {
 				return await new StartPage( driver, {
 					visit: true,
 					culture: locale,
@@ -716,7 +716,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					return await new LoggedOutMasterbarComponent( driver ).displayed();
+					return await LoggedOutMasterbarComponent.IsExpected( driver ).displayed();
 				} )().catch( err => {
 					SlackNotifier.warn(
 						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
@@ -741,7 +741,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
-			test.it( 'We can visit set the sandbox cookie for payments', async function() {
+			test.it( 'We can Visit set the sandbox cookie for payments', async function() {
 				const wpHomePage = new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
@@ -750,7 +750,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await wpHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
-			test.it( 'Can visit the domains start page', async function() {
+			test.it( 'Can Visit the domains start page', async function() {
 				return await new StartPage( driver, {
 					visit: true,
 					culture: locale,
@@ -922,7 +922,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await wpHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
-			test.it( 'Can visit the start page', async function() {
+			test.it( 'Can Visit the start page', async function() {
 				return await new StartPage( driver, {
 					visit: true,
 					culture: locale,
@@ -1075,7 +1075,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.it( 'Can visit the start page', async function() {
+		test.it( 'Can Visit the start page', async function() {
 			return await new StartPage( driver, {
 				visit: true,
 				culture: locale,
@@ -1167,7 +1167,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				const closeAccountPage = await new CloseAccountPage( driver );
 				await closeAccountPage.chooseCloseAccount();
 				await closeAccountPage.enterAccountNameAndClose( blogName );
-				return await new LoggedOutMasterbarComponent( driver ).displayed();
+				return await LoggedOutMasterbarComponent.IsExpected( driver ).displayed();
 			} )().catch( err => {
 				SlackNotifier.warn(
 					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
@@ -1297,7 +1297,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					return await new LoggedOutMasterbarComponent( driver ).displayed();
+					return await LoggedOutMasterbarComponent.IsExpected( driver ).displayed();
 				} )().catch( err => {
 					SlackNotifier.warn(
 						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`

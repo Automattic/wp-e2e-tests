@@ -139,7 +139,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 		test.it( 'As the invited user, I am no longer an editor on the site', async function() {
 			await driverManager.ensureNotLoggedIn( driver );
-			await new LoginPage( driver, true ).login( newUserName, password );
+			await new LoginPage.Visit( driver ).login( newUserName, password );
 			await new ReaderPage( driver ).displayed();
 
 			await new NavbarComponent( driver ).clickMySites();
@@ -424,7 +424,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 				test.it( 'Can not see the site - see the private site log in page', async function() {
 					await driverManager.ensureNotLoggedIn( driver );
-					await new LoginPage( driver, true ).login( newUserName, password );
+					await LoginPage.Visit( driver ).login( newUserName, password );
 
 					await new ReaderPage( driver, true ).displayed();
 					let displayed = await new PrivateSiteLoginPage( driver, true, siteUrl ).displayed();
@@ -580,7 +580,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			test.it( 'As the invited user, I can now publish a post', async function() {
 				await driverManager.ensureNotLoggedIn( driver );
 
-				await new LoginPage( driver, true ).login( newUserName, password );
+				await LoginPage.Visit( driver ).login( newUserName, password );
 				await new ReaderPage( driver ).displayed();
 				await new NavbarComponent( driver ).clickCreateNewPost();
 
