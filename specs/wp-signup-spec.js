@@ -81,7 +81,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
-			test.it( 'driver the start page', async function() {
+			test.it( 'Can visit the start page', async function() {
 				return await new StartPage( driver, {
 					visit: true,
 					culture: locale,
@@ -753,7 +753,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
-			test.it( 'We can Visit set the sandbox cookie for payments', async function() {
+			test.it( 'We can visit set the sandbox cookie for payments', async function() {
 				const wpHomePage = new WPHomePage( driver, {
 					visit: true,
 					culture: locale,
