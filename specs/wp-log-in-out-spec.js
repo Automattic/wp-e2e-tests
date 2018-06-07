@@ -97,9 +97,7 @@ test.describe(
 				} );
 
 				test.it( 'Can see wordpress.com home when after logging out', async function() {
-					const loggedOutMasterbarComponent = new LoggedOutMasterbarComponent( driver );
-					let displayed = await loggedOutMasterbarComponent.displayed();
-					assert( displayed, "The logged out masterbar isn't displayed after logging out" );
+					return await LoggedOutMasterbarComponent.Expect( driver );
 				} );
 			} );
 		} );

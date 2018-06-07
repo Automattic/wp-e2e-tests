@@ -157,7 +157,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.it( 'Can log out and request a magic link', async function() {
 				await driverManager.clearCookiesAndDeleteLocalStorage( driver );
-				return await new LoginPage( driver, true ).requestMagicLink( emailAddress );
+				const loginPage = await LoginPage.Visit( driver );
+				return await loginPage.requestMagicLink( emailAddress );
 			} );
 
 			test.it( 'Can see email containing magic link', async function() {
@@ -192,10 +193,11 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					return await new LoggedOutMasterbarComponent( driver ).displayed();
+					await LoggedOutMasterbarComponent.Expect( driver );
 				} )().catch( err => {
 					SlackNotifier.warn(
-						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+						{ suppressDuplicateMessages: true }
 					);
 				} );
 			} );
@@ -376,7 +378,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					return await cancelPurchasePage.waitAndDismissSuccessNotice();
 				} )().catch( err => {
 					SlackNotifier.warn(
-						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+						{ suppressDuplicateMessages: true }
 					);
 				} );
 			} );
@@ -389,10 +392,11 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					return await new LoggedOutMasterbarComponent( driver ).displayed();
+					await LoggedOutMasterbarComponent.Expect( driver );
 				} )().catch( err => {
 					SlackNotifier.warn(
-						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+						{ suppressDuplicateMessages: true }
 					);
 				} );
 			} );
@@ -542,7 +546,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					return await cancelPurchasePage.waitAndDismissSuccessNotice();
 				} )().catch( err => {
 					SlackNotifier.warn(
-						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+						{ suppressDuplicateMessages: true }
 					);
 				} );
 			} );
@@ -555,10 +560,11 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					return await new LoggedOutMasterbarComponent( driver ).displayed();
+					await LoggedOutMasterbarComponent.Expect( driver );
 				} )().catch( err => {
 					SlackNotifier.warn(
-						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+						{ suppressDuplicateMessages: true }
 					);
 				} );
 			} );
@@ -703,7 +709,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					return await cancelPurchasePage.waitAndDismissSuccessNotice();
 				} )().catch( err => {
 					SlackNotifier.warn(
-						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+						{ suppressDuplicateMessages: true }
 					);
 				} );
 			} );
@@ -716,10 +723,11 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					return await new LoggedOutMasterbarComponent( driver ).displayed();
+					await LoggedOutMasterbarComponent.Expect( driver );
 				} )().catch( err => {
 					SlackNotifier.warn(
-						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+						{ suppressDuplicateMessages: true }
 					);
 				} );
 			} );
@@ -890,7 +898,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					return await cancelDomainPage.completeSurveyAndConfirm();
 				} )().catch( err => {
 					SlackNotifier.warn(
-						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+						{ suppressDuplicateMessages: true }
 					);
 				} );
 			} );
@@ -1058,7 +1067,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await cancelPurchasePage.clickCancelPurchase();
 				} )().catch( err => {
 					SlackNotifier.warn(
-						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+						{ suppressDuplicateMessages: true }
 					);
 				} );
 			} );
@@ -1280,10 +1290,11 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					return await new LoggedOutMasterbarComponent( driver ).displayed();
+					await LoggedOutMasterbarComponent.Expect( driver );
 				} )().catch( err => {
 					SlackNotifier.warn(
-						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
+						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+						{ suppressDuplicateMessages: true }
 					);
 				} );
 			} );

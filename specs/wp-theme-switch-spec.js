@@ -140,7 +140,7 @@ test.describe(
 					} );
 				} else {
 					test.it( 'Can log in via Jetpack SSO', async function() {
-						let wpAdminLogonPage = new WPAdminLogonPage( driver );
+						const wpAdminLogonPage = await WPAdminLogonPage.Expect( driver );
 						return await wpAdminLogonPage.logonSSO();
 					} );
 
