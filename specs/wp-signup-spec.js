@@ -1157,23 +1157,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				);
 			} );
 		}
-
-		test.it( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				await new ReaderPage( driver, true ).displayed();
-				await new NavBarComponent( driver ).clickProfileLink();
-				await new ProfilePage( driver ).chooseAccountSettings();
-				await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-				const closeAccountPage = await new CloseAccountPage( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				return await new LoggedOutMasterbarComponent( driver ).displayed();
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`
-				);
-			} );
-		} );
 	} );
 
 	test.describe(
