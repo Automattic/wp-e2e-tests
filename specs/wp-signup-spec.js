@@ -193,8 +193,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					const loggedOutMasterbarComponent = await LoggedOutMasterbarComponent.Expect( driver );
-					return await loggedOutMasterbarComponent.displayed();
+					await LoggedOutMasterbarComponent.Expect( driver );
 				} )().catch( err => {
 					SlackNotifier.warn(
 						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
@@ -393,8 +392,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					const loggedOutMasterbarComponent = await LoggedOutMasterbarComponent.Expect( driver );
-					return await loggedOutMasterbarComponent.displayed();
+					await LoggedOutMasterbarComponent.Expect( driver );
 				} )().catch( err => {
 					SlackNotifier.warn(
 						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
@@ -562,8 +560,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					const loggedOutMasterbarComponent = await LoggedOutMasterbarComponent.Expect( driver );
-					return await loggedOutMasterbarComponent.displayed();
+					await LoggedOutMasterbarComponent.Expect( driver );
 				} )().catch( err => {
 					SlackNotifier.warn(
 						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
@@ -726,8 +723,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					const loggedOutMasterbarComponent = await LoggedOutMasterbarComponent.Expect( driver );
-					return await loggedOutMasterbarComponent.displayed();
+					await LoggedOutMasterbarComponent.Expect( driver );
 				} )().catch( err => {
 					SlackNotifier.warn(
 						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
@@ -1294,8 +1290,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					const loggedOutMasterbarComponent = await LoggedOutMasterbarComponent.Expect( driver );
-					return await loggedOutMasterbarComponent.displayed();
+					await LoggedOutMasterbarComponent.Expect( driver );
 				} )().catch( err => {
 					SlackNotifier.warn(
 						`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
