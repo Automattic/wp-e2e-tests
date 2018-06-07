@@ -193,9 +193,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					const loggedOutMasterbarComponent = await LoggedOutMasterbarComponent.IsExpected(
-						driver
-					);
+					const loggedOutMasterbarComponent = await LoggedOutMasterbarComponent.Expect( driver );
 					return await loggedOutMasterbarComponent.displayed();
 				} )().catch( err => {
 					SlackNotifier.warn(
@@ -395,9 +393,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					const loggedOutMasterbarComponent = await LoggedOutMasterbarComponent.IsExpected(
-						driver
-					);
+					const loggedOutMasterbarComponent = await LoggedOutMasterbarComponent.Expect( driver );
 					return await loggedOutMasterbarComponent.displayed();
 				} )().catch( err => {
 					SlackNotifier.warn(
@@ -566,9 +562,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					const loggedOutMasterbarComponent = await LoggedOutMasterbarComponent.IsExpected(
-						driver
-					);
+					const loggedOutMasterbarComponent = await LoggedOutMasterbarComponent.Expect( driver );
 					return await loggedOutMasterbarComponent.displayed();
 				} )().catch( err => {
 					SlackNotifier.warn(
@@ -732,9 +726,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					const loggedOutMasterbarComponent = await LoggedOutMasterbarComponent.IsExpected(
-						driver
-					);
+					const loggedOutMasterbarComponent = await LoggedOutMasterbarComponent.Expect( driver );
 					return await loggedOutMasterbarComponent.displayed();
 				} )().catch( err => {
 					SlackNotifier.warn(
@@ -1302,9 +1294,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const closeAccountPage = await new CloseAccountPage( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
-					const loggedOutMasterbarComponent = await LoggedOutMasterbarComponent.IsExpected(
-						driver
-					);
+					const loggedOutMasterbarComponent = await LoggedOutMasterbarComponent.Expect( driver );
 					return await loggedOutMasterbarComponent.displayed();
 				} )().catch( err => {
 					SlackNotifier.warn(
