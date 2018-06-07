@@ -98,7 +98,9 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can approve connection on the authorization page', async function() {
-			return await new JetpackAuthorizePage( driver ).approveConnection();
+			return await new JetpackAuthorizePage( driver, {
+				overrideABTests: false,
+			} ).approveConnection();
 		} );
 
 		test.it( 'Can select continue on add contact form', async function() {
@@ -176,7 +178,9 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can approve connection on the authorization page', async function() {
-			return await new JetpackAuthorizePage( driver ).approveConnection();
+			return await new JetpackAuthorizePage( driver, {
+				overrideABTests: false,
+			} ).approveConnection();
 		} );
 
 		test.it( 'Can enter address on business address page', async function() {
@@ -351,7 +355,9 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can approve connection on the authorization page', async function() {
-				return await new JetpackAuthorizePage( driver ).approveConnection();
+				return await new JetpackAuthorizePage( driver, {
+					overrideABTests: false,
+				} ).approveConnection();
 			} );
 
 			test.it( 'Can click the free plan button', async function() {

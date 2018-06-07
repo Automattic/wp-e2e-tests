@@ -137,8 +137,9 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can approve connection on the authorization page', async function() {
-			this.jetpackAuthorizePage = new JetpackAuthorizePage( driver );
-			return await this.jetpackAuthorizePage.approveConnection();
+			return await new JetpackAuthorizePage( driver, {
+				overrideABTests: false,
+			} ).approveConnection();
 		} );
 
 		test.it( 'Can click the free plan button', async function() {
@@ -272,7 +273,9 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can start connection flow using JN site', async function() {
-				return await new JetpackConnectPage( driver ).addSiteUrl( jnFlow.url );
+				return await new JetpackConnectPage( driver, { overrideABTests: false } ).addSiteUrl(
+					jnFlow.url
+				);
 			} );
 
 			test.it( 'Can enter the Jetpack credentials and install Jetpack', async function() {
