@@ -738,7 +738,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const expectedCurrencySymbol = '€';
 
 			test.before( async function() {
-				if ( process.env.SKIP_DOMAIN_TESTS ) {
+				if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
 					return this.skip();
 				}
 			} );
@@ -916,7 +916,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const expectedCurrencySymbol = 'C$';
 
 			test.before( async function() {
-				if ( process.env.SKIP_DOMAIN_TESTS ) {
+				if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
 					return this.skip();
 				}
 			} );
