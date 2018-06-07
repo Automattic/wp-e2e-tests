@@ -219,9 +219,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can login via SSO into WP Admin', async function() {
-			await new WPAdminLogonPage( driver, siteName, {
-				visit: true,
-			} ).logonSSO();
+			const wpAdminLogonPage = await WPAdminLogonPage.Visit( driver, siteName );
+			await wpAdminLogonPage.logonSSO();
 			await new JetpackAuthorizePage( driver ).approveSSOConnection();
 			// return new WPAdminDashboardPage( driver );
 		} );
