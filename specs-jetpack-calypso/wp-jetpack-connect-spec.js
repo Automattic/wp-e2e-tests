@@ -215,7 +215,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can log in as Subscriber', async function() {
-			return await LoginPage.Visit( driver ).login( this.accountName, this.password );
+			const loginPage = await LoginPage.Visit( driver );
+			return await loginPage.login( this.accountName, this.password );
 		} );
 
 		test.it( 'Can login via SSO into WP Admin', async function() {
@@ -293,7 +294,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 
 			test.it( 'Can log into WP.com', async function() {
 				const user = dataHelper.getAccountConfig( 'jetpackConnectUser' );
-				return await LoginPage.Expect( driver ).login( user[ 0 ], user[ 1 ] );
+				const loginPage = await LoginPage.Expect( driver );
+				return await loginPage.login( user[ 0 ], user[ 1 ] );
 			} );
 
 			test.it(
@@ -369,7 +371,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 
 			test.it( 'Can log into WP.com', async function() {
 				const user = dataHelper.getAccountConfig( 'jetpackConnectUser' );
-				return await LoginPage.Expect( driver ).login( user[ 0 ], user[ 1 ] );
+				const loginPage = await LoginPage.Expect( driver );
+				return await loginPage.login( user[ 0 ], user[ 1 ] );
 			} );
 
 			test.it( 'Can wait for Jetpack get connected', async function() {
