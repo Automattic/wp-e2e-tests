@@ -90,7 +90,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can see the "About" page, and enter some site information', async function() {
-				const aboutPage = new AboutPage( driver );
+				const aboutPage = await AboutPage.Expect( driver );
 				await aboutPage.enterSiteDetails( blogName, 'Electronics', {
 					share: true,
 				} );
@@ -100,7 +100,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the domains page, and Can search for a blog name, can see and select a free .wordpress address in the results',
 				async function() {
-					const findADomainComponent = new FindADomainComponent( driver );
+					const findADomainComponent = await FindADomainComponent.Expect( driver );
 					await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
 					await findADomainComponent.checkAndRetryForFreeBlogAddresses(
 						expectedBlogAddresses,
@@ -245,19 +245,17 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can see the "About" page, and enter some site information', async function() {
-				const aboutPage = new AboutPage( driver );
-				let displayed = await aboutPage.displayed();
-				await eyesHelper.eyesScreenshot( driver, eyes, 'About Page' );
-				return assert.equal( displayed, true, 'The about page is not displayed' );
+				await AboutPage.Expect( driver );
+				return await eyesHelper.eyesScreenshot( driver, eyes, 'About Page' );
 			} );
 
 			test.it( 'Can accept defaults for about page', async function() {
-				const aboutPage = new AboutPage( driver );
+				const aboutPage = await AboutPage.Expect( driver );
 				await aboutPage.submitForm();
 			} );
 
 			test.it( 'Can then see the domains page ', async function() {
-				const findADomainComponent = new FindADomainComponent( driver );
+				const findADomainComponent = await FindADomainComponent.Expect( driver );
 				const signupStepComponent = new SignupStepComponent( driver );
 				await signupStepComponent.waitForSignupStepLoad();
 				let displayed = await findADomainComponent.displayed();
@@ -268,7 +266,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can search for a blog name, can see and select a free WordPress.com blog address in results',
 				async function() {
-					const findADomainComponent = new FindADomainComponent( driver );
+					const findADomainComponent = await FindADomainComponent.Expect( driver );
 					await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
 					await findADomainComponent.checkAndRetryForFreeBlogAddresses(
 						expectedBlogAddresses,
@@ -442,7 +440,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can see the about page and accept defaults', async function() {
-				return await new AboutPage( driver ).submitForm();
+				const aboutPage = await AboutPage.Expect( driver );
+				return await aboutPage.submitForm();
 			} );
 
 			test.it(
@@ -455,7 +454,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
 				async function() {
-					const findADomainComponent = new FindADomainComponent( driver );
+					const findADomainComponent = await FindADomainComponent.Expect( driver );
 					await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
 					await findADomainComponent.checkAndRetryForFreeBlogAddresses(
 						expectedBlogAddresses,
@@ -605,7 +604,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can see the about page and accept defaults', async function() {
-				return await new AboutPage( driver ).submitForm();
+				const aboutPage = await AboutPage.Expect( driver );
+				return await aboutPage.submitForm();
 			} );
 
 			test.it(
@@ -618,7 +618,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
 				async function() {
-					const findADomainComponent = new FindADomainComponent( driver );
+					const findADomainComponent = await FindADomainComponent.Expect( driver );
 					await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
 					await findADomainComponent.checkAndRetryForFreeBlogAddresses(
 						expectedBlogAddresses,
@@ -945,7 +945,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can see the about page and accept defaults', async function() {
-				return await new AboutPage( driver ).submitForm();
+				const aboutPage = await AboutPage.Expect( driver );
+				return await aboutPage.submitForm();
 			} );
 
 			test.it(
@@ -958,7 +959,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the domains page, and can search for a blog name, can see and select a paid .live address in results ',
 				async function() {
-					const findADomainComponent = new FindADomainComponent( driver );
+					const findADomainComponent = await FindADomainComponent.Expect( driver );
 					await findADomainComponent.searchForBlogNameAndWaitForResults( expectedDomainName );
 					return await findADomainComponent.selectDomainAddress( expectedDomainName );
 				}
@@ -1099,14 +1100,15 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		} );
 
 		test.it( 'Can see the about page and accept defaults', async function() {
-			return await new AboutPage( driver ).submitForm();
+			const aboutPage = await AboutPage.Expect( driver );
+			return await aboutPage.submitForm();
 		} );
 
 		test.it(
 			'Can then see the domains page, and Can search for a blog name, can see and select a free .wordpress address in the results',
 			async function() {
 				const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
-				const findADomainComponent = new FindADomainComponent( driver );
+				const findADomainComponent = await FindADomainComponent.Expect( driver );
 				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
 				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
 					expectedBlogAddresses,
@@ -1214,7 +1216,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
 				async function() {
-					const findADomainComponent = new FindADomainComponent( driver );
+					const findADomainComponent = FindADomainComponent.Expect( driver );
 					await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
 					await findADomainComponent.checkAndRetryForFreeBlogAddresses(
 						expectedBlogAddresses,
