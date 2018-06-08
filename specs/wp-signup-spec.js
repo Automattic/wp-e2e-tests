@@ -82,10 +82,11 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can visit the start page', async function() {
-				return await new StartPage( driver, {
-					visit: true,
-					culture: locale,
-				} ).displayed();
+				const startPage = await StartPage.Visit(
+					driver,
+					StartPage.getStartURL( { culture: locale } )
+				);
+				return await startPage.setABTestControlGroupsInLocalStorage();
 			} );
 
 			test.it( 'Can see the "About" page, and enter some site information', async function() {
@@ -190,7 +191,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await new NavBarComponent( driver ).clickProfileLink();
 					await new ProfilePage( driver ).chooseAccountSettings();
 					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-					const closeAccountPage = await new CloseAccountPage( driver );
+					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
 					await LoggedOutMasterbarComponent.Expect( driver );
@@ -236,10 +237,11 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can visit the start page', async function() {
-				return await new StartPage( driver, {
-					visit: true,
-					culture: locale,
-				} ).displayed();
+				const startPage = await StartPage.Visit(
+					driver,
+					StartPage.getStartURL( { culture: locale } )
+				);
+				return await startPage.setABTestControlGroupsInLocalStorage();
 			} );
 
 			test.it( 'Can see the "About" page, and enter some site information', async function() {
@@ -389,7 +391,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await new NavBarComponent( driver ).clickProfileLink();
 					await new ProfilePage( driver ).chooseAccountSettings();
 					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-					const closeAccountPage = await new CloseAccountPage( driver );
+					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
 					await LoggedOutMasterbarComponent.Expect( driver );
@@ -432,11 +434,11 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can visit the start page', async function() {
-				return await new StartPage( driver, {
-					visit: true,
-					culture: locale,
-					flow: 'premium',
-				} ).displayed();
+				const startPage = await StartPage.Visit(
+					driver,
+					StartPage.getStartURL( { culture: locale, flow: 'premium' } )
+				);
+				await startPage.setABTestControlGroupsInLocalStorage( { flow: 'premium' } );
 			} );
 
 			test.it( 'Can see the about page and accept defaults', async function() {
@@ -557,7 +559,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await new NavBarComponent( driver ).clickProfileLink();
 					await new ProfilePage( driver ).chooseAccountSettings();
 					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-					const closeAccountPage = await new CloseAccountPage( driver );
+					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
 					await LoggedOutMasterbarComponent.Expect( driver );
@@ -595,11 +597,11 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can visit the start page', async function() {
-				return await new StartPage( driver, {
-					visit: true,
-					culture: locale,
-					flow: 'personal',
-				} ).displayed();
+				const startPage = await StartPage.Visit(
+					driver,
+					StartPage.getStartURL( { culture: locale, flow: 'personal' } )
+				);
+				await startPage.setABTestControlGroupsInLocalStorage( { flow: 'personal' } );
 			} );
 
 			test.it( 'Can see the about page and accept defaults', async function() {
@@ -720,7 +722,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await new NavBarComponent( driver ).clickProfileLink();
 					await new ProfilePage( driver ).chooseAccountSettings();
 					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-					const closeAccountPage = await new CloseAccountPage( driver );
+					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
 					await LoggedOutMasterbarComponent.Expect( driver );
@@ -759,13 +761,16 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can visit the domains start page', async function() {
-				return await new StartPage( driver, {
-					visit: true,
-					culture: locale,
-					flow: 'domain-first',
-					domainFirst: true,
-					domainFirstDomain: expectedDomainName,
-				} ).displayed();
+				const startPage = await StartPage.Visit(
+					driver,
+					StartPage.getStartURL( {
+						culture: locale,
+						flow: 'domain-first',
+						domainFirst: true,
+						domainFirstDomain: expectedDomainName,
+					} )
+				);
+				await startPage.setABTestControlGroupsInLocalStorage( { flow: 'domain-first' } );
 			} );
 
 			test.it( 'Can select domain only from the domain first choice page', async function() {
@@ -932,11 +937,11 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can visit the start page', async function() {
-				return await new StartPage( driver, {
-					visit: true,
-					culture: locale,
-					flow: 'business',
-				} ).displayed();
+				const startPage = await StartPage.Visit(
+					driver,
+					StartPage.getStartURL( { culture: locale, flow: 'business' } )
+				);
+				await startPage.setABTestControlGroupsInLocalStorage( { flow: 'business' } );
 			} );
 
 			test.it( 'Can see the about page and accept defaults', async function() {
@@ -1086,10 +1091,11 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		} );
 
 		test.it( 'Can visit the start page', async function() {
-			return await new StartPage( driver, {
-				visit: true,
-				culture: locale,
-			} ).displayed();
+			const startPage = await StartPage.Visit(
+				driver,
+				StartPage.getStartURL( { culture: locale } )
+			);
+			await startPage.setABTestControlGroupsInLocalStorage();
 		} );
 
 		test.it( 'Can see the about page and accept defaults', async function() {
@@ -1287,7 +1293,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await new NavBarComponent( driver ).clickProfileLink();
 					await new ProfilePage( driver ).chooseAccountSettings();
 					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
-					const closeAccountPage = await new CloseAccountPage( driver );
+					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
 					await LoggedOutMasterbarComponent.Expect( driver );
