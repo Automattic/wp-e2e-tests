@@ -256,7 +256,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.it( 'Can then see the domains page ', async function() {
 				const findADomainComponent = await FindADomainComponent.Expect( driver );
-				const signupStepComponent = new SignupStepComponent( driver );
+				const signupStepComponent = await SignupStepComponent.Expect( driver );
 				await signupStepComponent.waitForSignupStepLoad();
 				let displayed = await findADomainComponent.displayed();
 				await eyesHelper.eyesScreenshot( driver, eyes, 'Domains Page' );
@@ -293,7 +293,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.it( 'Can then enter account details', async function() {
 				const createYourAccountPage = new CreateYourAccountPage( driver );
-				const signupStepComponent = new SignupStepComponent( driver );
+				const signupStepComponent = await SignupStepComponent.Expect( driver );
 				await signupStepComponent.waitForSignupStepLoad();
 				await eyesHelper.eyesScreenshot( driver, eyes, 'Create Account Page' );
 				return await createYourAccountPage.enterAccountDetailsAndSubmit(
