@@ -1216,7 +1216,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
 				async function() {
-					const findADomainComponent = FindADomainComponent.Expect( driver );
+					const findADomainComponent = await FindADomainComponent.Expect( driver );
 					await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
 					await findADomainComponent.checkAndRetryForFreeBlogAddresses(
 						expectedBlogAddresses,
