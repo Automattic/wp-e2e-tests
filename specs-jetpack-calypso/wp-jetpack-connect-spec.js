@@ -215,7 +215,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can log in as Subscriber', async function() {
-			const loginPage = await LoginPage.visit( driver );
+			const loginPage = await LoginPage.Visit( driver );
 			return await loginPage.login( this.accountName, this.password );
 		} );
 
