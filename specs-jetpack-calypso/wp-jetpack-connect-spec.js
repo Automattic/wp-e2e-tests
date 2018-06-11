@@ -258,10 +258,9 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				return await new WPHomePage( driver, {
-					visit: true,
-					culture: locale,
-				} ).setSandboxModeForPayments( sandboxCookieValue );
+				const wpHomePage = await WPHomePage.Visit( driver );
+				await wpHomePage.checkURL( locale );
+				return await wpHomePage.setSandboxModeForPayments( sandboxCookieValue );
 			} );
 
 			test.it( 'Can create wporg site', async function() {

@@ -33,7 +33,7 @@ test.describe( `Logged out homepage redirect test @i18n (${ locale })`, function
 		driver = await driverManager.startBrowser();
 
 		// No culture here implies 'en'
-		this.wpHomePage = new WPHomePage( driver, { visit: true } );
-		await this.wpHomePage.checkURL( locale );
+		const wpHomePage = await WPHomePage.Visit( driver );
+		await wpHomePage.checkURL( locale );
 	} );
 } );

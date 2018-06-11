@@ -228,10 +228,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				const wPHomePage = new WPHomePage( driver, {
-					visit: true,
-					culture: locale,
-				} );
+				const wPHomePage = await WPHomePage.Visit( driver );
+				await wPHomePage.checkURL( locale );
 				await eyesHelper.eyesScreenshot( driver, eyes, 'Logged Out Homepage' );
 				await wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 				return await wPHomePage.setCurrencyForPayments( currencyValue );
@@ -421,12 +419,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				const wpHomePage = new WPHomePage( driver, {
-					visit: true,
-					culture: locale,
-				} );
-				await wpHomePage.setSandboxModeForPayments( sandboxCookieValue );
-				return await wpHomePage.setCurrencyForPayments( currencyValue );
+				const wPHomePage = await WPHomePage.Visit( driver );
+				await wPHomePage.checkURL( locale );
+				await wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				return await wPHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
 			test.it( 'Can visit the start page', async function() {
@@ -586,12 +582,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				const wpHomePage = new WPHomePage( driver, {
-					visit: true,
-					culture: locale,
-				} );
-				await wpHomePage.setSandboxModeForPayments( sandboxCookieValue );
-				return await wpHomePage.setCurrencyForPayments( currencyValue );
+				const wPHomePage = await WPHomePage.Visit( driver );
+				await wPHomePage.checkURL( locale );
+				await wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				return await wPHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
 			test.it( 'Can visit the start page', async function() {
@@ -752,12 +746,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can visit set the sandbox cookie for payments', async function() {
-				const wpHomePage = new WPHomePage( driver, {
-					visit: true,
-					culture: locale,
-				} );
-				await wpHomePage.setSandboxModeForPayments( sandboxCookieValue );
-				return await wpHomePage.setCurrencyForPayments( currencyValue );
+				const wPHomePage = await WPHomePage.Visit( driver );
+				await wPHomePage.checkURL( locale );
+				await wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				return await wPHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
 			test.it( 'Can visit the domains start page', async function() {
@@ -930,12 +922,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				const wpHomePage = new WPHomePage( driver, {
-					visit: true,
-					culture: locale,
-				} );
-				await wpHomePage.setSandboxModeForPayments( sandboxCookieValue );
-				return await wpHomePage.setCurrencyForPayments( currencyValue );
+				const wPHomePage = await WPHomePage.Visit( driver );
+				await wPHomePage.checkURL( locale );
+				await wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				return await wPHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
 			test.it( 'Can visit the start page', async function() {
@@ -1203,12 +1193,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				const wpHomePage = new WPHomePage( driver, {
-					visit: true,
-					culture: locale,
-				} );
-				await wpHomePage.setSandboxModeForPayments( sandboxCookieValue );
-				return await wpHomePage.setCurrencyForPayments( currencyValue );
+				const wPHomePage = await WPHomePage.Visit( driver );
+				await wPHomePage.checkURL( locale );
+				await wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+				return await wPHomePage.setCurrencyForPayments( currencyValue );
 			} );
 
 			test.it( 'Can see the themes page and select premium theme ', async function() {
