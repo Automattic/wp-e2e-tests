@@ -212,246 +212,134 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		}
 	);
 
-	test.xdescribe( 'Inviting New User as a Follower: @parallel @jetpack', function() {
-		this.bailSuite( true );
-		const newUserName = 'e2eflowtestingfollower' + new Date().getTime().toString();
-		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
-		let acceptInviteURL = '';
+	test.describe(
+		'Inviting New User as a Viewer of a WordPress.com Private Site: @parallel',
+		function() {
+			this.bailSuite( true );
+			const newUserName = 'e2eflowtestingviewer' + new Date().getTime().toString();
+			const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
+			const siteName = config.get( 'privateSiteForInvites' );
+			const siteUrl = `https://${ siteName }/`;
+			let acceptInviteURL = '';
 
-		test.before( async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
-		} );
+			test.before( async function() {
+				await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			} );
 
-		test.it( 'Can log in and navigate to Invite People page', async function() {
-			await new LoginFlow( driver ).loginAndSelectPeople();
-			await new PeoplePage( driver ).inviteUser();
-		} );
+			test.it( 'As an anonymous user I can not see a private site', async function() {
+				let displayed = await new PrivateSiteLoginPage( driver, true, siteUrl ).displayed();
+				assert( displayed, `The private site log in page was not displayed for:'${ siteUrl }'` );
+			} );
 
-		test.it( 'Can invite a new user as an editor and see its pending', async function() {
-			const invitePeoplePage = new InvitePeoplePage( driver );
-			await invitePeoplePage.inviteNewUser(
-				newInviteEmailAddress,
-				'follower',
-				'Automated e2e testing'
-			);
-			await invitePeoplePage.inviteSent();
-			await invitePeoplePage.backToPeopleMenu();
+			test.it( 'Can log in and navigate to Invite People page', async function() {
+				await new LoginFlow( driver, 'privateSiteUser' ).loginAndSelectPeople();
+				await new PeoplePage( driver ).inviteUser();
+			} );
 
-			const peoplePage = new PeoplePage( driver );
-			await peoplePage.selectInvites();
-			await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
-		} );
+			test.it( 'Can invite a new user as an editor and see its pending', async function() {
+				const invitePeoplePage = new InvitePeoplePage( driver );
+				await invitePeoplePage.inviteNewUser(
+					newInviteEmailAddress,
+					'viewer',
+					'Automated e2e testing'
+				);
+				await invitePeoplePage.inviteSent();
+				await invitePeoplePage.backToPeopleMenu();
 
-		test.it( 'Can see an invitation email received for the invite', async function() {
-			let emails = await emailClient.pollEmailsByRecipient( newInviteEmailAddress );
-			let links = emails[ 0 ].html.links;
-			let link = links.find( l => l.href.includes( 'accept-invite' ) );
-			acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
-			return assert.notEqual(
-				acceptInviteURL,
-				'',
-				'Could not locate the accept invite URL in the invite email'
-			);
-		} );
+				const peoplePage = new PeoplePage( driver );
+				await peoplePage.selectInvites();
+				return await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
+			} );
 
-		test.it( 'Can sign up as new user for the blog via invite link', async function() {
-			await driverManager.ensureNotLoggedIn( driver );
+			test.it( 'Can see an invitation email received for the invite', async function() {
+				let emails = await emailClient.pollEmailsByRecipient( newInviteEmailAddress );
+				let links = emails[ 0 ].html.links;
+				let link = links.find( l => l.href.includes( 'accept-invite' ) );
+				acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
+				return assert.notEqual(
+					acceptInviteURL,
+					'',
+					'Could not locate the accept invite URL in the invite email'
+				);
+			} );
 
-			await driver.get( acceptInviteURL );
-			const acceptInvitePage = new AcceptInvitePage( driver );
+			test.it( 'Can sign up as new user for the blog via invite link', async function() {
+				await driverManager.ensureNotLoggedIn( driver );
 
-			let actualEmailAddress = await acceptInvitePage.getEmailPreFilled();
-			let headerInviteText = await acceptInvitePage.getHeaderInviteText();
-			assert.equal( actualEmailAddress, newInviteEmailAddress );
-			assert( headerInviteText.includes( 'follow' ) );
+				await driver.get( acceptInviteURL );
+				const acceptInvitePage = new AcceptInvitePage( driver );
 
-			await acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
-			return await acceptInvitePage.waitUntilNotVisible();
-		} );
+				let actualEmailAddress = await acceptInvitePage.getEmailPreFilled();
+				let headerInviteText = await acceptInvitePage.getHeaderInviteText();
+				assert.equal( actualEmailAddress, newInviteEmailAddress );
+				assert( headerInviteText.includes( 'view' ) );
 
-		test.it( 'User has been added as a Follower', async function() {
-			let followMessageDisplayed = await new NoticesComponent( driver ).followMessageTitle();
-			assert(
-				followMessageDisplayed.includes( 'following' ),
-				`The follow message '${ followMessageDisplayed }' does not include 'following'`
-			);
-			await new ReaderPage( driver ).displayed();
-		} );
+				await acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
+				return await acceptInvitePage.waitUntilNotVisible();
+			} );
 
-		test.it( 'As the original user, can see new user added to site', async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-			await new LoginFlow( driver ).loginAndSelectPeople();
+			test.it( 'Can see user has been added as a Viewer', async function() {
+				let followMessageDisplayed = await new NoticesComponent( driver ).followMessageTitle();
+				assert.equal(
+					true,
+					followMessageDisplayed.includes( 'viewer' ),
+					`The follow message '${ followMessageDisplayed }' does not include 'viewer'`
+				);
 
-			const peoplePage = new PeoplePage( driver );
-			await peoplePage.selectEmailFollowers();
-			await peoplePage.searchForUser( newUserName );
-			let numberPeopleShown = await peoplePage.numberSearchResults();
-			assert.equal(
-				numberPeopleShown,
-				1,
-				`The number of people search results for '${ newUserName }' was incorrect`
-			);
-		} );
+				await new ReaderPage( driver ).displayed();
+				return await ViewBlogPage.Visit( driver, siteUrl );
+			} );
 
-		test.it( 'Can remove the email follower from the site', async function() {
-			const peoplePage = new PeoplePage( driver );
-			await peoplePage.removeOnlyEmailFollowerDisplayed();
-			await peoplePage.searchForUser( newUserName );
-			let numberPeopleShown = await peoplePage.numberSearchResults();
-			assert.equal(
-				numberPeopleShown,
-				0,
-				`After deletion, the number of email follower search results for '${ newUserName }' was incorrect`
-			);
-			await peoplePage.cancelSearch();
-		} );
+			test.it( 'Can see new user added and can be removed', async function() {
+				await driverManager.ensureNotLoggedIn( driver );
+				await new LoginFlow( driver, 'privateSiteUser' ).loginAndSelectPeople();
 
-		test.it( 'Can remove the follower account from the site', async function() {
-			const peoplePage = new PeoplePage( driver );
-			await peoplePage.selectFollowers();
-			await peoplePage.waitForSearchResults();
-			await peoplePage.removeUserByName( newUserName );
-			await peoplePage.waitForSearchResults();
-			let displayed = await peoplePage.viewerDisplayed( newUserName );
-			assert.equal(
-				displayed,
-				false,
-				`The username of '${ newUserName }' was still displayed as a site viewer`
-			);
-		} );
-	} );
+				const peoplePage = new PeoplePage( driver );
+				await peoplePage.selectViewers();
+				let displayed = await peoplePage.viewerDisplayed( newUserName );
+				assert(
+					displayed,
+					`The username of '${ newUserName }' was not displayed as a site viewer`
+				);
 
-	// Jetpack doesn't have private sites
-	if ( host === 'WPCOM' ) {
-		test.describe(
-			'Inviting New User as a Viewer of a Private Site: @parallel @jetpack',
-			function() {
-				this.bailSuite( true );
-				const newUserName = 'e2eflowtestingviewer' + new Date().getTime().toString();
-				const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
-				const siteName = config.get( 'privateSiteForInvites' );
-				const siteUrl = `https://${ siteName }/`;
-				let acceptInviteURL = '';
+				await peoplePage.removeUserByName( newUserName );
+				await peoplePage.waitForSearchResults();
+				displayed = await peoplePage.viewerDisplayed( newUserName );
+				return assert.equal(
+					displayed,
+					false,
+					`The username of '${ newUserName }' was still displayed as a site viewer`
+				);
+			} );
 
-				test.before( async function() {
-					await driverManager.clearCookiesAndDeleteLocalStorage( driver );
-				} );
+			test.it( 'Can not see the site - see the private site log in page', async function() {
+				await driverManager.ensureNotLoggedIn( driver );
+				const loginPage = await LoginPage.Visit( driver );
+				await loginPage.login( newUserName, password );
 
-				test.it( 'As an anonymous user I can not see a private site', async function() {
-					let displayed = await new PrivateSiteLoginPage( driver, true, siteUrl ).displayed();
-					assert( displayed, `The private site log in page was not displayed for:'${ siteUrl }'` );
-				} );
+				await new ReaderPage( driver, true ).displayed();
+				let displayed = await new PrivateSiteLoginPage( driver, true, siteUrl ).displayed();
+				assert.equal(
+					displayed,
+					true,
+					`The private site log in page was not displayed for:'${ siteUrl }'`
+				);
+			} );
 
-				test.it( 'Can log in and navigate to Invite People page', async function() {
-					await new LoginFlow( driver, 'privateSiteUser' ).loginAndSelectPeople();
-					await new PeoplePage( driver ).inviteUser();
-				} );
+			test.after( async function() {
+				await new LoginFlow( driver, 'privateSiteUser' ).loginAndSelectPeople();
+				const peoplePage = new PeoplePage( driver );
 
-				test.it( 'Can invite a new user as an editor and see its pending', async function() {
-					const invitePeoplePage = new InvitePeoplePage( driver );
-					await invitePeoplePage.inviteNewUser(
-						newInviteEmailAddress,
-						'viewer',
-						'Automated e2e testing'
-					);
-					await invitePeoplePage.inviteSent();
-					await invitePeoplePage.backToPeopleMenu();
-
-					const peoplePage = new PeoplePage( driver );
-					await peoplePage.selectInvites();
-					return await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
-				} );
-
-				test.it( 'Can see an invitation email received for the invite', async function() {
-					let emails = await emailClient.pollEmailsByRecipient( newInviteEmailAddress );
-					let links = emails[ 0 ].html.links;
-					let link = links.find( l => l.href.includes( 'accept-invite' ) );
-					acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
-					return assert.notEqual(
-						acceptInviteURL,
-						'',
-						'Could not locate the accept invite URL in the invite email'
-					);
-				} );
-
-				test.it( 'Can sign up as new user for the blog via invite link', async function() {
-					await driverManager.ensureNotLoggedIn( driver );
-
-					await driver.get( acceptInviteURL );
-					const acceptInvitePage = new AcceptInvitePage( driver );
-
-					let actualEmailAddress = await acceptInvitePage.getEmailPreFilled();
-					let headerInviteText = await acceptInvitePage.getHeaderInviteText();
-					assert.equal( actualEmailAddress, newInviteEmailAddress );
-					assert( headerInviteText.includes( 'view' ) );
-
-					await acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
-					return await acceptInvitePage.waitUntilNotVisible();
-				} );
-
-				test.it( 'Can see user has been added as a Viewer', async function() {
-					let followMessageDisplayed = await new NoticesComponent( driver ).followMessageTitle();
-					assert.equal(
-						true,
-						followMessageDisplayed.includes( 'viewer' ),
-						`The follow message '${ followMessageDisplayed }' does not include 'viewer'`
-					);
-
-					await new ReaderPage( driver ).displayed();
-					return await ViewBlogPage.Visit( driver, siteUrl );
-				} );
-
-				test.it( 'Can see new user added and can be removed', async function() {
-					await driverManager.ensureNotLoggedIn( driver );
-					await new LoginFlow( driver, 'privateSiteUser' ).loginAndSelectPeople();
-
-					const peoplePage = new PeoplePage( driver );
-					await peoplePage.selectViewers();
-					let displayed = await peoplePage.viewerDisplayed( newUserName );
-					assert(
-						displayed,
-						`The username of '${ newUserName }' was not displayed as a site viewer`
-					);
-
+				await peoplePage.selectViewers();
+				let displayed = await peoplePage.viewerDisplayed( newUserName );
+				if ( displayed ) {
 					await peoplePage.removeUserByName( newUserName );
-					await peoplePage.waitForSearchResults();
-					displayed = await peoplePage.viewerDisplayed( newUserName );
-					return assert.equal(
-						displayed,
-						false,
-						`The username of '${ newUserName }' was still displayed as a site viewer`
-					);
-				} );
 
-				test.it( 'Can not see the site - see the private site log in page', async function() {
-					await driverManager.ensureNotLoggedIn( driver );
-					const loginPage = await LoginPage.Visit( driver );
-					await loginPage.login( newUserName, password );
-
-					await new ReaderPage( driver, true ).displayed();
-					let displayed = await new PrivateSiteLoginPage( driver, true, siteUrl ).displayed();
-					assert.equal(
-						displayed,
-						true,
-						`The private site log in page was not displayed for:'${ siteUrl }'`
-					);
-				} );
-
-				test.after( async function() {
-					await new LoginFlow( driver, 'privateSiteUser' ).loginAndSelectPeople();
-					const peoplePage = new PeoplePage( driver );
-
-					await peoplePage.selectViewers();
-					let displayed = await peoplePage.viewerDisplayed( newUserName );
-					if ( displayed ) {
-						await peoplePage.removeUserByName( newUserName );
-
-						return await peoplePage.waitForSearchResults();
-					}
-				} );
-			}
-		);
-	}
+					return await peoplePage.waitForSearchResults();
+				}
+			} );
+		}
+	);
 
 	test.describe(
 		'Inviting New User as an Contributor, then change them to Author: @parallel @jetpack',
