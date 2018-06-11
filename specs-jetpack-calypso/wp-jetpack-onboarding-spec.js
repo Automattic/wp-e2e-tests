@@ -361,7 +361,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can click the free plan button', async function() {
-				return await new PickAPlanPage( driver ).selectFreePlanJetpack();
+				const pickAPlanPage = await PickAPlanPage.Expect( driver );
+				return await pickAPlanPage.selectFreePlanJetpack();
 			} );
 
 			test.it( 'Can navigate to onboarding flow', async function() {

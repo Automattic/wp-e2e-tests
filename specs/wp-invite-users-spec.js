@@ -398,7 +398,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 					);
 
 					await new ReaderPage( driver ).displayed();
-					await new ViewBlogPage( driver, true, siteUrl ).displayed();
+					return await ViewBlogPage.Visit( driver, siteUrl );
 				} );
 
 				test.it( 'Can see new user added and can be removed', async function() {

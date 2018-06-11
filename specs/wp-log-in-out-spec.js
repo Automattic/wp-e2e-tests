@@ -414,8 +414,8 @@ test.describe( `[${ host }] User Agent: (${ screenSize }) @parallel @jetpack`, f
 	} );
 
 	test.it( 'Can see the correct user agent set', async function() {
-		this.wpHomePage = new WPHomePage( driver, { visit: true } );
-		let userAgent = await driver.executeScript( 'return navigator.userAgent;' );
+		await WPHomePage.Visit( driver );
+		const userAgent = await driver.executeScript( 'return navigator.userAgent;' );
 		assert(
 			userAgent.match( 'wp-e2e-tests' ),
 			`User Agent does not contain 'wp-e2e-tests'.  [${ userAgent }]`
