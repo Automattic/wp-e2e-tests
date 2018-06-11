@@ -90,7 +90,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		} );
 
 		test.it( 'Can then see secure payment component', async function() {
-			return await new SecurePaymentComponent( driver ).displayed();
+			return await SecurePaymentComponent.Expect( driver );
 		} );
 
 		test.after( async function() {

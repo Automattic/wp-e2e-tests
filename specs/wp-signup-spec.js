@@ -314,7 +314,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the secure payment page with the premium plan in the cart',
 				async function() {
-					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					await eyesHelper.eyesScreenshot( driver, eyes, 'Secure Payment Page' );
 					const premiumPlanInCart = await securePaymentComponent.containsPremiumPlan();
 					assert.equal( premiumPlanInCart, true, "The cart doesn't contain the premium plan" );
@@ -330,7 +330,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the secure payment page with the expected currency in the cart',
 				async function() {
-					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					if ( driverManager.currentScreenSize() === 'desktop' ) {
 						const totalShown = await securePaymentComponent.cartTotalDisplayed();
 						assert.equal(
@@ -349,7 +349,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.it( 'Can enter and submit test payment details', async function() {
 				const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
-				const securePaymentComponent = new SecurePaymentComponent( driver );
+				const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 				await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
 				await securePaymentComponent.submitPaymentDetails();
 				return await securePaymentComponent.waitForPageToDisappear();
@@ -488,7 +488,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the secure payment page with the expected currency in the cart',
 				async function() {
-					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					if ( driverManager.currentScreenSize() === 'desktop' ) {
 						const totalShown = await securePaymentComponent.cartTotalDisplayed();
 						assert.equal(
@@ -508,7 +508,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the secure payment page with the expected products in the cart',
 				async function() {
-					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					const premiumPlanInCart = await securePaymentComponent.containsPremiumPlan();
 					assert.equal( premiumPlanInCart, true, "The cart doesn't contain the premium plan" );
 					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
@@ -522,7 +522,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.it( 'Can submit test payment details', async function() {
 				const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
-				const securePaymentComponent = new SecurePaymentComponent( driver );
+				const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 				await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
 				await securePaymentComponent.submitPaymentDetails();
 				return await securePaymentComponent.waitForPageToDisappear();
@@ -653,7 +653,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the secure payment page with the expected currency in the cart',
 				async function() {
-					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					if ( driverManager.currentScreenSize() === 'desktop' ) {
 						const totalShown = await securePaymentComponent.cartTotalDisplayed();
 						assert.equal(
@@ -673,7 +673,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the secure payment page with the expected products in the cart',
 				async function() {
-					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					const personalPlanInCart = await securePaymentComponent.containsPersonalPlan();
 					assert.equal( personalPlanInCart, true, "The cart doesn't contain the personal plan" );
 					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
@@ -687,7 +687,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.it( 'Can submit test payment details', async function() {
 				const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
-				const securePaymentComponent = new SecurePaymentComponent( driver );
+				const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 				await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
 				await securePaymentComponent.submitPaymentDetails();
 				return await securePaymentComponent.waitForPageToDisappear();
@@ -810,7 +810,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the secure payment page with the correct products in the cart',
 				async function() {
-					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					const domainInCart = await securePaymentComponent.containsDotLiveDomain();
 					assert.equal( domainInCart, true, "The cart doesn't contain the .live domain product" );
 					const privateWhoISInCart = await securePaymentComponent.containsPrivateWhois();
@@ -831,7 +831,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the secure payment page with the expected currency in the cart',
 				async function() {
-					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					if ( driverManager.currentScreenSize() === 'desktop' ) {
 						const totalShown = await securePaymentComponent.cartTotalDisplayed();
 						assert.equal(
@@ -850,7 +850,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.it( 'Can enter/submit test payment details', async function() {
 				const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
-				const securePaymentComponent = new SecurePaymentComponent( driver );
+				const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 				await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
 				await securePaymentComponent.submitPaymentDetails();
 				await securePaymentComponent.waitForCreditCardPaymentProcessing();
@@ -1000,7 +1000,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the secure payment page with the correct products in the cart',
 				async function() {
-					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					const domainInCart = await securePaymentComponent.containsDotLiveDomain();
 					assert.equal( domainInCart, true, "The cart doesn't contain the .live domain product" );
 					const privateWhoISInCart = await securePaymentComponent.containsPrivateWhois();
@@ -1027,7 +1027,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the secure payment page with the expected currency in the cart',
 				async function() {
-					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					if ( driverManager.currentScreenSize() === 'desktop' ) {
 						const totalShown = await securePaymentComponent.cartTotalDisplayed();
 						assert.equal(
@@ -1046,7 +1046,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.it( 'Can enter/submit test payment details', async function() {
 				const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
-				const securePaymentComponent = new SecurePaymentComponent( driver );
+				const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 				await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
 				await securePaymentComponent.submitPaymentDetails();
 				await securePaymentComponent.waitForCreditCardPaymentProcessing();
@@ -1264,7 +1264,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the secure payment page with the chosen theme in the cart',
 				async function() {
-					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					let products = await securePaymentComponent.getProductsNames();
 					assert(
 						products[ 0 ].search( chosenThemeName ),
@@ -1282,7 +1282,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can then see the secure payment page with the expected currency in the cart',
 				async function() {
-					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					if ( driverManager.currentScreenSize() === 'desktop' ) {
 						const totalShown = await securePaymentComponent.cartTotalDisplayed();
 						assert.equal(

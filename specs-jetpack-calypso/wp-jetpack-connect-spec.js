@@ -302,7 +302,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			test.it(
 				'Can see the secure payment page and enter/submit test payment details',
 				async function() {
-					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					await securePaymentComponent.payWithStoredCardIfPossible( testCreditCardDetails );
 					await securePaymentComponent.waitForCreditCardPaymentProcessing();
 					return await securePaymentComponent.waitForPageToDisappear();

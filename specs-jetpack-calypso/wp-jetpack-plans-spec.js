@@ -2,7 +2,6 @@
 
 import test from 'selenium-webdriver/testing';
 import config from 'config';
-import assert from 'assert';
 
 import * as driverManager from '../lib/driver-manager';
 import * as dataHelper from '../lib/data-helper';
@@ -75,9 +74,7 @@ test.describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function
 		} );
 
 		test.it( 'Can then see secure payment component', async function() {
-			const securePaymentComponent = new SecurePaymentComponent( driver );
-			let displayed = await securePaymentComponent.displayed();
-			assert.equal( displayed, true, 'Could not see the secure payment component' );
+			return await SecurePaymentComponent.Expect( driver );
 		} );
 
 		// Remove all items from basket for clean up
