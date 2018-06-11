@@ -62,7 +62,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can invite a new user as an editor and see its pending', async function() {
-			const invitePeoplePage = new InvitePeoplePage( driver );
+			const invitePeoplePage = await InvitePeoplePage.Expect( driver );
 			await invitePeoplePage.inviteNewUser(
 				newInviteEmailAddress,
 				'editor',
@@ -167,7 +167,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can Invite a New User as an Editor, then revoke the invite', async function() {
-				const invitePeoplePage = new InvitePeoplePage( driver );
+				const invitePeoplePage = await InvitePeoplePage.Expect( driver );
 				await invitePeoplePage.inviteNewUser(
 					newInviteEmailAddress,
 					'editor',
@@ -237,7 +237,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can invite a new user as an editor and see its pending', async function() {
-				const invitePeoplePage = new InvitePeoplePage( driver );
+				const invitePeoplePage = await InvitePeoplePage.Expect( driver );
 				await invitePeoplePage.inviteNewUser(
 					newInviteEmailAddress,
 					'viewer',
@@ -364,7 +364,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can invite a new user as an editor and see its pending', async function() {
-				const invitePeoplePage = new InvitePeoplePage( driver );
+				const invitePeoplePage = await InvitePeoplePage.Expect( driver );
 				await invitePeoplePage.inviteNewUser(
 					newInviteEmailAddress,
 					'contributor',
