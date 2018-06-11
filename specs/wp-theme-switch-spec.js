@@ -52,7 +52,8 @@ test.describe( `[${ host }] Switching Themes: (${ screenSize })`, function() {
 
 		test.describe( 'Can switch free themes', function() {
 			test.it( 'Can select a different free theme', async function() {
-				this.themesPage = new ThemesPage( driver );
+				this.themesPage = await ThemesPage.Expect( driver );
+				await this.themesPage.waitUntilThemesLoaded();
 				await eyesHelper.eyesScreenshot( driver, eyes, 'Themes Page' );
 				await this.themesPage.showOnlyFreeThemes();
 				await this.themesPage.searchFor( 'Twenty F' );
@@ -117,7 +118,8 @@ test.describe(
 
 			test.describe( 'Can switch free themes', function() {
 				test.it( 'Can activate a different free theme', async function() {
-					let themesPage = new ThemesPage( driver );
+					let themesPage = await ThemesPage.Expect( driver );
+					await themesPage.waitUntilThemesLoaded();
 					await themesPage.showOnlyFreeThemes();
 					await themesPage.searchFor( 'Twenty F' );
 					await themesPage.waitForThemeStartingWith( 'Twenty F' );

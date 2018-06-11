@@ -49,7 +49,8 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 		} );
 
 		test.it( 'can search for free themes', async function() {
-			this.themesPage = new ThemesPage( driver );
+			this.themesPage = await ThemesPage.Expect( driver );
+			await this.themesPage.waitUntilThemesLoaded();
 			await this.themesPage.showOnlyFreeThemes();
 			await this.themesPage.searchFor( this.themeSearchName );
 
@@ -119,7 +120,8 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 		} );
 
 		test.it( 'can search for free themes', async function() {
-			this.themesPage = new ThemesPage( driver );
+			this.themesPage = await ThemesPage.Expect( driver );
+			await this.themesPage.waitUntilThemesLoaded();
 			await this.themesPage.showOnlyFreeThemes();
 			await this.themesPage.searchFor( this.themeSearchName );
 			await this.themesPage.waitForThemeStartingWith( this.expectedTheme );

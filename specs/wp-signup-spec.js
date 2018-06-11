@@ -1200,7 +1200,9 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can see the themes page and select premium theme ', async function() {
-				const themesPage = new ThemesPage( driver, true, 'with-theme' );
+				const themesPage = await ThemesPage.Visit( driver, ThemesPage.getStartURL() );
+				await themesPage.waitUntilThemesLoaded();
+				await themesPage.setABTestControlGroupsInLocalStorage( { flow: 'with-theme' } );
 				await themesPage.showOnlyPremiumThemes();
 				chosenThemeName = await themesPage.getFirstThemeName();
 				return await themesPage.selectNewTheme();
