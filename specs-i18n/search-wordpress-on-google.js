@@ -67,7 +67,8 @@ function doGoogleAdSearch( search_params ) {
 		test.it( 'Our landing page exists', async function() {
 			const that = this;
 			let url = await this.searchPage.getAdUrl();
-			that.landingPage = new LandingPage( driver, url );
+			that.landingPage = await LandingPage.Visit( driver, url );
+			return await that.landingPage.checkURL();
 		} );
 
 		test.it( 'Localized string found on landing page', async function() {
