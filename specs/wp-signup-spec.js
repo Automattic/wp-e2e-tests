@@ -117,7 +117,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			);
 
 			test.it( 'Can see the plans page and pick the free plan', async function() {
-				return await new PickAPlanPage( driver ).selectFreePlan();
+				const pickAPlanPage = await PickAPlanPage.Expect( driver );
+				return await pickAPlanPage.selectFreePlan();
 			} );
 
 			test.it( 'Can see the account page and enter account details', async function() {
@@ -284,7 +285,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			);
 
 			test.it( 'Can then see the plans page and select the premium plan ', async function() {
-				const pickAPlanPage = new PickAPlanPage( driver );
+				const pickAPlanPage = await PickAPlanPage.Expect( driver );
 				let displayed = await pickAPlanPage.displayed();
 				await eyesHelper.eyesScreenshot( driver, eyes, 'Plans Page' );
 				assert.equal( displayed, true, 'The pick a plan page is not displayed' );
@@ -1125,7 +1126,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		);
 
 		test.it( 'Can then see the plans page and pick the free plan', async function() {
-			return await new PickAPlanPage( driver ).selectFreePlan();
+			const pickAPlanPage = await PickAPlanPage.Expect( driver );
+			return await pickAPlanPage.selectFreePlan();
 		} );
 
 		test.it( 'Can then enter account details and continue', async function() {
@@ -1232,7 +1234,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			);
 
 			test.it( 'Can then see the plans page and pick the free plan', async function() {
-				return await new PickAPlanPage( driver ).selectFreePlan();
+				const pickAPlanPage = await PickAPlanPage.Expect( driver );
+				return await pickAPlanPage.selectFreePlan();
 			} );
 
 			test.it( 'Can then enter account details and continue', async function() {

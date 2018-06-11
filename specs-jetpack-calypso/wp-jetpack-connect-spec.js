@@ -94,8 +94,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can click the free plan button', async function() {
-			this.pickAPlanPage = new PickAPlanPage( driver );
-			return await this.pickAPlanPage.selectFreePlanJetpack();
+			const pickAPlanPage = await PickAPlanPage.Expect( driver );
+			return await pickAPlanPage.selectFreePlanJetpack();
 		} );
 
 		test.it( 'Has site URL in route', async function( done ) {
@@ -143,8 +143,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can click the free plan button', async function() {
-			this.pickAPlanPage = new PickAPlanPage( driver );
-			return await this.pickAPlanPage.selectFreePlanJetpack();
+			const pickAPlanPage = await PickAPlanPage.Expect( driver );
+			return await pickAPlanPage.selectFreePlanJetpack();
 		} );
 
 		test.it(
@@ -167,7 +167,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select free plan', async function() {
-			return await new PickAPlanPage( driver ).selectFreePlan();
+			const pickAPlanPage = await PickAPlanPage.Expect( driver );
+			return await pickAPlanPage.selectFreePlanJetpack();
 		} );
 
 		test.it( 'Can see Jetpack connect page', async function() {
@@ -426,7 +427,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can click the free plan button', async function() {
-				return await new PickAPlanPage( driver ).selectFreePlanJetpack();
+				const pickAPlanPage = await PickAPlanPage.Expect( driver );
+				return await pickAPlanPage.selectFreePlanJetpack();
 			} );
 
 			test.it( 'Can then see the Jetpack plan page in Calypso', async function() {
