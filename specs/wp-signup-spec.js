@@ -139,7 +139,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			);
 
 			test.it( 'Can see expected Welcome message, URL, title, ', async function() {
-				const viewBlogPage = new ViewBlogPage( driver );
+				const viewBlogPage = await ViewBlogPage.Expect( driver );
 				await viewBlogPage.waitForTrampolineWelcomeMessage();
 				let displayed = await viewBlogPage.isTrampolineWelcomeDisplayed();
 				assert.equal( displayed, true, 'The trampoline welcome message is not displayed' );
@@ -1156,7 +1156,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		test.it(
 			'We are on the view blog page, can see trampoline, our URL and title',
 			async function() {
-				const viewBlogPage = new ViewBlogPage( driver );
+				const viewBlogPage = await ViewBlogPage.Expect( driver );
 				viewBlogPage.waitForTrampolineWelcomeMessage();
 				let displayed = await viewBlogPage.isTrampolineWelcomeDisplayed();
 				return assert.equal( displayed, true, 'The trampoline welcome message is not displayed' );
@@ -1164,7 +1164,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		);
 
 		test.it( 'Can see the correct blog URL displayed', async function() {
-			let url = await new ViewBlogPage( driver ).urlDisplayed();
+			const viewBlogPage = await ViewBlogPage.Expect( driver );
+			const url = await viewBlogPage.urlDisplayed();
 			return assert.equal(
 				url,
 				'https://' + newBlogAddress + '/',
@@ -1174,7 +1175,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 		if ( locale === 'en' ) {
 			test.it( 'Can see the correct blog title displayed', async function() {
-				let title = await new ViewBlogPage( driver ).title();
+				const viewBlogPage = await ViewBlogPage.Expect( driver );
+				const title = await viewBlogPage.title();
 				return assert.equal(
 					title,
 					'Site Title',
