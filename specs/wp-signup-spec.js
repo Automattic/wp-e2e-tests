@@ -1209,7 +1209,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can pick theme design', async function() {
-				return await new ThemeDetailPage( driver ).pickThisDesign();
+				const themeDetailPage = await ThemeDetailPage.Expect( driver );
+				return await themeDetailPage.pickThisDesign();
 			} );
 
 			test.it(

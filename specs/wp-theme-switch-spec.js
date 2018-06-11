@@ -62,7 +62,7 @@ test.describe( `[${ host }] Switching Themes: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see theme details page and open the live demo', async function() {
-				this.themeDetailPage = new ThemeDetailPage( driver );
+				this.themeDetailPage = await ThemeDetailPage.Expect( driver );
 				return await this.themeDetailPage.openLiveDemo();
 			} );
 
@@ -76,7 +76,7 @@ test.describe( `[${ host }] Switching Themes: (${ screenSize })`, function() {
 				async function() {
 					this.themeDialogComponent = new ThemeDialogComponent( driver );
 					await this.themeDialogComponent.goToThemeDetail();
-					this.themeDetailPage = new ThemeDetailPage( driver );
+					this.themeDetailPage = await ThemeDetailPage.Expect( driver );
 					let displayed = await this.themeDetailPage.displayed();
 					await eyesHelper.eyesScreenshot( driver, eyes, 'Theme Details Page' );
 					assert.equal(
