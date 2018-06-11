@@ -58,7 +58,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 		test.it( 'Can log in and navigate to Invite People page', async function() {
 			await new LoginFlow( driver ).loginAndSelectPeople();
-			await new PeoplePage( driver ).inviteUser();
+			const peoplePage = await PeoplePage.Expect( driver );
+			return await peoplePage.inviteUser();
 		} );
 
 		test.it( 'Can invite a new user as an editor and see its pending', async function() {
@@ -71,9 +72,9 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			await invitePeoplePage.inviteSent();
 			await invitePeoplePage.backToPeopleMenu();
 
-			const peoplePage = new PeoplePage( driver );
+			const peoplePage = await PeoplePage.Expect( driver );
 			await peoplePage.selectInvites();
-			await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
+			return await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
 		} );
 
 		test.it( 'Can see an invitation email received for the invite', async function() {
@@ -106,8 +107,10 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		test.it( 'User has been added as Editor', async function() {
 			await new PostsPage( driver ).displayed();
 
-			let invitesMessageTitleDisplayed = await new NoticesComponent( driver ).inviteMessageTitle();
-			assert(
+			const invitesMessageTitleDisplayed = await new NoticesComponent(
+				driver
+			).inviteMessageTitle();
+			return assert(
 				invitesMessageTitleDisplayed.includes( 'Editor' ),
 				`The invite message '${ invitesMessageTitleDisplayed }' does not include 'Editor'`
 			);
@@ -117,10 +120,10 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			await driverManager.ensureNotLoggedIn( driver );
 			await new LoginFlow( driver ).loginAndSelectPeople();
 
-			const peoplePage = new PeoplePage( driver );
+			const peoplePage = await PeoplePage.Expect( driver );
 			await peoplePage.selectTeam();
 			await peoplePage.searchForUser( newUserName );
-			let numberPeopleShown = await peoplePage.numberSearchResults();
+			const numberPeopleShown = await peoplePage.numberSearchResults();
 			assert.equal(
 				numberPeopleShown,
 				1,
@@ -129,8 +132,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 			await peoplePage.selectOnlyPersonDisplayed();
 			await new EditTeamMemberPage( driver ).removeUserAndDeleteContent();
-			let displayed = await peoplePage.successNoticeDisplayed();
-			assert.equal(
+			const displayed = await peoplePage.successNoticeDisplayed();
+			return assert.equal(
 				displayed,
 				true,
 				'The deletion successful notice was not shown on the people page.'
@@ -144,8 +147,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			await new ReaderPage( driver ).displayed();
 
 			await new NavbarComponent( driver ).clickMySites();
-			let displayed = await new NoSitesComponent( driver ).displayed();
-			assert( displayed, 'The no sites page is not displayed' );
+			const displayed = await new NoSitesComponent( driver ).displayed();
+			return assert( displayed, 'The no sites page is not displayed' );
 		} );
 	} );
 
@@ -158,12 +161,13 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			let acceptInviteURL = '';
 
 			test.before( async function() {
-				await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			} );
 
 			test.it( 'Can log in and navigate to Invite People page', async function() {
 				await new LoginFlow( driver ).loginAndSelectPeople();
-				await new PeoplePage( driver ).inviteUser();
+				const peoplePage = await PeoplePage.Expect( driver );
+				return await peoplePage.inviteUser();
 			} );
 
 			test.it( 'Can Invite a New User as an Editor, then revoke the invite', async function() {
@@ -176,7 +180,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await invitePeoplePage.inviteSent();
 				await invitePeoplePage.backToPeopleMenu();
 
-				const peoplePage = new PeoplePage( driver );
+				const peoplePage = await PeoplePage.Expect( driver );
 				await peoplePage.selectInvites();
 				await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
 
@@ -207,7 +211,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await new AcceptInvitePage( driver ).displayed();
 
 				let displayed = await new InviteErrorPage( driver ).inviteErrorTitleDisplayed();
-				assert( displayed, 'The invite was not successfully revoked' );
+				return assert( displayed, 'The invite was not successfully revoked' );
 			} );
 		}
 	);
@@ -223,17 +227,21 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			let acceptInviteURL = '';
 
 			test.before( async function() {
-				await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			} );
 
 			test.it( 'As an anonymous user I can not see a private site', async function() {
 				let displayed = await new PrivateSiteLoginPage( driver, true, siteUrl ).displayed();
-				assert( displayed, `The private site log in page was not displayed for:'${ siteUrl }'` );
+				return assert(
+					displayed,
+					`The private site log in page was not displayed for:'${ siteUrl }'`
+				);
 			} );
 
 			test.it( 'Can log in and navigate to Invite People page', async function() {
 				await new LoginFlow( driver, 'privateSiteUser' ).loginAndSelectPeople();
-				await new PeoplePage( driver ).inviteUser();
+				const peoplePage = await PeoplePage.Expect( driver );
+				return await peoplePage.inviteUser();
 			} );
 
 			test.it( 'Can invite a new user as an editor and see its pending', async function() {
@@ -246,7 +254,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await invitePeoplePage.inviteSent();
 				await invitePeoplePage.backToPeopleMenu();
 
-				const peoplePage = new PeoplePage( driver );
+				const peoplePage = await PeoplePage.Expect( driver );
 				await peoplePage.selectInvites();
 				return await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
 			} );
@@ -294,7 +302,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await driverManager.ensureNotLoggedIn( driver );
 				await new LoginFlow( driver, 'privateSiteUser' ).loginAndSelectPeople();
 
-				const peoplePage = new PeoplePage( driver );
+				const peoplePage = await PeoplePage.Expect( driver );
 				await peoplePage.selectViewers();
 				let displayed = await peoplePage.viewerDisplayed( newUserName );
 				assert(
@@ -328,7 +336,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 			test.after( async function() {
 				await new LoginFlow( driver, 'privateSiteUser' ).loginAndSelectPeople();
-				const peoplePage = new PeoplePage( driver );
+				const peoplePage = await PeoplePage.Expect( driver );
 
 				await peoplePage.selectViewers();
 				let displayed = await peoplePage.viewerDisplayed( newUserName );
@@ -355,12 +363,13 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			let acceptInviteURL = '';
 
 			test.before( async function() {
-				await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			} );
 
 			test.it( 'Can log in and navigate to Invite People page', async function() {
 				await new LoginFlow( driver ).loginAndSelectPeople();
-				await new PeoplePage( driver ).inviteUser();
+				const peoplePage = await PeoplePage.Expect( driver );
+				return await peoplePage.inviteUser();
 			} );
 
 			test.it( 'Can invite a new user as an editor and see its pending', async function() {
@@ -373,9 +382,9 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await invitePeoplePage.inviteSent();
 				await invitePeoplePage.backToPeopleMenu();
 
-				const peoplePage = new PeoplePage( driver );
+				const peoplePage = await PeoplePage.Expect( driver );
 				await peoplePage.selectInvites();
-				await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
+				return await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
 			} );
 
 			test.it( 'Can see an invitation email received for the invite', async function() {
@@ -440,7 +449,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			test.it( 'As the original user, can see new user added to site', async function() {
 				await driverManager.ensureNotLoggedIn( driver );
 				await new LoginFlow( driver ).loginAndSelectPeople();
-				const peoplePage = new PeoplePage( driver );
+				const peoplePage = await PeoplePage.Expect( driver );
 				await peoplePage.selectTeam();
 				await peoplePage.searchForUser( newUserName );
 				let numberPeopleShown = await peoplePage.numberSearchResults();
@@ -454,7 +463,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			test.it(
 				'As the original user, I can change the contributor user to an author user',
 				async function() {
-					const peoplePage = new PeoplePage( driver );
+					const peoplePage = await PeoplePage.Expect( driver );
 
 					await peoplePage.selectOnlyPersonDisplayed();
 					const editTeamMemberPage = new EditTeamMemberPage( driver );
