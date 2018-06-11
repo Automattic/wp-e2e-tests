@@ -39,7 +39,6 @@ import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
 import NavBarComponent from '../lib/components/navbar-component';
 import SideBarComponent from '../lib/components/sidebar-component';
-import SignupStepComponent from '../lib/components/signup-step-component.js';
 import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component';
 
 import * as SlackNotifier from '../lib/slack-notifier';
@@ -122,7 +121,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can see the account page and enter account details', async function() {
-				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+				const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+				return await createYourAccountPage.enterAccountDetailsAndSubmit(
 					emailAddress,
 					blogName,
 					passwordForTestAccounts
@@ -257,8 +257,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.it( 'Can then see the domains page ', async function() {
 				const findADomainComponent = await FindADomainComponent.Expect( driver );
-				const signupStepComponent = await SignupStepComponent.Expect( driver );
-				await signupStepComponent.waitForSignupStepLoad();
 				let displayed = await findADomainComponent.displayed();
 				await eyesHelper.eyesScreenshot( driver, eyes, 'Domains Page' );
 				return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
@@ -293,9 +291,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can then enter account details', async function() {
-				const createYourAccountPage = new CreateYourAccountPage( driver );
-				const signupStepComponent = await SignupStepComponent.Expect( driver );
-				await signupStepComponent.waitForSignupStepLoad();
+				const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
 				await eyesHelper.eyesScreenshot( driver, eyes, 'Create Account Page' );
 				return await createYourAccountPage.enterAccountDetailsAndSubmit(
 					emailAddress,
@@ -471,7 +467,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			);
 
 			test.it( 'Can see the account details page and enter account details', async function() {
-				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+				const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+				return await createYourAccountPage.enterAccountDetailsAndSubmit(
 					emailAddress,
 					blogName,
 					passwordForTestAccounts
@@ -635,7 +632,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			);
 
 			test.it( 'Can see the account details page and enter account details', async function() {
-				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+				const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+				return await createYourAccountPage.enterAccountDetailsAndSubmit(
 					emailAddress,
 					blogName,
 					passwordForTestAccounts
@@ -779,7 +777,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can then enter account details', async function() {
-				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+				const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+				return await createYourAccountPage.enterAccountDetailsAndSubmit(
 					emailAddress,
 					siteName,
 					passwordForTestAccounts
@@ -967,7 +966,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			);
 
 			test.it( 'Can then enter account details and continue', async function() {
-				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+				const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+				return await createYourAccountPage.enterAccountDetailsAndSubmit(
 					emailAddress,
 					siteName,
 					passwordForTestAccounts
@@ -1132,7 +1132,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 		test.it( 'Can then enter account details and continue', async function() {
 			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-			return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+			return await createYourAccountPage.enterAccountDetailsAndSubmit(
 				emailAddress,
 				blogName,
 				passwordForTestAccounts
@@ -1239,7 +1240,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can then enter account details and continue', async function() {
-				return await new CreateYourAccountPage( driver ).enterAccountDetailsAndSubmit(
+				const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+				return await createYourAccountPage.enterAccountDetailsAndSubmit(
 					emailAddress,
 					blogName,
 					passwordForTestAccounts
