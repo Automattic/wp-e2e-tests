@@ -132,7 +132,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				"Can see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
 				async function() {
-					const signupProcessingPage = new SignupProcessingPage( driver );
+					const signupProcessingPage = await SignupProcessingPage.Expect( driver );
 					await signupProcessingPage.waitForContinueButtonToBeEnabled();
 					return signupProcessingPage.continueAlong();
 				}
@@ -306,7 +306,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					if ( global.browserName === 'Internet Explorer' ) {
 						return;
 					}
-					return await new SignupProcessingPage( driver ).waitToDisappear();
+					const signupProcessingPage = await SignupProcessingPage.Expect( driver );
+					return await signupProcessingPage.waitToDisappear();
 				}
 			);
 
@@ -478,7 +479,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				"Can then see the sign up processing page and it will finish and show a 'Continue' button, which is clicked",
 				async function() {
-					const signupProcessingPage = new SignupProcessingPage( driver );
+					const signupProcessingPage = await SignupProcessingPage.Expect( driver );
 					await signupProcessingPage.waitForContinueButtonToBeEnabled();
 					return await signupProcessingPage.continueAlong();
 				}
@@ -643,7 +644,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				"Can then see the sign up processing page and it will finish and show a 'Continue' button, which is clicked",
 				async function() {
-					const signupProcessingPage = new SignupProcessingPage( driver );
+					const signupProcessingPage = await SignupProcessingPage.Expect( driver );
 					await signupProcessingPage.waitForContinueButtonToBeEnabled();
 					return await signupProcessingPage.continueAlong();
 				}
@@ -791,7 +792,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					if ( global.browserName === 'Internet Explorer' ) {
 						return;
 					}
-					return await new SignupProcessingPage( driver ).waitToDisappear();
+					const signupProcessingPage = await SignupProcessingPage.Expect( driver );
+					return await signupProcessingPage.waitToDisappear();
 				}
 			);
 
@@ -980,7 +982,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					if ( global.browserName === 'Internet Explorer' ) {
 						return;
 					}
-					return await new SignupProcessingPage( driver ).waitToDisappear();
+					const signupProcessingPage = await SignupProcessingPage.Expect( driver );
+					return await signupProcessingPage.waitToDisappear();
 				}
 			);
 
@@ -1143,7 +1146,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		test.it(
 			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
 			async function() {
-				const signupProcessingPage = new SignupProcessingPage( driver );
+				await SignupProcessingPage.hideFloatiesinIE11( driver );
+				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
 				await signupProcessingPage.waitForContinueButtonToBeEnabled();
 				return await signupProcessingPage.continueAlong();
 			}
@@ -1251,7 +1255,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
 				async function() {
-					const signupProcessingPage = new SignupProcessingPage( driver );
+					const signupProcessingPage = await SignupProcessingPage.Expect( driver );
 					await signupProcessingPage.waitForContinueButtonToBeEnabled();
 					return await signupProcessingPage.continueAlong();
 				}
