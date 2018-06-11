@@ -183,7 +183,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.it( 'Can visit the magic link and we should be logged in', async function() {
 				await driver.get( magicLoginLink );
-				await new MagicLoginPage( driver ).finishLogin();
+				const magicLoginPage = await MagicLoginPage.Expect( driver );
+				await magicLoginPage.finishLogin();
 				return await new ReaderPage( driver ).displayed();
 			} );
 
