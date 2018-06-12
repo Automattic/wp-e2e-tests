@@ -368,7 +368,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	test.describe.only( 'Basic Public Post @canary @parallel @jetpack', function() {
+	test.describe( 'Basic Public Post @canary @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', async function() {
