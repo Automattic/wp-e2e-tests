@@ -185,9 +185,9 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
 
 				await peoplePage.goToRevokeInvitePage( newInviteEmailAddress );
-				const revokePage = new RevokePage( driver );
-				await revokePage.revokeUser();
 
+				const revokePage = await RevokePage.Expect( driver );
+				await revokePage.revokeUser();
 				let sent = await revokePage.revokeSent();
 				return assert( sent, 'The sent confirmation message was not displayed' );
 			} );
@@ -210,7 +210,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await driver.get( acceptInviteURL );
 				await AcceptInvitePage.Expect( driver );
 
-				let displayed = await new InviteErrorPage( driver ).inviteErrorTitleDisplayed();
+				const inviteErrorPage = await InviteErrorPage.Expect( driver );
+				let displayed = await inviteErrorPage.inviteErrorTitleDisplayed();
 				return assert( displayed, 'The invite was not successfully revoked' );
 			} );
 		}
