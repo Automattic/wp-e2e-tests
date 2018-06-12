@@ -19,7 +19,7 @@ import WPHomePage from '../lib/pages/wp-home-page';
 // import MagicLoginPage from '../lib/pages/magic-login-page';
 // import LoginPage from '../lib/pages/login-page';
 
-import NavbarComponent from '../lib/components/navbar-component.js';
+import NavBarComponent from '../lib/components/nav-bar-component.js';
 import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component';
 
 import LoginFlow from '../lib/flows/login-flow.js';
@@ -82,7 +82,7 @@ test.describe(
 
 			test.describe( 'Can Log Out', function() {
 				test.it( 'Can view profile to log out', async function() {
-					let navbarComponent = new NavbarComponent( driver );
+					let navbarComponent = await NavBarComponent.Expect( driver );
 					await navbarComponent.clickProfileLink();
 				} );
 

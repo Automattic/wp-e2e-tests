@@ -9,7 +9,7 @@ import LoginFlow from '../lib/flows/login-flow.js';
 import ReaderPage from '../lib/pages/reader-page.js';
 import ReaderManagePage from '../lib/pages/reader-manage-page.js';
 
-import NavbarComponent from '../lib/components/navbar-component.js';
+import NavBarComponent from '../lib/components/nav-bar-component.js';
 import NotificationsComponent from '../lib/components/notifications-component.js';
 
 import * as driverManager from '../lib/driver-manager.js';
@@ -85,7 +85,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 					'Can delete the new comment (and wait for UNDO grace period so it is actually deleted)',
 					async function() {
 						await eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
-						this.navBarComponent = await NavbarComponent.Expect( driver );
+						this.navBarComponent = await NavBarComponent.Expect( driver );
 						await this.navBarComponent.openNotifications();
 						this.notificationsComponent = new NotificationsComponent( driver );
 						await this.notificationsComponent.selectCommentByText( this.comment );

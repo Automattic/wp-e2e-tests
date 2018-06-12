@@ -20,7 +20,7 @@ import PrivateSiteLoginPage from '../lib/pages/private-site-login-page.js';
 import EditorPage from '../lib/pages/editor-page.js';
 
 import NoticesComponent from '../lib/components/notices-component.js';
-import NavbarComponent from '../lib/components/navbar-component.js';
+import NavBarComponent from '../lib/components/nav-bar-component.js';
 import NoSitesComponent from '../lib/components/no-sites-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
 
@@ -146,9 +146,9 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			await loginPage.login( newUserName, password );
 			await ReaderPage.Expect( driver );
 
-			await new NavbarComponent( driver ).clickMySites();
-			const displayed = await new NoSitesComponent( driver ).displayed();
-			return assert( displayed, 'The no sites page is not displayed' );
+			const navBarComponent = await NavBarComponent.Expect( driver );
+			await navBarComponent.clickMySites();
+			return await NoSitesComponent.Expect( driver );
 		} );
 	} );
 
@@ -427,7 +427,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			} );
 
 			test.it( 'New user can create a new post', async function() {
-				const navbarComponent = new NavbarComponent( driver );
+				const navbarComponent = await NavBarComponent.Expect( driver );
 				await navbarComponent.dismissGuidedTours();
 				await navbarComponent.clickCreateNewPost();
 
@@ -483,7 +483,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				const loginPage = await LoginPage.Visit( driver );
 				await loginPage.login( newUserName, password );
 				await ReaderPage.Expect( driver );
-				await new NavbarComponent( driver ).clickCreateNewPost();
+				const navBarComponent = await NavBarComponent.Expect( driver );
+				await navBarComponent.clickCreateNewPost();
 
 				const editorPage = new EditorPage( driver );
 				let urlDisplayed = await driver.getCurrentUrl();

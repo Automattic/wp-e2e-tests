@@ -15,7 +15,7 @@ import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
 import ShoppingCartWidgetComponent from '../lib/components/shopping-cart-widget-component.js';
 import SidebarComponent from '../lib/components/sidebar-component.js';
-import NavbarComponent from '../lib/components/navbar-component.js';
+import NavBarComponent from '../lib/components/nav-bar-component.js';
 import MyOwnDomainPage from '../lib/pages/domain-my-own-page';
 import MapADomainComponent from '../lib/components/map-a-domain-component';
 import MapADomainPage from '../lib/pages/domain-map-page';
@@ -96,7 +96,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		test.after( async function() {
 			// Empty the cart
 			await ReaderPage.Visit( driver );
-			const navBarComponent = await NavbarComponent.Expect( driver );
+			const navBarComponent = await NavBarComponent.Expect( driver );
 			await navBarComponent.clickMySites();
 			await new StatsPage( driver, true ).displayed();
 			await new SidebarComponent( driver ).selectDomains();
@@ -162,7 +162,8 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		test.after( async function() {
 			// Empty the cart
 			await ReaderPage.Visit( driver );
-			await new NavbarComponent( driver ).clickMySites();
+			const navBarComponent = await NavBarComponent.Expect( driver );
+			await navBarComponent.clickMySites();
 			await new StatsPage( driver, true ).displayed();
 			await new SidebarComponent( driver ).selectDomains();
 			await new DomainsPage( driver ).displayed();

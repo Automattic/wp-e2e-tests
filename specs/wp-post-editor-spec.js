@@ -17,7 +17,7 @@ import ActivityPage from '../lib/pages/stats/activity-page';
 import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
-import NavbarComponent from '../lib/components/navbar-component.js';
+import NavBarComponent from '../lib/components/nav-bar-component.js';
 import PostPreviewComponent from '../lib/components/post-preview-component.js';
 import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component';
@@ -447,7 +447,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 		test.it( 'Can see the post in the Activity log', async function() {
 			await ReaderPage.Visit( driver );
-			await new NavbarComponent( driver ).clickMySites();
+			const navBarComponent = await NavBarComponent.Expect( driver );
+			await navBarComponent.clickMySites();
 			let sidebarComponent = new SidebarComponent( driver );
 			await sidebarComponent.ensureSidebarMenuVisible();
 			await sidebarComponent.selectStats();
@@ -1146,7 +1147,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			test.describe( 'Edit the post via posts', function() {
 				test.it( 'Can view the posts list', async function() {
 					this.readerPage = await ReaderPage.Visit( driver );
-					this.navbarComponent = new NavbarComponent( driver );
+					this.navbarComponent = await NavBarComponent.Expect( driver );
 					await this.navbarComponent.clickMySites();
 					const jetpackSiteName = dataHelper.getJetpackSiteName();
 					this.sidebarComponent = new SidebarComponent( driver );
