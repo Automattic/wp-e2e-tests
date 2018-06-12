@@ -231,11 +231,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			} );
 
 			test.it( 'As an anonymous user I can not see a private site', async function() {
-				let displayed = await new PrivateSiteLoginPage( driver, true, siteUrl ).displayed();
-				return assert(
-					displayed,
-					`The private site log in page was not displayed for:'${ siteUrl }'`
-				);
+				return await new PrivateSiteLoginPage.Visit( driver, siteUrl );
 			} );
 
 			test.it( 'Can log in and navigate to Invite People page', async function() {
@@ -327,12 +323,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await loginPage.login( newUserName, password );
 
 				await ReaderPage.Expect( driver );
-				let displayed = await new PrivateSiteLoginPage( driver, true, siteUrl ).displayed();
-				assert.equal(
-					displayed,
-					true,
-					`The private site log in page was not displayed for:'${ siteUrl }'`
-				);
+				return await PrivateSiteLoginPage.Visit( driver, siteUrl );
 			} );
 
 			test.after( async function() {
