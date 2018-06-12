@@ -132,7 +132,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 
 		test.it( 'Can open the editor media modal', async function() {
 			await this.editorPage.chooseInsertMediaOption();
-			await this.editorPage.selectImageByNumber( 0 );
+			await this.editorPage.selectFirstImage();
 			await eyesHelper.eyesScreenshot( driver, eyes, 'Editor Media Modal' );
 		} );
 
