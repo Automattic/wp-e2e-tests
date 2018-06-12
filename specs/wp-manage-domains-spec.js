@@ -96,7 +96,8 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		test.after( async function() {
 			// Empty the cart
 			await ReaderPage.Visit( driver );
-			await new NavbarComponent( driver ).clickMySites();
+			const navBarComponent = await NavbarComponent.Expect( driver );
+			await navBarComponent.clickMySites();
 			await new StatsPage( driver, true ).displayed();
 			await new SidebarComponent( driver ).selectDomains();
 			await new DomainsPage( driver ).displayed();

@@ -44,7 +44,7 @@ test.describe(
 		test.before( async function() {
 			this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
 			await this.loginFlow.login();
-			this.navBarComponent = new NavBarComponent( driver );
+			this.navBarComponent = await NavBarComponent.Expect( driver );
 			await this.navBarComponent.clickMySites();
 		} );
 

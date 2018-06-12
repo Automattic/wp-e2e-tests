@@ -85,7 +85,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 					'Can delete the new comment (and wait for UNDO grace period so it is actually deleted)',
 					async function() {
 						await eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
-						this.navBarComponent = new NavbarComponent( driver );
+						this.navBarComponent = await NavbarComponent.Expect( driver );
 						await this.navBarComponent.openNotifications();
 						this.notificationsComponent = new NotificationsComponent( driver );
 						await this.notificationsComponent.selectCommentByText( this.comment );
