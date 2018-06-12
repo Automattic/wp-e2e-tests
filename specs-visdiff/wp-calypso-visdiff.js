@@ -116,7 +116,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can view the blog posts list', async function() {
-			this.postsPage = new PostsPage( driver );
+			this.postsPage = await PostsPage.Expect( driver );
 			await this.postsPage.waitForPosts();
 			await eyesHelper.eyesScreenshot( driver, eyes, 'Blog Posts List' );
 		} );

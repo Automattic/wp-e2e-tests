@@ -105,7 +105,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 
 		test.it( 'User has been added as Editor', async function() {
-			await new PostsPage( driver ).displayed();
+			await PostsPage.Expect( driver );
 
 			const invitesMessageTitleDisplayed = await new NoticesComponent(
 				driver
@@ -416,7 +416,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see a notice welcoming the new user as an contributor', async function() {
-				await new PostsPage( driver );
+				await PostsPage.Expect( driver );
 				let invitesMessageTitleDisplayed = await new NoticesComponent(
 					driver
 				).inviteMessageTitle();

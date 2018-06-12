@@ -1099,8 +1099,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can then see the Posts page with a confirmation message', async function() {
-				const postsPage = new PostsPage( driver );
-				let displayed = await postsPage.successNoticeDisplayed();
+				const postsPage = await PostsPage.Expect( driver );
+				const displayed = await postsPage.successNoticeDisplayed();
 				return assert.equal(
 					displayed,
 					true,
@@ -1154,7 +1154,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						await this.sidebarComponent.selectSite( jetpackSiteName );
 					}
 					await this.sidebarComponent.selectPosts();
-					return ( this.postsPage = new PostsPage( driver ) );
+					return ( this.postsPage = await PostsPage.Expect( driver ) );
 				} );
 
 				test.it( 'Can see and edit our new post', async function() {
