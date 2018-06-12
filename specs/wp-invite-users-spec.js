@@ -107,9 +107,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		test.it( 'User has been added as Editor', async function() {
 			await PostsPage.Expect( driver );
 
-			const invitesMessageTitleDisplayed = await new NoticesComponent(
-				driver
-			).inviteMessageTitle();
+			const noticesComponent = await NoticesComponent.Expect( driver );
+			const invitesMessageTitleDisplayed = await noticesComponent.inviteMessageTitle();
 			return assert(
 				invitesMessageTitleDisplayed.includes( 'Editor' ),
 				`The invite message '${ invitesMessageTitleDisplayed }' does not include 'Editor'`
@@ -288,7 +287,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see user has been added as a Viewer', async function() {
-				let followMessageDisplayed = await new NoticesComponent( driver ).followMessageTitle();
+				const noticesComponent = await NoticesComponent.Expect( driver );
+				let followMessageDisplayed = await noticesComponent.followMessageTitle();
 				assert.equal(
 					true,
 					followMessageDisplayed.includes( 'viewer' ),
@@ -417,9 +417,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 			test.it( 'Can see a notice welcoming the new user as an contributor', async function() {
 				await PostsPage.Expect( driver );
-				let invitesMessageTitleDisplayed = await new NoticesComponent(
-					driver
-				).inviteMessageTitle();
+				const noticesComponent = await NoticesComponent.Expect( driver );
+				let invitesMessageTitleDisplayed = await noticesComponent.inviteMessageTitle();
 				return assert(
 					invitesMessageTitleDisplayed.includes( 'Contributor' ),
 					`The invite message '${ invitesMessageTitleDisplayed }' does not include 'Contributor'`
