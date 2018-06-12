@@ -93,7 +93,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			await driverManager.ensureNotLoggedIn( driver );
 
 			await driver.get( acceptInviteURL );
-			const acceptInvitePage = new AcceptInvitePage( driver );
+			const acceptInvitePage = await AcceptInvitePage.Expect( driver );
 
 			let actualEmailAddress = await acceptInvitePage.getEmailPreFilled();
 			let headerInviteText = await acceptInvitePage.getHeaderInviteText();
@@ -208,7 +208,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await driverManager.ensureNotLoggedIn( driver );
 
 				await driver.get( acceptInviteURL );
-				await new AcceptInvitePage( driver ).displayed();
+				await AcceptInvitePage.Expect( driver );
 
 				let displayed = await new InviteErrorPage( driver ).inviteErrorTitleDisplayed();
 				return assert( displayed, 'The invite was not successfully revoked' );
@@ -275,7 +275,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await driverManager.ensureNotLoggedIn( driver );
 
 				await driver.get( acceptInviteURL );
-				const acceptInvitePage = new AcceptInvitePage( driver );
+				const acceptInvitePage = await AcceptInvitePage.Expect( driver );
 
 				let actualEmailAddress = await acceptInvitePage.getEmailPreFilled();
 				let headerInviteText = await acceptInvitePage.getHeaderInviteText();
@@ -403,7 +403,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await driverManager.ensureNotLoggedIn( driver );
 
 				await driver.get( acceptInviteURL );
-				const acceptInvitePage = new AcceptInvitePage( driver );
+				const acceptInvitePage = await AcceptInvitePage.Expect( driver );
 
 				let actualEmailAddress = await acceptInvitePage.getEmailPreFilled();
 				let headerInviteText = await acceptInvitePage.getHeaderInviteText();
