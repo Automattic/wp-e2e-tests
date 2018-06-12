@@ -62,9 +62,7 @@ test.describe(
 				} );
 
 				test.it( 'Can see Reader Page after logging in', async function() {
-					let readerPage = new ReaderPage( driver );
-					let displayed = await readerPage.displayed();
-					assert.equal( displayed, true, 'The reader page is not displayed after log in' );
+					return await ReaderPage.Expect( driver );
 				} );
 			} );
 
@@ -77,8 +75,7 @@ test.describe(
 					} );
 
 					test.it( 'Can return to Reader', async () => {
-						let readerPage = new ReaderPage( driver, true );
-						return await readerPage.displayed();
+						return await ReaderPage.Visit( driver );
 					} );
 				} );
 			}

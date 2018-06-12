@@ -446,7 +446,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see the post in the Activity log', async function() {
-			await new ReaderPage( driver, true ).displayed();
+			await ReaderPage.Visit( driver );
 			await new NavbarComponent( driver ).clickMySites();
 			let sidebarComponent = new SidebarComponent( driver );
 			await sidebarComponent.ensureSidebarMenuVisible();
@@ -1145,7 +1145,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 			test.describe( 'Edit the post via posts', function() {
 				test.it( 'Can view the posts list', async function() {
-					this.readerPage = new ReaderPage( driver, true );
+					this.readerPage = await ReaderPage.Visit( driver );
 					this.navbarComponent = new NavbarComponent( driver );
 					await this.navbarComponent.clickMySites();
 					const jetpackSiteName = dataHelper.getJetpackSiteName();

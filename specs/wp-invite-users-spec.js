@@ -144,7 +144,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			await driverManager.ensureNotLoggedIn( driver );
 			const loginPage = await LoginPage.Visit( driver );
 			await loginPage.login( newUserName, password );
-			await new ReaderPage( driver ).displayed();
+			await ReaderPage.Expect( driver );
 
 			await new NavbarComponent( driver ).clickMySites();
 			const displayed = await new NoSitesComponent( driver ).displayed();
@@ -295,7 +295,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 					`The follow message '${ followMessageDisplayed }' does not include 'viewer'`
 				);
 
-				await new ReaderPage( driver ).displayed();
+				await ReaderPage.Expect( driver );
 				return await ViewBlogPage.Visit( driver, siteUrl );
 			} );
 
@@ -326,7 +326,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				const loginPage = await LoginPage.Visit( driver );
 				await loginPage.login( newUserName, password );
 
-				await new ReaderPage( driver, true ).displayed();
+				await ReaderPage.Expect( driver );
 				let displayed = await new PrivateSiteLoginPage( driver, true, siteUrl ).displayed();
 				assert.equal(
 					displayed,
@@ -482,7 +482,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 				const loginPage = await LoginPage.Visit( driver );
 				await loginPage.login( newUserName, password );
-				await new ReaderPage( driver ).displayed();
+				await ReaderPage.Expect( driver );
 				await new NavbarComponent( driver ).clickCreateNewPost();
 
 				const editorPage = new EditorPage( driver );

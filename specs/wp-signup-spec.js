@@ -185,7 +185,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				await driver.get( magicLoginLink );
 				const magicLoginPage = await MagicLoginPage.Expect( driver );
 				await magicLoginPage.finishLogin();
-				return await new ReaderPage( driver ).displayed();
+				return await ReaderPage.Expect( driver );
 			} );
 
 			test.it( 'Can delete our newly created account', async function() {
@@ -883,7 +883,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.it( 'We can cancel the domain', async function() {
 				return ( async () => {
-					await new ReaderPage( driver, true ).displayed();
+					await ReaderPage.Visit( driver );
 					await new NavBarComponent( driver ).clickMySites();
 					await new SideBarComponent( driver ).selectSettings();
 					await new DomainOnlySettingsPage( driver ).manageDomain();

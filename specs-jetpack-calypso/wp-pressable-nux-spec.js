@@ -99,7 +99,7 @@ if ( host === 'PRESSABLE' ) {
 			} );
 
 			test.it( 'Can open Rewind activity page', async function() {
-				await new ReaderPage( driver, true ).displayed();
+				await ReaderPage.Visit( driver );
 				await new NavbarComponent( driver ).clickMySites();
 				const sidebarComponent = new SidebarComponent( driver );
 				await sidebarComponent.selectSiteSwitcher();

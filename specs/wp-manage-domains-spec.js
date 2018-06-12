@@ -95,7 +95,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 
 		test.after( async function() {
 			// Empty the cart
-			await new ReaderPage( driver, true ).displayed();
+			await ReaderPage.Visit( driver );
 			await new NavbarComponent( driver ).clickMySites();
 			await new StatsPage( driver, true ).displayed();
 			await new SidebarComponent( driver ).selectDomains();
@@ -160,7 +160,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 
 		test.after( async function() {
 			// Empty the cart
-			await new ReaderPage( driver, true ).displayed();
+			await ReaderPage.Visit( driver );
 			await new NavbarComponent( driver ).clickMySites();
 			await new StatsPage( driver, true ).displayed();
 			await new SidebarComponent( driver ).selectDomains();

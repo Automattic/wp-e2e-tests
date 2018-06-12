@@ -79,7 +79,7 @@ test.describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function
 
 		// Remove all items from basket for clean up
 		test.after( async function() {
-			this.readerPage = new ReaderPage( driver, true );
+			await ReaderPage.Visit( driver );
 
 			this.navbarComponent = new NavbarComponent( driver );
 			await this.navbarComponent.clickMySites();
