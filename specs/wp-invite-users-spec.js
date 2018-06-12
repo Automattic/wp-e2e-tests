@@ -231,7 +231,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			} );
 
 			test.it( 'As an anonymous user I can not see a private site', async function() {
-				return await new PrivateSiteLoginPage.Visit( driver, siteUrl );
+				return await PrivateSiteLoginPage.Visit( driver, siteUrl );
 			} );
 
 			test.it( 'Can log in and navigate to Invite People page', async function() {
@@ -429,7 +429,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			} );
 
 			test.it( 'New user can submit the new post for review as pending status', async function() {
-				const postEditorToolbar = new PostEditorToolbarComponent( driver );
+				const postEditorToolbar = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorToolbar.ensureSaved();
 				await postEditorToolbar.submitForReview();
 				await postEditorToolbar.waitForIsPendingStatus();
@@ -482,7 +482,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await editorPage.enterTitle( publishPostTitle );
 				await editorPage.enterContent( postQuote );
 
-				const postEditorToolbar = new PostEditorToolbarComponent( driver );
+				const postEditorToolbar = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorToolbar.ensureSaved();
 				return await postEditorToolbar.publishAndViewContent( { useConfirmStep: true } );
 			} );

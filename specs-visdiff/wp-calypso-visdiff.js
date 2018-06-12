@@ -86,7 +86,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Close editor', async function() {
-			this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 			return await this.postEditorToolbarComponent.closeEditor();
 		} );
 
@@ -167,7 +167,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Close editor', async function() {
-			this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 			return await this.postEditorToolbarComponent.closeEditor();
 		} );
 

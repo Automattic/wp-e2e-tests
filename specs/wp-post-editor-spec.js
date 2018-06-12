@@ -110,7 +110,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 					test.it( 'Verify categories and tags present after save', async function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+						const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 						await postEditorSidebarComponent.hideComponentIfNecessary();
 						await postEditorToolbarComponent.ensureSaved();
 						await postEditorSidebarComponent.displayComponentIfNecessary();
@@ -167,7 +167,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 								await postEditorSidebarComponent.hideComponentIfNecessary();
 
-								this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+								this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 								await this.postEditorToolbarComponent.ensureSaved();
 								await this.postEditorToolbarComponent.launchPreview();
 								this.postPreviewComponent = new PostPreviewComponent( driver );
@@ -225,7 +225,9 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 							test.describe( 'Publish and Preview Published Content', function() {
 								test.it( 'Can publish and view content', async function() {
-									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+									const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect(
+										driver
+									);
 									await postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 								} );
 
@@ -288,7 +290,9 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 							test.describe( 'View Published Content', function() {
 								test.it( 'Can publish and view content', async function() {
-									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+									const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect(
+										driver
+									);
 									await postEditorToolbarComponent.viewPublishedPostOrPage();
 								} );
 
@@ -395,7 +399,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can publish and view content', async function() {
-				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorToolbarComponent.ensureSaved();
 				return await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 			} );
@@ -439,7 +443,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can publish and view content', async function() {
-			let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 			await postEditorToolbarComponent.ensureSaved();
 			await postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 			return await postEditorToolbarComponent.waitForSuccessViewPostNotice();
@@ -490,7 +494,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			test.it(
 				'Can schedule content for a future date (first day of second week next month)',
 				async function() {
-					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					let postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 					await postEditorToolbarComponent.ensureSaved( { clickSave: true } );
 					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					await postEditorSidebarComponent.expandStatusSection();
@@ -499,7 +503,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					await postEditorSidebarComponent.closeStatusSection();
 					let editorPage = await EditorPage.Expect( driver );
 					await editorPage.waitForPage();
-					postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 					await postEditorToolbarComponent.ensureSaved( { clickSave: true } );
 					return await postEditorToolbarComponent.clickPublishPost();
 				}
@@ -514,7 +518,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					'The publish date shown is not the expected publish date'
 				);
 				await editorConfirmationSidebarComponent.confirmAndPublish();
-				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorToolbarComponent.waitForPostSucessNotice();
 				let postEditorPage = await EditorPage.Expect( driver );
 				let isScheduled = await postEditorPage.postIsScheduled();
@@ -559,14 +563,14 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 			test.describe( 'Set to private which publishes it', function() {
 				test.it( 'Ensure the post is saved', async function() {
-					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 					await postEditorToolbarComponent.ensureSaved();
 				} );
 
 				test.it( 'Can set visibility to private which immediately publishes it', async function() {
 					const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					await postEditorSidebarComponent.setVisibilityToPrivate();
-					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 					await this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 					await this.postEditorToolbarComponent.viewPublishedPostOrPage();
 				} );
@@ -678,7 +682,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				await this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterContent( blogPostQuote );
-				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await this.postEditorToolbarComponent.ensureSaved();
 			} );
 
@@ -699,7 +703,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			test.describe( 'Publish and View', function() {
 				// Can publish and view content
 				test.before( async function() {
-					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 					await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 				} );
 
@@ -1138,7 +1142,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can publish the post', async function() {
-				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await this.postEditorToolbarComponent.ensureSaved();
 				await this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 				return await this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
@@ -1186,7 +1190,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						await this.editorPage.enterTitle( updatedBlogPostTitle );
 						let errorShown = await this.editorPage.errorDisplayed();
 						assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
-						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+						this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 						await this.postEditorToolbarComponent.publishThePost();
 						return await this.postEditorToolbarComponent.waitForSuccessAndViewPost();
 					}
@@ -1240,7 +1244,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can publish and view content', async function() {
-				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorToolbarComponent.ensureSaved();
 				await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 			} );
@@ -1301,7 +1305,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can publish and view content', async function() {
-			const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 			await postEditorToolbarComponent.ensureSaved();
 			await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 		} );
@@ -1374,7 +1378,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can publish the post', async function() {
-				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await this.postEditorToolbarComponent.ensureSaved();
 				await this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 
@@ -1388,7 +1392,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		test.describe( 'Revert the post to draft', function() {
 			test.it( 'Can revert the post to draft', async function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorSidebarComponent.revertToDraft();
 				await postEditorToolbarComponent.waitForIsDraftStatus();
 				let isDraft = await postEditorToolbarComponent.statusIsDraft();

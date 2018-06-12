@@ -78,7 +78,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 			await postEditorSidebarComponent.hideComponentIfNecessary();
 
-			const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 			await postEditorToolbarComponent.ensureSaved();
 			await postEditorToolbarComponent.launchPreview();
 		} );
@@ -120,7 +120,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can publish and preview published content', async function() {
-			const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 			await postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 		} );
 
@@ -161,7 +161,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can view content', async function() {
-			const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 			await postEditorToolbarComponent.displayed();
 			await postEditorToolbarComponent.viewPublishedPostOrPage();
 		} );
@@ -232,20 +232,20 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			const editorPage = await EditorPage.Expect( driver );
 			await editorPage.enterTitle( pageTitle );
 			await editorPage.enterContent( pageQuote );
-			const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 			return await postEditorToolbarComponent.ensureSaved();
 		} );
 
 		test.it( 'Can set visibility to private which immediately publishes it', async function() {
 			const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 			await postEditorSidebarComponent.setVisibilityToPrivate();
-			const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 			return await postEditorToolbarComponent.waitForSuccessViewPostNotice();
 		} );
 
 		if ( host === 'WPCOM' ) {
 			test.it( 'Can view content', async function() {
-				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorToolbarComponent.viewPublishedPostOrPage();
 			} );
 
@@ -288,7 +288,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} else {
 			// Jetpack tests
 			test.it( 'Open published page', async function() {
-				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorToolbarComponent.viewPublishedPostOrPage();
 			} );
 
@@ -329,12 +329,12 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				await postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				editorPage = await EditorPage.Expect( driver );
 				await editorPage.enterContent( pageQuote );
-				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorToolbarComponent.ensureSaved();
 			} );
 
 			test.it( 'Can publish and view content', async function() {
-				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 			} );
 		} );
@@ -621,7 +621,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can publish and view content', async function() {
-			const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 			await postEditorToolbarComponent.ensureSaved();
 			await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 		} );
