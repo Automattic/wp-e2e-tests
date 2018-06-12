@@ -63,7 +63,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		test.it( 'Can edit a default page', async function() {
 			const defaultPageTitle = 'About';
 			await this.pagesPage.editPageWithTitle( defaultPageTitle );
-			this.editorPage = new EditorPage( driver );
+			this.editorPage = await EditorPage.Expect( driver );
 			await this.editorPage.waitForTitle();
 			let titleShown = await this.editorPage.titleShown();
 			assert.equal( titleShown, defaultPageTitle, 'The page title shown was unexpected' );
@@ -124,7 +124,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		test.it( 'Can edit the default post', async function() {
 			const defaultPostTitle = 'The Journey Begins';
 			await this.postsPage.editPostWithTitle( defaultPostTitle );
-			this.editorPage = new EditorPage( driver );
+			this.editorPage = await EditorPage.Expect( driver );
 			await this.editorPage.waitForTitle();
 			let titleShown = await this.editorPage.titleShown();
 			assert.equal( titleShown, defaultPostTitle, 'The post title shown was unexpected' );

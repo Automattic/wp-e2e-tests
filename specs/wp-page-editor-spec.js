@@ -58,7 +58,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can enter page title, content and image', async function() {
-			const editorPage = new EditorPage( driver );
+			const editorPage = await EditorPage.Expect( driver );
 			await editorPage.enterTitle( pageTitle );
 			await editorPage.enterContent( pageQuote + '\n' );
 			await editorPage.enterPostImage( fileDetails );
@@ -229,7 +229,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can enter page title and content', async function() {
-			const editorPage = new EditorPage( driver );
+			const editorPage = await EditorPage.Expect( driver );
 			await editorPage.enterTitle( pageTitle );
 			await editorPage.enterContent( pageQuote );
 			const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
@@ -323,11 +323,11 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter page title and content and set to password protected', async function() {
-				let editorPage = new EditorPage( driver );
+				let editorPage = await EditorPage.Expect( driver );
 				await editorPage.enterTitle( pageTitle );
 				const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 				await postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
-				editorPage = new EditorPage( driver );
+				editorPage = await EditorPage.Expect( driver );
 				await editorPage.enterContent( pageQuote );
 				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				await postEditorToolbarComponent.ensureSaved();
@@ -607,7 +607,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		test.it( 'Can insert the payment button', async function() {
 			const pageTitle = 'Payment Button Page: ' + dataHelper.randomPhrase();
 
-			const editorPage = new EditorPage( driver );
+			const editorPage = await EditorPage.Expect( driver );
 			await editorPage.enterTitle( pageTitle );
 			await editorPage.insertPaymentButton( null, paymentButtonDetails );
 
@@ -616,7 +616,8 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see the payment button inserted into the visual editor', async function() {
-			return await new EditorPage( driver ).ensurePaymentButtonDisplayedInPost();
+			const editorPage = await EditorPage.Expect( driver );
+			return await editorPage.ensurePaymentButtonDisplayedInPost();
 		} );
 
 		test.it( 'Can publish and view content', async function() {

@@ -35,7 +35,7 @@ test.describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @je
 			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			const loginFlow = new LoginFlow( driver );
 			await loginFlow.loginAndStartNewPage();
-			editorPage = new EditorPage( driver );
+			editorPage = await EditorPage.Expect( driver );
 			await editorPage.displayed();
 		} );
 

@@ -431,7 +431,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await navbarComponent.dismissGuidedTours();
 				await navbarComponent.clickCreateNewPost();
 
-				const editorPage = new EditorPage( driver );
+				const editorPage = await EditorPage.Expect( driver );
 				let urlDisplayed = await driver.getCurrentUrl();
 				await editorPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
 				await editorPage.enterTitle( reviewPostTitle );
@@ -486,7 +486,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				const navBarComponent = await NavBarComponent.Expect( driver );
 				await navBarComponent.clickCreateNewPost();
 
-				const editorPage = new EditorPage( driver );
+				const editorPage = await EditorPage.Expect( driver );
 				let urlDisplayed = await driver.getCurrentUrl();
 				await editorPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
 				await editorPage.enterTitle( publishPostTitle );

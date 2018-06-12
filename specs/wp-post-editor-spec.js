@@ -78,7 +78,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 			test.describe( 'Create, Preview and Post', function() {
 				test.it( 'Can enter post title, content and image', async function() {
-					let editorPage = new EditorPage( driver );
+					let editorPage = await EditorPage.Expect( driver );
 					await editorPage.enterTitle( blogPostTitle );
 					await editorPage.enterContent( blogPostQuote + '\n' );
 					await editorPage.enterPostImage( fileDetails );
@@ -368,7 +368,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	test.describe( 'Basic Public Post @canary @parallel @jetpack', function() {
+	test.describe.only( 'Basic Public Post @canary @parallel @jetpack', function() {
 		this.bailSuite( true );
 
 		test.it( 'Delete Cookies and Local Storage', async function() {
@@ -386,7 +386,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter post title and content', async function() {
-				this.editorPage = new EditorPage( driver );
+				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterTitle( blogPostTitle );
 				await this.editorPage.enterContent( blogPostQuote + '\n' );
 
@@ -430,7 +430,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can enter post title and content', async function() {
-			let editorPage = new EditorPage( driver );
+			let editorPage = await EditorPage.Expect( driver );
 			await editorPage.enterTitle( blogPostTitle );
 			await editorPage.enterContent( blogPostQuote + '\n' );
 
@@ -479,7 +479,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter post title and content', async function() {
-				this.editorPage = new EditorPage( driver );
+				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterTitle( blogPostTitle );
 				await this.editorPage.enterContent( blogPostQuote + '\n' );
 
@@ -497,7 +497,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					await postEditorSidebarComponent.chooseFutureDate();
 					publishDate = await postEditorSidebarComponent.getSelectedPublishDate();
 					await postEditorSidebarComponent.closeStatusSection();
-					let editorPage = new EditorPage( driver );
+					let editorPage = await EditorPage.Expect( driver );
 					await editorPage.waitForPage();
 					postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 					await postEditorToolbarComponent.ensureSaved( { clickSave: true } );
@@ -516,7 +516,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				await editorConfirmationSidebarComponent.confirmAndPublish();
 				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				await postEditorToolbarComponent.waitForPostSucessNotice();
-				let postEditorPage = new EditorPage( driver );
+				let postEditorPage = await EditorPage.Expect( driver );
 				let isScheduled = await postEditorPage.postIsScheduled();
 				assert( isScheduled, 'The newly scheduled post is not showing in the editor as scheduled' );
 			} );
@@ -539,7 +539,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter post title and content', async function() {
-				let editorPage = new EditorPage( driver );
+				let editorPage = await EditorPage.Expect( driver );
 				await editorPage.enterTitle( blogPostTitle );
 				await editorPage.enterContent( blogPostQuote );
 			} );
@@ -672,11 +672,11 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter post title and content and set to password protected', async function() {
-				this.editorPage = new EditorPage( driver );
+				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterTitle( blogPostTitle );
 				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 				await this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
-				this.editorPage = new EditorPage( driver );
+				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterContent( blogPostQuote );
 				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
 				await this.postEditorToolbarComponent.ensureSaved();
@@ -1089,7 +1089,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter post title and content', async function() {
-				const editorPage = new EditorPage( driver );
+				const editorPage = await EditorPage.Expect( driver );
 				await editorPage.enterTitle( blogPostTitle );
 				return await editorPage.enterContent( blogPostQuote );
 			} );
@@ -1130,7 +1130,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter post title and content', async function() {
-				this.editorPage = new EditorPage( driver );
+				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterTitle( originalBlogPostTitle );
 				await this.editorPage.enterContent( blogPostQuote );
 				let errorShown = await this.editorPage.errorDisplayed();
@@ -1167,7 +1167,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						`The blog post titled '${ originalBlogPostTitle }' is not displayed in the list of posts`
 					);
 					await this.postsPage.editPostWithTitle( originalBlogPostTitle );
-					return ( this.editorPage = new EditorPage( driver ) );
+					return ( this.editorPage = await EditorPage.Expect( driver ) );
 				} );
 
 				test.it( 'Can see the post title', async function() {
@@ -1226,7 +1226,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can insert the contact form', async function() {
-				this.editorPage = new EditorPage( driver );
+				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterTitle( originalBlogPostTitle );
 				await this.editorPage.insertContactForm();
 
@@ -1235,7 +1235,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see the contact form inserted into the visual editor', async function() {
-				this.editorPage = new EditorPage( driver );
+				this.editorPage = await EditorPage.Expect( driver );
 				return await this.editorPage.ensureContactFormDisplayedInPost();
 			} );
 
@@ -1287,7 +1287,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		test.it( 'Can insert the payment button', async function() {
 			const blogPostTitle = 'Payment Button: ' + dataHelper.randomPhrase();
 
-			const editorPage = new EditorPage( driver );
+			const editorPage = await EditorPage.Expect( driver );
 			await editorPage.enterTitle( blogPostTitle );
 			await editorPage.insertPaymentButton( eyes, paymentButtonDetails );
 
@@ -1296,7 +1296,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see the payment button inserted into the visual editor', async function() {
-			return await new EditorPage( driver ).ensurePaymentButtonDisplayedInPost();
+			const editorPage = await EditorPage.Expect( driver );
+			return await editorPage.ensurePaymentButtonDisplayedInPost();
 		} );
 
 		test.it( 'Can publish and view content', async function() {
@@ -1364,7 +1365,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter post title and content', async function() {
-				this.editorPage = new EditorPage( driver );
+				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterTitle( originalBlogPostTitle );
 				await this.editorPage.enterContent( blogPostQuote );
 
