@@ -8,7 +8,7 @@ import * as driverManager from '../lib/driver-manager';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
 
-import NavBarComponent from '../lib/components/navbar-component';
+import NavBarComponent from '../lib/components/nav-bar-component';
 import SidebarComponent from '../lib/components/sidebar-component';
 import StoreSidebarComponent from '../lib/components/store-sidebar-component';
 import StoreSettingsPage from '../lib/pages/woocommerce/store-settings-page';
@@ -44,7 +44,7 @@ test.describe(
 		test.before( async function() {
 			this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
 			await this.loginFlow.login();
-			this.navBarComponent = new NavBarComponent( driver );
+			this.navBarComponent = await NavBarComponent.Expect( driver );
 			await this.navBarComponent.clickMySites();
 		} );
 

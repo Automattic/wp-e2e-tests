@@ -17,7 +17,7 @@ import ActivityPage from '../lib/pages/stats/activity-page';
 import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
-import NavbarComponent from '../lib/components/navbar-component.js';
+import NavBarComponent from '../lib/components/nav-bar-component.js';
 import PostPreviewComponent from '../lib/components/post-preview-component.js';
 import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component';
@@ -78,7 +78,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 			test.describe( 'Create, Preview and Post', function() {
 				test.it( 'Can enter post title, content and image', async function() {
-					let editorPage = new EditorPage( driver );
+					let editorPage = await EditorPage.Expect( driver );
 					await editorPage.enterTitle( blogPostTitle );
 					await editorPage.enterContent( blogPostQuote + '\n' );
 					await editorPage.enterPostImage( fileDetails );
@@ -110,7 +110,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 					test.it( 'Verify categories and tags present after save', async function() {
 						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-						let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+						const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 						await postEditorSidebarComponent.hideComponentIfNecessary();
 						await postEditorToolbarComponent.ensureSaved();
 						await postEditorSidebarComponent.displayComponentIfNecessary();
@@ -167,7 +167,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 								await postEditorSidebarComponent.hideComponentIfNecessary();
 
-								this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+								this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 								await this.postEditorToolbarComponent.ensureSaved();
 								await this.postEditorToolbarComponent.launchPreview();
 								this.postPreviewComponent = new PostPreviewComponent( driver );
@@ -225,7 +225,9 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 							test.describe( 'Publish and Preview Published Content', function() {
 								test.it( 'Can publish and view content', async function() {
-									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+									const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect(
+										driver
+									);
 									await postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 								} );
 
@@ -288,7 +290,9 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 							test.describe( 'View Published Content', function() {
 								test.it( 'Can publish and view content', async function() {
-									let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+									const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect(
+										driver
+									);
 									await postEditorToolbarComponent.viewPublishedPostOrPage();
 								} );
 
@@ -386,7 +390,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter post title and content', async function() {
-				this.editorPage = new EditorPage( driver );
+				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterTitle( blogPostTitle );
 				await this.editorPage.enterContent( blogPostQuote + '\n' );
 
@@ -395,7 +399,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can publish and view content', async function() {
-				const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorToolbarComponent.ensureSaved();
 				return await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 			} );
@@ -430,7 +434,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can enter post title and content', async function() {
-			let editorPage = new EditorPage( driver );
+			let editorPage = await EditorPage.Expect( driver );
 			await editorPage.enterTitle( blogPostTitle );
 			await editorPage.enterContent( blogPostQuote + '\n' );
 
@@ -439,15 +443,16 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can publish and view content', async function() {
-			let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 			await postEditorToolbarComponent.ensureSaved();
 			await postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 			return await postEditorToolbarComponent.waitForSuccessViewPostNotice();
 		} );
 
 		test.it( 'Can see the post in the Activity log', async function() {
-			await new ReaderPage( driver, true ).displayed();
-			await new NavbarComponent( driver ).clickMySites();
+			await ReaderPage.Visit( driver );
+			const navBarComponent = await NavBarComponent.Expect( driver );
+			await navBarComponent.clickMySites();
 			let sidebarComponent = new SidebarComponent( driver );
 			await sidebarComponent.ensureSidebarMenuVisible();
 			await sidebarComponent.selectStats();
@@ -478,7 +483,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter post title and content', async function() {
-				this.editorPage = new EditorPage( driver );
+				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterTitle( blogPostTitle );
 				await this.editorPage.enterContent( blogPostQuote + '\n' );
 
@@ -489,16 +494,16 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			test.it(
 				'Can schedule content for a future date (first day of second week next month)',
 				async function() {
-					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					let postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 					await postEditorToolbarComponent.ensureSaved( { clickSave: true } );
 					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					await postEditorSidebarComponent.expandStatusSection();
 					await postEditorSidebarComponent.chooseFutureDate();
 					publishDate = await postEditorSidebarComponent.getSelectedPublishDate();
 					await postEditorSidebarComponent.closeStatusSection();
-					let editorPage = new EditorPage( driver );
+					let editorPage = await EditorPage.Expect( driver );
 					await editorPage.waitForPage();
-					postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 					await postEditorToolbarComponent.ensureSaved( { clickSave: true } );
 					return await postEditorToolbarComponent.clickPublishPost();
 				}
@@ -513,9 +518,9 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					'The publish date shown is not the expected publish date'
 				);
 				await editorConfirmationSidebarComponent.confirmAndPublish();
-				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorToolbarComponent.waitForPostSucessNotice();
-				let postEditorPage = new EditorPage( driver );
+				let postEditorPage = await EditorPage.Expect( driver );
 				let isScheduled = await postEditorPage.postIsScheduled();
 				assert( isScheduled, 'The newly scheduled post is not showing in the editor as scheduled' );
 			} );
@@ -538,7 +543,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter post title and content', async function() {
-				let editorPage = new EditorPage( driver );
+				let editorPage = await EditorPage.Expect( driver );
 				await editorPage.enterTitle( blogPostTitle );
 				await editorPage.enterContent( blogPostQuote );
 			} );
@@ -558,14 +563,14 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 			test.describe( 'Set to private which publishes it', function() {
 				test.it( 'Ensure the post is saved', async function() {
-					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 					await postEditorToolbarComponent.ensureSaved();
 				} );
 
 				test.it( 'Can set visibility to private which immediately publishes it', async function() {
 					const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 					await postEditorSidebarComponent.setVisibilityToPrivate();
-					this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 					await this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
 					await this.postEditorToolbarComponent.viewPublishedPostOrPage();
 				} );
@@ -671,13 +676,13 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter post title and content and set to password protected', async function() {
-				this.editorPage = new EditorPage( driver );
+				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterTitle( blogPostTitle );
 				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
 				await this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
-				this.editorPage = new EditorPage( driver );
+				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterContent( blogPostQuote );
-				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await this.postEditorToolbarComponent.ensureSaved();
 			} );
 
@@ -698,7 +703,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			test.describe( 'Publish and View', function() {
 				// Can publish and view content
 				test.before( async function() {
-					let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+					const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 					await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 				} );
 
@@ -1088,7 +1093,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter post title and content', async function() {
-				const editorPage = new EditorPage( driver );
+				const editorPage = await EditorPage.Expect( driver );
 				await editorPage.enterTitle( blogPostTitle );
 				return await editorPage.enterContent( blogPostQuote );
 			} );
@@ -1099,8 +1104,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can then see the Posts page with a confirmation message', async function() {
-				const postsPage = new PostsPage( driver );
-				let displayed = await postsPage.successNoticeDisplayed();
+				const postsPage = await PostsPage.Expect( driver );
+				const displayed = await postsPage.successNoticeDisplayed();
 				return assert.equal(
 					displayed,
 					true,
@@ -1129,7 +1134,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter post title and content', async function() {
-				this.editorPage = new EditorPage( driver );
+				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterTitle( originalBlogPostTitle );
 				await this.editorPage.enterContent( blogPostQuote );
 				let errorShown = await this.editorPage.errorDisplayed();
@@ -1137,7 +1142,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can publish the post', async function() {
-				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await this.postEditorToolbarComponent.ensureSaved();
 				await this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 				return await this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
@@ -1145,8 +1150,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 			test.describe( 'Edit the post via posts', function() {
 				test.it( 'Can view the posts list', async function() {
-					this.readerPage = new ReaderPage( driver, true );
-					this.navbarComponent = new NavbarComponent( driver );
+					this.readerPage = await ReaderPage.Visit( driver );
+					this.navbarComponent = await NavBarComponent.Expect( driver );
 					await this.navbarComponent.clickMySites();
 					const jetpackSiteName = dataHelper.getJetpackSiteName();
 					this.sidebarComponent = new SidebarComponent( driver );
@@ -1154,7 +1159,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						await this.sidebarComponent.selectSite( jetpackSiteName );
 					}
 					await this.sidebarComponent.selectPosts();
-					return ( this.postsPage = new PostsPage( driver ) );
+					return ( this.postsPage = await PostsPage.Expect( driver ) );
 				} );
 
 				test.it( 'Can see and edit our new post', async function() {
@@ -1166,7 +1171,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						`The blog post titled '${ originalBlogPostTitle }' is not displayed in the list of posts`
 					);
 					await this.postsPage.editPostWithTitle( originalBlogPostTitle );
-					return ( this.editorPage = new EditorPage( driver ) );
+					return ( this.editorPage = await EditorPage.Expect( driver ) );
 				} );
 
 				test.it( 'Can see the post title', async function() {
@@ -1185,7 +1190,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						await this.editorPage.enterTitle( updatedBlogPostTitle );
 						let errorShown = await this.editorPage.errorDisplayed();
 						assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
-						this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+						this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 						await this.postEditorToolbarComponent.publishThePost();
 						return await this.postEditorToolbarComponent.waitForSuccessAndViewPost();
 					}
@@ -1225,7 +1230,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can insert the contact form', async function() {
-				this.editorPage = new EditorPage( driver );
+				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterTitle( originalBlogPostTitle );
 				await this.editorPage.insertContactForm();
 
@@ -1234,12 +1239,12 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see the contact form inserted into the visual editor', async function() {
-				this.editorPage = new EditorPage( driver );
+				this.editorPage = await EditorPage.Expect( driver );
 				return await this.editorPage.ensureContactFormDisplayedInPost();
 			} );
 
 			test.it( 'Can publish and view content', async function() {
-				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorToolbarComponent.ensureSaved();
 				await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 			} );
@@ -1286,7 +1291,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		test.it( 'Can insert the payment button', async function() {
 			const blogPostTitle = 'Payment Button: ' + dataHelper.randomPhrase();
 
-			const editorPage = new EditorPage( driver );
+			const editorPage = await EditorPage.Expect( driver );
 			await editorPage.enterTitle( blogPostTitle );
 			await editorPage.insertPaymentButton( eyes, paymentButtonDetails );
 
@@ -1295,11 +1300,12 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see the payment button inserted into the visual editor', async function() {
-			return await new EditorPage( driver ).ensurePaymentButtonDisplayedInPost();
+			const editorPage = await EditorPage.Expect( driver );
+			return await editorPage.ensurePaymentButtonDisplayedInPost();
 		} );
 
 		test.it( 'Can publish and view content', async function() {
-			const postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 			await postEditorToolbarComponent.ensureSaved();
 			await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 		} );
@@ -1363,7 +1369,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter post title and content', async function() {
-				this.editorPage = new EditorPage( driver );
+				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterTitle( originalBlogPostTitle );
 				await this.editorPage.enterContent( blogPostQuote );
 
@@ -1372,7 +1378,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can publish the post', async function() {
-				this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await this.postEditorToolbarComponent.ensureSaved();
 				await this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 
@@ -1386,7 +1392,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		test.describe( 'Revert the post to draft', function() {
 			test.it( 'Can revert the post to draft', async function() {
 				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
-				let postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorSidebarComponent.revertToDraft();
 				await postEditorToolbarComponent.waitForIsDraftStatus();
 				let isDraft = await postEditorToolbarComponent.statusIsDraft();

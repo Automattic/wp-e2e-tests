@@ -9,7 +9,7 @@ import LoginFlow from '../lib/flows/login-flow.js';
 import ReaderPage from '../lib/pages/reader-page.js';
 import ReaderManagePage from '../lib/pages/reader-manage-page.js';
 
-import NavbarComponent from '../lib/components/navbar-component.js';
+import NavBarComponent from '../lib/components/nav-bar-component.js';
 import NotificationsComponent from '../lib/components/notifications-component.js';
 
 import * as driverManager from '../lib/driver-manager.js';
@@ -49,13 +49,14 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 
 		test.describe( 'Leave a comment on the latest post in the Reader', function() {
 			test.it( 'Can see the Reader stream', async function() {
-				this.readerPage = new ReaderPage( driver );
-				return await this.readerPage.waitForPage();
+				const readerPage = await ReaderPage.Expect( driver );
+				return await readerPage.waitForPage();
 			} );
 
 			test.it( 'The latest post is on the expected test site', async function() {
 				const testSiteForNotifications = dataHelper.configGet( 'testSiteForNotifications' );
-				let siteOfLatestPost = await this.readerPage.siteOfLatestPost();
+				const readerPage = await ReaderPage.Expect( driver );
+				let siteOfLatestPost = await readerPage.siteOfLatestPost();
 				return assert.equal(
 					siteOfLatestPost,
 					testSiteForNotifications,
@@ -65,7 +66,8 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 
 			test.it( 'Can comment on the latest post', async function() {
 				this.comment = dataHelper.randomPhrase();
-				await this.readerPage.commentOnLatestPost( this.comment, eyes );
+				const readerPage = await ReaderPage.Expect( driver );
+				await readerPage.commentOnLatestPost( this.comment, eyes );
 			} );
 
 			test.describe( 'Delete the new comment', function() {
@@ -83,7 +85,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 					'Can delete the new comment (and wait for UNDO grace period so it is actually deleted)',
 					async function() {
 						await eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
-						this.navBarComponent = new NavbarComponent( driver );
+						this.navBarComponent = await NavBarComponent.Expect( driver );
 						await this.navBarComponent.openNotifications();
 						this.notificationsComponent = new NotificationsComponent( driver );
 						await this.notificationsComponent.selectCommentByText( this.comment );

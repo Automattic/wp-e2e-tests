@@ -14,7 +14,7 @@ import LoginFlow from '../lib/flows/login-flow.js';
 import ViewSitePage from '../lib/pages/view-site-page.js';
 import ViewPostPage from '../lib/pages/view-post-page.js';
 
-import NavbarComponent from '../lib/components/navbar-component.js';
+import NavBarComponent from '../lib/components/nav-bar-component.js';
 import NotificationsComponent from '../lib/components/notifications-component.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
@@ -86,7 +86,7 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 	} );
 
 	test.it( 'Can open notifications tab with keyboard shortcut', async function() {
-		const navBarComponent = new NavbarComponent( driver );
+		const navBarComponent = await NavBarComponent.Expect( driver );
 		await navBarComponent.openNotificationsShortcut();
 		const present = await navBarComponent.confirmNotificationsOpen();
 		return assert( present, 'Notifications tab is not open' );
@@ -94,7 +94,7 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 
 	test.it( 'Can see the notification of the comment', async function() {
 		const expectedContent = `${ commentingUser } commented on ${ commentedPostTitle }\n${ comment }`;
-		const navBarComponent = new NavbarComponent( driver );
+		const navBarComponent = await NavBarComponent.Expect( driver );
 		await navBarComponent.openNotifications();
 		const notificationsComponent = new NotificationsComponent( driver );
 		await notificationsComponent.selectComments();
