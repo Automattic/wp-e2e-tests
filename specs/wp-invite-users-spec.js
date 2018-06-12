@@ -130,7 +130,8 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			);
 
 			await peoplePage.selectOnlyPersonDisplayed();
-			await new EditTeamMemberPage( driver ).removeUserAndDeleteContent();
+			const editTeamMemberPage = await EditTeamMemberPage.Expect( driver );
+			await editTeamMemberPage.removeUserAndDeleteContent();
 			const displayed = await peoplePage.successNoticeDisplayed();
 			return assert.equal(
 				displayed,
@@ -457,7 +458,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 					const peoplePage = await PeoplePage.Expect( driver );
 
 					await peoplePage.selectOnlyPersonDisplayed();
-					const editTeamMemberPage = new EditTeamMemberPage( driver );
+					const editTeamMemberPage = await EditTeamMemberPage.Expect( driver );
 					await editTeamMemberPage.changeToNewRole( 'author' );
 					let displayed = await editTeamMemberPage.successNoticeDisplayed();
 					return assert(
