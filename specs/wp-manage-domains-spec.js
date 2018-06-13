@@ -145,7 +145,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		} );
 
 		test.it( 'Can see enter a domain component', async function() {
-			return await new MapADomainPage( driver ).displayed();
+			return await MapADomainPage.Expect( driver );
 		} );
 
 		test.it( 'Can enter the domain name', async function() {
