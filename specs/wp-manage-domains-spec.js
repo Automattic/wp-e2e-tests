@@ -159,7 +159,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		} );
 
 		test.it( 'Can see checkout page', async function() {
-			return await new MapADomainCheckoutPage( driver ).displayed();
+			return await MapADomainCheckoutPage.Expect( driver );
 		} );
 
 		test.after( async function() {
