@@ -136,7 +136,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		} );
 
 		test.it( 'Can see use my own domain page', async function() {
-			return await new MyOwnDomainPage( driver ).displayed();
+			return await MyOwnDomainPage.Expect( driver );
 		} );
 
 		test.it( 'Can select to manually connect existing domain component', async function() {
