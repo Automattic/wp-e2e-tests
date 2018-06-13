@@ -57,7 +57,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		} );
 
 		test.it( 'Can see the Domains page and choose add a domain', async function() {
-			const domainsPage = new DomainsPage( driver );
+			const domainsPage = await DomainsPage.Expect( driver );
 			let urlDisplayed = await driver.getCurrentUrl();
 			await domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
 			return await domainsPage.clickAddDomain();
@@ -101,7 +101,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 			await StatsPage.Expect( driver );
 			const sidebarComponent = await SidebarComponent.Expect( driver );
 			await sidebarComponent.selectDomains();
-			await new DomainsPage( driver ).displayed();
+			await DomainsPage.Expect( driver );
 			return await new ShoppingCartWidgetComponent( driver ).empty();
 		} );
 	} );
@@ -120,7 +120,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		} );
 
 		test.it( 'Can see the Domains page and choose add a domain', async function() {
-			const domainsPage = new DomainsPage( driver );
+			const domainsPage = await DomainsPage.Expect( driver );
 			let urlDisplayed = await driver.getCurrentUrl();
 			await domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
 			return await domainsPage.clickAddDomain();
@@ -171,7 +171,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 			await StatsPage.Expect( driver );
 			const sideBarComponent = await SidebarComponent.Expect( driver );
 			await sideBarComponent.selectDomains();
-			await new DomainsPage( driver ).displayed();
+			await DomainsPage.Expect( driver );
 			return await new ShoppingCartWidgetComponent( driver ).empty();
 		} );
 	} );
