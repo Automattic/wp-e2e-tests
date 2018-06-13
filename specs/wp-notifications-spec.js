@@ -96,7 +96,7 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 		const expectedContent = `${ commentingUser } commented on ${ commentedPostTitle }\n${ comment }`;
 		const navBarComponent = await NavBarComponent.Expect( driver );
 		await navBarComponent.openNotifications();
-		const notificationsComponent = new NotificationsComponent( driver );
+		const notificationsComponent = await NotificationsComponent.Expect( driver );
 		await notificationsComponent.selectComments();
 		let content = await notificationsComponent.allCommentsContent();
 		await eyesHelper.eyesScreenshot( driver, eyes, 'Notifications List' );
@@ -110,7 +110,7 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 	test.it(
 		'Can delete the comment (and wait for UNDO grace period so it is actually deleted)',
 		async function() {
-			const notificationsComponent = new NotificationsComponent( driver );
+			const notificationsComponent = await NotificationsComponent.Expect( driver );
 			await notificationsComponent.selectCommentByText( comment );
 			await eyesHelper.eyesScreenshot( driver, eyes, 'Single Comment Notification' );
 			await notificationsComponent.trashComment();
