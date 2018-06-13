@@ -67,7 +67,7 @@ if ( host === 'PRESSABLE' ) {
 
 			test.it( 'Can create new site', async function() {
 				this.siteName = dataHelper.getNewBlogName();
-				this.pressableSitesPage = new PressableSitesPage( driver );
+				this.pressableSitesPage = await PressableSitesPage.Expect( driver );
 				return await this.pressableSitesPage.addNewSite( this.siteName );
 			} );
 
@@ -117,7 +117,8 @@ if ( host === 'PRESSABLE' ) {
 			// } );
 
 			test.after( async function() {
-				return await new PressableSitesPage( driver, true ).deleteFirstSite();
+				const pressableSitesPage = await PressableSitesPage.Visit( driver );
+				return await pressableSitesPage.deleteFirstSite();
 			} );
 		} );
 	} );
