@@ -61,17 +61,17 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 	} );
 
 	test.it( 'Can see the first post page and capture the title', async function() {
-		const viewPostPage = new ViewPostPage( driver );
+		const viewPostPage = await ViewPostPage.Expect( driver );
 		commentedPostTitle = await viewPostPage.postTitle();
 	} );
 
 	test.it( 'Can leave a comment', async function() {
-		const viewPostPage = new ViewPostPage( driver );
+		const viewPostPage = await ViewPostPage.Expect( driver );
 		return await viewPostPage.leaveAComment( comment );
 	} );
 
 	test.it( 'Can see the comment', async function() {
-		const viewPostPage = new ViewPostPage( driver );
+		const viewPostPage = await ViewPostPage.Expect( driver );
 		const shown = await viewPostPage.commentEventuallyShown( comment );
 		if ( shown === false ) {
 			return slackNotifier.warn(

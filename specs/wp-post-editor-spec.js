@@ -297,7 +297,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 								} );
 
 								test.it( 'Can see correct post title', async function() {
-									this.viewPostPage = new ViewPostPage( driver );
+									this.viewPostPage = await ViewPostPage.Expect( driver );
 									let postTitle = await this.viewPostPage.postTitle();
 									assert.equal(
 										postTitle.toLowerCase(),
@@ -405,7 +405,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see correct post title', async function() {
-				this.viewPostPage = new ViewPostPage( driver );
+				this.viewPostPage = await ViewPostPage.Expect( driver );
 				let postTitle = await this.viewPostPage.postTitle();
 				assert.equal(
 					postTitle.toLowerCase(),
@@ -579,7 +579,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				if ( host === 'WPCOM' ) {
 					test.describe( 'As a logged in user ', function() {
 						test.it( 'Can see correct post title', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let postTitle = await viewPostPage.postTitle();
 							assert.equal(
 								postTitle.toLowerCase(),
@@ -589,7 +589,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see correct post content', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let content = await viewPostPage.postContent();
 							assert.equal(
 								content.indexOf( blogPostQuote ) > -1,
@@ -603,7 +603,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see comments enabled', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.commentsVisible();
 							assert.equal(
 								visible,
@@ -613,7 +613,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see sharing buttons", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.sharingButtonsVisible();
 							assert.equal(
 								visible,
@@ -711,7 +711,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				test.describe( 'As a logged in user', function() {
 					test.describe( 'With no password entered', function() {
 						test.it( 'Can view post title', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let postTitle = await viewPostPage.postTitle();
 							assert.equal(
 								postTitle.toLowerCase(),
@@ -720,7 +720,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see password field', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let isPasswordProtected = await viewPostPage.isPasswordProtected();
 							assert.equal(
 								isPasswordProtected,
@@ -730,7 +730,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see content when no password is entered", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let content = await viewPostPage.postContent();
 							assert.equal(
 								content.indexOf( blogPostQuote ) === -1,
@@ -744,7 +744,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see comments", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.commentsVisible();
 							assert.equal(
 								visible,
@@ -754,7 +754,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see sharing buttons', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.sharingButtonsVisible();
 							return assert.equal(
 								visible,
@@ -767,13 +767,13 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					test.describe( 'With incorrect password entered', function() {
 						// Enter incorrect password
 						test.before( async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							await viewPostPage.displayed();
 							await viewPostPage.enterPassword( 'password' );
 						} );
 
 						test.it( 'Can view post title', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let postTitle = await viewPostPage.postTitle();
 							assert.equal(
 								postTitle.toLowerCase(),
@@ -782,7 +782,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see password field', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let isPasswordProtected = await viewPostPage.isPasswordProtected();
 							assert.equal(
 								isPasswordProtected,
@@ -792,7 +792,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see content when incorrect password is entered", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let content = await viewPostPage.postContent();
 							assert.equal(
 								content.indexOf( blogPostQuote ) === -1,
@@ -806,7 +806,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see comments", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.commentsVisible();
 							assert.equal(
 								visible,
@@ -816,7 +816,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see sharing buttons', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.sharingButtonsVisible();
 							assert.equal(
 								visible,
@@ -829,13 +829,13 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					test.describe( 'With correct password entered', function() {
 						// Enter correct password
 						test.before( async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							await viewPostPage.displayed();
 							await viewPostPage.enterPassword( postPassword );
 						} );
 
 						test.it( 'Can view post title', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let postTitle = await viewPostPage.postTitle();
 							assert.equal(
 								postTitle.toLowerCase(),
@@ -844,7 +844,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see password field", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let isPasswordProtected = await viewPostPage.isPasswordProtected();
 							assert.equal(
 								isPasswordProtected,
@@ -854,7 +854,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see page content', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let content = await viewPostPage.postContent();
 							assert.equal(
 								content.indexOf( blogPostQuote ) > -1,
@@ -868,7 +868,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see comments", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.commentsVisible();
 							assert.equal(
 								visible,
@@ -878,7 +878,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see sharing buttons', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.sharingButtonsVisible();
 							assert.equal(
 								visible,
@@ -895,7 +895,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					} );
 					test.describe( 'With no password entered', function() {
 						test.it( 'Can view post title', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let postTitle = await viewPostPage.postTitle();
 							assert.equal(
 								postTitle.toLowerCase(),
@@ -904,7 +904,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see password field', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let isPasswordProtected = await viewPostPage.isPasswordProtected();
 							assert.equal(
 								isPasswordProtected,
@@ -914,7 +914,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see content when no password is entered", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let content = await viewPostPage.postContent();
 							assert.equal(
 								content.indexOf( blogPostQuote ) === -1,
@@ -928,7 +928,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see comments", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.commentsVisible();
 							assert.equal(
 								visible,
@@ -938,7 +938,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see sharing buttons', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.sharingButtonsVisible();
 							return assert.equal(
 								visible,
@@ -951,13 +951,13 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					test.describe( 'With incorrect password entered', function() {
 						// Enter incorrect password
 						test.before( async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							await viewPostPage.displayed();
 							await viewPostPage.enterPassword( 'password' );
 						} );
 
 						test.it( 'Can view post title', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let postTitle = await viewPostPage.postTitle();
 							assert.equal(
 								postTitle.toLowerCase(),
@@ -966,7 +966,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see password field', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let isPasswordProtected = await viewPostPage.isPasswordProtected();
 							assert.equal(
 								isPasswordProtected,
@@ -976,7 +976,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see content when incorrect password is entered", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let content = await viewPostPage.postContent();
 							assert.equal(
 								content.indexOf( blogPostQuote ) === -1,
@@ -990,7 +990,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see comments", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.commentsVisible();
 							assert.equal(
 								visible,
@@ -1000,7 +1000,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see sharing buttons', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.sharingButtonsVisible();
 							assert.equal(
 								visible,
@@ -1013,13 +1013,13 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					test.describe( 'With correct password entered', function() {
 						// Enter correct password
 						test.before( async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							await viewPostPage.displayed();
 							await viewPostPage.enterPassword( postPassword );
 						} );
 
 						test.it( 'Can view post title', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let postTitle = await viewPostPage.postTitle();
 							assert.equal(
 								postTitle.toLowerCase(),
@@ -1028,7 +1028,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see password field", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let isPasswordProtected = await viewPostPage.isPasswordProtected();
 							assert.equal(
 								isPasswordProtected,
@@ -1038,7 +1038,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see page content', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let content = await viewPostPage.postContent();
 							assert.equal(
 								content.indexOf( blogPostQuote ) > -1,
@@ -1052,7 +1052,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see comments", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.commentsVisible();
 							assert.equal(
 								visible,
@@ -1062,7 +1062,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see sharing buttons', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.sharingButtonsVisible();
 							assert.equal(
 								visible,
@@ -1198,8 +1198,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				);
 
 				test.describe( 'Can view the post with the new title', function() {
-					test.it( 'Can view the post', function() {
-						return ( this.viewPostPage = new ViewPostPage( driver ) );
+					test.it( 'Can view the post', async function() {
+						return ( this.viewPostPage = await ViewPostPage.Expect( driver ) );
 					} );
 
 					test.it( 'Can see correct post title', async function() {
@@ -1251,7 +1251,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see the contact form in our published post', async function() {
-				this.viewPostPage = new ViewPostPage( driver );
+				this.viewPostPage = await ViewPostPage.Expect( driver );
 				let displayed = await this.viewPostPage.contactFormDisplayed();
 				assert.equal( displayed, true, 'The published post does not contain the contact form' );
 			} );
@@ -1312,7 +1312,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see the payment button in our published post', async function() {
-			const viewPostPage = new ViewPostPage( driver );
+			const viewPostPage = await ViewPostPage.Expect( driver );
 			let displayed = await viewPostPage.paymentButtonDisplayed();
 			assert.equal( displayed, true, 'The published post does not contain the payment button' );
 		} );
@@ -1326,7 +1326,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					1,
 					'There is more than one open browser window before clicking payment button'
 				);
-				let viewPostPage = new ViewPostPage( driver );
+				let viewPostPage = await ViewPostPage.Expect( driver );
 				await viewPostPage.clickPaymentButton();
 				await driverHelper.waitForNumberOfWindows( driver, 2 );
 				await driverHelper.switchToWindowByIndex( driver, 1 );
@@ -1341,7 +1341,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				);
 				await driverHelper.closeCurrentWindow( driver );
 				await driverHelper.switchToWindowByIndex( driver, 0 );
-				viewPostPage = new ViewPostPage( driver );
+				viewPostPage = await ViewPostPage.Expect( driver );
 				assert( await viewPostPage.displayed(), 'view post page is not displayed' );
 			}
 		);
