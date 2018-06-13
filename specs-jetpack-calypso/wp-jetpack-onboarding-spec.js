@@ -212,7 +212,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see site home page', async function() {
-			const viewSitePage = new ViewSitePage( driver );
+			const viewSitePage = await ViewSitePage.Expect( driver );
 			const widgetContactInfoComponent = new WidgetContactInfoComponent( driver );
 			const businessAddress = [ address, city, stateCode, postalCode, countryCode ];
 
@@ -312,7 +312,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see site home page', async function() {
-				const viewSitePage = new ViewSitePage( driver );
+				const viewSitePage = await ViewSitePage.Expect( driver );
 				let title = await viewSitePage.siteTitle();
 				assert.equal(
 					title.toUpperCase(),
@@ -404,7 +404,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see site home page', async function() {
-				const viewSitePage = new ViewSitePage( driver );
+				const viewSitePage = await ViewSitePage.Expect( driver );
 				let title = await viewSitePage.siteTitle();
 				assert.equal(
 					title.toUpperCase(),

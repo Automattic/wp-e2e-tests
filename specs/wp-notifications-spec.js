@@ -56,7 +56,7 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 		const testSiteForInvitationsURL = `https://${ dataHelper.configGet(
 			'testSiteForNotifications'
 		) }`;
-		const viewBlogPage = new ViewSitePage( driver, true, testSiteForInvitationsURL );
+		const viewBlogPage = await ViewSitePage.Visit( driver, testSiteForInvitationsURL );
 		return await viewBlogPage.viewFirstPost();
 	} );
 
