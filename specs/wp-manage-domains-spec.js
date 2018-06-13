@@ -149,11 +149,13 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		} );
 
 		test.it( 'Can enter the domain name', async function() {
-			return await new EnterADomainComponent( driver ).enterADomain( blogName );
+			const enterADomainComponent = await EnterADomainComponent.Expect( driver );
+			return await enterADomainComponent.enterADomain( blogName );
 		} );
 
 		test.it( 'Can add domain to the cart', async function() {
-			return await new EnterADomainComponent( driver ).clickonAddButtonToAddDomainToTheCart();
+			const enterADomainComponent = await EnterADomainComponent.Expect( driver );
+			return await enterADomainComponent.clickonAddButtonToAddDomainToTheCart();
 		} );
 
 		test.it( 'Can see checkout page', async function() {
