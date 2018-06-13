@@ -70,7 +70,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Close sidebar for editor screenshot', async function() {
-			this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+			this.postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 			await this.postEditorSidebarComponent.hideComponentIfNecessary();
 			await eyesHelper.eyesScreenshot( driver, eyes, 'Page Editor' );
 		} );
@@ -150,7 +150,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Close sidebar for editor screenshot', async function() {
-			this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+			this.postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 			await this.postEditorSidebarComponent.hideComponentIfNecessary();
 			await eyesHelper.eyesScreenshot( driver, eyes, 'Post Editor' );
 		} );

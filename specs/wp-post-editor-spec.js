@@ -89,27 +89,27 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 				test.describe( 'Categories and Tags', function() {
 					test.it( 'Expand Categories and Tags', async function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 						await postEditorSidebarComponent.expandCategoriesAndTags();
 					} );
 
 					test.it( 'Can add a new category', async function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 						await postEditorSidebarComponent.addNewCategory( newCategoryName );
 					} );
 
 					test.it( 'Can add a new tag', async function() {
-						let postEditorSidebarComponent = await new PostEditorSidebarComponent( driver );
+						const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 						await postEditorSidebarComponent.addNewTag( newTagName );
 					} );
 
 					test.it( 'Close categories and tags', async function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 						await postEditorSidebarComponent.closeCategoriesAndTags();
 					} );
 
 					test.it( 'Verify categories and tags present after save', async function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 						const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 						await postEditorSidebarComponent.hideComponentIfNecessary();
 						await postEditorToolbarComponent.ensureSaved();
@@ -124,13 +124,13 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 					test.describe( 'Publicize Options', function() {
 						test.it( 'Expand sharing section', async function() {
-							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+							let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 							await postEditorSidebarComponent.expandSharingSection();
 						} );
 
 						if ( host !== 'CI' && host !== 'JN' ) {
 							test.it( 'Can see the publicise to twitter account', async function() {
-								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+								let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 								let accountDisplayed = await postEditorSidebarComponent.publicizeToTwitterAccountDisplayed();
 								assert.equal(
 									accountDisplayed,
@@ -142,7 +142,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 							} );
 
 							test.it( 'Can see the default publicise message', async function() {
-								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+								let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 								let messageDisplayed = await postEditorSidebarComponent.publicizeMessageDisplayed();
 								assert.equal(
 									messageDisplayed,
@@ -152,19 +152,19 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 							} );
 
 							test.it( 'Can set a custom publicise message', async function() {
-								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+								let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 								await postEditorSidebarComponent.setPublicizeMessage( publicizeMessage );
 							} );
 						}
 
 						test.it( 'Close sharing section', async function() {
-							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+							let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 							await postEditorSidebarComponent.closeSharingSection();
 						} );
 
 						test.describe( 'Preview (https only)', function() {
 							test.it( 'Can launch post preview', async function() {
-								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+								let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 								await postEditorSidebarComponent.hideComponentIfNecessary();
 
 								this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
@@ -497,7 +497,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				async function() {
 					let postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 					await postEditorToolbarComponent.ensureSaved( { clickSave: true } );
-					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+					let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 					await postEditorSidebarComponent.expandStatusSection();
 					await postEditorSidebarComponent.chooseFutureDate();
 					publishDate = await postEditorSidebarComponent.getSelectedPublishDate();
@@ -550,14 +550,14 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can disable sharing buttons', async function() {
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 				await postEditorSidebarComponent.expandSharingSection();
 				await postEditorSidebarComponent.setSharingButtons( false );
 				await postEditorSidebarComponent.closeSharingSection();
 			} );
 
 			test.it( 'Can allow comments', async function() {
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 				await postEditorSidebarComponent.expandMoreOptions();
 				await postEditorSidebarComponent.setCommentsForPost( true );
 			} );
@@ -569,7 +569,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				} );
 
 				test.it( 'Can set visibility to private which immediately publishes it', async function() {
-					const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+					const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 					await postEditorSidebarComponent.setVisibilityToPrivate();
 					this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 					await this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
@@ -679,7 +679,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			test.it( 'Can enter post title and content and set to password protected', async function() {
 				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterTitle( blogPostTitle );
-				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				this.postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 				await this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterContent( blogPostQuote );
@@ -688,14 +688,14 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enable sharing buttons', async function() {
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 				await postEditorSidebarComponent.expandSharingSection();
 				await postEditorSidebarComponent.setSharingButtons( true );
 				await postEditorSidebarComponent.closeSharingSection();
 			} );
 
 			test.it( 'Can disallow comments', async function() {
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 				await postEditorSidebarComponent.expandMoreOptions();
 				await postEditorSidebarComponent.setCommentsForPost( false );
 				await postEditorSidebarComponent.closeMoreOptions();
@@ -1100,7 +1100,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can trash the new post', async function() {
-				const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 				return await postEditorSidebarComponent.trashPost();
 			} );
 
@@ -1392,7 +1392,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 		test.describe( 'Revert the post to draft', function() {
 			test.it( 'Can revert the post to draft', async function() {
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorSidebarComponent.revertToDraft();
 				await postEditorToolbarComponent.waitForIsDraftStatus();
