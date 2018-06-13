@@ -102,7 +102,8 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 			const sidebarComponent = await SidebarComponent.Expect( driver );
 			await sidebarComponent.selectDomains();
 			await DomainsPage.Expect( driver );
-			return await new ShoppingCartWidgetComponent( driver ).empty();
+			const shoppingCartWidgetComponent = await ShoppingCartWidgetComponent.Expect( driver );
+			return await shoppingCartWidgetComponent.empty();
 		} );
 	} );
 
@@ -172,7 +173,8 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 			const sideBarComponent = await SidebarComponent.Expect( driver );
 			await sideBarComponent.selectDomains();
 			await DomainsPage.Expect( driver );
-			return await new ShoppingCartWidgetComponent( driver ).empty();
+			const shoppingCartWidgetComponent = await ShoppingCartWidgetComponent.Expect( driver );
+			return await shoppingCartWidgetComponent.empty();
 		} );
 	} );
 } );

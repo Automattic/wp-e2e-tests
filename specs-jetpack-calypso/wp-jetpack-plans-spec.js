@@ -81,17 +81,17 @@ test.describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function
 		test.after( async function() {
 			await ReaderPage.Visit( driver );
 
-			this.navbarComponent = await NavBarComponent.Expect( driver );
-			await this.navbarComponent.clickMySites();
+			const navbarComponent = await NavBarComponent.Expect( driver );
+			await navbarComponent.clickMySites();
 
-			this.statsPage = await StatsPage.Expect( driver );
+			await StatsPage.Expect( driver );
 
-			this.sidebarComponent = await SidebarComponent.Expect( driver );
-			await this.sideBarComponent.selectPlan();
+			const sidebarComponent = await SidebarComponent.Expect( driver );
+			await sidebarComponent.selectPlan();
 
 			this.domainsPage = new PlansPage( driver );
-			this.shoppingCartWidgetComponent = new ShoppingCartWidgetComponent( driver );
-			await this.shoppingCartWidgetComponent.empty();
+			const shoppingCartWidgetComponent = await ShoppingCartWidgetComponent.Expect( driver );
+			await shoppingCartWidgetComponent.empty();
 		} );
 	} );
 } );
