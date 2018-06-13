@@ -67,7 +67,7 @@ if ( host === 'PRESSABLE' ) {
 
 			test.it( 'Can create new site', async function() {
 				this.siteName = dataHelper.getNewBlogName();
-				this.pressableSitesPage = new PressableSitesPage( driver );
+				this.pressableSitesPage = await PressableSitesPage.Expect( driver );
 				return await this.pressableSitesPage.addNewSite( this.siteName );
 			} );
 
@@ -102,11 +102,12 @@ if ( host === 'PRESSABLE' ) {
 				await ReaderPage.Visit( driver );
 				const navBarComponent = await NavBarComponent.Expect( driver );
 				await navBarComponent.clickMySites();
-				const sidebarComponent = new SidebarComponent( driver );
+				const sidebarComponent = await SidebarComponent.Expect( driver );
 				await sidebarComponent.selectSiteSwitcher();
 				await sidebarComponent.searchForSite( this.siteName );
 				await sidebarComponent.selectStats();
-				return await new StatsPage( driver ).openActivity();
+				const statsPage = await StatsPage.Expect( driver );
+				return await statsPage.openActivity();
 			} );
 
 			// Disabled due to to longer time is required to make a backup.
@@ -116,7 +117,8 @@ if ( host === 'PRESSABLE' ) {
 			// } );
 
 			test.after( async function() {
-				return await new PressableSitesPage( driver, true ).deleteFirstSite();
+				const pressableSitesPage = await PressableSitesPage.Visit( driver );
+				return await pressableSitesPage.deleteFirstSite();
 			} );
 		} );
 	} );

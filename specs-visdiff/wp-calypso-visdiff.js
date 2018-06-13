@@ -49,7 +49,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can open the Site Pages section', async function() {
-			this.sidebarComponent = new SidebarComponent( driver );
+			this.sidebarComponent = await SidebarComponent.Expect( driver );
 			await this.sidebarComponent.ensureSidebarMenuVisible();
 			return await this.sidebarComponent.selectPages();
 		} );
@@ -70,7 +70,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Close sidebar for editor screenshot', async function() {
-			this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+			this.postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 			await this.postEditorSidebarComponent.hideComponentIfNecessary();
 			await eyesHelper.eyesScreenshot( driver, eyes, 'Page Editor' );
 		} );
@@ -110,7 +110,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can open the Blog Posts section', async function() {
-			this.sidebarComponent = new SidebarComponent( driver );
+			this.sidebarComponent = await SidebarComponent.Expect( driver );
 			await this.sidebarComponent.ensureSidebarMenuVisible();
 			return await this.sidebarComponent.selectPosts();
 		} );
@@ -150,7 +150,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Close sidebar for editor screenshot', async function() {
-			this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+			this.postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 			await this.postEditorSidebarComponent.hideComponentIfNecessary();
 			await eyesHelper.eyesScreenshot( driver, eyes, 'Post Editor' );
 		} );
@@ -191,7 +191,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can open the Comments section', async function() {
-			this.sidebarComponent = new SidebarComponent( driver );
+			this.sidebarComponent = await SidebarComponent.Expect( driver );
 			await this.sidebarComponent.ensureSidebarMenuVisible();
 			return await this.sidebarComponent.selectComments();
 		} );

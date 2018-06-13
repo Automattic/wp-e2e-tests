@@ -1,3 +1,5 @@
+/** @format */
+
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 
@@ -13,40 +15,40 @@ const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
 
-var driver;
+let driver;
 
 test.before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Jetpack Connection Removal: (${screenSize}) @jetpack`, function() {
+test.describe( `[${ host }] Jetpack Connection Removal: (${ screenSize }) @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Deactivate Jetpack Plugin:', function() {
 		this.bailSuite( true );
 
-		test.before( function() {
-			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.it( 'Can log into WordPress.com and open My Sites', () => {
+		test.it( 'Can log into WordPress.com and open My Sites', async function() {
 			this.loginFlow = new LoginFlow( driver, 'jetpackUserCI' );
-			return this.loginFlow.loginAndSelectMySite();
+			return await this.loginFlow.loginAndSelectMySite();
 		} );
 
-		test.it( 'Can open site Settings', () => {
-			this.sidebarComponent = new SidebarComponent( driver );
-			return this.sidebarComponent.selectSettings();
+		test.it( 'Can open site Settings', async function() {
+			this.sidebarComponent = await SidebarComponent.Expect( driver );
+			return await this.sidebarComponent.selectSettings();
 		} );
 
-		test.it( 'Can manage connection', () => {
+		test.it( 'Can manage connection', async function() {
 			this.settingsPage = new SettingsPage( driver );
-			this.settingsPage.manageConnection();
+			return await this.settingsPage.manageConnection();
 		} );
 
-		test.it( 'Can disconnect site', () => {
-			this.settingsPage.disconnectSite();
+		test.it( 'Can disconnect site', async function() {
+			return await this.settingsPage.disconnectSite();
 		} );
 	} );
 } );

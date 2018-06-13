@@ -121,7 +121,7 @@ test.describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @je
 				} );
 
 				test.it( 'Can open Featured Image upload modal', async function() {
-					editorSidebar = new PostEditorSidebarComponent( driver );
+					editorSidebar = await PostEditorSidebarComponent.Expect( driver );
 					await editorSidebar.displayed();
 					await editorSidebar.expandFeaturedImage();
 					await editorSidebar.openFeaturedImageDialog();

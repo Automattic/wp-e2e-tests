@@ -87,7 +87,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 						await eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
 						this.navBarComponent = await NavBarComponent.Expect( driver );
 						await this.navBarComponent.openNotifications();
-						this.notificationsComponent = new NotificationsComponent( driver );
+						this.notificationsComponent = await NotificationsComponent.Expect( driver );
 						await this.notificationsComponent.selectCommentByText( this.comment );
 						await this.notificationsComponent.trashComment();
 						await this.notificationsComponent.waitForUndoMessage();

@@ -68,14 +68,14 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can disable sharing buttons', async function() {
-			const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+			const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 			await postEditorSidebarComponent.expandSharingSection();
 			await postEditorSidebarComponent.setSharingButtons( false );
 			await postEditorSidebarComponent.closeSharingSection();
 		} );
 
 		test.it( 'Can launch page preview', async function() {
-			const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+			const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 			await postEditorSidebarComponent.hideComponentIfNecessary();
 
 			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
@@ -237,7 +237,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can set visibility to private which immediately publishes it', async function() {
-			const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+			const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 			await postEditorSidebarComponent.setVisibilityToPrivate();
 			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 			return await postEditorToolbarComponent.waitForSuccessViewPostNotice();
@@ -325,7 +325,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			test.it( 'Can enter page title and content and set to password protected', async function() {
 				let editorPage = await EditorPage.Expect( driver );
 				await editorPage.enterTitle( pageTitle );
-				const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 				await postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				editorPage = await EditorPage.Expect( driver );
 				await editorPage.enterContent( pageQuote );

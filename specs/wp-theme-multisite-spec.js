@@ -44,7 +44,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 			this.loginFlow = new LoginFlow( driver, 'multiSiteUser' );
 			await this.loginFlow.loginAndSelectAllSites();
 
-			this.sidebarComponent = new SidebarComponent( driver );
+			this.sidebarComponent = await SidebarComponent.Expect( driver );
 			await this.sidebarComponent.selectThemes();
 		} );
 
@@ -115,7 +115,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 			this.loginFlow = new LoginFlow( driver, 'multiSiteUser' );
 			await this.loginFlow.loginAndSelectAllSites();
 
-			this.sidebarComponent = new SidebarComponent( driver );
+			this.sidebarComponent = await SidebarComponent.Expect( driver );
 			await this.sidebarComponent.selectThemes();
 		} );
 

@@ -47,7 +47,7 @@ test.describe(
 			} );
 
 			test.it( 'Can view the default site from sidebar', async function() {
-				this.sidebarComponent = new SidebarComponent( driver );
+				this.sidebarComponent = await SidebarComponent.Expect( driver );
 				return await this.sidebarComponent.selectViewThisSite();
 			} );
 

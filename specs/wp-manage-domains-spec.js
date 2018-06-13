@@ -57,7 +57,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		} );
 
 		test.it( 'Can see the Domains page and choose add a domain', async function() {
-			const domainsPage = new DomainsPage( driver );
+			const domainsPage = await DomainsPage.Expect( driver );
 			let urlDisplayed = await driver.getCurrentUrl();
 			await domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
 			return await domainsPage.clickAddDomain();
@@ -83,7 +83,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		);
 
 		test.it( 'Can see checkout page, choose privacy and enter registrar details', async function() {
-			const checkOutPage = new CheckOutPage( driver );
+			const checkOutPage = await CheckOutPage.Expect( driver );
 			await checkOutPage.selectAddPrivacyProtectionCheckbox();
 			await checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
 			return await checkOutPage.submitForm();
@@ -98,10 +98,12 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 			await ReaderPage.Visit( driver );
 			const navBarComponent = await NavBarComponent.Expect( driver );
 			await navBarComponent.clickMySites();
-			await new StatsPage( driver, true ).displayed();
-			await new SidebarComponent( driver ).selectDomains();
-			await new DomainsPage( driver ).displayed();
-			return await new ShoppingCartWidgetComponent( driver ).empty();
+			await StatsPage.Expect( driver );
+			const sidebarComponent = await SidebarComponent.Expect( driver );
+			await sidebarComponent.selectDomains();
+			await DomainsPage.Expect( driver );
+			const shoppingCartWidgetComponent = await ShoppingCartWidgetComponent.Expect( driver );
+			return await shoppingCartWidgetComponent.empty();
 		} );
 	} );
 
@@ -119,7 +121,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		} );
 
 		test.it( 'Can see the Domains page and choose add a domain', async function() {
-			const domainsPage = new DomainsPage( driver );
+			const domainsPage = await DomainsPage.Expect( driver );
 			let urlDisplayed = await driver.getCurrentUrl();
 			await domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
 			return await domainsPage.clickAddDomain();
@@ -136,27 +138,30 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		} );
 
 		test.it( 'Can see use my own domain page', async function() {
-			return await new MyOwnDomainPage( driver ).displayed();
+			return await MyOwnDomainPage.Expect( driver );
 		} );
 
 		test.it( 'Can select to manually connect existing domain component', async function() {
-			return await new MapADomainComponent( driver ).selectManuallyConnectExistingDomain();
+			const mapADomainComponent = await MapADomainComponent.Expect( driver );
+			return await mapADomainComponent.selectManuallyConnectExistingDomain();
 		} );
 
 		test.it( 'Can see enter a domain component', async function() {
-			return await new MapADomainPage( driver ).displayed();
+			return await MapADomainPage.Expect( driver );
 		} );
 
 		test.it( 'Can enter the domain name', async function() {
-			return await new EnterADomainComponent( driver ).enterADomain( blogName );
+			const enterADomainComponent = await EnterADomainComponent.Expect( driver );
+			return await enterADomainComponent.enterADomain( blogName );
 		} );
 
 		test.it( 'Can add domain to the cart', async function() {
-			return await new EnterADomainComponent( driver ).clickonAddButtonToAddDomainToTheCart();
+			const enterADomainComponent = await EnterADomainComponent.Expect( driver );
+			return await enterADomainComponent.clickonAddButtonToAddDomainToTheCart();
 		} );
 
 		test.it( 'Can see checkout page', async function() {
-			return await new MapADomainCheckoutPage( driver ).displayed();
+			return await MapADomainCheckoutPage.Expect( driver );
 		} );
 
 		test.after( async function() {
@@ -164,10 +169,12 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 			await ReaderPage.Visit( driver );
 			const navBarComponent = await NavBarComponent.Expect( driver );
 			await navBarComponent.clickMySites();
-			await new StatsPage( driver, true ).displayed();
-			await new SidebarComponent( driver ).selectDomains();
-			await new DomainsPage( driver ).displayed();
-			return await new ShoppingCartWidgetComponent( driver ).empty();
+			await StatsPage.Expect( driver );
+			const sideBarComponent = await SidebarComponent.Expect( driver );
+			await sideBarComponent.selectDomains();
+			await DomainsPage.Expect( driver );
+			const shoppingCartWidgetComponent = await ShoppingCartWidgetComponent.Expect( driver );
+			return await shoppingCartWidgetComponent.empty();
 		} );
 	} );
 } );

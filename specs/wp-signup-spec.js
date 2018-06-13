@@ -192,7 +192,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseAccountSettings();
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseAccountSettings();
 					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
 					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
@@ -366,7 +367,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseManagePurchases();
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseManagePurchases();
 					const purchasesPage = new PurchasesPage( driver );
 					await purchasesPage.dismissGuidedTour();
 					await purchasesPage.selectPremiumPlan();
@@ -387,7 +389,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseAccountSettings();
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseAccountSettings();
 					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
 					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
@@ -536,7 +539,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseManagePurchases();
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseManagePurchases();
 					const purchasesPage = new PurchasesPage( driver );
 					await purchasesPage.dismissGuidedTour();
 					await purchasesPage.selectPremiumPlan();
@@ -557,7 +561,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseAccountSettings();
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseAccountSettings();
 					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
 					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
@@ -701,7 +706,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseManagePurchases();
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseManagePurchases();
 					const purchasesPage = new PurchasesPage( driver );
 					await purchasesPage.dismissGuidedTour();
 					await purchasesPage.selectPersonalPlan();
@@ -722,7 +728,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseAccountSettings();
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseAccountSettings();
 					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
 					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
@@ -806,7 +813,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can see checkout page, choose domain privacy option and enter registrar details',
 				async function() {
-					const checkOutPage = new CheckOutPage( driver );
+					const checkOutPage = await CheckOutPage.Expect( driver );
 					await checkOutPage.selectAddPrivacyProtectionCheckbox();
 					await checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
 					return await checkOutPage.submitForm();
@@ -878,7 +885,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We should only one option - the settings option', async function() {
-				const sideBarComponent = new SideBarComponent( driver );
+				const sideBarComponent = await SideBarComponent.Expect( driver );
 				let numberMenuItems = await sideBarComponent.numberOfMenuItems();
 				assert.equal(
 					numberMenuItems,
@@ -894,7 +901,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await ReaderPage.Visit( driver );
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickMySites();
-					await new SideBarComponent( driver ).selectSettings();
+					const sidebarComponent = await SideBarComponent.Expect( driver );
+					await sidebarComponent.selectSettings();
 					await new DomainOnlySettingsPage( driver ).manageDomain();
 					await new DomainDetailsPage( driver ).viewPaymentSettings();
 
@@ -1002,7 +1010,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can see checkout page, choose domain privacy option and enter registrar details',
 				async function() {
-					const checkOutPage = new CheckOutPage( driver );
+					const checkOutPage = await CheckOutPage.Expect( driver );
 					await checkOutPage.selectAddPrivacyProtectionCheckbox();
 					await checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
 					return await checkOutPage.submitForm();
@@ -1077,7 +1085,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseManagePurchases();
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseManagePurchases();
 
 					let purchasesPage = new PurchasesPage( driver );
 					await purchasesPage.dismissGuidedTour();
@@ -1319,7 +1328,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseAccountSettings();
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseAccountSettings();
 					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
 					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
