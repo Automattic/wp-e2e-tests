@@ -456,7 +456,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			let sidebarComponent = new SidebarComponent( driver );
 			await sidebarComponent.ensureSidebarMenuVisible();
 			await sidebarComponent.selectStats();
-			await new StatsPage( driver ).openActivity();
+			const statsPage = await StatsPage.Expect( driver );
+			await statsPage.openActivity();
 			let displayed = await new ActivityPage( driver ).postTitleDisplayed( blogPostTitle );
 			return assert(
 				displayed,

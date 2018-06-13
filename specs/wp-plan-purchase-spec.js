@@ -42,7 +42,7 @@ test.describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, functi
 		} );
 
 		test.it( 'Can Select Plans', async function() {
-			const statsPage = new StatsPage( driver );
+			const statsPage = await StatsPage.Expect( driver );
 			await statsPage.waitForPage();
 			const sideBarComponent = new SidebarComponent( driver );
 			return await sideBarComponent.selectPlan();

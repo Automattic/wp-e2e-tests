@@ -106,7 +106,8 @@ if ( host === 'PRESSABLE' ) {
 				await sidebarComponent.selectSiteSwitcher();
 				await sidebarComponent.searchForSite( this.siteName );
 				await sidebarComponent.selectStats();
-				return await new StatsPage( driver ).openActivity();
+				const statsPage = await StatsPage.Expect( driver );
+				return await statsPage.openActivity();
 			} );
 
 			// Disabled due to to longer time is required to make a backup.

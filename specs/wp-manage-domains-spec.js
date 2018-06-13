@@ -98,7 +98,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 			await ReaderPage.Visit( driver );
 			const navBarComponent = await NavBarComponent.Expect( driver );
 			await navBarComponent.clickMySites();
-			await new StatsPage( driver, true ).displayed();
+			await StatsPage.Expect( driver );
 			await new SidebarComponent( driver ).selectDomains();
 			await new DomainsPage( driver ).displayed();
 			return await new ShoppingCartWidgetComponent( driver ).empty();
@@ -167,7 +167,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 			await ReaderPage.Visit( driver );
 			const navBarComponent = await NavBarComponent.Expect( driver );
 			await navBarComponent.clickMySites();
-			await new StatsPage( driver, true ).displayed();
+			await StatsPage.Expect( driver );
 			await new SidebarComponent( driver ).selectDomains();
 			await new DomainsPage( driver ).displayed();
 			return await new ShoppingCartWidgetComponent( driver ).empty();
