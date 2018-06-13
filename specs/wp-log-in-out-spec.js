@@ -19,7 +19,7 @@ import WPHomePage from '../lib/pages/wp-home-page';
 // import MagicLoginPage from '../lib/pages/magic-login-page';
 // import LoginPage from '../lib/pages/login-page';
 
-import NavbarComponent from '../lib/components/navbar-component.js';
+import NavBarComponent from '../lib/components/nav-bar-component.js';
 import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component';
 
 import LoginFlow from '../lib/flows/login-flow.js';
@@ -62,9 +62,7 @@ test.describe(
 				} );
 
 				test.it( 'Can see Reader Page after logging in', async function() {
-					let readerPage = new ReaderPage( driver );
-					let displayed = await readerPage.displayed();
-					assert.equal( displayed, true, 'The reader page is not displayed after log in' );
+					return await ReaderPage.Expect( driver );
 				} );
 			} );
 
@@ -77,15 +75,14 @@ test.describe(
 					} );
 
 					test.it( 'Can return to Reader', async () => {
-						let readerPage = new ReaderPage( driver, true );
-						return await readerPage.displayed();
+						return await ReaderPage.Visit( driver );
 					} );
 				} );
 			}
 
 			test.describe( 'Can Log Out', function() {
 				test.it( 'Can view profile to log out', async function() {
-					let navbarComponent = new NavbarComponent( driver );
+					let navbarComponent = await NavBarComponent.Expect( driver );
 					await navbarComponent.clickProfileLink();
 				} );
 
@@ -97,9 +94,7 @@ test.describe(
 				} );
 
 				test.it( 'Can see wordpress.com home when after logging out', async function() {
-					const loggedOutMasterbarComponent = new LoggedOutMasterbarComponent( driver );
-					let displayed = await loggedOutMasterbarComponent.displayed();
-					assert( displayed, "The logged out masterbar isn't displayed after logging out" );
+					return await LoggedOutMasterbarComponent.Expect( driver );
 				} );
 			} );
 		} );
@@ -416,8 +411,8 @@ test.describe( `[${ host }] User Agent: (${ screenSize }) @parallel @jetpack`, f
 	} );
 
 	test.it( 'Can see the correct user agent set', async function() {
-		this.wpHomePage = new WPHomePage( driver, { visit: true } );
-		let userAgent = await driver.executeScript( 'return navigator.userAgent;' );
+		await WPHomePage.Visit( driver );
+		const userAgent = await driver.executeScript( 'return navigator.userAgent;' );
 		assert(
 			userAgent.match( 'wp-e2e-tests' ),
 			`User Agent does not contain 'wp-e2e-tests'.  [${ userAgent }]`

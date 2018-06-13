@@ -63,7 +63,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		test.it( 'Can edit a default page', async function() {
 			const defaultPageTitle = 'About';
 			await this.pagesPage.editPageWithTitle( defaultPageTitle );
-			this.editorPage = new EditorPage( driver );
+			this.editorPage = await EditorPage.Expect( driver );
 			await this.editorPage.waitForTitle();
 			let titleShown = await this.editorPage.titleShown();
 			assert.equal( titleShown, defaultPageTitle, 'The page title shown was unexpected' );
@@ -86,7 +86,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Close editor', async function() {
-			this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 			return await this.postEditorToolbarComponent.closeEditor();
 		} );
 
@@ -116,7 +116,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can view the blog posts list', async function() {
-			this.postsPage = new PostsPage( driver );
+			this.postsPage = await PostsPage.Expect( driver );
 			await this.postsPage.waitForPosts();
 			await eyesHelper.eyesScreenshot( driver, eyes, 'Blog Posts List' );
 		} );
@@ -124,7 +124,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		test.it( 'Can edit the default post', async function() {
 			const defaultPostTitle = 'The Journey Begins';
 			await this.postsPage.editPostWithTitle( defaultPostTitle );
-			this.editorPage = new EditorPage( driver );
+			this.editorPage = await EditorPage.Expect( driver );
 			await this.editorPage.waitForTitle();
 			let titleShown = await this.editorPage.titleShown();
 			assert.equal( titleShown, defaultPostTitle, 'The post title shown was unexpected' );
@@ -132,7 +132,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 
 		test.it( 'Can open the editor media modal', async function() {
 			await this.editorPage.chooseInsertMediaOption();
-			await this.editorPage.selectImageByNumber( 0 );
+			await this.editorPage.selectFirstImage();
 			await eyesHelper.eyesScreenshot( driver, eyes, 'Editor Media Modal' );
 		} );
 
@@ -167,7 +167,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Close editor', async function() {
-			this.postEditorToolbarComponent = new PostEditorToolbarComponent( driver );
+			this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 			return await this.postEditorToolbarComponent.closeEditor();
 		} );
 

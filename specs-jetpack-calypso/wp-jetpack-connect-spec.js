@@ -94,8 +94,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can click the free plan button', async function() {
-			this.pickAPlanPage = new PickAPlanPage( driver );
-			return await this.pickAPlanPage.selectFreePlanJetpack();
+			const pickAPlanPage = await PickAPlanPage.Expect( driver );
+			return await pickAPlanPage.selectFreePlanJetpack();
 		} );
 
 		test.it( 'Has site URL in route', async function( done ) {
@@ -137,13 +137,14 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can approve connection on the authorization page', async function() {
-			this.jetpackAuthorizePage = new JetpackAuthorizePage( driver );
-			return await this.jetpackAuthorizePage.approveConnection();
+			return await new JetpackAuthorizePage( driver, {
+				overrideABTests: false,
+			} ).approveConnection();
 		} );
 
 		test.it( 'Can click the free plan button', async function() {
-			this.pickAPlanPage = new PickAPlanPage( driver );
-			return await this.pickAPlanPage.selectFreePlanJetpack();
+			const pickAPlanPage = await PickAPlanPage.Expect( driver );
+			return await pickAPlanPage.selectFreePlanJetpack();
 		} );
 
 		test.it(
@@ -166,7 +167,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select free plan', async function() {
-			return await new PickAPlanPage( driver ).selectFreePlan();
+			const pickAPlanPage = await PickAPlanPage.Expect( driver );
+			return await pickAPlanPage.selectFreePlanJetpack();
 		} );
 
 		test.it( 'Can see Jetpack connect page', async function() {
@@ -214,13 +216,13 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can log in as Subscriber', async function() {
-			return await new LoginPage( driver, true ).login( this.accountName, this.password );
+			const loginPage = await LoginPage.Visit( driver );
+			return await loginPage.login( this.accountName, this.password );
 		} );
 
 		test.it( 'Can login via SSO into WP Admin', async function() {
-			await new WPAdminLogonPage( driver, siteName, {
-				visit: true,
-			} ).logonSSO();
+			const wpAdminLogonPage = await WPAdminLogonPage.Visit( driver, siteName );
+			await wpAdminLogonPage.logonSSO();
 			await new JetpackAuthorizePage( driver ).approveSSOConnection();
 			// return new WPAdminDashboardPage( driver );
 		} );
@@ -256,10 +258,9 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'We can set the sandbox cookie for payments', async function() {
-				return await new WPHomePage( driver, {
-					visit: true,
-					culture: locale,
-				} ).setSandboxModeForPayments( sandboxCookieValue );
+				const wpHomePage = await WPHomePage.Visit( driver );
+				await wpHomePage.checkURL( locale );
+				return await wpHomePage.setSandboxModeForPayments( sandboxCookieValue );
 			} );
 
 			test.it( 'Can create wporg site', async function() {
@@ -272,7 +273,9 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can start connection flow using JN site', async function() {
-				return await new JetpackConnectPage( driver ).addSiteUrl( jnFlow.url );
+				return await new JetpackConnectPage( driver, { overrideABTests: false } ).addSiteUrl(
+					jnFlow.url
+				);
 			} );
 
 			test.it( 'Can enter the Jetpack credentials and install Jetpack', async function() {
@@ -291,13 +294,14 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 
 			test.it( 'Can log into WP.com', async function() {
 				const user = dataHelper.getAccountConfig( 'jetpackConnectUser' );
-				return await new LoginPage( driver ).login( user[ 0 ], user[ 1 ] );
+				const loginPage = await LoginPage.Expect( driver );
+				return await loginPage.login( user[ 0 ], user[ 1 ] );
 			} );
 
 			test.it(
 				'Can see the secure payment page and enter/submit test payment details',
 				async function() {
-					const securePaymentComponent = new SecurePaymentComponent( driver );
+					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					await securePaymentComponent.payWithStoredCardIfPossible( testCreditCardDetails );
 					await securePaymentComponent.waitForCreditCardPaymentProcessing();
 					return await securePaymentComponent.waitForPageToDisappear();
@@ -367,7 +371,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 
 			test.it( 'Can log into WP.com', async function() {
 				const user = dataHelper.getAccountConfig( 'jetpackConnectUser' );
-				return await new LoginPage( driver ).login( user[ 0 ], user[ 1 ] );
+				const loginPage = await LoginPage.Expect( driver );
+				return await loginPage.login( user[ 0 ], user[ 1 ] );
 			} );
 
 			test.it( 'Can wait for Jetpack get connected', async function() {
@@ -421,7 +426,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can click the free plan button', async function() {
-				return await new PickAPlanPage( driver ).selectFreePlanJetpack();
+				const pickAPlanPage = await PickAPlanPage.Expect( driver );
+				return await pickAPlanPage.selectFreePlanJetpack();
 			} );
 
 			test.it( 'Can then see the Jetpack plan page in Calypso', async function() {

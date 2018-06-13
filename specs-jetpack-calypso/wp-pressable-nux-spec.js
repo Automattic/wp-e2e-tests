@@ -14,7 +14,7 @@ import PressableNUXFlow from '../lib/flows/pressable-nux-flow';
 import ReaderPage from '../lib/pages/reader-page';
 import SidebarComponent from '../lib/components/sidebar-component';
 import StatsPage from '../lib/pages/stats-page';
-import NavbarComponent from '../lib/components/navbar-component';
+import NavBarComponent from '../lib/components/nav-bar-component';
 import JetpackConnectFlow from '../lib/flows/jetpack-connect-flow';
 import LoginFlow from '../lib/flows/login-flow';
 
@@ -82,7 +82,9 @@ if ( host === 'PRESSABLE' ) {
 			} );
 
 			test.it( 'Can approve connection on the authorization page', async function() {
-				return await new JetpackAuthorizePage( driver ).approveConnection();
+				return await new JetpackAuthorizePage( driver, {
+					overrideABTests: false,
+				} ).approveConnection();
 			} );
 
 			test.it(
@@ -97,8 +99,9 @@ if ( host === 'PRESSABLE' ) {
 			} );
 
 			test.it( 'Can open Rewind activity page', async function() {
-				await new ReaderPage( driver, true ).displayed();
-				await new NavbarComponent( driver ).clickMySites();
+				await ReaderPage.Visit( driver );
+				const navBarComponent = await NavBarComponent.Expect( driver );
+				await navBarComponent.clickMySites();
 				const sidebarComponent = new SidebarComponent( driver );
 				await sidebarComponent.selectSiteSwitcher();
 				await sidebarComponent.searchForSite( this.siteName );

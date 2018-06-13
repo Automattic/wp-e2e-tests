@@ -2,7 +2,6 @@
 
 import test from 'selenium-webdriver/testing';
 import config from 'config';
-import assert from 'assert';
 
 import * as driverManager from '../lib/driver-manager';
 import * as dataHelper from '../lib/data-helper';
@@ -18,7 +17,7 @@ import ReaderPage from '../lib/pages/reader-page.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
 import ShoppingCartWidgetComponent from '../lib/components/shopping-cart-widget-component.js';
 import SidebarComponent from '../lib/components/sidebar-component.js';
-import NavbarComponent from '../lib/components/navbar-component.js';
+import NavBarComponent from '../lib/components/nav-bar-component.js';
 
 import WPAdminSidebar from '../lib/pages/wp-admin/wp-admin-sidebar';
 
@@ -75,16 +74,14 @@ test.describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function
 		} );
 
 		test.it( 'Can then see secure payment component', async function() {
-			const securePaymentComponent = new SecurePaymentComponent( driver );
-			let displayed = await securePaymentComponent.displayed();
-			assert.equal( displayed, true, 'Could not see the secure payment component' );
+			return await SecurePaymentComponent.Expect( driver );
 		} );
 
 		// Remove all items from basket for clean up
 		test.after( async function() {
-			this.readerPage = new ReaderPage( driver, true );
+			await ReaderPage.Visit( driver );
 
-			this.navbarComponent = new NavbarComponent( driver );
+			this.navbarComponent = await NavBarComponent.Expect( driver );
 			await this.navbarComponent.clickMySites();
 
 			this.statsPage = new StatsPage( driver, true );

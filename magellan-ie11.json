@@ -1,12 +1,12 @@
 {
   "mocha_tests": [
-    "specs/*wp-signup-spec.js"
+    "specs/"
   ],
   "mocha_opts": "test/mocha.opts",
   "mocha_args": "-R spec-xunit-reporter",
   "max_test_attempts": 3,
-  "max_workers": 6,
-  "suiteTag": "parallel",
+  "max_workers": 1,
+  "suiteTag": "ie11canary",
   "sauce": false,
   "browser": "ie11",
   "framework": "testarmada-magellan-mocha-plugin",

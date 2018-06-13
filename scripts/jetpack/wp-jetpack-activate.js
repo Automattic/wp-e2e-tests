@@ -1,3 +1,5 @@
+/** @format */
+
 import test from 'selenium-webdriver/testing';
 import config from 'config';
 
@@ -25,7 +27,7 @@ test.before( function() {
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${host}] Jetpack Connection: (${screenSize}) @jetpack`, function() {
+test.describe( `[${ host }] Jetpack Connection: (${ screenSize }) @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Activate Jetpack Plugin:', function() {
@@ -60,9 +62,9 @@ test.describe( `[${host}] Jetpack Connection: (${screenSize}) @jetpack`, functio
 			this.jetpackAuthorizePage.approveConnection();
 		} );
 
-		test.it( 'Can select Free plan', () => {
-			this.pickAPlanPage = new PickAPlanPage( driver );
-			return this.pickAPlanPage.selectFreePlan();
+		test.it( 'Can select Free plan', async function() {
+			const pickAPlanPage = await PickAPlanPage.Expect( driver );
+			return await pickAPlanPage.selectFreePlan();
 		} );
 
 		test.it( 'Can activate recommended features', () => {

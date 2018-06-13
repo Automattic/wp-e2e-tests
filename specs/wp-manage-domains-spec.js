@@ -15,7 +15,7 @@ import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
 import ShoppingCartWidgetComponent from '../lib/components/shopping-cart-widget-component.js';
 import SidebarComponent from '../lib/components/sidebar-component.js';
-import NavbarComponent from '../lib/components/navbar-component.js';
+import NavBarComponent from '../lib/components/nav-bar-component.js';
 import MyOwnDomainPage from '../lib/pages/domain-my-own-page';
 import MapADomainComponent from '../lib/components/map-a-domain-component';
 import MapADomainPage from '../lib/pages/domain-map-page';
@@ -64,19 +64,19 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		} );
 
 		test.it( 'Can see the domain search component', async function() {
-			return await new FindADomainComponent( driver ).waitForResults();
+			const findADomainComponent = await FindADomainComponent.Expect( driver );
+			return await findADomainComponent.waitForResults();
 		} );
 
 		test.it( 'Can search for a blog name', async function() {
-			return await new FindADomainComponent( driver ).searchForBlogNameAndWaitForResults(
-				blogName
-			);
+			const findADomainComponent = await FindADomainComponent.Expect( driver );
+			return await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
 		} );
 
 		test.it(
 			'Can select the .com search result and decline Google Apps for email',
 			async function() {
-				const findADomainComponent = new FindADomainComponent( driver );
+				const findADomainComponent = await FindADomainComponent.Expect( driver );
 				await findADomainComponent.selectDomainAddress( expectedDomainName );
 				return await findADomainComponent.declineGoogleApps();
 			}
@@ -90,13 +90,14 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		} );
 
 		test.it( 'Can then see secure payment component', async function() {
-			return await new SecurePaymentComponent( driver ).displayed();
+			return await SecurePaymentComponent.Expect( driver );
 		} );
 
 		test.after( async function() {
 			// Empty the cart
-			await new ReaderPage( driver, true ).displayed();
-			await new NavbarComponent( driver ).clickMySites();
+			await ReaderPage.Visit( driver );
+			const navBarComponent = await NavBarComponent.Expect( driver );
+			await navBarComponent.clickMySites();
 			await new StatsPage( driver, true ).displayed();
 			await new SidebarComponent( driver ).selectDomains();
 			await new DomainsPage( driver ).displayed();
@@ -125,11 +126,13 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		} );
 
 		test.it( 'Can see the domain search component', async function() {
-			return await new FindADomainComponent( driver ).waitForResults();
+			const findADomainComponent = await FindADomainComponent.Expect( driver );
+			return await findADomainComponent.waitForResults();
 		} );
 
 		test.it( 'Can select to use an existing domain', async function() {
-			return await new FindADomainComponent( driver ).selectUseOwnDomain();
+			const findADomainComponent = await FindADomainComponent.Expect( driver );
+			return await findADomainComponent.selectUseOwnDomain();
 		} );
 
 		test.it( 'Can see use my own domain page', async function() {
@@ -158,8 +161,9 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 
 		test.after( async function() {
 			// Empty the cart
-			await new ReaderPage( driver, true ).displayed();
-			await new NavbarComponent( driver ).clickMySites();
+			await ReaderPage.Visit( driver );
+			const navBarComponent = await NavBarComponent.Expect( driver );
+			await navBarComponent.clickMySites();
 			await new StatsPage( driver, true ).displayed();
 			await new SidebarComponent( driver ).selectDomains();
 			await new DomainsPage( driver ).displayed();
