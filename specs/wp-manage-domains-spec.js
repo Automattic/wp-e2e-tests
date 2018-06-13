@@ -83,7 +83,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		);
 
 		test.it( 'Can see checkout page, choose privacy and enter registrar details', async function() {
-			const checkOutPage = new CheckOutPage( driver );
+			const checkOutPage = await CheckOutPage.Expect( driver );
 			await checkOutPage.selectAddPrivacyProtectionCheckbox();
 			await checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
 			return await checkOutPage.submitForm();

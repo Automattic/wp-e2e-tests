@@ -813,7 +813,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can see checkout page, choose domain privacy option and enter registrar details',
 				async function() {
-					const checkOutPage = new CheckOutPage( driver );
+					const checkOutPage = await CheckOutPage.Expect( driver );
 					await checkOutPage.selectAddPrivacyProtectionCheckbox();
 					await checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
 					return await checkOutPage.submitForm();
@@ -1010,7 +1010,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can see checkout page, choose domain privacy option and enter registrar details',
 				async function() {
-					const checkOutPage = new CheckOutPage( driver );
+					const checkOutPage = await CheckOutPage.Expect( driver );
 					await checkOutPage.selectAddPrivacyProtectionCheckbox();
 					await checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
 					return await checkOutPage.submitForm();
