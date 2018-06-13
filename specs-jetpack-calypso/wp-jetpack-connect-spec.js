@@ -87,7 +87,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can add new site', async function() {
-			const sidebarComponent = new SidebarComponent( driver );
+			const sidebarComponent = await SidebarComponent.Expect( driver );
 			await sidebarComponent.addNewSite( driver );
 			const addNewSitePage = new AddNewSitePage( driver );
 			return await addNewSitePage.addSiteUrl( this.jnFlow.url );
@@ -407,7 +407,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can add new site', async function() {
-				await new SidebarComponent( driver ).addNewSite();
+				const sideBarComponent = await SidebarComponent.Expect( driver );
+				await sideBarComponent.addNewSite();
 				return await new AddNewSitePage( driver ).addSiteUrl( jnFlow.url );
 			} );
 

@@ -99,7 +99,8 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 			const navBarComponent = await NavBarComponent.Expect( driver );
 			await navBarComponent.clickMySites();
 			await StatsPage.Expect( driver );
-			await new SidebarComponent( driver ).selectDomains();
+			const sidebarComponent = await SidebarComponent.Expect( driver );
+			await sidebarComponent.selectDomains();
 			await new DomainsPage( driver ).displayed();
 			return await new ShoppingCartWidgetComponent( driver ).empty();
 		} );
@@ -168,7 +169,8 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 			const navBarComponent = await NavBarComponent.Expect( driver );
 			await navBarComponent.clickMySites();
 			await StatsPage.Expect( driver );
-			await new SidebarComponent( driver ).selectDomains();
+			const sideBarComponent = await SidebarComponent.Expect( driver );
+			await sideBarComponent.selectDomains();
 			await new DomainsPage( driver ).displayed();
 			return await new ShoppingCartWidgetComponent( driver ).empty();
 		} );

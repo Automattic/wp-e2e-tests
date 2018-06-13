@@ -885,7 +885,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We should only one option - the settings option', async function() {
-				const sideBarComponent = new SideBarComponent( driver );
+				const sideBarComponent = await SideBarComponent.Expect( driver );
 				let numberMenuItems = await sideBarComponent.numberOfMenuItems();
 				assert.equal(
 					numberMenuItems,
@@ -901,7 +901,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await ReaderPage.Visit( driver );
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickMySites();
-					await new SideBarComponent( driver ).selectSettings();
+					const sidebarComponent = await SideBarComponent.Expect( driver );
+					await sidebarComponent.selectSettings();
 					await new DomainOnlySettingsPage( driver ).manageDomain();
 					await new DomainDetailsPage( driver ).viewPaymentSettings();
 

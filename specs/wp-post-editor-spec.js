@@ -453,7 +453,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			await ReaderPage.Visit( driver );
 			const navBarComponent = await NavBarComponent.Expect( driver );
 			await navBarComponent.clickMySites();
-			let sidebarComponent = new SidebarComponent( driver );
+			let sidebarComponent = await SidebarComponent.Expect( driver );
 			await sidebarComponent.ensureSidebarMenuVisible();
 			await sidebarComponent.selectStats();
 			const statsPage = await StatsPage.Expect( driver );
@@ -1155,7 +1155,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					this.navbarComponent = await NavBarComponent.Expect( driver );
 					await this.navbarComponent.clickMySites();
 					const jetpackSiteName = dataHelper.getJetpackSiteName();
-					this.sidebarComponent = new SidebarComponent( driver );
+					this.sidebarComponent = await SidebarComponent.Expect( driver );
 					if ( host !== 'WPCOM' ) {
 						await this.sidebarComponent.selectSite( jetpackSiteName );
 					}

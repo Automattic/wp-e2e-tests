@@ -51,7 +51,7 @@ test.describe(
 		test.it(
 			"Can see 'Store' option in main Calypso menu for an AT WooCommerce site set to the US",
 			async function() {
-				this.sideBarComponent = new SidebarComponent( driver );
+				this.sidebarComponent = await SidebarComponent.Expect( driver );
 				let displayed = await this.sideBarComponent.storeOptionDisplayed();
 				assert(
 					displayed,
@@ -61,7 +61,7 @@ test.describe(
 		);
 
 		test.it( "The 'Store' option opens the store dashboard with its own sidebar", async function() {
-			this.sideBarComponent = new SidebarComponent( driver );
+			this.sidebarComponent = await SidebarComponent.Expect( driver );
 			await this.sideBarComponent.selectStoreOption();
 			this.storeSidebarComponent = new StoreSidebarComponent( driver );
 			let d = await this.storeSidebarComponent.displayed();

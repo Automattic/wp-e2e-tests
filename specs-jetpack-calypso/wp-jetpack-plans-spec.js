@@ -86,7 +86,7 @@ test.describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function
 
 			this.statsPage = await StatsPage.Expect( driver );
 
-			this.sideBarComponent = new SidebarComponent( driver );
+			this.sidebarComponent = await SidebarComponent.Expect( driver );
 			await this.sideBarComponent.selectPlan();
 
 			this.domainsPage = new PlansPage( driver );

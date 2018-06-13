@@ -102,7 +102,7 @@ if ( host === 'PRESSABLE' ) {
 				await ReaderPage.Visit( driver );
 				const navBarComponent = await NavBarComponent.Expect( driver );
 				await navBarComponent.clickMySites();
-				const sidebarComponent = new SidebarComponent( driver );
+				const sidebarComponent = await SidebarComponent.Expect( driver );
 				await sidebarComponent.selectSiteSwitcher();
 				await sidebarComponent.searchForSite( this.siteName );
 				await sidebarComponent.selectStats();

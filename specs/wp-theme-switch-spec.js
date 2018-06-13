@@ -112,7 +112,7 @@ test.describe(
 			} );
 
 			test.it( 'Can open Themes menu', async function() {
-				let sidebarComponent = new SidebarComponent( driver );
+				let sidebarComponent = await SidebarComponent.Expect( driver );
 				return await sidebarComponent.selectThemes();
 			} );
 

@@ -49,7 +49,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can open the Site Pages section', async function() {
-			this.sidebarComponent = new SidebarComponent( driver );
+			this.sidebarComponent = await SidebarComponent.Expect( driver );
 			await this.sidebarComponent.ensureSidebarMenuVisible();
 			return await this.sidebarComponent.selectPages();
 		} );
@@ -110,7 +110,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can open the Blog Posts section', async function() {
-			this.sidebarComponent = new SidebarComponent( driver );
+			this.sidebarComponent = await SidebarComponent.Expect( driver );
 			await this.sidebarComponent.ensureSidebarMenuVisible();
 			return await this.sidebarComponent.selectPosts();
 		} );
@@ -191,7 +191,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can open the Comments section', async function() {
-			this.sidebarComponent = new SidebarComponent( driver );
+			this.sidebarComponent = await SidebarComponent.Expect( driver );
 			await this.sidebarComponent.ensureSidebarMenuVisible();
 			return await this.sidebarComponent.selectComments();
 		} );
