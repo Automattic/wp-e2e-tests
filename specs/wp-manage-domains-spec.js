@@ -140,7 +140,8 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		} );
 
 		test.it( 'Can select to manually connect existing domain component', async function() {
-			return await new MapADomainComponent( driver ).selectManuallyConnectExistingDomain();
+			const mapADomainComponent = await MapADomainComponent.Expect( driver );
+			return await mapADomainComponent.selectManuallyConnectExistingDomain();
 		} );
 
 		test.it( 'Can see enter a domain component', async function() {
