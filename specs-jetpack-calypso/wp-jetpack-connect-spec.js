@@ -209,7 +209,9 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			await WPAdminSidebar.refreshIfJNError( driver );
 			const wpAdminSidebar = await WPAdminSidebar.Expect( driver );
 			await wpAdminSidebar.selectAddNewUser();
-			return await new WPAdminNewUserPage( driver ).addUser( this.emailAddress );
+			await WPAdminNewUserPage.refreshIfJNError( driver );
+			const wpAdminNewUserPage = await WPAdminNewUserPage.Expect( driver );
+			return await wpAdminNewUserPage.addUser( this.emailAddress );
 		} );
 
 		test.it( 'Log out from WP Admin', async function() {
