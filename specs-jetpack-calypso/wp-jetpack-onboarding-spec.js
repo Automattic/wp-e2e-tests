@@ -213,7 +213,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 
 		test.it( 'Can see site home page', async function() {
 			const viewSitePage = await ViewSitePage.Expect( driver );
-			const widgetContactInfoComponent = new WidgetContactInfoComponent( driver );
+			const widgetContactInfoComponent = await WidgetContactInfoComponent.Expect( driver );
 			const businessAddress = [ address, city, stateCode, postalCode, countryCode ];
 
 			let title = await viewSitePage.siteTitle();
