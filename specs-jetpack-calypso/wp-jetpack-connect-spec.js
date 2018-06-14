@@ -89,7 +89,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		test.it( 'Can add new site', async function() {
 			const sidebarComponent = await SidebarComponent.Expect( driver );
 			await sidebarComponent.addNewSite( driver );
-			const addNewSitePage = new AddNewSitePage( driver );
+			const addNewSitePage = await AddNewSitePage.Expect( driver );
 			return await addNewSitePage.addSiteUrl( this.jnFlow.url );
 		} );
 
@@ -122,7 +122,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can navigate to the Jetpack dashboard', async function() {
-			this.wpAdminSidebar = new WPAdminSidebar( driver );
+			await WPAdminSidebar.refreshIfJNError( driver );
+			this.wpAdminSidebar = await WPAdminSidebar.Expect( driver );
 			return await this.wpAdminSidebar.selectJetpack();
 		} );
 
@@ -137,9 +138,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can approve connection on the authorization page', async function() {
-			return await new JetpackAuthorizePage( driver, {
-				overrideABTests: false,
-			} ).approveConnection();
+			const jetpackAuthorizePage = await JetpackAuthorizePage.Expect( driver );
+			return await jetpackAuthorizePage.approveConnection();
 		} );
 
 		test.it( 'Can click the free plan button', async function() {
@@ -206,7 +206,9 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Add new user as Subscriber in wp-admin', async function() {
-			await new WPAdminSidebar( driver ).selectAddNewUser();
+			await WPAdminSidebar.refreshIfJNError( driver );
+			const wpAdminSidebar = await WPAdminSidebar.Expect( driver );
+			await wpAdminSidebar.selectAddNewUser();
 			return await new WPAdminNewUserPage( driver ).addUser( this.emailAddress );
 		} );
 
@@ -223,7 +225,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		test.it( 'Can login via SSO into WP Admin', async function() {
 			const wpAdminLogonPage = await WPAdminLogonPage.Visit( driver, siteName );
 			await wpAdminLogonPage.logonSSO();
-			await new JetpackAuthorizePage( driver ).approveSSOConnection();
+			const jetpackAuthorizePage = await JetpackAuthorizePage.Expect( driver );
+			return await jetpackAuthorizePage.approveSSOConnection();
 			// return new WPAdminDashboardPage( driver );
 		} );
 	} );
@@ -287,9 +290,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can wait for Jetpack get connected', async function() {
-				return await new JetpackAuthorizePage( driver, {
-					overrideABTests: false,
-				} ).waitToDisappear();
+				const jetpackAuthorizePage = await JetpackAuthorizePage.Expect( driver );
+				return await jetpackAuthorizePage.waitToDisappear();
 			} );
 
 			test.it( 'Can log into WP.com', async function() {
@@ -376,9 +378,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can wait for Jetpack get connected', async function() {
-				return await new JetpackAuthorizePage( driver, {
-					overrideABTests: false,
-				} ).waitToDisappear();
+				const jetpackAuthorizePage = await JetpackAuthorizePage.Expect( driver );
+				return await jetpackAuthorizePage.waitToDisappear();
 			} );
 
 			test.it( 'Can see the Woo wizard ready page', async function() {
@@ -409,7 +410,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			test.it( 'Can add new site', async function() {
 				const sideBarComponent = await SidebarComponent.Expect( driver );
 				await sideBarComponent.addNewSite();
-				return await new AddNewSitePage( driver ).addSiteUrl( jnFlow.url );
+				const addNewSitePage = await AddNewSitePage.Expect( driver );
+				return await addNewSitePage.addSiteUrl( jnFlow.url );
 			} );
 
 			test.it( 'Can enter the Jetpack credentials and install Jetpack', async function() {
@@ -421,9 +423,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can wait for Jetpack get connected', async function() {
-				return await new JetpackAuthorizePage( driver, {
-					overrideABTests: false,
-				} ).waitToDisappear();
+				const jetpackAuthorizePage = await JetpackAuthorizePage.Expect( driver );
+				return await jetpackAuthorizePage.waitToDisappear();
 			} );
 
 			test.it( 'Can click the free plan button', async function() {

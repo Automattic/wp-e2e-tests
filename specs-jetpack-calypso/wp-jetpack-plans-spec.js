@@ -53,7 +53,8 @@ test.describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function
 		} );
 
 		test.it( 'Can open Jetpack dashboard', async function() {
-			this.wpAdminSidebar = new WPAdminSidebar( driver );
+			await WPAdminSidebar.refreshIfJNError( driver );
+			this.wpAdminSidebar = await WPAdminSidebar.Expect( driver );
 			return await this.wpAdminSidebar.selectJetpack();
 		} );
 
