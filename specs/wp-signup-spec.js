@@ -787,7 +787,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can select domain only from the domain first choice page', async function() {
-				return await new DomainFirstPage( driver ).chooseJustBuyTheDomain();
+				const domainFirstPage = await DomainFirstPage.Expect( driver );
+				return await domainFirstPage.chooseJustBuyTheDomain();
 			} );
 
 			test.it( 'Can then enter account details', async function() {

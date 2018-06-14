@@ -59,7 +59,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can skip all steps', async function() {
-			const wizardNavigationComponent = new WizardNavigationComponent( driver );
+			const wizardNavigationComponent = await WizardNavigationComponent.Expect( driver );
 			await wizardNavigationComponent.skipStep();
 			await wizardNavigationComponent.skipStep();
 			await wizardNavigationComponent.skipStep();
@@ -165,7 +165,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can skip add a contact form', async function() {
-			return await new WizardNavigationComponent( driver ).skipStep();
+			const wizardNavigationComponent = await WizardNavigationComponent.Expect( driver );
+			return await wizardNavigationComponent.skipStep();
 		} );
 
 		test.it( 'Can select add a business address', async function() {
@@ -213,7 +214,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 
 		test.it( 'Can see site home page', async function() {
 			const viewSitePage = await ViewSitePage.Expect( driver );
-			const widgetContactInfoComponent = new WidgetContactInfoComponent( driver );
+			const widgetContactInfoComponent = await WidgetContactInfoComponent.Expect( driver );
 			const businessAddress = [ address, city, stateCode, postalCode, countryCode ];
 
 			let title = await viewSitePage.siteTitle();
@@ -279,11 +280,13 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can skip add a contact form', async function() {
-				return await new WizardNavigationComponent( driver ).skipStep();
+				const wizardNavigationComponent = await WizardNavigationComponent.Expect( driver );
+				return await wizardNavigationComponent.skipStep();
 			} );
 
 			test.it( 'Can skip add a business address', async function() {
-				return await new WizardNavigationComponent( driver ).skipStep();
+				const wizardNavigationComponent = await WizardNavigationComponent.Expect( driver );
+				return await wizardNavigationComponent.skipStep();
 			} );
 
 			test.it( 'Can make business an online store', async function() {

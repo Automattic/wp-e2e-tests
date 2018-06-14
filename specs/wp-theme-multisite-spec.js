@@ -157,7 +157,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 
 				test.describe( 'Successful activation dialog', function() {
 					test.it( 'should show the successful activation dialog', async function() {
-						const themeDialogComponent = new ThemeDialogComponent( driver );
+						const themeDialogComponent = await ThemeDialogComponent.Expect( driver );
 						return await themeDialogComponent.goToThemeDetail();
 					} );
 
