@@ -98,9 +98,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can approve connection on the authorization page', async function() {
-			return await new JetpackAuthorizePage( driver, {
-				overrideABTests: false,
-			} ).approveConnection();
+			const jetpackAuthorizePage = await JetpackAuthorizePage.Expect( driver );
+			return await jetpackAuthorizePage.approveConnection();
 		} );
 
 		test.it( 'Can select continue on add contact form', async function() {
@@ -179,9 +178,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can approve connection on the authorization page', async function() {
-			return await new JetpackAuthorizePage( driver, {
-				overrideABTests: false,
-			} ).approveConnection();
+			const jetpackAuthorizePage = await JetpackAuthorizePage.Expect( driver );
+			return await jetpackAuthorizePage.approveConnection();
 		} );
 
 		test.it( 'Can enter address on business address page', async function() {
@@ -298,9 +296,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can approve connection on the authorization page', async function() {
-				return await new JetpackAuthorizePage( driver, {
-					overrideABTests: false,
-				} ).approveConnection();
+				const jetpackAuthorizePage = await JetpackAuthorizePage.Expect( driver );
+				return await jetpackAuthorizePage.approveConnection();
 			} );
 
 			test.it( 'Can select activate on activate stats page', async function() {
@@ -345,7 +342,9 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can navigate to the Jetpack dashboard', async function() {
-				return await new WPAdminSidebar( driver ).selectJetpack();
+				await WPAdminSidebar.refreshIfJNError( driver );
+				const wpAdminSidebar = await WPAdminSidebar.Expect( driver );
+				return await wpAdminSidebar.selectJetpack();
 			} );
 
 			test.it( 'Can click the Connect Jetpack button', async function() {
@@ -358,9 +357,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can approve connection on the authorization page', async function() {
-				return await new JetpackAuthorizePage( driver, {
-					overrideABTests: false,
-				} ).approveConnection();
+				const jetpackAuthorizePage = await JetpackAuthorizePage.Expect( driver );
+				return await jetpackAuthorizePage.approveConnection();
 			} );
 
 			test.it( 'Can click the free plan button', async function() {

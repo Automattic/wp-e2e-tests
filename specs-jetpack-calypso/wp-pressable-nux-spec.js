@@ -76,15 +76,14 @@ if ( host === 'PRESSABLE' ) {
 			} );
 
 			test.it( 'Can proceed to Jetpack activation', async function() {
-				const siteSettings = new PressableSiteSettingsPage( driver );
+				const siteSettings = await PressableSiteSettingsPage.Expect( driver );
 				await siteSettings.waitForJetpackPremium();
 				return await siteSettings.activateJetpackPremium();
 			} );
 
 			test.it( 'Can approve connection on the authorization page', async function() {
-				return await new JetpackAuthorizePage( driver, {
-					overrideABTests: false,
-				} ).approveConnection();
+				const jetpackAuthorizePage = await JetpackAuthorizePage.Expect( driver );
+				return await jetpackAuthorizePage.approveConnection();
 			} );
 
 			test.it(
