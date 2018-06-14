@@ -5,7 +5,6 @@ import test from 'selenium-webdriver/testing';
 
 import config from 'config';
 import * as driverManager from '../lib/driver-manager';
-import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
 
 import NavBarComponent from '../lib/components/nav-bar-component';
@@ -16,6 +15,7 @@ import StoreOrdersPage from '../lib/pages/woocommerce/store-orders-page';
 import StoreOrderDetailsPage from '../lib/pages/woocommerce/store-order-details-page';
 import StoreProductsPage from '../lib/pages/woocommerce/store-products-page';
 import AddEditProductPage from '../lib/pages/woocommerce/add-edit-product-page';
+import StoreDashboardPage from '../lib/pages/woocommerce/store-dashboard-page';
 
 import LoginFlow from '../lib/flows/login-flow';
 
@@ -42,30 +42,28 @@ test.describe(
 
 		// Login as WooCommerce store user and open the sidebar
 		test.before( async function() {
-			this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-			await this.loginFlow.login();
-			this.navBarComponent = await NavBarComponent.Expect( driver );
-			await this.navBarComponent.clickMySites();
+			const loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
+			await loginFlow.login();
+			const navBarComponent = await NavBarComponent.Expect( driver );
+			return await navBarComponent.clickMySites();
 		} );
 
 		test.it(
 			"Can see 'Store' option in main Calypso menu for an AT WooCommerce site set to the US",
 			async function() {
-				this.sidebarComponent = await SidebarComponent.Expect( driver );
-				let displayed = await this.sideBarComponent.storeOptionDisplayed();
+				const sidebarComponent = await SidebarComponent.Expect( driver );
 				assert(
-					displayed,
+					await sidebarComponent.storeOptionDisplayed(),
 					'The Store menu option is not displayed for the AT WooCommerce site set to the US'
 				);
 			}
 		);
 
 		test.it( "The 'Store' option opens the store dashboard with its own sidebar", async function() {
-			this.sidebarComponent = await SidebarComponent.Expect( driver );
-			await this.sideBarComponent.selectStoreOption();
-			this.storeSidebarComponent = new StoreSidebarComponent( driver );
-			let d = await this.storeSidebarComponent.displayed();
-			assert( d, 'The store sidebar is not displayed' );
+			const sidebarComponent = await SidebarComponent.Expect( driver );
+			await sidebarComponent.selectStoreOption();
+			await StoreDashboardPage.Expect( driver );
+			return await StoreSidebarComponent.Expect( driver );
 		} );
 	}
 );
@@ -80,24 +78,28 @@ test.describe( `Can see WooCommerce products in Calypso '${ screenSize }' @paral
 
 	// Login as WooCommerce store user and open the woo store
 	test.before( async function() {
-		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		return await this.loginFlow.loginAndOpenWooStore();
+		const loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
+		return await loginFlow.loginAndOpenWooStore();
 	} );
 
 	test.it( "Can see 'Products' option in the Woo store sidebar", async function() {
-		this.storeSidebarComponent = new StoreSidebarComponent( driver );
-		let d = await this.storeSidebarComponent.productsLinkDisplayed();
-		assert( d, 'The store sidebar products link is not displayed' );
+		const storeSidebarComponent = await StoreSidebarComponent.Expect( driver );
+		assert(
+			await storeSidebarComponent.productsLinkDisplayed(),
+			'The store sidebar products link is not displayed'
+		);
 	} );
 
 	test.it(
 		'Can see the products page with at least one product when selecting the products option in the Woo store sidebar',
 		async function() {
-			this.storeSidebarComponent = new StoreSidebarComponent( driver );
-			await this.storeSidebarComponent.selectProducts();
-			this.storeProductsPage = new StoreProductsPage( driver );
-			let displayed = await this.storeProductsPage.atLeastOneProductDisplayed();
-			assert( displayed, 'No Woo products are displayed on the product page' );
+			const storeSidebarComponent = await StoreSidebarComponent.Expect( driver );
+			await storeSidebarComponent.selectProducts();
+			const storeProductsPage = await StoreProductsPage.Expect( driver );
+			assert(
+				await storeProductsPage.atLeastOneProductDisplayed(),
+				'No Woo products are displayed on the product page'
+			);
 		}
 	);
 } );
@@ -107,21 +109,15 @@ test.describe(
 	function() {
 		this.timeout( mochaTimeOut );
 		this.bailSuite( true );
-		let fileDetails;
 
 		test.before( async function() {
 			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		// 'Create image file for upload'
-		test.before( async function() {
-			fileDetails = await mediaHelper.createFile( false, 'image-uploads-store' );
-		} );
-
 		// Login as WooCommerce store user and open the woo store
 		test.before( async function() {
-			this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-			return await this.loginFlow.loginAndOpenWooStore();
+			const loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
+			return await loginFlow.loginAndOpenWooStore();
 		} );
 
 		test.it(
@@ -129,44 +125,35 @@ test.describe(
 			async function() {
 				const productTitle = dataHelper.randomPhrase();
 				const productDescription = 'Another test e2e product';
-				this.storeSidebarComponent = new StoreSidebarComponent( driver );
-				await this.storeSidebarComponent.addProduct();
-				this.addProductPage = new AddEditProductPage( driver );
-				await this.addProductPage.enterTitle( productTitle );
-				// this.addProductPage.addImage( fileDetails );
-				await this.addProductPage.enterDescription( productDescription );
-				await this.addProductPage.setPrice( '888.00' );
-				await this.addProductPage.setDimensions( '6', '7', '8' );
-				await this.addProductPage.setWeight( '2.2' );
-				await this.addProductPage.addQuantity( '80' );
-				await this.addProductPage.allowBackorders();
-				await this.addProductPage.addCategory( 'Art' ); //Adding a category at the end to prevent errors being thrown on save
-				await this.addProductPage.saveAndPublish();
-				await this.addProductPage.waitForSuccessNotice();
-				this.storeProductsPage = new StoreProductsPage( driver );
-				let displayed = await this.storeProductsPage.productDisplayed( productTitle );
+				const storeSidebarComponent = await StoreSidebarComponent.Expect( driver );
+				await storeSidebarComponent.addProduct();
+				const addProductPage = await AddEditProductPage.Expect( driver );
+				await addProductPage.enterTitle( productTitle );
+				await addProductPage.enterDescription( productDescription );
+				await addProductPage.setPrice( '888.00' );
+				await addProductPage.setDimensions( '6', '7', '8' );
+				await addProductPage.setWeight( '2.2' );
+				await addProductPage.addQuantity( '80' );
+				await addProductPage.allowBackorders();
+				await addProductPage.addCategory( 'Art' ); //Adding a category at the end to prevent errors being thrown on save
+				await addProductPage.saveAndPublish();
+				await addProductPage.waitForSuccessNotice();
+				let storeProductsPage = await StoreProductsPage.Expect( driver );
 				assert(
-					displayed,
+					await storeProductsPage.productDisplayed( productTitle ),
 					`The product '${ productTitle }' isn't being displayed on the products page after being added`
 				);
-				await this.storeProductsPage.selectProduct( productTitle );
-				this.editProductPage = new AddEditProductPage( driver );
-				await this.editProductPage.deleteProduct();
-				await this.editProductPage.waitForSuccessNotice();
-				this.storeProductsPage = new StoreProductsPage( driver );
-				displayed = await this.storeProductsPage.productDisplayed( productTitle );
+				await storeProductsPage.selectProduct( productTitle );
+				const editProductPage = await AddEditProductPage.Expect( driver );
+				await editProductPage.deleteProduct();
+				await editProductPage.waitForSuccessNotice();
+				storeProductsPage = await StoreProductsPage.Expect( driver );
 				assert(
-					! displayed,
-					`The product '${ productTitle }' isn't still being displayed on the products page after being deleted`
+					! await storeProductsPage.productDisplayed( productTitle ),
+					`The product '${ productTitle }' is still being displayed on the products page after being deleted`
 				);
 			}
 		);
-
-		test.after( async function() {
-			if ( fileDetails ) {
-				await mediaHelper.deleteFile( fileDetails );
-			}
-		} );
 	}
 );
 
@@ -180,37 +167,41 @@ test.describe( `Can see WooCommerce orders in Calypso '${ screenSize }' @paralle
 
 	// Login as WooCommerce store user and open the woo store
 	test.before( async function() {
-		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		return await this.loginFlow.loginAndOpenWooStore();
+		const loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
+		return await loginFlow.loginAndOpenWooStore();
 	} );
 
 	test.it( "Can see 'Orders' option in the Woo store sidebar", async function() {
-		this.storeSidebarComponent = new StoreSidebarComponent( driver );
-		let d = await this.storeSidebarComponent.productsLinkDisplayed();
-		assert( d, 'The store sidebar orders link is not displayed' );
+		const storeSidebarComponent = await StoreSidebarComponent.Expect( driver );
+		assert(
+			await storeSidebarComponent.productsLinkDisplayed(),
+			'The store sidebar orders link is not displayed'
+		);
 	} );
 
 	test.it(
 		'Can see the orders page with at least one order when selecting the orders option in the Woo store sidebar',
 		async function() {
-			this.storeSidebarComponent = new StoreSidebarComponent( driver );
-			await this.storeSidebarComponent.selectOrders();
-			this.storeOrdersPage = new StoreOrdersPage( driver );
-			let displayed = await this.storeOrdersPage.atLeastOneOrderDisplayed();
-			assert( displayed, 'No Woo orders are displayed on the orders page' );
+			const storeSidebarComponent = await StoreSidebarComponent.Expect( driver );
+			await storeSidebarComponent.selectOrders();
+			const storeOrdersPage = await StoreOrdersPage.Expect( driver );
+			assert(
+				await storeOrdersPage.atLeastOneOrderDisplayed(),
+				'No Woo orders are displayed on the orders page'
+			);
 		}
 	);
 
 	test.it(
 		'Can see the order details page when opening an order, product details page when clicking a product in an order',
 		async function() {
-			this.storeSidebarComponent = new StoreSidebarComponent( driver );
-			await this.storeSidebarComponent.selectOrders();
-			this.storeOrdersPage = new StoreOrdersPage( driver );
-			await this.storeOrdersPage.clickFirstOrder();
-			this.storeOrderDetailsPage = new StoreOrderDetailsPage( driver );
-			await this.storeOrderDetailsPage.clickFirstProduct();
-			this.editProductPage = new AddEditProductPage( driver );
+			const storeSidebarComponent = await StoreSidebarComponent.Expect( driver );
+			await storeSidebarComponent.selectOrders();
+			const storeOrdersPage = await StoreOrdersPage.Expect( driver );
+			await storeOrdersPage.clickFirstOrder();
+			const storeOrderDetailsPage = await StoreOrderDetailsPage.Expect( driver );
+			await storeOrderDetailsPage.clickFirstProduct();
+			return await AddEditProductPage.Expect( driver );
 		}
 	);
 } );
@@ -225,36 +216,44 @@ test.describe( `Can see WooCommerce settings in Calypso '${ screenSize }' @paral
 
 	// Login as WooCommerce store user and open the woo store
 	test.before( async function() {
-		this.loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
-		return await this.loginFlow.loginAndOpenWooStore();
+		const loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
+		return await loginFlow.loginAndOpenWooStore();
 	} );
 
 	test.it( "Can see 'Settings' option in the Woo store sidebar", async function() {
-		this.storeSidebarComponent = new StoreSidebarComponent( driver );
-		let d = await this.storeSidebarComponent.settingsLinkDisplayed();
-		assert( d, 'The store sidebar settings link is not displayed' );
+		const storeSidebarComponent = await StoreSidebarComponent.Expect( driver );
+		assert(
+			await storeSidebarComponent.settingsLinkDisplayed(),
+			'The store sidebar settings link is not displayed'
+		);
 	} );
 
 	test.it(
 		'Can see the settings page when selecting the settings option in the Woo store sidebar',
 		async function() {
-			this.storeSidebarComponent = new StoreSidebarComponent( driver );
-			await this.storeSidebarComponent.selectSettings();
+			const storeSidebarComponent = await StoreSidebarComponent.Expect( driver );
+			return await storeSidebarComponent.selectSettings();
 		}
 	);
 
 	test.it( 'Can select payments, shipping, and taxes tabs on the settings page', async function() {
-		this.storeSidebarComponent = new StoreSidebarComponent( driver );
-		await this.storeSidebarComponent.selectSettings();
-		this.storeSettingsPage = new StoreSettingsPage( driver );
-		await this.storeSettingsPage.selectPaymentsTab();
-		let displayed = await this.storeSettingsPage.paymentsSettingsDisplayed();
-		assert( displayed, 'The payment settings were not displayed' );
-		await this.storeSettingsPage.selectShippingTab();
-		displayed = await this.storeSettingsPage.shippingSettingsDisplayed();
-		assert( displayed, 'The shipping settings were not displayed' );
-		await this.storeSettingsPage.selectTaxesTab();
-		displayed = await this.storeSettingsPage.taxesSettingsDisplayed();
-		assert( displayed, 'The taxes settings were not displayed' );
+		const storeSidebarComponent = await StoreSidebarComponent.Expect( driver );
+		await storeSidebarComponent.selectSettings();
+		const storeSettingsPage = await StoreSettingsPage.Expect( driver );
+		await storeSettingsPage.selectPaymentsTab();
+		assert(
+			await storeSettingsPage.paymentsSettingsDisplayed(),
+			'The payment settings were not displayed'
+		);
+		await storeSettingsPage.selectShippingTab();
+		assert(
+			await storeSettingsPage.shippingSettingsDisplayed(),
+			'The shipping settings were not displayed'
+		);
+		await storeSettingsPage.selectTaxesTab();
+		assert(
+			await storeSettingsPage.taxesSettingsDisplayed(),
+			'The taxes settings were not displayed'
+		);
 	} );
 } );
