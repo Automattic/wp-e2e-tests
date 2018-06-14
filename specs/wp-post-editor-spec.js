@@ -511,8 +511,10 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			);
 
 			test.it( 'Can confirm scheduling post and see correct publish date', async function() {
-				let editorConfirmationSidebarComponent = new EditorConfirmationSidebarComponent( driver );
-				let publishDateShown = await editorConfirmationSidebarComponent.publishDateShown();
+				const editorConfirmationSidebarComponent = await EditorConfirmationSidebarComponent.Expect(
+					driver
+				);
+				const publishDateShown = await editorConfirmationSidebarComponent.publishDateShown();
 				assert.equal(
 					publishDateShown,
 					publishDate,
@@ -521,9 +523,11 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				await editorConfirmationSidebarComponent.confirmAndPublish();
 				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorToolbarComponent.waitForPostSucessNotice();
-				let postEditorPage = await EditorPage.Expect( driver );
-				let isScheduled = await postEditorPage.postIsScheduled();
-				assert( isScheduled, 'The newly scheduled post is not showing in the editor as scheduled' );
+				const postEditorPage = await EditorPage.Expect( driver );
+				assert(
+					await postEditorPage.postIsScheduled(),
+					'The newly scheduled post is not showing in the editor as scheduled'
+				);
 			} );
 		} );
 	} );
