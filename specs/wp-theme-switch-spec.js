@@ -74,8 +74,8 @@ test.describe( `[${ host }] Switching Themes: (${ screenSize })`, function() {
 			test.it(
 				'Can see the theme thanks dialog and go back to the theme details page',
 				async function() {
-					this.themeDialogComponent = new ThemeDialogComponent( driver );
-					await this.themeDialogComponent.goToThemeDetail();
+					const themeDialogComponent = await ThemeDialogComponent.Expect( driver );
+					await themeDialogComponent.goToThemeDetail();
 					this.themeDetailPage = await ThemeDetailPage.Expect( driver );
 					let displayed = await this.themeDetailPage.displayed();
 					await eyesHelper.eyesScreenshot( driver, eyes, 'Theme Details Page' );
@@ -130,7 +130,7 @@ test.describe(
 				} );
 
 				test.it( 'Can see the theme thanks dialog', async function() {
-					let themeDialogComponent = new ThemeDialogComponent( driver );
+					const themeDialogComponent = await ThemeDialogComponent.Expect( driver );
 					await themeDialogComponent.customizeSite();
 				} );
 
