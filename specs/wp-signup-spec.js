@@ -759,7 +759,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.before( async function() {
 				if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
 					await SlackNotifier.warn(
-						'Domains tests are currently disabled as SKIP_DOMAIN_TESTS is set to true'
+						'Domains tests are currently disabled as SKIP_DOMAIN_TESTS is set to true',
+						{ suppressDuplicateMessages: true }
 					);
 					return this.skip();
 				}
@@ -948,7 +949,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.before( async function() {
 				if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
 					await SlackNotifier.warn(
-						'Domains tests are currently disabled as SKIP_DOMAIN_TESTS is set to true'
+						'Domains tests are currently disabled as SKIP_DOMAIN_TESTS is set to true',
+						{ suppressDuplicateMessages: true }
 					);
 					return this.skip();
 				}
