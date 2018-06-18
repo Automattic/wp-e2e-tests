@@ -164,7 +164,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 					test.it( 'should show the correct theme in the current theme bar', async function() {
 						this.themeDetailPage = await ThemeDetailPage.Expect( driver );
 						await this.themeDetailPage.goBackToAllThemes();
-						this.currentThemeComponent = new CurrentThemeComponent( driver );
+						this.currentThemeComponent = await CurrentThemeComponent.Expect( driver );
 						let name = await this.currentThemeComponent.getThemeName();
 						return assert.equal( name, this.currentThemeName );
 					} );
