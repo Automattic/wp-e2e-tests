@@ -887,7 +887,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await checkOutThankyouPage.goToMyDomain();
 					const domainOnlySettingsPage = await DomainOnlySettingsPage.Expect( driver );
 					await domainOnlySettingsPage.manageDomain();
-					return await new DomainDetailsPage( driver ).displayed();
+					return await DomainDetailsPage.Expect( driver );
 				}
 			);
 
@@ -917,7 +917,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await sidebarComponent.selectSettings();
 					const domainOnlySettingsPage = await DomainOnlySettingsPage.Expect( driver );
 					await domainOnlySettingsPage.manageDomain();
-					await new DomainDetailsPage( driver ).viewPaymentSettings();
+					const domainDetailsPage = await DomainDetailsPage.Expect( driver );
+					await domainDetailsPage.viewPaymentSettings();
 
 					const managePurchasePage = await ManagePurchasePage.Expect( driver );
 					let domainDisplayed = await managePurchasePage.domainDisplayed();
