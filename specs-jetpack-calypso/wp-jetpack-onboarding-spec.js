@@ -118,7 +118,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see site home page', async function() {
-			const viewPagePage = new ViewPagePage( driver );
+			const viewPagePage = await ViewPagePage.Expect( driver );
 			let title = await viewPagePage.pageTitle();
 			return assert.equal( title.toUpperCase(), 'HOME PAGE', 'Homepage not set to a static page' );
 		} );
