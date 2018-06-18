@@ -633,7 +633,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 							} );
 
 							test.it( "Can't see post at all", async function() {
-								let notFoundPage = new NotFoundPage( driver );
+								let notFoundPage = await NotFoundPage.Expect( driver );
 								let displayed = await notFoundPage.displayed();
 								assert.equal(
 									displayed,
@@ -647,7 +647,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					// Jetpack tests
 					test.describe( 'As a non-logged in user ', function() {
 						test.it( "Can't see post at all", async function() {
-							let notFoundPage = new NotFoundPage( driver );
+							let notFoundPage = await NotFoundPage.Expect( driver );
 							let displayed = await notFoundPage.displayed();
 							assert.equal(
 								displayed,

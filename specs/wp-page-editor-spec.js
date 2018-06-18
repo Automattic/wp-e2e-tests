@@ -277,7 +277,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				await driver.manage().deleteAllCookies();
 				await driver.navigate().refresh();
 
-				const notFoundPage = new NotFoundPage( driver );
+				const notFoundPage = await NotFoundPage.Expect( driver );
 				const displayed = await notFoundPage.displayed();
 				assert.equal(
 					displayed,
@@ -293,7 +293,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			} );
 
 			test.it( "Can't view page title or content as non-logged in user", async function() {
-				const notFoundPage = new NotFoundPage( driver );
+				const notFoundPage = await NotFoundPage.Expect( driver );
 				const displayed = await notFoundPage.displayed();
 				assert.equal(
 					displayed,
