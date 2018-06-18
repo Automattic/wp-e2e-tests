@@ -373,7 +373,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const purchasesPage = await PurchasesPage.Expect( driver );
 					await purchasesPage.dismissGuidedTour();
 					await purchasesPage.selectPremiumPlan();
-					await new ManagePurchasePage( driver ).chooseCancelAndRefund();
+					const managePurchasePage = await ManagePurchasePage.Expect( driver );
+					await managePurchasePage.chooseCancelAndRefund();
 					const cancelPurchasePage = new CancelPurchasePage( driver );
 					await cancelPurchasePage.clickCancelPurchase();
 					await cancelPurchasePage.completeCancellationSurvey();
@@ -546,7 +547,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const purchasesPage = await PurchasesPage.Expect( driver );
 					await purchasesPage.dismissGuidedTour();
 					await purchasesPage.selectPremiumPlan();
-					await new ManagePurchasePage( driver ).chooseCancelAndRefund();
+					const managePurchasePage = await ManagePurchasePage.Expect( driver );
+					await managePurchasePage.chooseCancelAndRefund();
 					const cancelPurchasePage = new CancelPurchasePage( driver );
 					await cancelPurchasePage.clickCancelPurchase();
 					await cancelPurchasePage.completeCancellationSurvey();
@@ -714,7 +716,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const purchasesPage = await PurchasesPage.Expect( driver );
 					await purchasesPage.dismissGuidedTour();
 					await purchasesPage.selectPersonalPlan();
-					await new ManagePurchasePage( driver ).chooseCancelAndRefund();
+					const managePurchasePage = await ManagePurchasePage.Expect( driver );
+					await managePurchasePage.chooseCancelAndRefund();
 					const cancelPurchasePage = new CancelPurchasePage( driver );
 					await cancelPurchasePage.clickCancelPurchase();
 					await cancelPurchasePage.completeCancellationSurvey();
@@ -912,7 +915,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await new DomainOnlySettingsPage( driver ).manageDomain();
 					await new DomainDetailsPage( driver ).viewPaymentSettings();
 
-					const managePurchasePage = new ManagePurchasePage( driver );
+					const managePurchasePage = await ManagePurchasePage.Expect( driver );
 					let domainDisplayed = await managePurchasePage.domainDisplayed();
 					assert.equal(
 						domainDisplayed,
@@ -1098,7 +1101,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await purchasesPage.dismissGuidedTour();
 					await purchasesPage.selectBusinessPlan();
 
-					await new ManagePurchasePage( driver ).chooseCancelAndRefund();
+					const managePurchasePage = await ManagePurchasePage.Expect( driver );
+					await managePurchasePage.chooseCancelAndRefund();
 
 					const cancelPurchasePage = new CancelPurchasePage( driver );
 					await cancelPurchasePage.chooseCancelPlanAndDomain();
