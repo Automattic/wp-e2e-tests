@@ -97,7 +97,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 
 				test.describe( 'Manage Followed Sites', function() {
 					test.it( 'Can see the Manage page', async function() {
-						this.readerManagePage = new ReaderManagePage( driver, true );
+						this.readerManagePage = await ReaderManagePage.Visit( driver );
 						await this.readerManagePage.waitForSites();
 						await eyesHelper.eyesScreenshot(
 							driver,

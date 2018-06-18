@@ -67,9 +67,6 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			const newCategoryName = 'Category ' + new Date().getTime().toString();
 			const newTagName = 'Tag ' + new Date().getTime().toString();
 			const publicizeMessage = dataHelper.randomPhrase();
-			const publicizeTwitterAccount = config.has( 'publicizeTwitterAccount' )
-				? config.get( 'publicizeTwitterAccount' )
-				: '';
 
 			test.it( 'Can log in', async function() {
 				let loginFlow = new LoginFlow( driver );
@@ -130,6 +127,9 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 						if ( host !== 'CI' && host !== 'JN' ) {
 							test.it( 'Can see the publicise to twitter account', async function() {
+								const publicizeTwitterAccount = config.has( 'publicizeTwitterAccount' )
+									? config.get( 'publicizeTwitterAccount' )
+									: '';
 								let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 								let accountDisplayed = await postEditorSidebarComponent.publicizeToTwitterAccountDisplayed();
 								assert.equal(
@@ -170,8 +170,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 								this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 								await this.postEditorToolbarComponent.ensureSaved();
 								await this.postEditorToolbarComponent.launchPreview();
-								this.postPreviewComponent = new PostPreviewComponent( driver );
-								await this.postPreviewComponent.displayed();
+								this.postPreviewComponent = await PostPreviewComponent.Expect( driver );
+								return await this.postPreviewComponent.displayed();
 							} );
 
 							test.it( 'Can see correct post title in preview', async function() {
@@ -232,7 +232,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 								} );
 
 								test.it( 'Can see correct post title in preview', async function() {
-									this.postPreviewComponent = new PostPreviewComponent( driver );
+									this.postPreviewComponent = await PostPreviewComponent.Expect( driver );
 									let postTitle = await this.postPreviewComponent.postTitle();
 									assert.equal(
 										postTitle.toLowerCase(),
@@ -349,12 +349,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 								if ( host !== 'CI' && host !== 'JN' ) {
 									test.describe( 'Can see post publicized on twitter', function() {
 										test.it( 'Can see post message', async function() {
-											let twitterFeedPage = new TwitterFeedPage(
-												driver,
-												publicizeTwitterAccount,
-												true
-											);
-											await twitterFeedPage.checkLatestTweetsContain( publicizeMessage );
+											let twitterFeedPage = await TwitterFeedPage.Visit( driver );
+											return await twitterFeedPage.checkLatestTweetsContain( publicizeMessage );
 										} );
 									} );
 								}
@@ -458,7 +454,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			await sidebarComponent.selectStats();
 			const statsPage = await StatsPage.Expect( driver );
 			await statsPage.openActivity();
-			let displayed = await new ActivityPage( driver ).postTitleDisplayed( blogPostTitle );
+			const activityPage = await ActivityPage.Expect( driver );
+			let displayed = await activityPage.postTitleDisplayed( blogPostTitle );
 			return assert(
 				displayed,
 				`The published post title '${ blogPostTitle }' was not displayed in activity log after publishing`
@@ -633,7 +630,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 							} );
 
 							test.it( "Can't see post at all", async function() {
-								let notFoundPage = new NotFoundPage( driver );
+								let notFoundPage = await NotFoundPage.Expect( driver );
 								let displayed = await notFoundPage.displayed();
 								assert.equal(
 									displayed,
@@ -647,7 +644,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					// Jetpack tests
 					test.describe( 'As a non-logged in user ', function() {
 						test.it( "Can't see post at all", async function() {
-							let notFoundPage = new NotFoundPage( driver );
+							let notFoundPage = await NotFoundPage.Expect( driver );
 							let displayed = await notFoundPage.displayed();
 							assert.equal(
 								displayed,
@@ -1334,7 +1331,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				await viewPostPage.clickPaymentButton();
 				await driverHelper.waitForNumberOfWindows( driver, 2 );
 				await driverHelper.switchToWindowByIndex( driver, 1 );
-				const paypalCheckoutPage = new PaypalCheckoutPage( driver );
+				const paypalCheckoutPage = await PaypalCheckoutPage.Expect( driver );
 				const amountDisplayed = await paypalCheckoutPage.priceDisplayed();
 				assert.equal(
 					amountDisplayed,
@@ -1388,7 +1385,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				await this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 
 				await this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
-				let postPreviewComponent = new PostPreviewComponent( driver );
+				const postPreviewComponent = await PostPreviewComponent.Expect( driver );
 
 				return await postPreviewComponent.edit();
 			} );

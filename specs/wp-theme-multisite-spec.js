@@ -70,7 +70,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 			test.describe( 'when "Try & Customize" is clicked', function() {
 				test.it( 'click try and customize popover', async function() {
 					await this.themesPage.clickPopoverItem( 'Try & Customize' );
-					this.siteSelector = new SiteSelectorComponent( driver );
+					this.siteSelector = await SiteSelectorComponent.Expect( driver );
 				} );
 
 				test.it( 'should show the site selector', async function() {
@@ -87,7 +87,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 					test.it( 'should open the customizer with the selected site and theme', async function(
 						done
 					) {
-						this.customizerPage = new CustomizerPage( driver );
+						this.customizerPage = await CustomizerPage.Expect( driver );
 						let url = await driver.getCurrentUrl();
 						assert.include( url, this.siteSelector.selectedSiteDomain, 'Wrong site domain' );
 						assert.include( url, this.themeSearchName, 'Wrong theme' );
@@ -142,7 +142,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 			test.describe( 'when Activate is clicked', function() {
 				test.it( 'can click activate', async function() {
 					await this.themesPage.clickPopoverItem( 'Activate' );
-					return ( this.siteSelector = new SiteSelectorComponent( driver ) );
+					return ( this.siteSelector = await SiteSelectorComponent.Expect( driver ) );
 				} );
 
 				test.it( 'shows the site selector', async function() {
@@ -164,7 +164,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 					test.it( 'should show the correct theme in the current theme bar', async function() {
 						this.themeDetailPage = await ThemeDetailPage.Expect( driver );
 						await this.themeDetailPage.goBackToAllThemes();
-						this.currentThemeComponent = new CurrentThemeComponent( driver );
+						this.currentThemeComponent = await CurrentThemeComponent.Expect( driver );
 						let name = await this.currentThemeComponent.getThemeName();
 						return assert.equal( name, this.currentThemeName );
 					} );

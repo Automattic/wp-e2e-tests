@@ -84,7 +84,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see correct page title in preview', async function() {
-			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			await pagePreviewComponent.displayed();
 			let actualPageTitle = await pagePreviewComponent.pageTitle();
 			assert.equal(
@@ -95,7 +95,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see correct page content in preview', async function() {
-			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			let content = await pagePreviewComponent.pageContent();
 			assert.equal(
 				content.indexOf( pageQuote ) > -1,
@@ -109,13 +109,13 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see the image uploaded in the preview', async function() {
-			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			const imageDisplayed = await pagePreviewComponent.imageDisplayed( fileDetails );
 			return assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
 		} );
 
 		test.it( 'Can close page preview', async function() {
-			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			await pagePreviewComponent.close();
 		} );
 
@@ -125,7 +125,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see correct page title in preview', async function() {
-			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			await pagePreviewComponent.displayed();
 			let actualPageTitle = await pagePreviewComponent.pageTitle();
 			assert.equal(
@@ -136,7 +136,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see correct page content in preview', async function() {
-			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			const content = await pagePreviewComponent.pageContent();
 			assert.equal(
 				content.indexOf( pageQuote ) > -1,
@@ -150,13 +150,13 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see the image uploaded in the preview', async function() {
-			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			const imageDisplayed = await pagePreviewComponent.imageDisplayed( fileDetails );
 			assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
 		} );
 
 		test.it( 'Can close page preview', async function() {
-			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			return await pagePreviewComponent.edit();
 		} );
 
@@ -167,7 +167,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see correct page title', async function() {
-			const viewPagePage = new ViewPagePage( driver );
+			const viewPagePage = await ViewPagePage.Expect( driver );
 			let actualPageTitle = await viewPagePage.pageTitle();
 			assert.equal(
 				actualPageTitle.toUpperCase(),
@@ -177,7 +177,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see correct page content', async function() {
-			const viewPagePage = new ViewPagePage( driver );
+			const viewPagePage = await ViewPagePage.Expect( driver );
 			let content = await viewPagePage.pageContent();
 			assert.equal(
 				content.indexOf( pageQuote ) > -1,
@@ -191,7 +191,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( "Can't see sharing buttons", async function() {
-			const viewPagePage = new ViewPagePage( driver );
+			const viewPagePage = await ViewPagePage.Expect( driver );
 			let visible = await viewPagePage.sharingButtonsVisible();
 			assert.equal(
 				visible,
@@ -201,7 +201,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see the image uploaded displayed', async function() {
-			const viewPagePage = new ViewPagePage( driver );
+			const viewPagePage = await ViewPagePage.Expect( driver );
 			let imageDisplayed = await viewPagePage.imageDisplayed( fileDetails );
 			assert.equal( imageDisplayed, true, 'Could not see the image in the published page' );
 		} );
@@ -250,7 +250,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can view page title as logged in user', async function() {
-				const viewPagePage = new ViewPagePage( driver );
+				const viewPagePage = await ViewPagePage.Expect( driver );
 				const actualPageTitle = await viewPagePage.pageTitle();
 				assert.equal(
 					actualPageTitle.toUpperCase(),
@@ -260,7 +260,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can view page content as logged in user', async function() {
-				const viewPagePage = new ViewPagePage( driver );
+				const viewPagePage = await ViewPagePage.Expect( driver );
 				const content = await viewPagePage.pageContent();
 				assert.equal(
 					content.indexOf( pageQuote ) > -1,
@@ -277,7 +277,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				await driver.manage().deleteAllCookies();
 				await driver.navigate().refresh();
 
-				const notFoundPage = new NotFoundPage( driver );
+				const notFoundPage = await NotFoundPage.Expect( driver );
 				const displayed = await notFoundPage.displayed();
 				assert.equal(
 					displayed,
@@ -293,7 +293,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			} );
 
 			test.it( "Can't view page title or content as non-logged in user", async function() {
-				const notFoundPage = new NotFoundPage( driver );
+				const notFoundPage = await NotFoundPage.Expect( driver );
 				const displayed = await notFoundPage.displayed();
 				assert.equal(
 					displayed,
@@ -342,7 +342,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		test.describe( 'As a logged in user', function() {
 			test.describe( 'With no password entered', function() {
 				test.it( 'Can view page title', async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const actualPageTitle = await viewPagePage.pageTitle();
 					assert.equal(
 						actualPageTitle.toUpperCase(),
@@ -351,7 +351,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				} );
 
 				test.it( 'Can see password field', async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const isPasswordProtected = await viewPagePage.isPasswordProtected();
 					assert.equal(
 						isPasswordProtected,
@@ -361,7 +361,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				} );
 
 				test.it( "Can't see content when no password is entered", async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const content = await viewPagePage.pageContent();
 					assert.equal(
 						content.indexOf( pageQuote ) === -1,
@@ -377,12 +377,12 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 			test.describe( 'With incorrect password entered', function() {
 				test.it( 'Enter incorrect password', async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					await viewPagePage.enterPassword( 'password' );
 				} );
 
 				test.it( 'Can view page title', async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const actualPageTitle = await viewPagePage.pageTitle();
 					assert.equal(
 						actualPageTitle.toUpperCase(),
@@ -391,7 +391,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				} );
 
 				test.it( 'Can see password field', async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const isPasswordProtected = await viewPagePage.isPasswordProtected();
 					assert.equal(
 						isPasswordProtected,
@@ -401,7 +401,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				} );
 
 				test.it( "Can't see content when incorrect password is entered", async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const content = await viewPagePage.pageContent();
 					assert.equal(
 						content.indexOf( pageQuote ) === -1,
@@ -417,12 +417,12 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 			test.describe( 'With correct password entered', function() {
 				test.it( 'Enter correct password', async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					await viewPagePage.enterPassword( postPassword );
 				} );
 
 				test.it( 'Can view page title', async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const actualPageTitle = await viewPagePage.pageTitle();
 					assert.equal(
 						actualPageTitle.toUpperCase(),
@@ -431,7 +431,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				} );
 
 				test.it( "Can't see password field", async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const isPasswordProtected = await viewPagePage.isPasswordProtected();
 					assert.equal(
 						isPasswordProtected,
@@ -441,7 +441,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				} );
 
 				test.it( 'Can see page content', async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const content = await viewPagePage.pageContent();
 					assert.equal(
 						content.indexOf( pageQuote ) > -1,
@@ -464,7 +464,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 			test.describe( 'With no password entered', function() {
 				test.it( 'Can view page title', async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const actualPageTitle = await viewPagePage.pageTitle();
 					assert.equal(
 						actualPageTitle.toUpperCase(),
@@ -473,7 +473,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				} );
 
 				test.it( 'Can see password field', async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const isPasswordProtected = await viewPagePage.isPasswordProtected();
 					assert.equal(
 						isPasswordProtected,
@@ -483,7 +483,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				} );
 
 				test.it( "Can't see content when no password is entered", async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const content = await viewPagePage.pageContent();
 					assert.equal(
 						content.indexOf( pageQuote ) === -1,
@@ -499,12 +499,12 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 			test.describe( 'With incorrect password entered', function() {
 				test.it( 'Enter incorrect password', async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					await viewPagePage.enterPassword( 'password' );
 				} );
 
 				test.it( 'Can view page title', async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const actualPageTitle = await viewPagePage.pageTitle();
 					assert.equal(
 						actualPageTitle.toUpperCase(),
@@ -513,7 +513,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				} );
 
 				test.it( 'Can see password field', async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const isPasswordProtected = await viewPagePage.isPasswordProtected();
 					assert.equal(
 						isPasswordProtected,
@@ -523,7 +523,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				} );
 
 				test.it( "Can't see content when incorrect password is entered", async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const content = await viewPagePage.pageContent();
 					assert.equal(
 						content.indexOf( pageQuote ) === -1,
@@ -539,12 +539,12 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 			test.describe( 'With correct password entered', function() {
 				test.it( 'Enter correct password', async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					await viewPagePage.enterPassword( postPassword );
 				} );
 
 				test.it( 'Can view page title', async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const actualPageTitle = await viewPagePage.pageTitle();
 					assert.equal(
 						actualPageTitle.toUpperCase(),
@@ -553,7 +553,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				} );
 
 				test.it( "Can't see password field", async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const isPasswordProtected = await viewPagePage.isPasswordProtected();
 					assert.equal(
 						isPasswordProtected,
@@ -563,7 +563,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				} );
 
 				test.it( 'Can see page content', async function() {
-					const viewPagePage = new ViewPagePage( driver );
+					const viewPagePage = await ViewPagePage.Expect( driver );
 					const content = await viewPagePage.pageContent();
 					assert.equal(
 						content.indexOf( pageQuote ) > -1,
@@ -627,7 +627,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see the payment button in our published page', async function() {
-			const viewPagePage = new ViewPagePage( driver );
+			const viewPagePage = await ViewPagePage.Expect( driver );
 			let displayed = await viewPagePage.paymentButtonDisplayed();
 			assert.equal( displayed, true, 'The published page does not contain the payment button' );
 		} );
@@ -641,11 +641,11 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 					1,
 					'There is more than one open browser window before clicking payment button'
 				);
-				let viewPagePage = new ViewPagePage( driver );
+				let viewPagePage = await ViewPagePage.Expect( driver );
 				await viewPagePage.clickPaymentButton();
 				await driverHelper.waitForNumberOfWindows( driver, 2 );
 				await driverHelper.switchToWindowByIndex( driver, 1 );
-				const paypalCheckoutPage = new PaypalCheckoutPage( driver );
+				const paypalCheckoutPage = await PaypalCheckoutPage.Expect( driver );
 				const amountDisplayed = await paypalCheckoutPage.priceDisplayed();
 				assert.equal(
 					amountDisplayed,
@@ -656,7 +656,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				);
 				await driverHelper.closeCurrentWindow( driver );
 				await driverHelper.switchToWindowByIndex( driver, 0 );
-				viewPagePage = new ViewPagePage( driver );
+				viewPagePage = await ViewPagePage.Expect( driver );
 				assert( await viewPagePage.displayed(), 'view page page is not displayed' );
 			}
 		);

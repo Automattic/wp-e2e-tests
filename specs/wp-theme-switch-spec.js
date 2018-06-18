@@ -67,7 +67,7 @@ test.describe( `[${ host }] Switching Themes: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can activate the theme from the theme preview page', async function() {
-				this.themePreviewPage = new ThemePreviewPage( driver );
+				this.themePreviewPage = await ThemePreviewPage.Expect( driver );
 				await this.themePreviewPage.activate();
 			} );
 
@@ -136,7 +136,7 @@ test.describe(
 
 				if ( host === 'WPCOM' ) {
 					test.it( 'Can customize the site from the theme thanks dialog', async function() {
-						let customizerPage = new CustomizerPage( driver );
+						let customizerPage = await CustomizerPage.Expect( driver );
 						let displayed = await customizerPage.displayed();
 						return assert( displayed, 'The customizer page was not displayed' );
 					} );
@@ -147,7 +147,8 @@ test.describe(
 					} );
 
 					test.it( 'Can customize the site from the theme thanks dialog', async function() {
-						let wpAdminCustomizerPage = new WPAdminCustomizerPage( driver );
+						await WPAdminCustomizerPage.refreshIfError();
+						const wpAdminCustomizerPage = await WPAdminCustomizerPage.Expect( driver );
 						let displayed = await wpAdminCustomizerPage.displayed();
 						assert( displayed, 'The customizer page was not displayed' );
 					} );
