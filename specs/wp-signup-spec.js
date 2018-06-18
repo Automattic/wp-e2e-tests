@@ -370,7 +370,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await navBarComponent.clickProfileLink();
 					const profilePage = await ProfilePage.Expect( driver );
 					await profilePage.chooseManagePurchases();
-					const purchasesPage = new PurchasesPage( driver );
+					const purchasesPage = await PurchasesPage.Expect( driver );
 					await purchasesPage.dismissGuidedTour();
 					await purchasesPage.selectPremiumPlan();
 					await new ManagePurchasePage( driver ).chooseCancelAndRefund();
@@ -543,7 +543,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await navBarComponent.clickProfileLink();
 					const profilePage = await ProfilePage.Expect( driver );
 					await profilePage.chooseManagePurchases();
-					const purchasesPage = new PurchasesPage( driver );
+					const purchasesPage = await PurchasesPage.Expect( driver );
 					await purchasesPage.dismissGuidedTour();
 					await purchasesPage.selectPremiumPlan();
 					await new ManagePurchasePage( driver ).chooseCancelAndRefund();
@@ -711,7 +711,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await navBarComponent.clickProfileLink();
 					const profilePage = await ProfilePage.Expect( driver );
 					await profilePage.chooseManagePurchases();
-					const purchasesPage = new PurchasesPage( driver );
+					const purchasesPage = await PurchasesPage.Expect( driver );
 					await purchasesPage.dismissGuidedTour();
 					await purchasesPage.selectPersonalPlan();
 					await new ManagePurchasePage( driver ).chooseCancelAndRefund();
@@ -1094,7 +1094,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const profilePage = await ProfilePage.Expect( driver );
 					await profilePage.chooseManagePurchases();
 
-					let purchasesPage = new PurchasesPage( driver );
+					let purchasesPage = await PurchasesPage.Expect( driver );
 					await purchasesPage.dismissGuidedTour();
 					await purchasesPage.selectBusinessPlan();
 
