@@ -170,8 +170,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 								this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 								await this.postEditorToolbarComponent.ensureSaved();
 								await this.postEditorToolbarComponent.launchPreview();
-								this.postPreviewComponent = new PostPreviewComponent( driver );
-								await this.postPreviewComponent.displayed();
+								return await PostPreviewComponent.Expect( driver );
 							} );
 
 							test.it( 'Can see correct post title in preview', async function() {
@@ -232,7 +231,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 								} );
 
 								test.it( 'Can see correct post title in preview', async function() {
-									this.postPreviewComponent = new PostPreviewComponent( driver );
+									this.postPreviewComponent = await PostPreviewComponent.Expect( driver );
 									let postTitle = await this.postPreviewComponent.postTitle();
 									assert.equal(
 										postTitle.toLowerCase(),
@@ -1388,7 +1387,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				await this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 
 				await this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
-				let postPreviewComponent = new PostPreviewComponent( driver );
+				const postPreviewComponent = await PostPreviewComponent.Expect( driver );
 
 				return await postPreviewComponent.edit();
 			} );
