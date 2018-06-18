@@ -67,9 +67,6 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			const newCategoryName = 'Category ' + new Date().getTime().toString();
 			const newTagName = 'Tag ' + new Date().getTime().toString();
 			const publicizeMessage = dataHelper.randomPhrase();
-			const publicizeTwitterAccount = config.has( 'publicizeTwitterAccount' )
-				? config.get( 'publicizeTwitterAccount' )
-				: '';
 
 			test.it( 'Can log in', async function() {
 				let loginFlow = new LoginFlow( driver );
@@ -130,6 +127,9 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 						if ( host !== 'CI' && host !== 'JN' ) {
 							test.it( 'Can see the publicise to twitter account', async function() {
+								const publicizeTwitterAccount = config.has( 'publicizeTwitterAccount' )
+									? config.get( 'publicizeTwitterAccount' )
+									: '';
 								let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 								let accountDisplayed = await postEditorSidebarComponent.publicizeToTwitterAccountDisplayed();
 								assert.equal(
@@ -170,7 +170,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 								this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 								await this.postEditorToolbarComponent.ensureSaved();
 								await this.postEditorToolbarComponent.launchPreview();
-								return await PostPreviewComponent.Expect( driver );
+								this.postPreviewComponent = await PostPreviewComponent.Expect( driver );
+								return await this.postPreviewComponent.displayed();
 							} );
 
 							test.it( 'Can see correct post title in preview', async function() {
@@ -348,12 +349,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 								if ( host !== 'CI' && host !== 'JN' ) {
 									test.describe( 'Can see post publicized on twitter', function() {
 										test.it( 'Can see post message', async function() {
-											let twitterFeedPage = new TwitterFeedPage(
-												driver,
-												publicizeTwitterAccount,
-												true
-											);
-											await twitterFeedPage.checkLatestTweetsContain( publicizeMessage );
+											let twitterFeedPage = await TwitterFeedPage.Visit( driver );
+											return await twitterFeedPage.checkLatestTweetsContain( publicizeMessage );
 										} );
 									} );
 								}
