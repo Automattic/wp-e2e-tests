@@ -1087,7 +1087,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can see the gsuite upsell page', async function() {
-				return await new GSuiteUpsellPage( driver ).declineEmail();
+				const gSuiteUpsellPage = await GSuiteUpsellPage.Expect( driver );
+				return await gSuiteUpsellPage.declineEmail();
 			} );
 
 			test.it( 'Can see the secure check out thank you page', async function() {
