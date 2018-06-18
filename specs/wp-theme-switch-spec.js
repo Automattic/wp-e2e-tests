@@ -136,7 +136,7 @@ test.describe(
 
 				if ( host === 'WPCOM' ) {
 					test.it( 'Can customize the site from the theme thanks dialog', async function() {
-						let customizerPage = new CustomizerPage( driver );
+						let customizerPage = await CustomizerPage.Expect( driver );
 						let displayed = await customizerPage.displayed();
 						return assert( displayed, 'The customizer page was not displayed' );
 					} );

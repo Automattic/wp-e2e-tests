@@ -87,7 +87,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 					test.it( 'should open the customizer with the selected site and theme', async function(
 						done
 					) {
-						this.customizerPage = new CustomizerPage( driver );
+						this.customizerPage = await CustomizerPage.Expect( driver );
 						let url = await driver.getCurrentUrl();
 						assert.include( url, this.siteSelector.selectedSiteDomain, 'Wrong site domain' );
 						assert.include( url, this.themeSearchName, 'Wrong theme' );
