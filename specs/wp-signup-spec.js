@@ -194,7 +194,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await navBarComponent.clickProfileLink();
 					const profilePage = await ProfilePage.Expect( driver );
 					await profilePage.chooseAccountSettings();
-					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+					const accountSettingsPage = await AccountSettingsPage.Expect( driver );
+					await accountSettingsPage.chooseCloseYourAccount();
 					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
@@ -357,7 +358,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can see the secure check out thank you page', async function() {
-				const checkOutThankyouPage = new CheckOutThankyouPage( driver );
+				const checkOutThankyouPage = await CheckOutThankyouPage.Expect( driver );
 				let displayed = await checkOutThankyouPage.displayed();
 				await eyesHelper.eyesScreenshot( driver, eyes, 'Checkout Thank You Page' );
 				return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
@@ -391,7 +392,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await navBarComponent.clickProfileLink();
 					const profilePage = await ProfilePage.Expect( driver );
 					await profilePage.chooseAccountSettings();
-					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+					const accountSettingsPage = await AccountSettingsPage.Expect( driver );
+					await accountSettingsPage.chooseCloseYourAccount();
 					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
@@ -532,7 +534,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can see the secure check out thank you page', async function() {
-				return await new CheckOutThankyouPage( driver ).displayed();
+				return await CheckOutThankyouPage.Expect( driver );
 			} );
 
 			test.it( 'Can delete the plan', async function() {
@@ -563,7 +565,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await navBarComponent.clickProfileLink();
 					const profilePage = await ProfilePage.Expect( driver );
 					await profilePage.chooseAccountSettings();
-					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+					const accountSettingsPage = await AccountSettingsPage.Expect( driver );
+					await accountSettingsPage.chooseCloseYourAccount();
 					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
@@ -699,7 +702,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can see the secure check out thank you page', async function() {
-				return await new CheckOutThankyouPage( driver ).displayed();
+				return await CheckOutThankyouPage.Expect( driver );
 			} );
 
 			test.it( 'Can delete the plan', async function() {
@@ -730,7 +733,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await navBarComponent.clickProfileLink();
 					const profilePage = await ProfilePage.Expect( driver );
 					await profilePage.chooseAccountSettings();
-					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+					const accountSettingsPage = await AccountSettingsPage.Expect( driver );
+					await accountSettingsPage.chooseCloseYourAccount();
 					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
@@ -874,7 +878,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can see the secure check out thank you page and click "go to my domain" button to see the domain only settings page',
 				async function() {
-					await new CheckOutThankyouPage( driver ).goToMyDomain();
+					const checkOutThankyouPage = await CheckOutThankyouPage.Expect( driver );
+					await checkOutThankyouPage.goToMyDomain();
 					await new DomainOnlySettingsPage( driver ).manageDomain();
 					return await new DomainDetailsPage( driver ).displayed();
 				}
@@ -1079,7 +1084,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can see the secure check out thank you page', async function() {
-				return await new CheckOutThankyouPage( driver ).displayed();
+				return await CheckOutThankyouPage.Expect( driver );
 			} );
 
 			test.it( 'Can cancel the domain', async function() {
@@ -1331,7 +1336,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await navBarComponent.clickProfileLink();
 					const profilePage = await ProfilePage.Expect( driver );
 					await profilePage.chooseAccountSettings();
-					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+					const accountSettingsPage = await AccountSettingsPage.Expect( driver );
+					await accountSettingsPage.chooseCloseYourAccount();
 					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );

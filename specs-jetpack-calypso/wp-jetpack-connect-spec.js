@@ -313,7 +313,9 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			);
 
 			test.it( 'Can see Premium Thank You page', async function() {
-				assert( await new CheckOutThankyouPage( driver ).isPremiumPlan() );
+				const checkOutThankyouPage = await CheckOutThankyouPage.Expect( driver );
+				const isPremium = await checkOutThankyouPage.isPremiumPlan();
+				return assert( isPremium, 'The Thank You Notice is not for the Premium Plan' );
 			} );
 		}
 	);
