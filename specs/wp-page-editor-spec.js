@@ -84,7 +84,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see correct page title in preview', async function() {
-			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			await pagePreviewComponent.displayed();
 			let actualPageTitle = await pagePreviewComponent.pageTitle();
 			assert.equal(
@@ -95,7 +95,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see correct page content in preview', async function() {
-			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			let content = await pagePreviewComponent.pageContent();
 			assert.equal(
 				content.indexOf( pageQuote ) > -1,
@@ -109,13 +109,13 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see the image uploaded in the preview', async function() {
-			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			const imageDisplayed = await pagePreviewComponent.imageDisplayed( fileDetails );
 			return assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
 		} );
 
 		test.it( 'Can close page preview', async function() {
-			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			await pagePreviewComponent.close();
 		} );
 
@@ -125,7 +125,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see correct page title in preview', async function() {
-			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			await pagePreviewComponent.displayed();
 			let actualPageTitle = await pagePreviewComponent.pageTitle();
 			assert.equal(
@@ -136,7 +136,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see correct page content in preview', async function() {
-			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			const content = await pagePreviewComponent.pageContent();
 			assert.equal(
 				content.indexOf( pageQuote ) > -1,
@@ -150,13 +150,13 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see the image uploaded in the preview', async function() {
-			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			const imageDisplayed = await pagePreviewComponent.imageDisplayed( fileDetails );
 			assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
 		} );
 
 		test.it( 'Can close page preview', async function() {
-			const pagePreviewComponent = new PagePreviewComponent( driver );
+			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			return await pagePreviewComponent.edit();
 		} );
 
