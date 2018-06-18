@@ -66,7 +66,6 @@ The `run.sh` script takes the following parameters, which can be combined to exe
     -f      - Tell visdiffs to fail the tests rather than just send an alert
     -I      - Execute i18n tests in the specs-i18n/ directory (desktop)
     -i      - Execute i18n signup screenshot tests, not compatible with -g flag
-    -U      - Execute the upload script for i18n signup screenshot tests in scripts/
     -v      - Execute the integrated visdiff tests
     -x      - Execute the tests using the --headless flag in Chrome
     -u [baseUrl]  - Override the calypsoBaseURL config
