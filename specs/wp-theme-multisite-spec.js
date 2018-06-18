@@ -70,7 +70,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 			test.describe( 'when "Try & Customize" is clicked', function() {
 				test.it( 'click try and customize popover', async function() {
 					await this.themesPage.clickPopoverItem( 'Try & Customize' );
-					this.siteSelector = new SiteSelectorComponent( driver );
+					this.siteSelector = await SiteSelectorComponent.Expect( driver );
 				} );
 
 				test.it( 'should show the site selector', async function() {
@@ -142,7 +142,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 			test.describe( 'when Activate is clicked', function() {
 				test.it( 'can click activate', async function() {
 					await this.themesPage.clickPopoverItem( 'Activate' );
-					return ( this.siteSelector = new SiteSelectorComponent( driver ) );
+					return ( this.siteSelector = await SiteSelectorComponent.Expect( driver ) );
 				} );
 
 				test.it( 'shows the site selector', async function() {
