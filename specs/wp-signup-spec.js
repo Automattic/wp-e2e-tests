@@ -932,7 +932,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
 					await cancelPurchasePage.clickCancelPurchase();
 
-					const cancelDomainPage = new CancelDomainPage( driver );
+					const cancelDomainPage = await CancelDomainPage.Expect( driver );
 					return await cancelDomainPage.completeSurveyAndConfirm();
 				} )().catch( err => {
 					SlackNotifier.warn(
