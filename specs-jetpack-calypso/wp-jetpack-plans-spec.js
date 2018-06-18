@@ -90,7 +90,7 @@ test.describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function
 			const sidebarComponent = await SidebarComponent.Expect( driver );
 			await sidebarComponent.selectPlan();
 
-			this.domainsPage = new PlansPage( driver );
+			await PlansPage.Expect( driver );
 			const shoppingCartWidgetComponent = await ShoppingCartWidgetComponent.Expect( driver );
 			await shoppingCartWidgetComponent.empty();
 		} );
