@@ -645,7 +645,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				await viewPagePage.clickPaymentButton();
 				await driverHelper.waitForNumberOfWindows( driver, 2 );
 				await driverHelper.switchToWindowByIndex( driver, 1 );
-				const paypalCheckoutPage = new PaypalCheckoutPage( driver );
+				const paypalCheckoutPage = await PaypalCheckoutPage.Expect( driver );
 				const amountDisplayed = await paypalCheckoutPage.priceDisplayed();
 				assert.equal(
 					amountDisplayed,
