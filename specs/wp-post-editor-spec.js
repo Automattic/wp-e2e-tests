@@ -454,7 +454,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			await sidebarComponent.selectStats();
 			const statsPage = await StatsPage.Expect( driver );
 			await statsPage.openActivity();
-			let displayed = await new ActivityPage( driver ).postTitleDisplayed( blogPostTitle );
+			const activityPage = await ActivityPage.Expect( driver );
+			let displayed = await activityPage.postTitleDisplayed( blogPostTitle );
 			return assert(
 				displayed,
 				`The published post title '${ blogPostTitle }' was not displayed in activity log after publishing`
