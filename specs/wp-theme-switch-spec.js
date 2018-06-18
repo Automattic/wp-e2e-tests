@@ -67,7 +67,7 @@ test.describe( `[${ host }] Switching Themes: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can activate the theme from the theme preview page', async function() {
-				this.themePreviewPage = new ThemePreviewPage( driver );
+				this.themePreviewPage = await ThemePreviewPage.Expect( driver );
 				await this.themePreviewPage.activate();
 			} );
 
