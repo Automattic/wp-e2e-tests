@@ -451,7 +451,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can see the choose a theme page as the starting page, and select the first theme',
 				async function() {
-					return await new ChooseAThemePage( driver ).selectFirstTheme();
+					const chooseAThemePage = await ChooseAThemePage.Expect( driver );
+					return await chooseAThemePage.selectFirstTheme();
 				}
 			);
 
@@ -620,7 +621,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can see the choose a theme page as the starting page, and select the first theme',
 				async function() {
-					return await new ChooseAThemePage( driver ).selectFirstTheme();
+					const chooseAThemePage = await ChooseAThemePage.Expect( driver );
+					return await chooseAThemePage.selectFirstTheme();
 				}
 			);
 
@@ -984,7 +986,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can see the choose a theme page as the starting page, and select the first theme',
 				async function() {
-					return await new ChooseAThemePage( driver ).selectFirstTheme();
+					const chooseAThemePage = await ChooseAThemePage.Expect( driver );
+					return await chooseAThemePage.selectFirstTheme();
 				}
 			);
 
