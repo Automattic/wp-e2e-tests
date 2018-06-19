@@ -23,7 +23,7 @@ import PlansPage from '../lib/pages/plans-page';
 import LoginPage from '../lib/pages/login-page';
 import JetpackComPage from '../lib/pages/external/jetpackcom-page';
 import JetpackComFeaturesDesignPage from '../lib/pages/external/jetpackcom-features-design-page';
-import WooWizardSetupPage from '../lib/pages/woocommerce/wizard-setup-page';
+import WooWizardSetupPage from '../lib/pages/woocommerce/woo-wizard-setup-page';
 import WooWizardPaymentsPage from '../lib/pages/woocommerce/wizard-payments-page';
 import WooWizardShippingPage from '../lib/pages/woocommerce/wizard-shipping-page';
 import WooWizardExtrasPage from '../lib/pages/woocommerce/wizard-extras-page';
@@ -356,7 +356,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can fill out and submit store information form', async function() {
-				return await new WooWizardSetupPage( driver ).enterStoreDetailsAndSubmit( {
+				const wooWizardSetupPage = await WooWizardSetupPage.Expect( driver );
+				return await wooWizardSetupPage.enterStoreDetailsAndSubmit( {
 					countryCode,
 					stateCode,
 					address,
