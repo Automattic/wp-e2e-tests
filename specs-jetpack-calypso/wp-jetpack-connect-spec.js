@@ -219,7 +219,11 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 
 		test.it( 'Log out from WP Admin', async function() {
 			await driverManager.ensureNotLoggedIn( driver );
-			return await new WPAdminDashboardPage( driver, siteName ).logout();
+			const wPAdminDashboardPage = await WPAdminDashboardPage.Visit(
+				driver,
+				WPAdminDashboardPage.getUrl( siteName )
+			);
+			return await wPAdminDashboardPage.logout();
 		} );
 
 		test.it( 'Can log in as Subscriber', async function() {
@@ -347,7 +351,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter WooCommerce Wizard', async function() {
-				return await new WPAdminDashboardPage( driver ).enterWooCommerceWizard();
+				const wPAdminDashboardPage = await WPAdminDashboardPage.Expect( driver );
+				return await wPAdminDashboardPage.enterWooCommerceWizard();
 			} );
 
 			test.it( 'Can fill out and submit store information form', async function() {
