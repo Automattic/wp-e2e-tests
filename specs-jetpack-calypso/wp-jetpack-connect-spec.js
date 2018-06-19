@@ -28,7 +28,7 @@ import WooWizardPaymentsPage from '../lib/pages/woocommerce/woo-wizard-payments-
 import WooWizardShippingPage from '../lib/pages/woocommerce/woo-wizard-shipping-page';
 import WooWizardExtrasPage from '../lib/pages/woocommerce/woo-wizard-extras-page';
 import WooWizardJetpackPage from '../lib/pages/woocommerce/woo-wizard-jetpack-page';
-import WooWizardReadyPage from '../lib/pages/woocommerce/wizard-ready-page';
+import WooWizardReadyPage from '../lib/pages/woocommerce/woo-wizard-ready-page';
 
 import * as driverManager from '../lib/driver-manager';
 import * as driverHelper from '../lib/driver-helper';
@@ -401,7 +401,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see the Woo wizard ready page', async function() {
-				return await new WooWizardReadyPage( driver );
+				return await WooWizardReadyPage.Expect( driver );
 			} );
 		}
 	);
