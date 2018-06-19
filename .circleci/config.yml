@@ -4,20 +4,27 @@ jobs:
     parallelism: 2
     working_directory: ~/wp-e2e-tests
     docker:
-      - image: 'circleci/node:8.11.2-browsers'
+      - image: 'circleci/node:10.4.1-browsers'
         environment:
           NODE_ENV: test
     steps:
       - checkout
+
+      # npm ci removes node_modules and reinstalls exact package-lock
+      # Cache the npm cache so all packages do not need to go over the network
+      # Cache first on exact package-lock.json
+      # Fallback cache on Node version
       - restore_cache:
-          key: 'dependency-cache-{{ checksum "package.json" }}'
-      - run: npm install
+          key: npm-v1-{{ checksum ".nvmrc" }}-{{ checksum "package-lock.json" }}
+          key: npm-v1-{{ checksum ".nvmrc" }}
+      - run: npm ci
+      - save_cache:
+          key: npm-v1-{{ checksum ".nvmrc" }}-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
+
       - run: npm run lint
       - run: npm run decryptconfig
-      - save_cache:
-          key: 'dependency-cache-{{ checksum "package.json" }}'
-          paths:
-            - ./node_modules
       - run: ./scripts/randomize.sh specs
       - run: ./scripts/run-wrapper.sh
       - store_test_results:
