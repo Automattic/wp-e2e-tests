@@ -1,6 +1,4 @@
-/**
- * @format
- */
+/** @format */
 
 /**
  * External dependencies
@@ -51,18 +49,21 @@ files.forEach( file => {
 	execSync( `git add ${ file }` );
 } );
 
-// linting should happen after formatting
-const lintResult = spawnSync( 'eslint', [ ...files, '--max-warnings=0' ], {
-	shell: true,
-	stdio: 'inherit',
-} );
+// We may have no files to lint. Prevent eslint from printing help documentation.
+if ( files.length ) {
+	// linting should happen after formatting
+	const lintResult = spawnSync( 'eslint', [ ...files, '--max-warnings=0' ], {
+		shell: true,
+		stdio: 'inherit',
+	} );
 
-if ( lintResult.status ) {
-	console.log(
-		'COMMIT ABORTED:',
-		'The linter reported some problems. ' +
-			'If you are aware of them and it is OK, ' +
-			'repeat the commit command with --no-verify to avoid this check.'
-	);
-	process.exit( 1 ); // eslint-disable-line no-process-exit
+	if ( lintResult.status ) {
+		console.log(
+			'COMMIT ABORTED:',
+			'The linter reported some problems. ' +
+				'If you are aware of them and it is OK, ' +
+				'repeat the commit command with --no-verify to avoid this check.'
+		);
+		process.exit( 1 ); // eslint-disable-line no-process-exit
+	}
 }
