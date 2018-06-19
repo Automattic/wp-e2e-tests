@@ -165,7 +165,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select Try it Free', async function() {
-			return await new JetpackComPage( driver ).selectTryItFree();
+			const jetPackComPage = await JetpackComPage.Visit( driver );
+			return await jetPackComPage.selectTryItFree();
 		} );
 
 		test.it( 'Can select free plan', async function() {
