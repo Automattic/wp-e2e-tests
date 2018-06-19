@@ -24,8 +24,8 @@ import LoginPage from '../lib/pages/login-page';
 import JetpackComPage from '../lib/pages/external/jetpackcom-page';
 import JetpackComFeaturesDesignPage from '../lib/pages/external/jetpackcom-features-design-page';
 import WooWizardSetupPage from '../lib/pages/woocommerce/woo-wizard-setup-page';
-import WooWizardPaymentsPage from '../lib/pages/woocommerce/wizard-payments-page';
-import WooWizardShippingPage from '../lib/pages/woocommerce/wizard-shipping-page';
+import WooWizardPaymentsPage from '../lib/pages/woocommerce/woo-wizard-payments-page';
+import WooWizardShippingPage from '../lib/pages/woocommerce/woo-wizard-shipping-page';
 import WooWizardExtrasPage from '../lib/pages/woocommerce/wizard-extras-page';
 import WooWizardJetpackPage from '../lib/pages/woocommerce/wizard-jetpack-page';
 import WooWizardReadyPage from '../lib/pages/woocommerce/wizard-ready-page';
@@ -370,11 +370,13 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can continue through payments information', async function() {
-				return await new WooWizardPaymentsPage( driver ).selectContinue();
+				const wooWizardPaymentsPage = await WooWizardPaymentsPage.Expect( driver );
+				return await wooWizardPaymentsPage.selectContinue();
 			} );
 
 			test.it( 'Can continue through shipping information', async function() {
-				return await new WooWizardShippingPage( driver ).selectContinue();
+				const wooWizardShippingPage = await WooWizardShippingPage.Expect( driver );
+				return await wooWizardShippingPage.selectContinue();
 			} );
 
 			test.it( 'Can continue through extras information', async function() {
