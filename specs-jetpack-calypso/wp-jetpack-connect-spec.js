@@ -175,7 +175,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see Jetpack connect page', async function() {
-			return await new JetpackConnectPage( driver, { overrideABTests: false } ).displayed();
+			return await JetpackConnectPage.Expect( driver );
 		} );
 	} );
 
@@ -250,7 +250,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see Jetpack connect page', async function() {
-				return await new JetpackConnectPage( driver, { overrideABTests: false } ).displayed();
+				return await JetpackConnectPage.Expect( driver );
 			} );
 		}
 	);
@@ -281,13 +281,14 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can start connection flow using JN site', async function() {
-				return await new JetpackConnectPage( driver, { overrideABTests: false } ).addSiteUrl(
-					jnFlow.url
-				);
+				const jetPackConnectPage = await JetpackConnectPage.Expect( driver );
+				return await jetPackConnectPage.addSiteUrl( jnFlow.url );
 			} );
 
 			test.it( 'Can enter the Jetpack credentials and install Jetpack', async function() {
-				const jetpackConnectAddCredentialsPage = new JetpackConnectAddCredentialsPage( driver );
+				const jetpackConnectAddCredentialsPage = await JetpackConnectAddCredentialsPage.Expect(
+					driver
+				);
 				return await jetpackConnectAddCredentialsPage.enterDetailsAndConnect(
 					jnFlow.username,
 					jnFlow.password
@@ -422,7 +423,9 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter the Jetpack credentials and install Jetpack', async function() {
-				const jetpackConnectAddCredentialsPage = new JetpackConnectAddCredentialsPage( driver );
+				const jetpackConnectAddCredentialsPage = await JetpackConnectAddCredentialsPage.Expect(
+					driver
+				);
 				return await jetpackConnectAddCredentialsPage.enterDetailsAndConnect(
 					jnFlow.username,
 					jnFlow.password
