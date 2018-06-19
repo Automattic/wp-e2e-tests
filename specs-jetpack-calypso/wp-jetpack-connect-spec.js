@@ -57,14 +57,16 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
 	test.describe( 'Disconnect expired sites: @parallel @jetpack @canary', function() {
+		const timeout = mochaTimeOut * 10;
 		this.bailSuite( true );
+		this.timeout( timeout );
 
 		test.before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.it( 'Can disconnect any expired sites', async function() {
-			return await new JetpackConnectFlow( driver, 'jetpackConnectUser' ).removeSites();
+			return await new JetpackConnectFlow( driver, 'jetpackConnectUser' ).removeSites( timeout );
 		} );
 	} );
 
