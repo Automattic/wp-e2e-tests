@@ -26,7 +26,7 @@ import JetpackComFeaturesDesignPage from '../lib/pages/external/jetpackcom-featu
 import WooWizardSetupPage from '../lib/pages/woocommerce/woo-wizard-setup-page';
 import WooWizardPaymentsPage from '../lib/pages/woocommerce/woo-wizard-payments-page';
 import WooWizardShippingPage from '../lib/pages/woocommerce/woo-wizard-shipping-page';
-import WooWizardExtrasPage from '../lib/pages/woocommerce/wizard-extras-page';
+import WooWizardExtrasPage from '../lib/pages/woocommerce/woo-wizard-extras-page';
 import WooWizardJetpackPage from '../lib/pages/woocommerce/wizard-jetpack-page';
 import WooWizardReadyPage from '../lib/pages/woocommerce/wizard-ready-page';
 
@@ -380,7 +380,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can continue through extras information', async function() {
-				return await new WooWizardExtrasPage( driver ).selectContinue();
+				const wooWizardExtrasPage = await WooWizardExtrasPage.Expect( driver );
+				return await wooWizardExtrasPage.selectContinue();
 			} );
 
 			test.it( 'Can activate Jetpack', async function() {
