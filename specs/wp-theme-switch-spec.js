@@ -147,7 +147,7 @@ test.describe(
 					} );
 
 					test.it( 'Can customize the site from the theme thanks dialog', async function() {
-						await WPAdminCustomizerPage.refreshIfError();
+						await WPAdminCustomizerPage.refreshIfError( driver );
 						const wpAdminCustomizerPage = await WPAdminCustomizerPage.Expect( driver );
 						let displayed = await wpAdminCustomizerPage.displayed();
 						assert( displayed, 'The customizer page was not displayed' );
