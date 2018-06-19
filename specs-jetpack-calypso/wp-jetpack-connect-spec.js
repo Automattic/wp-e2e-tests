@@ -31,6 +31,7 @@ import WooWizardJetpackPage from '../lib/pages/woocommerce/wizard-jetpack-page';
 import WooWizardReadyPage from '../lib/pages/woocommerce/wizard-ready-page';
 
 import * as driverManager from '../lib/driver-manager';
+import * as driverHelper from '../lib/driver-helper';
 import * as dataHelper from '../lib/data-helper';
 import JetpackComPricingPage from '../lib/pages/external/jetpackcom-pricing-page';
 import SecurePaymentComponent from '../lib/components/secure-payment-component';
@@ -128,7 +129,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can click the Connect Jetpack button', async function() {
-			this.wpAdminJetpack = new WPAdminJetpackPage( driver );
+			await driverHelper.refreshIfJNError( driver );
+			this.wpAdminJetpack = await WPAdminJetpackPage.Expect( driver );
 			return await this.wpAdminJetpack.connectWordPressCom();
 		} );
 

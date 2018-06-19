@@ -4,6 +4,7 @@ import test from 'selenium-webdriver/testing';
 import config from 'config';
 
 import * as driverManager from '../../lib/driver-manager';
+import * as driverHelper from '../../lib/driver-helper';
 import * as dataHelper from '../../lib/data-helper';
 
 import LoginFlow from '../../lib/flows/login-flow';
@@ -69,7 +70,8 @@ test.describe( `[${ host }] Jetpack Connection: (${ screenSize }) @jetpack`, fun
 		} );
 
 		test.it( 'Can activate recommended features', async function() {
-			this.jetpackDashboard = new WPAdminJetpackPage( driver );
+			await driverHelper.refreshIfJNError( driver );
+			this.jetpackDashboard = await WPAdminJetpackPage.Expect( driver );
 			return await this.jetpackDashboard.activateRecommendedFeatures();
 		} );
 	} );

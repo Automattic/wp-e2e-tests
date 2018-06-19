@@ -4,6 +4,7 @@ import test from 'selenium-webdriver/testing';
 import config from 'config';
 
 import * as driverManager from '../lib/driver-manager';
+import * as driverHelper from '../lib/driver-helper';
 import * as dataHelper from '../lib/data-helper';
 
 import LoginFlow from '../lib/flows/login-flow';
@@ -59,7 +60,8 @@ test.describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function
 		} );
 
 		test.it( 'Can find and click Upgrade nudge button', async function() {
-			this.jetpackDashboard = new WPAdminJetpackPage( driver );
+			await driverHelper.refreshIfJNError( driver );
+			this.jetpackDashboard = await WPAdminJetpackPage.Expect( driver );
 			// The nudge buttons are loaded after the page, and there's no good loaded status indicator to key off of
 			return driver.sleep( 3000 ).then( async () => {
 				return await this.jetpackDashboard.clickUpgradeNudge();
