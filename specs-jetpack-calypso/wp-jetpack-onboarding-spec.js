@@ -365,7 +365,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can click the Connect Jetpack button', async function() {
-				return await new WPAdminJetpackPage( driver ).connectWordPressCom();
+				const wPAdminJetpackPage = await WPAdminJetpackPage.Expect( driver );
+				return await wPAdminJetpackPage.connectWordPressCom();
 			} );
 
 			test.it( 'Can login into WordPress.com', async function() {
