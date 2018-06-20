@@ -93,7 +93,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select add a contact form', async function() {
-			return await new ContactFormPage( driver ).selectAddContactForm();
+			const contactFormPage = await ContactFormPage.Expect( driver );
+			return await contactFormPage.selectAddContactForm();
 		} );
 
 		test.it( 'Can login into WordPress.com', async function() {
@@ -107,7 +108,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select continue on add contact form', async function() {
-			return await new ContactFormPage( driver ).selectContinue();
+			const contactFormPage = await ContactFormPage.Expect( driver );
+			return await contactFormPage.selectContinue();
 		} );
 
 		test.it( 'Can select continue on activate stats page', async function() {
@@ -402,11 +404,13 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can select add a contact form', async function() {
-				return await new ContactFormPage( driver ).selectAddContactForm();
+				const contactFormPage = await ContactFormPage.Expect( driver );
+				return await contactFormPage.selectAddContactForm();
 			} );
 
 			test.it( 'Can continue on add a contact form', async function() {
-				return await new ContactFormPage( driver ).selectContinue();
+				const contactFormPage = await ContactFormPage.Expect( driver );
+				return await contactFormPage.selectContinue();
 			} );
 
 			test.it( 'Can select continue on activate stats page', async function() {
