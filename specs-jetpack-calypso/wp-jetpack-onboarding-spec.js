@@ -50,6 +50,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can create wporg site', async function() {
+			this.timeout( mochaTimeOut * 12 );
+
 			this.jnFlow = new JetpackConnectFlow( driver, null );
 			return await this.jnFlow.createJNSite();
 		} );
@@ -147,6 +149,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can create wporg site', async function() {
+			this.timeout( mochaTimeOut * 12 );
+
 			this.jnFlow = new JetpackConnectFlow( driver, null );
 			return await this.jnFlow.createJNSite();
 		} );
@@ -266,6 +270,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can create wporg site', async function() {
+				this.timeout( mochaTimeOut * 12 );
+
 				this.jnFlow = new JetpackConnectFlow( driver, null );
 				return await this.jnFlow.createJNSite();
 			} );
@@ -354,6 +360,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can create wporg site', async function() {
+				this.timeout( mochaTimeOut * 12 );
+
 				this.jnFlow = new JetpackConnectFlow( driver, null );
 				return await this.jnFlow.createJNSite();
 			} );
