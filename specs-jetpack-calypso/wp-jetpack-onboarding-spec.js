@@ -111,7 +111,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select continue on activate stats page', async function() {
-			return await new ActivateStatsPage( driver ).selectContinue();
+			const activateStatsPage = await ActivateStatsPage.Expect( driver );
+			return await activateStatsPage.selectContinue();
 		} );
 
 		test.it( 'Can see onboarding summary page', async function() {
@@ -207,7 +208,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select continue on activate stats page', async function() {
-			return await new ActivateStatsPage( driver ).selectContinue();
+			const activateStatsPage = await ActivateStatsPage.Expect( driver );
+			return await activateStatsPage.selectContinue();
 		} );
 
 		test.it( 'Can see onboarding summary page', async function() {
@@ -302,7 +304,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can select activate on activate stats page', async function() {
-				return await new ActivateStatsPage( driver ).selectActivateStats();
+				const activateStatsPage = await ActivateStatsPage.Expect( driver );
+				return await activateStatsPage.selectActivateStats();
 			} );
 
 			test.it( 'Can approve connection on the authorization page', async function() {
@@ -311,7 +314,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can select activate on activate stats page', async function() {
-				return await new ActivateStatsPage( driver ).selectContinue();
+				const activateStatsPage = await ActivateStatsPage.Expect( driver );
+				return await activateStatsPage.selectContinue();
 			} );
 
 			test.it( 'Can see onboarding summary page', async function() {
@@ -406,7 +410,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can select continue on activate stats page', async function() {
-				return await new ActivateStatsPage( driver ).selectContinue();
+				const activateStatsPage = await ActivateStatsPage.Expect( driver );
+				return await activateStatsPage.selectContinue();
 			} );
 
 			test.it( 'Can see onboarding summary page', async function() {
