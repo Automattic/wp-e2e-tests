@@ -178,7 +178,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select add a business address', async function() {
-			return await new BusinessAddressPage( driver ).selectAddBusinessAddress();
+			const businessAddressPage = await BusinessAddressPage.Expect( driver );
+			return await businessAddressPage.selectAddBusinessAddress();
 		} );
 
 		test.it( 'Can login into WordPress.com', async function() {
@@ -192,7 +193,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can enter address on business address page', async function() {
-			const businessAddressPage = new BusinessAddressPage( driver );
+			const businessAddressPage = await BusinessAddressPage.Expect( driver );
 			await businessAddressPage.enterBusinessAddressAndSubmit(
 				businessName,
 				address,
