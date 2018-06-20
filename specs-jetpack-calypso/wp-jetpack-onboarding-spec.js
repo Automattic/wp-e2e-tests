@@ -65,12 +65,14 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			await wizardNavigationComponent.skipStep();
 			await wizardNavigationComponent.skipStep();
 			await wizardNavigationComponent.skipStep();
-			let toDoCount = await new SummaryPage( driver ).countToDoSteps();
+			const summaryPage = await SummaryPage.Expect( driver );
+			let toDoCount = await summaryPage.countToDoSteps();
 			assert.equal( toDoCount, 4, 'Expected and actual steps are not equal.' );
 		} );
 
 		test.it( 'Can go back to first step in flow from summary page', async function() {
-			return await new SummaryPage( driver ).visitStep( 1 );
+			const summaryPage = await SummaryPage.Expect( driver );
+			return await summaryPage.visitStep( 1 );
 		} );
 
 		test.it( 'Can fill out site title and tagline', async function() {
@@ -112,7 +114,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see onboarding summary page', async function() {
-			const summaryPage = new SummaryPage( driver );
+			const summaryPage = await SummaryPage.Expect( driver );
 			let toDoCount = await summaryPage.countToDoSteps();
 			assert.equal( toDoCount, 0, 'Expected and actual steps are not equal.' );
 			return await summaryPage.selectVisitSite();
@@ -206,7 +208,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see onboarding summary page', async function() {
-			const summaryPage = new SummaryPage( driver );
+			const summaryPage = await SummaryPage.Expect( driver );
 			let toDoCount = await summaryPage.countToDoSteps();
 			assert.equal( toDoCount, 1, 'Expected and actual steps are not equal.' );
 			return await summaryPage.selectVisitSite();
@@ -308,7 +310,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see onboarding summary page', async function() {
-				const summaryPage = new SummaryPage( driver );
+				const summaryPage = await SummaryPage.Expect( driver );
 				let toDoCount = await summaryPage.countToDoSteps();
 				assert.equal( toDoCount, 2, 'Expected and actual steps are not equal.' );
 				return await summaryPage.selectVisitSite();
@@ -402,8 +404,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see onboarding summary page', async function() {
-				const summaryPage = new SummaryPage( driver );
-				let toDoCount = await new SummaryPage( driver ).countToDoSteps();
+				const summaryPage = await SummaryPage.Expect( driver );
+				let toDoCount = await summaryPage.countToDoSteps();
 				assert.equal( toDoCount, 0, 'Expected and actual steps are not equal.' );
 				return await summaryPage.selectVisitSite();
 			} );
