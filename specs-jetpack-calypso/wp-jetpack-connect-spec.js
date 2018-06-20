@@ -23,14 +23,15 @@ import PlansPage from '../lib/pages/plans-page';
 import LoginPage from '../lib/pages/login-page';
 import JetpackComPage from '../lib/pages/external/jetpackcom-page';
 import JetpackComFeaturesDesignPage from '../lib/pages/external/jetpackcom-features-design-page';
-import WooWizardSetupPage from '../lib/pages/woocommerce/wizard-setup-page';
-import WooWizardPaymentsPage from '../lib/pages/woocommerce/wizard-payments-page';
-import WooWizardShippingPage from '../lib/pages/woocommerce/wizard-shipping-page';
-import WooWizardExtrasPage from '../lib/pages/woocommerce/wizard-extras-page';
-import WooWizardJetpackPage from '../lib/pages/woocommerce/wizard-jetpack-page';
-import WooWizardReadyPage from '../lib/pages/woocommerce/wizard-ready-page';
+import WooWizardSetupPage from '../lib/pages/woocommerce/woo-wizard-setup-page';
+import WooWizardPaymentsPage from '../lib/pages/woocommerce/woo-wizard-payments-page';
+import WooWizardShippingPage from '../lib/pages/woocommerce/woo-wizard-shipping-page';
+import WooWizardExtrasPage from '../lib/pages/woocommerce/woo-wizard-extras-page';
+import WooWizardJetpackPage from '../lib/pages/woocommerce/woo-wizard-jetpack-page';
+import WooWizardReadyPage from '../lib/pages/woocommerce/woo-wizard-ready-page';
 
 import * as driverManager from '../lib/driver-manager';
+import * as driverHelper from '../lib/driver-helper';
 import * as dataHelper from '../lib/data-helper';
 import JetpackComPricingPage from '../lib/pages/external/jetpackcom-pricing-page';
 import SecurePaymentComponent from '../lib/components/secure-payment-component';
@@ -130,7 +131,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can click the Connect Jetpack button', async function() {
-			this.wpAdminJetpack = new WPAdminJetpackPage( driver );
+			await driverHelper.refreshIfJNError( driver );
+			this.wpAdminJetpack = await WPAdminJetpackPage.Expect( driver );
 			return await this.wpAdminJetpack.connectWordPressCom();
 		} );
 
@@ -165,7 +167,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select Try it Free', async function() {
-			return await new JetpackComPage( driver ).selectTryItFree();
+			const jetPackComPage = await JetpackComPage.Visit( driver );
+			return await jetPackComPage.selectTryItFree();
 		} );
 
 		test.it( 'Can select free plan', async function() {
@@ -174,7 +177,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see Jetpack connect page', async function() {
-			return await new JetpackConnectPage( driver, { overrideABTests: false } ).displayed();
+			return await JetpackConnectPage.Expect( driver );
 		} );
 	} );
 
@@ -218,7 +221,11 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 
 		test.it( 'Log out from WP Admin', async function() {
 			await driverManager.ensureNotLoggedIn( driver );
-			return await new WPAdminDashboardPage( driver, siteName ).logout();
+			const wPAdminDashboardPage = await WPAdminDashboardPage.Visit(
+				driver,
+				WPAdminDashboardPage.getUrl( siteName )
+			);
+			return await wPAdminDashboardPage.logout();
 		} );
 
 		test.it( 'Can log in as Subscriber', async function() {
@@ -249,7 +256,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see Jetpack connect page', async function() {
-				return await new JetpackConnectPage( driver, { overrideABTests: false } ).displayed();
+				return await JetpackConnectPage.Expect( driver );
 			} );
 		}
 	);
@@ -280,13 +287,14 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can start connection flow using JN site', async function() {
-				return await new JetpackConnectPage( driver, { overrideABTests: false } ).addSiteUrl(
-					jnFlow.url
-				);
+				const jetPackConnectPage = await JetpackConnectPage.Expect( driver );
+				return await jetPackConnectPage.addSiteUrl( jnFlow.url );
 			} );
 
 			test.it( 'Can enter the Jetpack credentials and install Jetpack', async function() {
-				const jetpackConnectAddCredentialsPage = new JetpackConnectAddCredentialsPage( driver );
+				const jetpackConnectAddCredentialsPage = await JetpackConnectAddCredentialsPage.Expect(
+					driver
+				);
 				return await jetpackConnectAddCredentialsPage.enterDetailsAndConnect(
 					jnFlow.username,
 					jnFlow.password
@@ -345,11 +353,13 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter WooCommerce Wizard', async function() {
-				return await new WPAdminDashboardPage( driver ).enterWooCommerceWizard();
+				const wPAdminDashboardPage = await WPAdminDashboardPage.Expect( driver );
+				return await wPAdminDashboardPage.enterWooCommerceWizard();
 			} );
 
 			test.it( 'Can fill out and submit store information form', async function() {
-				return await new WooWizardSetupPage( driver ).enterStoreDetailsAndSubmit( {
+				const wooWizardSetupPage = await WooWizardSetupPage.Expect( driver );
+				return await wooWizardSetupPage.enterStoreDetailsAndSubmit( {
 					countryCode,
 					stateCode,
 					address,
@@ -362,19 +372,23 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can continue through payments information', async function() {
-				return await new WooWizardPaymentsPage( driver ).selectContinue();
+				const wooWizardPaymentsPage = await WooWizardPaymentsPage.Expect( driver );
+				return await wooWizardPaymentsPage.selectContinue();
 			} );
 
 			test.it( 'Can continue through shipping information', async function() {
-				return await new WooWizardShippingPage( driver ).selectContinue();
+				const wooWizardShippingPage = await WooWizardShippingPage.Expect( driver );
+				return await wooWizardShippingPage.selectContinue();
 			} );
 
 			test.it( 'Can continue through extras information', async function() {
-				return await new WooWizardExtrasPage( driver ).selectContinue();
+				const wooWizardExtrasPage = await WooWizardExtrasPage.Expect( driver );
+				return await wooWizardExtrasPage.selectContinue();
 			} );
 
 			test.it( 'Can activate Jetpack', async function() {
-				return await new WooWizardJetpackPage( driver ).selectContinueWithJetpack();
+				const wooWizardJetpackPage = await WooWizardJetpackPage.Expect( driver );
+				return await wooWizardJetpackPage.selectContinueWithJetpack();
 			} );
 
 			test.it( 'Can log into WP.com', async function() {
@@ -389,7 +403,7 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see the Woo wizard ready page', async function() {
-				return await new WooWizardReadyPage( driver );
+				return await WooWizardReadyPage.Expect( driver );
 			} );
 		}
 	);
@@ -421,7 +435,9 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enter the Jetpack credentials and install Jetpack', async function() {
-				const jetpackConnectAddCredentialsPage = new JetpackConnectAddCredentialsPage( driver );
+				const jetpackConnectAddCredentialsPage = await JetpackConnectAddCredentialsPage.Expect(
+					driver
+				);
 				return await jetpackConnectAddCredentialsPage.enterDetailsAndConnect(
 					jnFlow.username,
 					jnFlow.password
