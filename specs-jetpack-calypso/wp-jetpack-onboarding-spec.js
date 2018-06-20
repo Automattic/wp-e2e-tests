@@ -88,7 +88,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select static page homepage', async function() {
-			return await new SetHomepagePage( driver ).selectPage();
+			const setHomepagePage = await SetHomepagePage.Expect( driver );
+			return await setHomepagePage.selectPage();
 		} );
 
 		test.it( 'Can select add a contact form', async function() {
@@ -164,7 +165,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select posts homepage', async function() {
-			return await new SetHomepagePage( driver ).selectPosts();
+			const setHomepagePage = await SetHomepagePage.Expect( driver );
+			return await setHomepagePage.selectPosts();
 		} );
 
 		test.it( 'Can skip add a contact form', async function() {
@@ -279,7 +281,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can select static homepage', async function() {
-				return await new SetHomepagePage( driver ).selectPage();
+				const setHomepagePage = await SetHomepagePage.Expect( driver );
+				return await setHomepagePage.selectPage();
 			} );
 
 			test.it( 'Can skip add a contact form', async function() {
@@ -388,7 +391,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can select posts homepage', async function() {
-				return await new SetHomepagePage( driver ).selectPosts();
+				const setHomepagePage = await SetHomepagePage.Expect( driver );
+				return await setHomepagePage.selectPosts();
 			} );
 
 			test.it( 'Can select add a contact form', async function() {
