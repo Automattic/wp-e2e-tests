@@ -202,7 +202,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can make business an online store', async function() {
-			return await new InstallWooCommercePage( driver ).selectSellOnline();
+			const installWooCommercePage = await InstallWooCommercePage.Expect( driver );
+			return await installWooCommercePage.selectSellOnline();
 		} );
 
 		test.it( 'Can select continue on activate stats page', async function() {
@@ -296,7 +297,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can make business an online store', async function() {
-				return await new InstallWooCommercePage( driver ).selectSellOnline();
+				const installWooCommercePage = await InstallWooCommercePage.Expect( driver );
+				return await installWooCommercePage.selectSellOnline();
 			} );
 
 			test.it( 'Can select activate on activate stats page', async function() {
