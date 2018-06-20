@@ -81,7 +81,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select Personal Site', async function() {
-			return await new SiteTypePage( driver ).selectPersonalSite();
+			const siteTypePage = await SiteTypePage.Expect( driver );
+			return await siteTypePage.selectPersonalSite();
 		} );
 
 		test.it( 'Can select static page homepage', async function() {
@@ -156,7 +157,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can select Business Site', async function() {
-			return await new SiteTypePage( driver ).selectBusinessSite();
+			const siteTypePage = await SiteTypePage.Expect( driver );
+			return await siteTypePage.selectBusinessSite();
 		} );
 
 		test.it( 'Can select posts homepage', async function() {
@@ -270,7 +272,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can select Business Site', async function() {
-				return await new SiteTypePage( driver ).selectBusinessSite();
+				const siteTypePage = await SiteTypePage.Expect( driver );
+				return await siteTypePage.selectBusinessSite();
 			} );
 
 			test.it( 'Can select static homepage', async function() {
@@ -378,7 +381,8 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can select personal Site', async function() {
-				return await new SiteTypePage( driver ).selectPersonalSite();
+				const siteTypePage = await SiteTypePage.Expect( driver );
+				return await siteTypePage.selectPersonalSite();
 			} );
 
 			test.it( 'Can select posts homepage', async function() {
