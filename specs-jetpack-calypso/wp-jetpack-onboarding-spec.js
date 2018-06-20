@@ -76,7 +76,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can fill out site title and tagline', async function() {
-			const siteTitleTaglinePage = new SiteTitleTaglinePage( driver );
+			const siteTitleTaglinePage = await SiteTitleTaglinePage.Expect( driver );
 			await siteTitleTaglinePage.enterTitle( blogTitle );
 			await siteTitleTaglinePage.enterTagline( blogTagline );
 			return await siteTitleTaglinePage.selectContinue();
@@ -152,7 +152,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can fill out site title and tagline', async function() {
-			const siteTitleTaglinePage = new SiteTitleTaglinePage( driver );
+			const siteTitleTaglinePage = await SiteTitleTaglinePage.Expect( driver );
 			await siteTitleTaglinePage.enterTitle( blogTitle );
 			await siteTitleTaglinePage.enterTagline( blogTagline );
 			return await siteTitleTaglinePage.selectContinue();
@@ -267,7 +267,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can fill out site title and tagline', async function() {
-				const siteTitleTaglinePage = new SiteTitleTaglinePage( driver );
+				const siteTitleTaglinePage = await SiteTitleTaglinePage.Expect( driver );
 				await siteTitleTaglinePage.enterTitle( blogTitle );
 				await siteTitleTaglinePage.enterTagline( blogTagline );
 				return await siteTitleTaglinePage.selectContinue();
@@ -376,7 +376,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can fill out site title and tagline', async function() {
-				const siteTitleTaglinePage = new SiteTitleTaglinePage( driver );
+				const siteTitleTaglinePage = await SiteTitleTaglinePage.Expect( driver );
 				await siteTitleTaglinePage.enterTitle( blogTitle );
 				await siteTitleTaglinePage.enterTagline( blogTagline );
 				return await siteTitleTaglinePage.selectContinue();
