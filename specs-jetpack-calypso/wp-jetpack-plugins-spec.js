@@ -44,25 +44,25 @@ test.describe(
 			test.it( 'Ensure Hello Dolly is deactivated', async function() {
 				const pluginsPage = await PluginsPage.Expect( driver );
 				await pluginsPage.viewPlugin( 'hello' );
-				this.pluginDetailsPage = new PluginDetailsPage( driver );
-				await this.pluginDetailsPage.waitForPlugin();
-				await this.pluginDetailsPage.ensureDeactivated();
-				return await this.pluginDetailsPage.goBack();
+				const pluginDetailsPage = await PluginDetailsPage.Expect( driver );
+				await pluginDetailsPage.waitForPlugin();
+				await pluginDetailsPage.ensureDeactivated();
+				return await pluginDetailsPage.goBack();
 			} );
 
 			test.it( 'Can view the plugin details to activate Hello Dolly', async function() {
 				const pluginsPage = await PluginsPage.Expect( driver );
 				await pluginsPage.viewPlugin( 'hello' );
-				this.pluginDetailsPage = new PluginDetailsPage( driver );
-				await this.pluginDetailsPage.waitForPlugin();
-				return await this.pluginDetailsPage.clickActivateToggleForPlugin();
+				const pluginDetailsPage = await PluginDetailsPage.Expect( driver );
+				await pluginDetailsPage.waitForPlugin();
+				return await pluginDetailsPage.clickActivateToggleForPlugin();
 			} );
 
 			test.it( 'Success message contains Hello Dolly', async function() {
 				const expectedPartialText = 'Successfully activated Hello Dolly';
-				this.pluginDetailsPage = new PluginDetailsPage( driver );
-				await this.pluginDetailsPage.waitForSuccessNotice();
-				let successMessageText = await this.pluginDetailsPage.getSuccessNoticeText();
+				const pluginDetailsPage = await PluginDetailsPage.Expect( driver );
+				await pluginDetailsPage.waitForSuccessNotice();
+				let successMessageText = await pluginDetailsPage.getSuccessNoticeText();
 				return assert.equal(
 					successMessageText.indexOf( expectedPartialText ) > -1,
 					true,
