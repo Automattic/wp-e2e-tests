@@ -289,7 +289,8 @@ test.describe( `Jetpack Connect: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can select buy Premium on Pricing Page', async function() {
-				return await new JetpackComPricingPage( driver ).buyPremium();
+				const jetpackComPricingPage = await JetpackComPricingPage.Visit( driver );
+				return await jetpackComPricingPage.buyPremium();
 			} );
 
 			test.it( 'Can start connection flow using JN site', async function() {
