@@ -60,11 +60,13 @@ if ( host === 'PRESSABLE' ) {
 			} );
 
 			test.it( 'Can log into Pressable', async function() {
-				return await new PressableLogonPage( driver, true ).loginWithWP();
+				const pressableLogonPage = await PressableLogonPage.Visit( driver );
+				return await pressableLogonPage.loginWithWP();
 			} );
 
 			test.it( 'Can approve login with WordPress', async function() {
-				return await new PressableApprovePage( driver ).approve();
+				const pressableApprovePage = await PressableApprovePage.Expect( driver );
+				return await pressableApprovePage.approve();
 			} );
 
 			test.it( 'Can create new site', async function() {

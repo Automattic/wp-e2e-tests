@@ -34,7 +34,7 @@ test.describe( `[${ host }] Jetpack Settings on Calypso: (${ screenSize }) @jetp
 	test.before( async function() {
 		let loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
 		await loginFlow.loginAndSelectSettings();
-		this.settingsPage = new SettingsPage( driver );
+		this.settingsPage = await SettingsPage.Expect( driver );
 		return await this.settingsPage.selectWriting();
 	} );
 

@@ -43,7 +43,7 @@ test.describe( `[${ host }] Jetpack Connection Removal: (${ screenSize }) @jetpa
 		} );
 
 		test.it( 'Can manage connection', async function() {
-			this.settingsPage = new SettingsPage( driver );
+			this.settingsPage = await SettingsPage.Expect( driver );
 			return await this.settingsPage.manageConnection();
 		} );
 

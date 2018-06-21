@@ -55,10 +55,12 @@ function doGoogleAdSearch( search_params ) {
 		} );
 
 		test.it( 'Google search contains our ad', async function() {
-			const googleFlow = new GoogleFlow( driver, 'desktop' );
+			const googleFlow = new GoogleFlow( driver );
+			await googleFlow.resize( 'desktop' );
 			const that = this;
 			await googleFlow.search( search_params, test_data );
-			const searchPage = new GoogleSearchPage( driver, 'https://' + test_data.wpcom_base_url );
+			const searchPage = await GoogleSearchPage.Expect( driver );
+			await searchPage.createAdLink( 'https://' + test_data.wpcom_base_url );
 			if ( await searchPage.adExists() ) {
 				that.searchPage = searchPage;
 			}

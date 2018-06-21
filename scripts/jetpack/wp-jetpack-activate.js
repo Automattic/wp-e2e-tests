@@ -54,7 +54,8 @@ test.describe( `[${ host }] Jetpack Connection: (${ screenSize }) @jetpack`, fun
 		} );
 
 		test.it( 'Can activate Jetpack', async function() {
-			this.wpAdminPlugins = new WPAdminPluginsPage( driver );
+			await driverHelper.refreshIfJNError( driver );
+			this.wpAdminPlugins = await WPAdminPluginsPage.Expect( driver );
 			return await this.wpAdminPlugins.activateJetpack();
 		} );
 

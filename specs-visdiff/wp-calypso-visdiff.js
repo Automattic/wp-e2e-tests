@@ -55,7 +55,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can view the site pages list', async function() {
-			this.pagesPage = new PagesPage( driver );
+			this.pagesPage = await PagesPage.Expect( driver );
 			await this.pagesPage.waitForPages();
 			await eyesHelper.eyesScreenshot( driver, eyes, 'Site Pages List' );
 		} );
@@ -197,7 +197,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can view the comments list', async function() {
-			this.commentsPage = new CommentsPage( driver );
+			this.commentsPage = await CommentsPage.Expect( driver );
 			await this.commentsPage.waitForComments();
 			await eyesHelper.eyesScreenshot( driver, eyes, 'Comments List' );
 		} );
