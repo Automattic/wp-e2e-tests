@@ -197,7 +197,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can view the comments list', async function() {
-			this.commentsPage = new CommentsPage( driver );
+			this.commentsPage = await CommentsPage.Expect( driver );
 			await this.commentsPage.waitForComments();
 			await eyesHelper.eyesScreenshot( driver, eyes, 'Comments List' );
 		} );
