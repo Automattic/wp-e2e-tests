@@ -61,19 +61,15 @@ test.describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function
 
 		test.it( 'Can find and click Upgrade nudge button', async function() {
 			await driverHelper.refreshIfJNError( driver );
-			this.jetpackDashboard = await WPAdminJetpackPage.Expect( driver );
-			// The nudge buttons are loaded after the page, and there's no good loaded status indicator to key off of
-			return driver.sleep( 3000 ).then( async () => {
-				return await this.jetpackDashboard.clickUpgradeNudge();
-			} );
+			const jetpackDashboard = await WPAdminJetpackPage.Expect( driver );
+			await driver.sleep( 3000 ); // The nudge buttons are loaded after the page, and there's no good loaded status indicator to key off of
+			return await jetpackDashboard.clickUpgradeNudge();
 		} );
 
 		test.it( 'Can click the Proceed button', async function() {
-			this.jetpackPlanSalesPage = new JetpackPlanSalesPage( driver );
-			// The upgrade buttons are loaded after the page, and there's no good loaded status indicator to key off of
-			return driver.sleep( 3000 ).then( async () => {
-				return await this.jetpackPlanSalesPage.clickPurchaseButton();
-			} );
+			const jetpackPlanSalesPage = await JetpackPlanSalesPage.Expect( driver );
+			await driver.sleep( 3000 ); // The upgrade buttons are loaded after the page, and there's no good loaded status indicator to key off of
+			return await jetpackPlanSalesPage.clickPurchaseButton();
 		} );
 
 		test.it( 'Can then see secure payment component', async function() {
