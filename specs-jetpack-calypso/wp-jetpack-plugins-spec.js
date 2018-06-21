@@ -94,9 +94,9 @@ test.describe(
 				async function() {
 					const pluginVendor = 'WP Job Manager';
 					const pluginTitle = 'WP Job Manager';
-					this.pluginsBrowserPage = new PluginsBrowserPage( driver );
-					await this.pluginsBrowserPage.searchForPlugin( pluginVendor );
-					let pluginDisplayed = await this.pluginsBrowserPage.pluginTitledShown(
+					const pluginsBrowserPage = await PluginsBrowserPage.Expect( driver );
+					await pluginsBrowserPage.searchForPlugin( pluginVendor );
+					let pluginDisplayed = await pluginsBrowserPage.pluginTitledShown(
 						pluginTitle,
 						pluginVendor
 					);
