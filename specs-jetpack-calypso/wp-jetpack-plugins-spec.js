@@ -42,8 +42,8 @@ test.describe(
 
 		test.describe( 'Can activate Hello Dolly', function() {
 			test.it( 'Ensure Hello Dolly is deactivated', async function() {
-				this.pluginsPage = new PluginsPage( driver );
-				await this.pluginsPage.viewPlugin( 'hello' );
+				const pluginsPage = await PluginsPage.Expect( driver );
+				await pluginsPage.viewPlugin( 'hello' );
 				this.pluginDetailsPage = new PluginDetailsPage( driver );
 				await this.pluginDetailsPage.waitForPlugin();
 				await this.pluginDetailsPage.ensureDeactivated();
@@ -51,8 +51,8 @@ test.describe(
 			} );
 
 			test.it( 'Can view the plugin details to activate Hello Dolly', async function() {
-				this.pluginsPage = new PluginsPage( driver );
-				await this.pluginsPage.viewPlugin( 'hello' );
+				const pluginsPage = await PluginsPage.Expect( driver );
+				await pluginsPage.viewPlugin( 'hello' );
 				this.pluginDetailsPage = new PluginDetailsPage( driver );
 				await this.pluginDetailsPage.waitForPlugin();
 				return await this.pluginDetailsPage.clickActivateToggleForPlugin();
