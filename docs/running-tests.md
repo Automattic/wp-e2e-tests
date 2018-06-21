@@ -7,8 +7,6 @@
 - [To run with different modes](#to-run-with-different-modes)
 - [To run a specific suite of specs](#to-run-a-specific-suite-of-specs)
 - [To run headlessly](#to-run-headlessly)
-- [To run inside a Docker container](#to-run-inside-a-docker-container)
-- [Jetpack Tests on CircleCI](#jetpack-tests-on-circleci)
 
 ## To run the default specs in parallel (in default browser sizes - mobile and desktop)
 
@@ -83,42 +81,3 @@ or
 
 1. `export HEADLESS=1`
 1. `./node_modules/.bin/mocha specs/wp-log-in-out-spec.js`
-
-Another way is to run a separate Selenium server via Docker.  There are lots of options for this on Docker Hub, but I recommend [this one](https://hub.docker.com/r/selenium/standalone-chrome-debug/), as it also allows you to VNC into the container if you do want to view the results.  Just drop the "-debug" from these steps if you don't need that feature.
-
-1. If you haven't already, [install Docker](https://docs.docker.com/engine/installation/)
-1. `export SELENIUM_REMOTE_URL=http://localhost:4444/wd/hub`
-1. `docker-compose up -d`
-1. Execute your tests as normal, and no browser will appear
-
-*Note that this command needs to be run from the root of the wp-e2e-tests repo to enable data sharing from the host.  It opens VNC access at `localhost:5902`, with password "secret".  The `-d` flag runs in the background, omit that if you want to view the Selenium server output on the screen.  If running in the background you can stop it with the `docker-compose down` command.
-
-A couple additional steps are necessary if you want to connect that Selenium server to a locally running branch of Calypso.  This runs two separate containers, for both Selenium and Calypso, and handles all the networking in between them.  These steps assume you've already configured and built Calypso for Docker with an image name of `wp-calypso`.
-
-1. Set your `calypsoBaseUrl` config variable to `http://wpcalypso.wordpress.com` (note the http, not https)
-1. From the `wp-e2e-tests` directory, run `docker-compose -f docker-compose/docker-compose-calypso.yml up -d`
-
-Note that you'll need to supply the `-f docker-compose/docker-compose-calypso.yml` parameter to the `down` command as well, or you'll get a warning message about orphaned containers.
-
-## To run inside a Docker container
-
-We can also run the test suite (including Selenium) from within the context of a Docker container, which allows us to force a particular version of Chrome/driver to reduce compatibility issues.  This would mostly be useful from a CI server.
-
-1. If you haven't already, [install Docker](https://docs.docker.com/engine/installation/)
-1. Execute `docker build -t wp-e2e-tests .` to build the image (this may take several minutes the first time)
-1. Execute `docker run -v /dev/shm:/dev/shm -v $(pwd):$(pwd) -w $(pwd) -e NODE_ENV -it --rm wp-e2e-tests ./run.sh -g -x` and it will run the default test suite at mobile/desktop width
-
-## Jetpack Tests on CircleCI
-
-The scripts in the `scripts/jetpack` directory are designed to build/configure a Jetpack site via the ServerPilot API on a DigitalOcean droplet.  Once you've built a droplet and connected it to ServerPilot (and configured your keys in the `spConfig` object), build the site via `./scripts/jetpack/wp-serverpilot-init.js`.  There are also scripts in that directory for installing/activating/connecting/disconnecting Jetpack, and deleting the site.
-
-## Jetpack CI like tests localy
-
-To locally run Jetpack CI tests against dynamicaly created sites (as they runs in CI) do the following:
-
-1. `export CIRCLE_SHA1=#{some_random_long_lowercased_string}`
-1. `export JETPACKHOST=CI`
-1. create new dynamic site via: `$ ./scripts/jetpack/wp-serverpilot-init.js`
-1. login (using jetpackUserCI creds) to your new shiny site and install Jetack (Do not activate!)
-1. run activate script: `$ ./node_modules/.bin/mocha scripts/jetpack/wp-jetpack-activate.js`
-1. run magelan tests: `./node_modules/.bin/magellan --config=./magellan-jetpack.json --test=path/to/test.js`

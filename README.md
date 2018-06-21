@@ -21,8 +21,6 @@ Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Au
     - [To run with different modes](docs/running-tests.md#to-run-with-different-modes)
     - [To run a specific suite of specs](docs/running-tests.md#to-run-a-specific-suite-of-specs)
     - [To run headlessly](docs/running-tests.md#to-run-headlessly)
-    - [To run inside a Docker container](docs/running-tests.md#to-run-inside-a-docker-container)
-    - [Jetpack Tests on CircleCI](docs/running-tests.md#jetpack-tests-on-circleci)
 - [Style Guide](docs/style-guide.md)
 - [Other information](#other-information)
   - [NodeJS Version](docs/miscellaneous.md#nodejs-version)

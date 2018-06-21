@@ -78,7 +78,6 @@ A full list of config values are:
 | testAccounts (deprecated) | A JSON object with username/password pairs assigned to keynames for easy retrieval.  The necessary accounts can be found in the config/local.example.json file.  | {"defaultUser": ["username1","password1"], "multiSiteUser": ["username2","password2"] } | No | **NO** |
 | highlightElements | Boolean to indicate whether to visually highlight elements being interacted with on the page | true | No | Yes |
 | restApiApplication | A JSON object with your [WordPress REST API app](https://developer.wordpress.com/apps/) client ID, redirect URI, and client secret | {"client_id": "YOUR_CLIENT_ID", "redirect_uri": "YOUR_REDIRECT_URI", "client_secret": "YOUR CLIENT_SECRET"} | Yes (for REST API scripts only) | **NO** |
-| spConfig | A JSON object with your [ServerPilot API](serverpilot.io) client ID, API key, and System User ID | {"clientId": "YOUR_CLIENT_ID", "apiKey": "YOUR_API_KEY", "sysuserid": "YOUR_SYSUSERID"} | Yes (for Jetpack on CI scripts only) | **NO** |
 
 ## Standalone Environment Variables
 
