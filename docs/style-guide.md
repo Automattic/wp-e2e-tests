@@ -1,5 +1,66 @@
 # Style Guide
 
+## Async / Await
+
+We use async functions and await to wait for commands to finish. 
+
+We don't chain function calls together and avoid using `.then` calls.
+
+Avoid doing:
+
+```
+async selectContinue() {
+	const continueSelector = By.css( '.card[data-e2e-type="continue"] button' );
+	return await driverHelper
+		.waitTillPresentAndDisplayed( this.driver, continueSelector )
+		.then( () => driverHelper.clickWhenClickable( this.driver, continueSelector ) );
+	}
+```
+
+Instead use `await` for each function call:
+
+```
+async selectContinue() {
+	const continueSelector = By.css( 'a.card[data-e2e-type="continue"] button' );
+	await driverHelper.waitTillPresentAndDisplayed( this.driver, continueSelector );
+	return await driverHelper.clickWhenClickable( this.driver, continueSelector );
+}
+```
+
+## Constructing page objects
+
+All pages have asynchronous functions. Constructors for pages can't be asynchronous so we never construct a page object directly (using something like `new PageObjectPage(...)`), instead we use the static methods `Expect` and `Visit`, which are on the asyncBaseContainer and hence available for every page, to construct the page object.
+
+Don't do:
+
+```
+test.it( 'Can select domain only from the domain first choice page', function() {
+	const domainFirstChoicePage = new DomainFirstPage( driver );
+	return await domainFirstChoicePage.chooseJustBuyTheDomain();
+} );
+```
+
+Instead you should do this if you're expecting a page to appear during a flow:
+
+```
+test.it( 'Can select domain only from the domain first choice page', function() {
+	const domainFirstChoicePage = await DomainFirstPage.Expect( driver );
+	return await domainFirstChoicePage.chooseJustBuyTheDomain();
+} );
+```
+
+or this to directly visit a page:
+
+
+```
+test.it( 'Can select domain only from the domain first choice page', function() {
+	const domainFirstChoicePage = await DomainFirstPage.Visit( driver );
+	return await domainFirstChoicePage.chooseJustBuyTheDomain();
+} );
+```
+
+**Note:** not all pages can be visited as they require a direct URL to be defined, some pages come only as part of flows (eg. sign up pages)
+
 ## Use of this, const and lets
 
 It is preferred to use `const`, or `lets`, instead of `this.`, as the scope is narrower and less likely to cause confusion across test steps.
@@ -8,8 +69,8 @@ For example:
 
 ```
 test.it( 'Can select domain only from the domain first choice page', function() {
-	this.domainFirstChoicePage = new DomainFirstPage( driver );
-	return this.domainFirstChoicePage.chooseJustBuyTheDomain();
+	this.domainFirstChoicePage = await DomainFirstPage.Expect( driver );
+	return await this.domainFirstChoicePage.chooseJustBuyTheDomain();
 } );
 ```
 
@@ -18,15 +79,7 @@ can use a `const` instead:
 ```
 test.it( 'Can select domain only from the domain first choice page', function() {
 	const domainFirstChoicePage = new DomainFirstPage( driver );
-	return domainFirstChoicePage.chooseJustBuyTheDomain();
-} );
-```
-
-This can be reduced further to just:
-
-```
-test.it( 'Can select domain only from the domain first choice page', function() {
-	return ( new DomainFirstPage( driver ).chooseJustBuyTheDomain() );
+	return await domainFirstChoicePage.chooseJustBuyTheDomain();
 } );
 ```
 
@@ -37,16 +90,18 @@ Passing arrow functions (“lambdas”) to Mocha is discouraged. Lambdas lexical
 Avoid:
 
 ```
-test.it( 'We can visit set the sandbox cookie for payments', () => {
-  return ( new WPHomePage( driver, { visit: true, culture: locale } ).setSandboxModeForPayments( sandboxCookieValue ) );
+test.it( 'We can set the sandbox cookie for payments', () => {
+	const wPHomePage = await WPHomePage.Visit( driver );
+	await wPHomePage.checkURL( locale );
 } );
 ```
 
 instead:
 
 ```
-test.it( 'We can visit set the sandbox cookie for payments', function() {
-  return ( new WPHomePage( driver, { visit: true, culture: locale } ).setSandboxModeForPayments( sandboxCookieValue ) );
+test.it( 'We can set the sandbox cookie for payments', async function() {
+	const wPHomePage = await WPHomePage.Visit( driver );
+	await wPHomePage.checkURL( locale );
 } );
 ```
 
@@ -110,6 +165,9 @@ test.describe(
 	}
 );
 ```
+
+**Note:** The `test.describe` blocks shouldn't be `async`
+
 
 ## Catching errors in a test.it block
 
