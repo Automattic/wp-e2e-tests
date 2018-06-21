@@ -55,7 +55,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can view the site pages list', async function() {
-			this.pagesPage = new PagesPage( driver );
+			this.pagesPage = await PagesPage.Expect( driver );
 			await this.pagesPage.waitForPages();
 			await eyesHelper.eyesScreenshot( driver, eyes, 'Site Pages List' );
 		} );
