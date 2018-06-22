@@ -10,7 +10,7 @@
 
 ## NodeJS Version
 
-The node version should be defined in the `.nvmrc` file for use with the [nvm](https://github.com/creationix/nvm) project.  When changing the version a new Docker container should be built/pushed to Docker Hub for use on CircleCI 2.0
+The node version should be defined in the `.nvmrc` file for use with the [nvm](https://github.com/creationix/nvm) project.
 
 ## Git Pre-Commit Hook
 
