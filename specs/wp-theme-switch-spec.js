@@ -67,15 +67,15 @@ test.describe( `[${ host }] Switching Themes: (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can activate the theme from the theme preview page', async function() {
-				this.themePreviewPage = new ThemePreviewPage( driver );
+				this.themePreviewPage = await ThemePreviewPage.Expect( driver );
 				await this.themePreviewPage.activate();
 			} );
 
 			test.it(
 				'Can see the theme thanks dialog and go back to the theme details page',
 				async function() {
-					this.themeDialogComponent = new ThemeDialogComponent( driver );
-					await this.themeDialogComponent.goToThemeDetail();
+					const themeDialogComponent = await ThemeDialogComponent.Expect( driver );
+					await themeDialogComponent.goToThemeDetail();
 					this.themeDetailPage = await ThemeDetailPage.Expect( driver );
 					let displayed = await this.themeDetailPage.displayed();
 					await eyesHelper.eyesScreenshot( driver, eyes, 'Theme Details Page' );
@@ -112,7 +112,7 @@ test.describe(
 			} );
 
 			test.it( 'Can open Themes menu', async function() {
-				let sidebarComponent = new SidebarComponent( driver );
+				let sidebarComponent = await SidebarComponent.Expect( driver );
 				return await sidebarComponent.selectThemes();
 			} );
 
@@ -130,13 +130,13 @@ test.describe(
 				} );
 
 				test.it( 'Can see the theme thanks dialog', async function() {
-					let themeDialogComponent = new ThemeDialogComponent( driver );
+					const themeDialogComponent = await ThemeDialogComponent.Expect( driver );
 					await themeDialogComponent.customizeSite();
 				} );
 
 				if ( host === 'WPCOM' ) {
 					test.it( 'Can customize the site from the theme thanks dialog', async function() {
-						let customizerPage = new CustomizerPage( driver );
+						let customizerPage = await CustomizerPage.Expect( driver );
 						let displayed = await customizerPage.displayed();
 						return assert( displayed, 'The customizer page was not displayed' );
 					} );
@@ -147,7 +147,8 @@ test.describe(
 					} );
 
 					test.it( 'Can customize the site from the theme thanks dialog', async function() {
-						let wpAdminCustomizerPage = new WPAdminCustomizerPage( driver );
+						await WPAdminCustomizerPage.refreshIfError( driver );
+						const wpAdminCustomizerPage = await WPAdminCustomizerPage.Expect( driver );
 						let displayed = await wpAdminCustomizerPage.displayed();
 						assert( displayed, 'The customizer page was not displayed' );
 					} );

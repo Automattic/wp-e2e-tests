@@ -67,9 +67,6 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			const newCategoryName = 'Category ' + new Date().getTime().toString();
 			const newTagName = 'Tag ' + new Date().getTime().toString();
 			const publicizeMessage = dataHelper.randomPhrase();
-			const publicizeTwitterAccount = config.has( 'publicizeTwitterAccount' )
-				? config.get( 'publicizeTwitterAccount' )
-				: '';
 
 			test.it( 'Can log in', async function() {
 				let loginFlow = new LoginFlow( driver );
@@ -89,27 +86,27 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 				test.describe( 'Categories and Tags', function() {
 					test.it( 'Expand Categories and Tags', async function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 						await postEditorSidebarComponent.expandCategoriesAndTags();
 					} );
 
 					test.it( 'Can add a new category', async function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 						await postEditorSidebarComponent.addNewCategory( newCategoryName );
 					} );
 
 					test.it( 'Can add a new tag', async function() {
-						let postEditorSidebarComponent = await new PostEditorSidebarComponent( driver );
+						const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 						await postEditorSidebarComponent.addNewTag( newTagName );
 					} );
 
 					test.it( 'Close categories and tags', async function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 						await postEditorSidebarComponent.closeCategoriesAndTags();
 					} );
 
 					test.it( 'Verify categories and tags present after save', async function() {
-						let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+						let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 						const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 						await postEditorSidebarComponent.hideComponentIfNecessary();
 						await postEditorToolbarComponent.ensureSaved();
@@ -124,13 +121,16 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 					test.describe( 'Publicize Options', function() {
 						test.it( 'Expand sharing section', async function() {
-							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+							let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 							await postEditorSidebarComponent.expandSharingSection();
 						} );
 
 						if ( host !== 'CI' && host !== 'JN' ) {
 							test.it( 'Can see the publicise to twitter account', async function() {
-								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+								const publicizeTwitterAccount = config.has( 'publicizeTwitterAccount' )
+									? config.get( 'publicizeTwitterAccount' )
+									: '';
+								let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 								let accountDisplayed = await postEditorSidebarComponent.publicizeToTwitterAccountDisplayed();
 								assert.equal(
 									accountDisplayed,
@@ -142,7 +142,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 							} );
 
 							test.it( 'Can see the default publicise message', async function() {
-								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+								let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 								let messageDisplayed = await postEditorSidebarComponent.publicizeMessageDisplayed();
 								assert.equal(
 									messageDisplayed,
@@ -152,26 +152,26 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 							} );
 
 							test.it( 'Can set a custom publicise message', async function() {
-								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+								let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 								await postEditorSidebarComponent.setPublicizeMessage( publicizeMessage );
 							} );
 						}
 
 						test.it( 'Close sharing section', async function() {
-							let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+							let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 							await postEditorSidebarComponent.closeSharingSection();
 						} );
 
 						test.describe( 'Preview (https only)', function() {
 							test.it( 'Can launch post preview', async function() {
-								let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+								let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 								await postEditorSidebarComponent.hideComponentIfNecessary();
 
 								this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 								await this.postEditorToolbarComponent.ensureSaved();
 								await this.postEditorToolbarComponent.launchPreview();
-								this.postPreviewComponent = new PostPreviewComponent( driver );
-								await this.postPreviewComponent.displayed();
+								this.postPreviewComponent = await PostPreviewComponent.Expect( driver );
+								return await this.postPreviewComponent.displayed();
 							} );
 
 							test.it( 'Can see correct post title in preview', async function() {
@@ -232,7 +232,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 								} );
 
 								test.it( 'Can see correct post title in preview', async function() {
-									this.postPreviewComponent = new PostPreviewComponent( driver );
+									this.postPreviewComponent = await PostPreviewComponent.Expect( driver );
 									let postTitle = await this.postPreviewComponent.postTitle();
 									assert.equal(
 										postTitle.toLowerCase(),
@@ -297,7 +297,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 								} );
 
 								test.it( 'Can see correct post title', async function() {
-									this.viewPostPage = new ViewPostPage( driver );
+									this.viewPostPage = await ViewPostPage.Expect( driver );
 									let postTitle = await this.viewPostPage.postTitle();
 									assert.equal(
 										postTitle.toLowerCase(),
@@ -349,12 +349,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 								if ( host !== 'CI' && host !== 'JN' ) {
 									test.describe( 'Can see post publicized on twitter', function() {
 										test.it( 'Can see post message', async function() {
-											let twitterFeedPage = new TwitterFeedPage(
-												driver,
-												publicizeTwitterAccount,
-												true
-											);
-											await twitterFeedPage.checkLatestTweetsContain( publicizeMessage );
+											let twitterFeedPage = await TwitterFeedPage.Visit( driver );
+											return await twitterFeedPage.checkLatestTweetsContain( publicizeMessage );
 										} );
 									} );
 								}
@@ -405,7 +401,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see correct post title', async function() {
-				this.viewPostPage = new ViewPostPage( driver );
+				this.viewPostPage = await ViewPostPage.Expect( driver );
 				let postTitle = await this.viewPostPage.postTitle();
 				assert.equal(
 					postTitle.toLowerCase(),
@@ -453,11 +449,13 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			await ReaderPage.Visit( driver );
 			const navBarComponent = await NavBarComponent.Expect( driver );
 			await navBarComponent.clickMySites();
-			let sidebarComponent = new SidebarComponent( driver );
+			let sidebarComponent = await SidebarComponent.Expect( driver );
 			await sidebarComponent.ensureSidebarMenuVisible();
 			await sidebarComponent.selectStats();
-			await new StatsPage( driver ).openActivity();
-			let displayed = await new ActivityPage( driver ).postTitleDisplayed( blogPostTitle );
+			const statsPage = await StatsPage.Expect( driver );
+			await statsPage.openActivity();
+			const activityPage = await ActivityPage.Expect( driver );
+			let displayed = await activityPage.postTitleDisplayed( blogPostTitle );
 			return assert(
 				displayed,
 				`The published post title '${ blogPostTitle }' was not displayed in activity log after publishing`
@@ -496,7 +494,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				async function() {
 					let postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 					await postEditorToolbarComponent.ensureSaved( { clickSave: true } );
-					let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+					let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 					await postEditorSidebarComponent.expandStatusSection();
 					await postEditorSidebarComponent.chooseFutureDate();
 					publishDate = await postEditorSidebarComponent.getSelectedPublishDate();
@@ -510,8 +508,10 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			);
 
 			test.it( 'Can confirm scheduling post and see correct publish date', async function() {
-				let editorConfirmationSidebarComponent = new EditorConfirmationSidebarComponent( driver );
-				let publishDateShown = await editorConfirmationSidebarComponent.publishDateShown();
+				const editorConfirmationSidebarComponent = await EditorConfirmationSidebarComponent.Expect(
+					driver
+				);
+				const publishDateShown = await editorConfirmationSidebarComponent.publishDateShown();
 				assert.equal(
 					publishDateShown,
 					publishDate,
@@ -520,9 +520,11 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				await editorConfirmationSidebarComponent.confirmAndPublish();
 				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorToolbarComponent.waitForPostSucessNotice();
-				let postEditorPage = await EditorPage.Expect( driver );
-				let isScheduled = await postEditorPage.postIsScheduled();
-				assert( isScheduled, 'The newly scheduled post is not showing in the editor as scheduled' );
+				const postEditorPage = await EditorPage.Expect( driver );
+				assert(
+					await postEditorPage.postIsScheduled(),
+					'The newly scheduled post is not showing in the editor as scheduled'
+				);
 			} );
 		} );
 	} );
@@ -549,14 +551,14 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can disable sharing buttons', async function() {
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 				await postEditorSidebarComponent.expandSharingSection();
 				await postEditorSidebarComponent.setSharingButtons( false );
 				await postEditorSidebarComponent.closeSharingSection();
 			} );
 
 			test.it( 'Can allow comments', async function() {
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 				await postEditorSidebarComponent.expandMoreOptions();
 				await postEditorSidebarComponent.setCommentsForPost( true );
 			} );
@@ -568,7 +570,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				} );
 
 				test.it( 'Can set visibility to private which immediately publishes it', async function() {
-					const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+					const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 					await postEditorSidebarComponent.setVisibilityToPrivate();
 					this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 					await this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
@@ -578,7 +580,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				if ( host === 'WPCOM' ) {
 					test.describe( 'As a logged in user ', function() {
 						test.it( 'Can see correct post title', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let postTitle = await viewPostPage.postTitle();
 							assert.equal(
 								postTitle.toLowerCase(),
@@ -588,7 +590,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see correct post content', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let content = await viewPostPage.postContent();
 							assert.equal(
 								content.indexOf( blogPostQuote ) > -1,
@@ -602,7 +604,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see comments enabled', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.commentsVisible();
 							assert.equal(
 								visible,
@@ -612,7 +614,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see sharing buttons", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.sharingButtonsVisible();
 							assert.equal(
 								visible,
@@ -628,7 +630,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 							} );
 
 							test.it( "Can't see post at all", async function() {
-								let notFoundPage = new NotFoundPage( driver );
+								let notFoundPage = await NotFoundPage.Expect( driver );
 								let displayed = await notFoundPage.displayed();
 								assert.equal(
 									displayed,
@@ -642,7 +644,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					// Jetpack tests
 					test.describe( 'As a non-logged in user ', function() {
 						test.it( "Can't see post at all", async function() {
-							let notFoundPage = new NotFoundPage( driver );
+							let notFoundPage = await NotFoundPage.Expect( driver );
 							let displayed = await notFoundPage.displayed();
 							assert.equal(
 								displayed,
@@ -678,7 +680,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			test.it( 'Can enter post title and content and set to password protected', async function() {
 				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterTitle( blogPostTitle );
-				this.postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				this.postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 				await this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				this.editorPage = await EditorPage.Expect( driver );
 				await this.editorPage.enterContent( blogPostQuote );
@@ -687,14 +689,14 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can enable sharing buttons', async function() {
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 				await postEditorSidebarComponent.expandSharingSection();
 				await postEditorSidebarComponent.setSharingButtons( true );
 				await postEditorSidebarComponent.closeSharingSection();
 			} );
 
 			test.it( 'Can disallow comments', async function() {
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 				await postEditorSidebarComponent.expandMoreOptions();
 				await postEditorSidebarComponent.setCommentsForPost( false );
 				await postEditorSidebarComponent.closeMoreOptions();
@@ -710,7 +712,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				test.describe( 'As a logged in user', function() {
 					test.describe( 'With no password entered', function() {
 						test.it( 'Can view post title', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let postTitle = await viewPostPage.postTitle();
 							assert.equal(
 								postTitle.toLowerCase(),
@@ -719,7 +721,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see password field', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let isPasswordProtected = await viewPostPage.isPasswordProtected();
 							assert.equal(
 								isPasswordProtected,
@@ -729,7 +731,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see content when no password is entered", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let content = await viewPostPage.postContent();
 							assert.equal(
 								content.indexOf( blogPostQuote ) === -1,
@@ -743,7 +745,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see comments", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.commentsVisible();
 							assert.equal(
 								visible,
@@ -753,7 +755,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see sharing buttons', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.sharingButtonsVisible();
 							return assert.equal(
 								visible,
@@ -766,13 +768,13 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					test.describe( 'With incorrect password entered', function() {
 						// Enter incorrect password
 						test.before( async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							await viewPostPage.displayed();
 							await viewPostPage.enterPassword( 'password' );
 						} );
 
 						test.it( 'Can view post title', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let postTitle = await viewPostPage.postTitle();
 							assert.equal(
 								postTitle.toLowerCase(),
@@ -781,7 +783,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see password field', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let isPasswordProtected = await viewPostPage.isPasswordProtected();
 							assert.equal(
 								isPasswordProtected,
@@ -791,7 +793,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see content when incorrect password is entered", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let content = await viewPostPage.postContent();
 							assert.equal(
 								content.indexOf( blogPostQuote ) === -1,
@@ -805,7 +807,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see comments", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.commentsVisible();
 							assert.equal(
 								visible,
@@ -815,7 +817,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see sharing buttons', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.sharingButtonsVisible();
 							assert.equal(
 								visible,
@@ -828,13 +830,13 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					test.describe( 'With correct password entered', function() {
 						// Enter correct password
 						test.before( async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							await viewPostPage.displayed();
 							await viewPostPage.enterPassword( postPassword );
 						} );
 
 						test.it( 'Can view post title', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let postTitle = await viewPostPage.postTitle();
 							assert.equal(
 								postTitle.toLowerCase(),
@@ -843,7 +845,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see password field", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let isPasswordProtected = await viewPostPage.isPasswordProtected();
 							assert.equal(
 								isPasswordProtected,
@@ -853,7 +855,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see page content', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let content = await viewPostPage.postContent();
 							assert.equal(
 								content.indexOf( blogPostQuote ) > -1,
@@ -867,7 +869,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see comments", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.commentsVisible();
 							assert.equal(
 								visible,
@@ -877,7 +879,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see sharing buttons', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.sharingButtonsVisible();
 							assert.equal(
 								visible,
@@ -894,7 +896,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					} );
 					test.describe( 'With no password entered', function() {
 						test.it( 'Can view post title', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let postTitle = await viewPostPage.postTitle();
 							assert.equal(
 								postTitle.toLowerCase(),
@@ -903,7 +905,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see password field', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let isPasswordProtected = await viewPostPage.isPasswordProtected();
 							assert.equal(
 								isPasswordProtected,
@@ -913,7 +915,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see content when no password is entered", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let content = await viewPostPage.postContent();
 							assert.equal(
 								content.indexOf( blogPostQuote ) === -1,
@@ -927,7 +929,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see comments", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.commentsVisible();
 							assert.equal(
 								visible,
@@ -937,7 +939,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see sharing buttons', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.sharingButtonsVisible();
 							return assert.equal(
 								visible,
@@ -950,13 +952,13 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					test.describe( 'With incorrect password entered', function() {
 						// Enter incorrect password
 						test.before( async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							await viewPostPage.displayed();
 							await viewPostPage.enterPassword( 'password' );
 						} );
 
 						test.it( 'Can view post title', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let postTitle = await viewPostPage.postTitle();
 							assert.equal(
 								postTitle.toLowerCase(),
@@ -965,7 +967,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see password field', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let isPasswordProtected = await viewPostPage.isPasswordProtected();
 							assert.equal(
 								isPasswordProtected,
@@ -975,7 +977,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see content when incorrect password is entered", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let content = await viewPostPage.postContent();
 							assert.equal(
 								content.indexOf( blogPostQuote ) === -1,
@@ -989,7 +991,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see comments", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.commentsVisible();
 							assert.equal(
 								visible,
@@ -999,7 +1001,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see sharing buttons', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.sharingButtonsVisible();
 							assert.equal(
 								visible,
@@ -1012,13 +1014,13 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					test.describe( 'With correct password entered', function() {
 						// Enter correct password
 						test.before( async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							await viewPostPage.displayed();
 							await viewPostPage.enterPassword( postPassword );
 						} );
 
 						test.it( 'Can view post title', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let postTitle = await viewPostPage.postTitle();
 							assert.equal(
 								postTitle.toLowerCase(),
@@ -1027,7 +1029,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see password field", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let isPasswordProtected = await viewPostPage.isPasswordProtected();
 							assert.equal(
 								isPasswordProtected,
@@ -1037,7 +1039,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see page content', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let content = await viewPostPage.postContent();
 							assert.equal(
 								content.indexOf( blogPostQuote ) > -1,
@@ -1051,7 +1053,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( "Can't see comments", async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.commentsVisible();
 							assert.equal(
 								visible,
@@ -1061,7 +1063,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.it( 'Can see sharing buttons', async function() {
-							let viewPostPage = new ViewPostPage( driver );
+							let viewPostPage = await ViewPostPage.Expect( driver );
 							let visible = await viewPostPage.sharingButtonsVisible();
 							assert.equal(
 								visible,
@@ -1099,7 +1101,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can trash the new post', async function() {
-				const postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 				return await postEditorSidebarComponent.trashPost();
 			} );
 
@@ -1154,7 +1156,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					this.navbarComponent = await NavBarComponent.Expect( driver );
 					await this.navbarComponent.clickMySites();
 					const jetpackSiteName = dataHelper.getJetpackSiteName();
-					this.sidebarComponent = new SidebarComponent( driver );
+					this.sidebarComponent = await SidebarComponent.Expect( driver );
 					if ( host !== 'WPCOM' ) {
 						await this.sidebarComponent.selectSite( jetpackSiteName );
 					}
@@ -1197,8 +1199,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				);
 
 				test.describe( 'Can view the post with the new title', function() {
-					test.it( 'Can view the post', function() {
-						return ( this.viewPostPage = new ViewPostPage( driver ) );
+					test.it( 'Can view the post', async function() {
+						return ( this.viewPostPage = await ViewPostPage.Expect( driver ) );
 					} );
 
 					test.it( 'Can see correct post title', async function() {
@@ -1250,7 +1252,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			test.it( 'Can see the contact form in our published post', async function() {
-				this.viewPostPage = new ViewPostPage( driver );
+				this.viewPostPage = await ViewPostPage.Expect( driver );
 				let displayed = await this.viewPostPage.contactFormDisplayed();
 				assert.equal( displayed, true, 'The published post does not contain the contact form' );
 			} );
@@ -1311,7 +1313,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		test.it( 'Can see the payment button in our published post', async function() {
-			const viewPostPage = new ViewPostPage( driver );
+			const viewPostPage = await ViewPostPage.Expect( driver );
 			let displayed = await viewPostPage.paymentButtonDisplayed();
 			assert.equal( displayed, true, 'The published post does not contain the payment button' );
 		} );
@@ -1325,11 +1327,11 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					1,
 					'There is more than one open browser window before clicking payment button'
 				);
-				let viewPostPage = new ViewPostPage( driver );
+				let viewPostPage = await ViewPostPage.Expect( driver );
 				await viewPostPage.clickPaymentButton();
 				await driverHelper.waitForNumberOfWindows( driver, 2 );
 				await driverHelper.switchToWindowByIndex( driver, 1 );
-				const paypalCheckoutPage = new PaypalCheckoutPage( driver );
+				const paypalCheckoutPage = await PaypalCheckoutPage.Expect( driver );
 				const amountDisplayed = await paypalCheckoutPage.priceDisplayed();
 				assert.equal(
 					amountDisplayed,
@@ -1340,7 +1342,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				);
 				await driverHelper.closeCurrentWindow( driver );
 				await driverHelper.switchToWindowByIndex( driver, 0 );
-				viewPostPage = new ViewPostPage( driver );
+				viewPostPage = await ViewPostPage.Expect( driver );
 				assert( await viewPostPage.displayed(), 'view post page is not displayed' );
 			}
 		);
@@ -1383,7 +1385,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				await this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
 
 				await this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
-				let postPreviewComponent = new PostPreviewComponent( driver );
+				const postPreviewComponent = await PostPreviewComponent.Expect( driver );
 
 				return await postPreviewComponent.edit();
 			} );
@@ -1391,7 +1393,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 		test.describe( 'Revert the post to draft', function() {
 			test.it( 'Can revert the post to draft', async function() {
-				let postEditorSidebarComponent = new PostEditorSidebarComponent( driver );
+				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorSidebarComponent.revertToDraft();
 				await postEditorToolbarComponent.waitForIsDraftStatus();

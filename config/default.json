@@ -61,23 +61,23 @@
 		"skipThemesSelectionModal",
 		"checklistThankYouForFreeUser",
 		"checklistThankYouForPaidUser",
-		"mobilePlansTablesOnSignup",
 		"springSale30PercentOff",
 		"multiyearSubscriptions",
 		"jetpackSignupGoogleTop",
 		"domainSuggestionKrakenV321",
-		"domainSearchTLDFilterPlacement"
+		"domainSearchTLDFilterPlacement",
+		"staleCartNotice"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
 		[ "skipThemesSelectionModal_20170904", "show" ],
 		[ "checklistThankYouForFreeUser_20171204", "hide" ],
 		[ "checklistThankYouForPaidUser_20171204", "hide" ],
-		[ "mobilePlansTablesOnSignup_20180330", "original" ],
 		[ "springSale30PercentOff_20180413", "control" ],
 		[ "multiyearSubscriptions_20180601", "hide" ],
 		[ "jetpackSignupGoogleTop_20180427", "original" ],
 		[ "domainSuggestionKrakenV321_20180524", "domainsbot" ],
-		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ]
+		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
+		[ "staleCartNotice_20180618", "siteDeservesBoost" ]
 	]
 }

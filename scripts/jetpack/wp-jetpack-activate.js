@@ -4,6 +4,7 @@ import test from 'selenium-webdriver/testing';
 import config from 'config';
 
 import * as driverManager from '../../lib/driver-manager';
+import * as driverHelper from '../../lib/driver-helper';
 import * as dataHelper from '../../lib/data-helper';
 
 import LoginFlow from '../../lib/flows/login-flow';
@@ -33,33 +34,35 @@ test.describe( `[${ host }] Jetpack Connection: (${ screenSize }) @jetpack`, fun
 	test.describe( 'Activate Jetpack Plugin:', function() {
 		this.bailSuite( true );
 
-		test.before( function() {
-			return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.it( 'Can log into WordPress.com', () => {
+		test.it( 'Can log into WordPress.com', async function() {
 			this.loginFlow = new LoginFlow( driver, 'jetpackUserCI' );
-			return this.loginFlow.login();
+			return await this.loginFlow.login();
 		} );
 
-		test.it( 'Can log into site via wp-login.php', () => {
-			return this.loginFlow.login( { jetpackDIRECT: true } );
+		test.it( 'Can log into site via wp-login.php', async function() {
+			return await this.loginFlow.login( { jetpackDIRECT: true } );
 		} );
 
-		test.it( 'Can open Plugins page', () => {
-			this.wpAdminSidebar = new WPAdminSidebar( driver );
-			return this.wpAdminSidebar.selectPlugins();
+		test.it( 'Can open Plugins page', async function() {
+			await WPAdminSidebar.refreshIfJNError( driver );
+			this.wpAdminSidebar = await WPAdminSidebar.Expect( driver );
+			return await this.wpAdminSidebar.selectPlugins();
 		} );
 
-		test.it( 'Can activate Jetpack', () => {
-			this.wpAdminPlugins = new WPAdminPluginsPage( driver );
-			return this.wpAdminPlugins.activateJetpack();
+		test.it( 'Can activate Jetpack', async function() {
+			await driverHelper.refreshIfJNError( driver );
+			this.wpAdminPlugins = await WPAdminPluginsPage.Expect( driver );
+			return await this.wpAdminPlugins.activateJetpack();
 		} );
 
-		test.it( 'Can connect Jetpack', () => {
+		test.it( 'Can connect Jetpack', async function() {
 			this.wpAdminPlugins.connectJetpackAfterActivation();
-			this.jetpackAuthorizePage = new JetpackAuthorizePage( driver );
-			this.jetpackAuthorizePage.approveConnection();
+			this.jetpackAuthorizePage = await JetpackAuthorizePage.Expect( driver );
+			await this.jetpackAuthorizePage.approveConnection();
 		} );
 
 		test.it( 'Can select Free plan', async function() {
@@ -67,9 +70,10 @@ test.describe( `[${ host }] Jetpack Connection: (${ screenSize }) @jetpack`, fun
 			return await pickAPlanPage.selectFreePlan();
 		} );
 
-		test.it( 'Can activate recommended features', () => {
-			this.jetpackDashboard = new WPAdminJetpackPage( driver );
-			return this.jetpackDashboard.activateRecommendedFeatures();
+		test.it( 'Can activate recommended features', async function() {
+			await driverHelper.refreshIfJNError( driver );
+			this.jetpackDashboard = await WPAdminJetpackPage.Expect( driver );
+			return await this.jetpackDashboard.activateRecommendedFeatures();
 		} );
 	} );
 } );

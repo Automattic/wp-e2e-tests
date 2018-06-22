@@ -35,14 +35,16 @@ if ( host === 'PRESSABLE' ) {
 		this.timeout( mochaTimeOut * 2 );
 
 		test.describe( 'Disconnect expired sites: @parallel @jetpack', function() {
+			const timeout = mochaTimeOut * 10;
 			this.bailSuite( true );
+			this.timeout( timeout );
 
 			test.before( async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			test.it( 'Can disconnect any expired sites', async function() {
-				return await new JetpackConnectFlow( driver ).removeSites();
+				return await new JetpackConnectFlow( driver ).removeSites( timeout );
 			} );
 		} );
 
@@ -58,16 +60,18 @@ if ( host === 'PRESSABLE' ) {
 			} );
 
 			test.it( 'Can log into Pressable', async function() {
-				return await new PressableLogonPage( driver, true ).loginWithWP();
+				const pressableLogonPage = await PressableLogonPage.Visit( driver );
+				return await pressableLogonPage.loginWithWP();
 			} );
 
 			test.it( 'Can approve login with WordPress', async function() {
-				return await new PressableApprovePage( driver ).approve();
+				const pressableApprovePage = await PressableApprovePage.Expect( driver );
+				return await pressableApprovePage.approve();
 			} );
 
 			test.it( 'Can create new site', async function() {
 				this.siteName = dataHelper.getNewBlogName();
-				this.pressableSitesPage = new PressableSitesPage( driver );
+				this.pressableSitesPage = await PressableSitesPage.Expect( driver );
 				return await this.pressableSitesPage.addNewSite( this.siteName );
 			} );
 
@@ -76,15 +80,14 @@ if ( host === 'PRESSABLE' ) {
 			} );
 
 			test.it( 'Can proceed to Jetpack activation', async function() {
-				const siteSettings = new PressableSiteSettingsPage( driver );
+				const siteSettings = await PressableSiteSettingsPage.Expect( driver );
 				await siteSettings.waitForJetpackPremium();
 				return await siteSettings.activateJetpackPremium();
 			} );
 
 			test.it( 'Can approve connection on the authorization page', async function() {
-				return await new JetpackAuthorizePage( driver, {
-					overrideABTests: false,
-				} ).approveConnection();
+				const jetpackAuthorizePage = await JetpackAuthorizePage.Expect( driver );
+				return await jetpackAuthorizePage.approveConnection();
 			} );
 
 			test.it(
@@ -102,11 +105,12 @@ if ( host === 'PRESSABLE' ) {
 				await ReaderPage.Visit( driver );
 				const navBarComponent = await NavBarComponent.Expect( driver );
 				await navBarComponent.clickMySites();
-				const sidebarComponent = new SidebarComponent( driver );
+				const sidebarComponent = await SidebarComponent.Expect( driver );
 				await sidebarComponent.selectSiteSwitcher();
 				await sidebarComponent.searchForSite( this.siteName );
 				await sidebarComponent.selectStats();
-				return await new StatsPage( driver ).openActivity();
+				const statsPage = await StatsPage.Expect( driver );
+				return await statsPage.openActivity();
 			} );
 
 			// Disabled due to to longer time is required to make a backup.
@@ -116,7 +120,8 @@ if ( host === 'PRESSABLE' ) {
 			// } );
 
 			test.after( async function() {
-				return await new PressableSitesPage( driver, true ).deleteFirstSite();
+				const pressableSitesPage = await PressableSitesPage.Visit( driver );
+				return await pressableSitesPage.deleteFirstSite();
 			} );
 		} );
 	} );

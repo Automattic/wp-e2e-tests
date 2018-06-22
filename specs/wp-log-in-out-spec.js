@@ -87,7 +87,7 @@ test.describe(
 				} );
 
 				test.it( 'Can logout from profile page', async function() {
-					let profilePage = new ProfilePage( driver );
+					const profilePage = await ProfilePage.Expect( driver );
 					await profilePage.waitForProfileLinks();
 					await eyesHelper.eyesScreenshot( driver, eyes, 'Me Profile Page' );
 					await profilePage.clickSignOut();

@@ -42,19 +42,18 @@ test.describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, functi
 		} );
 
 		test.it( 'Can Select Plans', async function() {
-			const statsPage = new StatsPage( driver );
+			const statsPage = await StatsPage.Expect( driver );
 			await statsPage.waitForPage();
-			const sideBarComponent = new SidebarComponent( driver );
+			const sideBarComponent = await SidebarComponent.Expect( driver );
 			return await sideBarComponent.selectPlan();
 		} );
 
 		test.it( 'Can See Plans', async function() {
-			const plansPage = new PlansPage( driver );
-			return await plansPage.waitForPage();
+			return await PlansPage.Expect( driver );
 		} );
 
 		test.it( 'Can Compare Plans', async function() {
-			const plansPage = new PlansPage( driver );
+			const plansPage = await PlansPage.Expect( driver );
 			if ( host === 'WPCOM' ) {
 				await plansPage.openPlansTab();
 				return await plansPage.waitForComparison();
@@ -68,7 +67,7 @@ test.describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, functi
 		if ( host === 'WPCOM' ) {
 			test.it( 'Can Verify Current Plan', async function() {
 				const planName = 'premium';
-				const plansPage = new PlansPage( driver );
+				const plansPage = await PlansPage.Expect( driver );
 				const present = await plansPage.confirmCurrentPlan( planName );
 				return assert( present, `Failed to detect correct plan (${ planName })` );
 			} );

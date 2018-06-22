@@ -47,12 +47,12 @@ test.describe(
 			} );
 
 			test.it( 'Can view the default site from sidebar', async function() {
-				this.sidebarComponent = new SidebarComponent( driver );
+				this.sidebarComponent = await SidebarComponent.Expect( driver );
 				return await this.sidebarComponent.selectViewThisSite();
 			} );
 
 			test.it( 'Can see the web preview button', async function() {
-				this.siteViewComponent = new SiteViewComponent( driver );
+				this.siteViewComponent = await SiteViewComponent.Expect( driver );
 				let present = await this.siteViewComponent.isWebPreviewPresent();
 				return assert.equal( present, true, 'The web preview button was not displayed' );
 			} );

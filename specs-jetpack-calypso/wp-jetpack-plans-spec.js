@@ -4,6 +4,7 @@ import test from 'selenium-webdriver/testing';
 import config from 'config';
 
 import * as driverManager from '../lib/driver-manager';
+import * as driverHelper from '../lib/driver-helper';
 import * as dataHelper from '../lib/data-helper';
 
 import LoginFlow from '../lib/flows/login-flow';
@@ -53,24 +54,22 @@ test.describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function
 		} );
 
 		test.it( 'Can open Jetpack dashboard', async function() {
-			this.wpAdminSidebar = new WPAdminSidebar( driver );
+			await WPAdminSidebar.refreshIfJNError( driver );
+			this.wpAdminSidebar = await WPAdminSidebar.Expect( driver );
 			return await this.wpAdminSidebar.selectJetpack();
 		} );
 
 		test.it( 'Can find and click Upgrade nudge button', async function() {
-			this.jetpackDashboard = new WPAdminJetpackPage( driver );
-			// The nudge buttons are loaded after the page, and there's no good loaded status indicator to key off of
-			return driver.sleep( 3000 ).then( async () => {
-				return await this.jetpackDashboard.clickUpgradeNudge();
-			} );
+			await driverHelper.refreshIfJNError( driver );
+			const jetpackDashboard = await WPAdminJetpackPage.Expect( driver );
+			await driver.sleep( 3000 ); // The nudge buttons are loaded after the page, and there's no good loaded status indicator to key off of
+			return await jetpackDashboard.clickUpgradeNudge();
 		} );
 
 		test.it( 'Can click the Proceed button', async function() {
-			this.jetpackPlanSalesPage = new JetpackPlanSalesPage( driver );
-			// The upgrade buttons are loaded after the page, and there's no good loaded status indicator to key off of
-			return driver.sleep( 3000 ).then( async () => {
-				return await this.jetpackPlanSalesPage.clickPurchaseButton();
-			} );
+			const jetpackPlanSalesPage = await JetpackPlanSalesPage.Expect( driver );
+			await driver.sleep( 3000 ); // The upgrade buttons are loaded after the page, and there's no good loaded status indicator to key off of
+			return await jetpackPlanSalesPage.clickPurchaseButton();
 		} );
 
 		test.it( 'Can then see secure payment component', async function() {
@@ -81,17 +80,17 @@ test.describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function
 		test.after( async function() {
 			await ReaderPage.Visit( driver );
 
-			this.navbarComponent = await NavBarComponent.Expect( driver );
-			await this.navbarComponent.clickMySites();
+			const navbarComponent = await NavBarComponent.Expect( driver );
+			await navbarComponent.clickMySites();
 
-			this.statsPage = new StatsPage( driver, true );
+			await StatsPage.Expect( driver );
 
-			this.sideBarComponent = new SidebarComponent( driver );
-			await this.sideBarComponent.selectPlan();
+			const sidebarComponent = await SidebarComponent.Expect( driver );
+			await sidebarComponent.selectPlan();
 
-			this.domainsPage = new PlansPage( driver );
-			this.shoppingCartWidgetComponent = new ShoppingCartWidgetComponent( driver );
-			await this.shoppingCartWidgetComponent.empty();
+			await PlansPage.Expect( driver );
+			const shoppingCartWidgetComponent = await ShoppingCartWidgetComponent.Expect( driver );
+			await shoppingCartWidgetComponent.empty();
 		} );
 	} );
 } );

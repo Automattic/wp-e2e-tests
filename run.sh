@@ -13,7 +13,6 @@ BRANCH=""
 RETURN=0
 CLEAN=0
 GREP=""
-UPLOAD=0
 
 # Warn if NODE_ENV variable is not set
 if [ "$NODE_ENV" = "" ]; then
@@ -54,7 +53,6 @@ usage () {
 -f		  - Tell visdiffs to fail the tests rather than just send an alert
 -i		  - Execute i18n NUX screenshot tests, not compatible with -g flag
 -I		  - Execute tests in specs-i18n/ directory
--U      - Execute the i18n screenshot upload script in scripts/
 -v		  - Execute the visdiff tests via Sauce Labs
 -x		  - Execute the tests from the context of xvfb-run
 -u [baseUrl]	  - Override the calypsoBaseURL config
@@ -114,9 +112,6 @@ while getopts ":a:Rpb:B:s:gjWCJH:wzl:cm:fiIUvxu:h" opt; do
       NODE_CONFIG_ARGS+=$I18N_CONFIG
       LOCALES="en,es,pt-br,de,fr,he,ja,it,nl,ru,tr,id,zh-cn,zh-tw,ko,ar,sv"
       MAGELLAN_CONFIG="magellan-i18n.json"
-      ;;
-    U)
-      UPLOAD=1
       ;;
     w)
       NODE_CONFIG_ARGS+=$IE11_CONFIG
@@ -225,10 +220,6 @@ if [ $PARALLEL == 1 ]; then
   fi
 else # Not using multiple CircleCI containers, just queue up the tests in sequence
   if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
-    if [ $UPLOAD == 1 ]; then
-      # Clear out screenshots-i18n/ directory
-      rm -f ${SCREENSHOTDIR}/*
-    fi
     IFS=, read -r -a SCREENSIZE_ARRAY <<< "$SCREENSIZES"
     IFS=, read -r -a LOCALE_ARRAY <<< "$LOCALES"
     for size in ${SCREENSIZE_ARRAY[@]}; do
@@ -244,14 +235,6 @@ else # Not using multiple CircleCI containers, just queue up the tests in sequen
       done
     done
   fi
-fi
-
-if [ $UPLOAD == 1 ]; then
-  echo "Uploading i18n tests screenshots:"
-  CMD="node ./scripts/i18n-screenshots-upload.js $LOCALES"
-
-  eval $CMD
-  RETURN+=$?
 fi
 
 if [ $CLEAN == 1 ]; then

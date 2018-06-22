@@ -192,8 +192,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseAccountSettings();
-					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseAccountSettings();
+					const accountSettingsPage = await AccountSettingsPage.Expect( driver );
+					await accountSettingsPage.chooseCloseYourAccount();
 					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
@@ -356,7 +358,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can see the secure check out thank you page', async function() {
-				const checkOutThankyouPage = new CheckOutThankyouPage( driver );
+				const checkOutThankyouPage = await CheckOutThankyouPage.Expect( driver );
 				let displayed = await checkOutThankyouPage.displayed();
 				await eyesHelper.eyesScreenshot( driver, eyes, 'Checkout Thank You Page' );
 				return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
@@ -366,12 +368,14 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseManagePurchases();
-					const purchasesPage = new PurchasesPage( driver );
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseManagePurchases();
+					const purchasesPage = await PurchasesPage.Expect( driver );
 					await purchasesPage.dismissGuidedTour();
 					await purchasesPage.selectPremiumPlan();
-					await new ManagePurchasePage( driver ).chooseCancelAndRefund();
-					const cancelPurchasePage = new CancelPurchasePage( driver );
+					const managePurchasePage = await ManagePurchasePage.Expect( driver );
+					await managePurchasePage.chooseCancelAndRefund();
+					const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
 					await cancelPurchasePage.clickCancelPurchase();
 					await cancelPurchasePage.completeCancellationSurvey();
 					return await cancelPurchasePage.waitAndDismissSuccessNotice();
@@ -387,8 +391,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseAccountSettings();
-					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseAccountSettings();
+					const accountSettingsPage = await AccountSettingsPage.Expect( driver );
+					await accountSettingsPage.chooseCloseYourAccount();
 					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
@@ -445,7 +451,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can see the choose a theme page as the starting page, and select the first theme',
 				async function() {
-					return await new ChooseAThemePage( driver ).selectFirstTheme();
+					const chooseAThemePage = await ChooseAThemePage.Expect( driver );
+					return await chooseAThemePage.selectFirstTheme();
 				}
 			);
 
@@ -529,19 +536,21 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can see the secure check out thank you page', async function() {
-				return await new CheckOutThankyouPage( driver ).displayed();
+				return await CheckOutThankyouPage.Expect( driver );
 			} );
 
 			test.it( 'Can delete the plan', async function() {
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseManagePurchases();
-					const purchasesPage = new PurchasesPage( driver );
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseManagePurchases();
+					const purchasesPage = await PurchasesPage.Expect( driver );
 					await purchasesPage.dismissGuidedTour();
 					await purchasesPage.selectPremiumPlan();
-					await new ManagePurchasePage( driver ).chooseCancelAndRefund();
-					const cancelPurchasePage = new CancelPurchasePage( driver );
+					const managePurchasePage = await ManagePurchasePage.Expect( driver );
+					await managePurchasePage.chooseCancelAndRefund();
+					const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
 					await cancelPurchasePage.clickCancelPurchase();
 					await cancelPurchasePage.completeCancellationSurvey();
 					return await cancelPurchasePage.waitAndDismissSuccessNotice();
@@ -557,8 +566,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseAccountSettings();
-					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseAccountSettings();
+					const accountSettingsPage = await AccountSettingsPage.Expect( driver );
+					await accountSettingsPage.chooseCloseYourAccount();
 					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
@@ -610,7 +621,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can see the choose a theme page as the starting page, and select the first theme',
 				async function() {
-					return await new ChooseAThemePage( driver ).selectFirstTheme();
+					const chooseAThemePage = await ChooseAThemePage.Expect( driver );
+					return await chooseAThemePage.selectFirstTheme();
 				}
 			);
 
@@ -694,19 +706,21 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can see the secure check out thank you page', async function() {
-				return await new CheckOutThankyouPage( driver ).displayed();
+				return await CheckOutThankyouPage.Expect( driver );
 			} );
 
 			test.it( 'Can delete the plan', async function() {
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseManagePurchases();
-					const purchasesPage = new PurchasesPage( driver );
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseManagePurchases();
+					const purchasesPage = await PurchasesPage.Expect( driver );
 					await purchasesPage.dismissGuidedTour();
 					await purchasesPage.selectPersonalPlan();
-					await new ManagePurchasePage( driver ).chooseCancelAndRefund();
-					const cancelPurchasePage = new CancelPurchasePage( driver );
+					const managePurchasePage = await ManagePurchasePage.Expect( driver );
+					await managePurchasePage.chooseCancelAndRefund();
+					const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
 					await cancelPurchasePage.clickCancelPurchase();
 					await cancelPurchasePage.completeCancellationSurvey();
 					return await cancelPurchasePage.waitAndDismissSuccessNotice();
@@ -722,8 +736,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseAccountSettings();
-					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseAccountSettings();
+					const accountSettingsPage = await AccountSettingsPage.Expect( driver );
+					await accountSettingsPage.chooseCloseYourAccount();
 					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );
@@ -751,6 +767,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.before( async function() {
 				if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
+					await SlackNotifier.warn(
+						'Domains tests are currently disabled as SKIP_DOMAIN_TESTS is set to true',
+						{ suppressDuplicateMessages: true }
+					);
 					return this.skip();
 				}
 			} );
@@ -780,7 +800,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can select domain only from the domain first choice page', async function() {
-				return await new DomainFirstPage( driver ).chooseJustBuyTheDomain();
+				const domainFirstPage = await DomainFirstPage.Expect( driver );
+				return await domainFirstPage.chooseJustBuyTheDomain();
 			} );
 
 			test.it( 'Can then enter account details', async function() {
@@ -806,7 +827,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can see checkout page, choose domain privacy option and enter registrar details',
 				async function() {
-					const checkOutPage = new CheckOutPage( driver );
+					const checkOutPage = await CheckOutPage.Expect( driver );
 					await checkOutPage.selectAddPrivacyProtectionCheckbox();
 					await checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
 					return await checkOutPage.submitForm();
@@ -866,9 +887,11 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can see the secure check out thank you page and click "go to my domain" button to see the domain only settings page',
 				async function() {
-					await new CheckOutThankyouPage( driver ).goToMyDomain();
-					await new DomainOnlySettingsPage( driver ).manageDomain();
-					return await new DomainDetailsPage( driver ).displayed();
+					const checkOutThankyouPage = await CheckOutThankyouPage.Expect( driver );
+					await checkOutThankyouPage.goToMyDomain();
+					const domainOnlySettingsPage = await DomainOnlySettingsPage.Expect( driver );
+					await domainOnlySettingsPage.manageDomain();
+					return await DomainDetailsPage.Expect( driver );
 				}
 			);
 
@@ -878,7 +901,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'We should only one option - the settings option', async function() {
-				const sideBarComponent = new SideBarComponent( driver );
+				const sideBarComponent = await SideBarComponent.Expect( driver );
 				let numberMenuItems = await sideBarComponent.numberOfMenuItems();
 				assert.equal(
 					numberMenuItems,
@@ -894,11 +917,14 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					await ReaderPage.Visit( driver );
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickMySites();
-					await new SideBarComponent( driver ).selectSettings();
-					await new DomainOnlySettingsPage( driver ).manageDomain();
-					await new DomainDetailsPage( driver ).viewPaymentSettings();
+					const sidebarComponent = await SideBarComponent.Expect( driver );
+					await sidebarComponent.selectSettings();
+					const domainOnlySettingsPage = await DomainOnlySettingsPage.Expect( driver );
+					await domainOnlySettingsPage.manageDomain();
+					const domainDetailsPage = await DomainDetailsPage.Expect( driver );
+					await domainDetailsPage.viewPaymentSettings();
 
-					const managePurchasePage = new ManagePurchasePage( driver );
+					const managePurchasePage = await ManagePurchasePage.Expect( driver );
 					let domainDisplayed = await managePurchasePage.domainDisplayed();
 					assert.equal(
 						domainDisplayed,
@@ -907,9 +933,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					);
 					await managePurchasePage.chooseCancelAndRefund();
 
-					await new CancelPurchasePage( driver ).clickCancelPurchase();
+					const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
+					await cancelPurchasePage.clickCancelPurchase();
 
-					const cancelDomainPage = new CancelDomainPage( driver );
+					const cancelDomainPage = await CancelDomainPage.Expect( driver );
 					return await cancelDomainPage.completeSurveyAndConfirm();
 				} )().catch( err => {
 					SlackNotifier.warn(
@@ -935,6 +962,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			test.before( async function() {
 				if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
+					await SlackNotifier.warn(
+						'Domains tests are currently disabled as SKIP_DOMAIN_TESTS is set to true',
+						{ suppressDuplicateMessages: true }
+					);
 					return this.skip();
 				}
 			} );
@@ -966,7 +997,8 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can see the choose a theme page as the starting page, and select the first theme',
 				async function() {
-					return await new ChooseAThemePage( driver ).selectFirstTheme();
+					const chooseAThemePage = await ChooseAThemePage.Expect( driver );
+					return await chooseAThemePage.selectFirstTheme();
 				}
 			);
 
@@ -1002,7 +1034,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it(
 				'Can see checkout page, choose domain privacy option and enter registrar details',
 				async function() {
-					const checkOutPage = new CheckOutPage( driver );
+					const checkOutPage = await CheckOutPage.Expect( driver );
 					await checkOutPage.selectAddPrivacyProtectionCheckbox();
 					await checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
 					return await checkOutPage.submitForm();
@@ -1066,26 +1098,29 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can see the gsuite upsell page', async function() {
-				return await new GSuiteUpsellPage( driver ).declineEmail();
+				const gSuiteUpsellPage = await GSuiteUpsellPage.Expect( driver );
+				return await gSuiteUpsellPage.declineEmail();
 			} );
 
 			test.it( 'Can see the secure check out thank you page', async function() {
-				return await new CheckOutThankyouPage( driver ).displayed();
+				return await CheckOutThankyouPage.Expect( driver );
 			} );
 
 			test.it( 'Can cancel the domain', async function() {
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseManagePurchases();
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseManagePurchases();
 
-					let purchasesPage = new PurchasesPage( driver );
+					let purchasesPage = await PurchasesPage.Expect( driver );
 					await purchasesPage.dismissGuidedTour();
 					await purchasesPage.selectBusinessPlan();
 
-					await new ManagePurchasePage( driver ).chooseCancelAndRefund();
+					const managePurchasePage = await ManagePurchasePage.Expect( driver );
+					await managePurchasePage.chooseCancelAndRefund();
 
-					const cancelPurchasePage = new CancelPurchasePage( driver );
+					const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
 					await cancelPurchasePage.chooseCancelPlanAndDomain();
 					await cancelPurchasePage.clickCancelPurchase();
 				} )().catch( err => {
@@ -1319,8 +1354,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				return ( async () => {
 					const navBarComponent = await NavBarComponent.Expect( driver );
 					await navBarComponent.clickProfileLink();
-					await new ProfilePage( driver ).chooseAccountSettings();
-					await new AccountSettingsPage( driver ).chooseCloseYourAccount();
+					const profilePage = await ProfilePage.Expect( driver );
+					await profilePage.chooseAccountSettings();
+					const accountSettingsPage = await AccountSettingsPage.Expect( driver );
+					await accountSettingsPage.chooseCloseYourAccount();
 					const closeAccountPage = await CloseAccountPage.Expect( driver );
 					await closeAccountPage.chooseCloseAccount();
 					await closeAccountPage.enterAccountNameAndClose( blogName );

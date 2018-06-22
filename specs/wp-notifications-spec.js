@@ -56,22 +56,22 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 		const testSiteForInvitationsURL = `https://${ dataHelper.configGet(
 			'testSiteForNotifications'
 		) }`;
-		const viewBlogPage = new ViewSitePage( driver, true, testSiteForInvitationsURL );
+		const viewBlogPage = await ViewSitePage.Visit( driver, testSiteForInvitationsURL );
 		return await viewBlogPage.viewFirstPost();
 	} );
 
 	test.it( 'Can see the first post page and capture the title', async function() {
-		const viewPostPage = new ViewPostPage( driver );
+		const viewPostPage = await ViewPostPage.Expect( driver );
 		commentedPostTitle = await viewPostPage.postTitle();
 	} );
 
 	test.it( 'Can leave a comment', async function() {
-		const viewPostPage = new ViewPostPage( driver );
+		const viewPostPage = await ViewPostPage.Expect( driver );
 		return await viewPostPage.leaveAComment( comment );
 	} );
 
 	test.it( 'Can see the comment', async function() {
-		const viewPostPage = new ViewPostPage( driver );
+		const viewPostPage = await ViewPostPage.Expect( driver );
 		const shown = await viewPostPage.commentEventuallyShown( comment );
 		if ( shown === false ) {
 			return slackNotifier.warn(
@@ -96,7 +96,7 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 		const expectedContent = `${ commentingUser } commented on ${ commentedPostTitle }\n${ comment }`;
 		const navBarComponent = await NavBarComponent.Expect( driver );
 		await navBarComponent.openNotifications();
-		const notificationsComponent = new NotificationsComponent( driver );
+		const notificationsComponent = await NotificationsComponent.Expect( driver );
 		await notificationsComponent.selectComments();
 		let content = await notificationsComponent.allCommentsContent();
 		await eyesHelper.eyesScreenshot( driver, eyes, 'Notifications List' );
@@ -110,7 +110,7 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 	test.it(
 		'Can delete the comment (and wait for UNDO grace period so it is actually deleted)',
 		async function() {
-			const notificationsComponent = new NotificationsComponent( driver );
+			const notificationsComponent = await NotificationsComponent.Expect( driver );
 			await notificationsComponent.selectCommentByText( comment );
 			await eyesHelper.eyesScreenshot( driver, eyes, 'Single Comment Notification' );
 			await notificationsComponent.trashComment();
