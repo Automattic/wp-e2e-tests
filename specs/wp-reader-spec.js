@@ -57,7 +57,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 				const testSiteForNotifications = dataHelper.configGet( 'testSiteForNotifications' );
 				const readerPage = await ReaderPage.Expect( driver );
 				let siteOfLatestPost = await readerPage.siteOfLatestPost();
-				return assert.equal(
+				return assert.strictEqual(
 					siteOfLatestPost,
 					testSiteForNotifications,
 					'The latest post is not on the expected test site'

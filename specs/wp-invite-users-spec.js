@@ -97,7 +97,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 			let actualEmailAddress = await acceptInvitePage.getEmailPreFilled();
 			let headerInviteText = await acceptInvitePage.getHeaderInviteText();
-			assert.equal( actualEmailAddress, newInviteEmailAddress );
+			assert.strictEqual( actualEmailAddress, newInviteEmailAddress );
 			assert( headerInviteText.includes( 'editor' ) );
 
 			await acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
@@ -123,7 +123,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			await peoplePage.selectTeam();
 			await peoplePage.searchForUser( newUserName );
 			const numberPeopleShown = await peoplePage.numberSearchResults();
-			assert.equal(
+			assert.strictEqual(
 				numberPeopleShown,
 				1,
 				`The number of people search results for '${ newUserName }' was incorrect`
@@ -133,7 +133,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			const editTeamMemberPage = await EditTeamMemberPage.Expect( driver );
 			await editTeamMemberPage.removeUserAndDeleteContent();
 			const displayed = await peoplePage.successNoticeDisplayed();
-			return assert.equal(
+			return assert.strictEqual(
 				displayed,
 				true,
 				'The deletion successful notice was not shown on the people page.'
@@ -276,7 +276,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 				let actualEmailAddress = await acceptInvitePage.getEmailPreFilled();
 				let headerInviteText = await acceptInvitePage.getHeaderInviteText();
-				assert.equal( actualEmailAddress, newInviteEmailAddress );
+				assert.strictEqual( actualEmailAddress, newInviteEmailAddress );
 				assert( headerInviteText.includes( 'view' ) );
 
 				await acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
@@ -286,7 +286,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			test.it( 'Can see user has been added as a Viewer', async function() {
 				const noticesComponent = await NoticesComponent.Expect( driver );
 				let followMessageDisplayed = await noticesComponent.followMessageTitle();
-				assert.equal(
+				assert.strictEqual(
 					true,
 					followMessageDisplayed.includes( 'viewer' ),
 					`The follow message '${ followMessageDisplayed }' does not include 'viewer'`
@@ -311,7 +311,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await peoplePage.removeUserByName( newUserName );
 				await peoplePage.waitForSearchResults();
 				displayed = await peoplePage.viewerDisplayed( newUserName );
-				return assert.equal(
+				return assert.strictEqual(
 					displayed,
 					false,
 					`The username of '${ newUserName }' was still displayed as a site viewer`
@@ -400,7 +400,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 				let actualEmailAddress = await acceptInvitePage.getEmailPreFilled();
 				let headerInviteText = await acceptInvitePage.getHeaderInviteText();
-				assert.equal( actualEmailAddress, newInviteEmailAddress );
+				assert.strictEqual( actualEmailAddress, newInviteEmailAddress );
 				assert( headerInviteText.includes( 'contributor' ) );
 
 				await acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
@@ -445,7 +445,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await peoplePage.selectTeam();
 				await peoplePage.searchForUser( newUserName );
 				let numberPeopleShown = await peoplePage.numberSearchResults();
-				return assert.equal(
+				return assert.strictEqual(
 					numberPeopleShown,
 					1,
 					`The number of people search results for '${ newUserName }' was incorrect`

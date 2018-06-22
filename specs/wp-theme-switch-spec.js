@@ -79,7 +79,7 @@ test.describe( `[${ host }] Switching Themes: (${ screenSize })`, function() {
 					this.themeDetailPage = await ThemeDetailPage.Expect( driver );
 					let displayed = await this.themeDetailPage.displayed();
 					await eyesHelper.eyesScreenshot( driver, eyes, 'Theme Details Page' );
-					assert.equal(
+					assert.strictEqual(
 						displayed,
 						true,
 						'Could not see the theme detail page after activating a new theme'

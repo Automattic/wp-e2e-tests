@@ -54,12 +54,12 @@ test.describe(
 			test.it( 'Can see the web preview button', async function() {
 				this.siteViewComponent = await SiteViewComponent.Expect( driver );
 				let present = await this.siteViewComponent.isWebPreviewPresent();
-				return assert.equal( present, true, 'The web preview button was not displayed' );
+				return assert.strictEqual( present, true, 'The web preview button was not displayed' );
 			} );
 
 			test.it( 'Can see the web preview "open in new window" button', async function() {
 				let present = await this.siteViewComponent.isOpenInNewWindowButtonPresent();
-				return assert.equal(
+				return assert.strictEqual(
 					present,
 					true,
 					'The web preview "open in new window" button was not displayed'
@@ -68,7 +68,7 @@ test.describe(
 
 			test.it( 'Can see the site preview', async function() {
 				let present = await this.siteViewComponent.isSitePresent();
-				return assert.equal( present, true, 'The web site preview was not displayed' );
+				return assert.strictEqual( present, true, 'The web site preview was not displayed' );
 			} );
 
 			if ( screenSize !== 'mobile' ) {
