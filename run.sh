@@ -14,6 +14,9 @@ RETURN=0
 CLEAN=0
 GREP=""
 
+#disable selenium promise manager
+export SELENIUM_PROMISE_MANAGER=0
+
 # Warn if NODE_ENV variable is not set
 if [ "$NODE_ENV" = "" ]; then
 	echo "WARNING: NODE_ENV environment variable is not set."
