@@ -136,9 +136,7 @@ test.describe(
 
 				if ( host === 'WPCOM' ) {
 					test.it( 'Can customize the site from the theme thanks dialog', async function() {
-						let customizerPage = await CustomizerPage.Expect( driver );
-						let displayed = await customizerPage.displayed();
-						return assert( displayed, 'The customizer page was not displayed' );
+						return await CustomizerPage.Expect( driver );
 					} );
 				} else {
 					test.it( 'Can log in via Jetpack SSO', async function() {
@@ -148,9 +146,7 @@ test.describe(
 
 					test.it( 'Can customize the site from the theme thanks dialog', async function() {
 						await WPAdminCustomizerPage.refreshIfError( driver );
-						const wpAdminCustomizerPage = await WPAdminCustomizerPage.Expect( driver );
-						let displayed = await wpAdminCustomizerPage.displayed();
-						assert( displayed, 'The customizer page was not displayed' );
+						return await WPAdminCustomizerPage.Expect( driver );
 					} );
 				}
 			} );
