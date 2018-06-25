@@ -64,7 +64,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			await editorPage.enterPostImage( fileDetails );
 			await editorPage.waitUntilImageInserted( fileDetails );
 			let errorShown = await editorPage.errorDisplayed();
-			assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+			assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
 		} );
 
 		test.it( 'Can disable sharing buttons', async function() {
@@ -87,7 +87,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			await pagePreviewComponent.displayed();
 			let actualPageTitle = await pagePreviewComponent.pageTitle();
-			assert.equal(
+			assert.strictEqual(
 				actualPageTitle.toUpperCase(),
 				pageTitle.toUpperCase(),
 				'The page preview title is not correct'
@@ -97,7 +97,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		test.it( 'Can see correct page content in preview', async function() {
 			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			let content = await pagePreviewComponent.pageContent();
-			assert.equal(
+			assert.strictEqual(
 				content.indexOf( pageQuote ) > -1,
 				true,
 				'The page preview content (' +
@@ -111,7 +111,11 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		test.it( 'Can see the image uploaded in the preview', async function() {
 			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			const imageDisplayed = await pagePreviewComponent.imageDisplayed( fileDetails );
-			return assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
+			return assert.strictEqual(
+				imageDisplayed,
+				true,
+				'Could not see the image in the web preview'
+			);
 		} );
 
 		test.it( 'Can close page preview', async function() {
@@ -128,7 +132,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			await pagePreviewComponent.displayed();
 			let actualPageTitle = await pagePreviewComponent.pageTitle();
-			assert.equal(
+			assert.strictEqual(
 				actualPageTitle.toUpperCase(),
 				pageTitle.toUpperCase(),
 				'The page preview title is not correct'
@@ -138,7 +142,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		test.it( 'Can see correct page content in preview', async function() {
 			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			const content = await pagePreviewComponent.pageContent();
-			assert.equal(
+			assert.strictEqual(
 				content.indexOf( pageQuote ) > -1,
 				true,
 				'The page preview content (' +
@@ -152,7 +156,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		test.it( 'Can see the image uploaded in the preview', async function() {
 			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
 			const imageDisplayed = await pagePreviewComponent.imageDisplayed( fileDetails );
-			assert.equal( imageDisplayed, true, 'Could not see the image in the web preview' );
+			assert.strictEqual( imageDisplayed, true, 'Could not see the image in the web preview' );
 		} );
 
 		test.it( 'Can close page preview', async function() {
@@ -169,7 +173,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		test.it( 'Can see correct page title', async function() {
 			const viewPagePage = await ViewPagePage.Expect( driver );
 			let actualPageTitle = await viewPagePage.pageTitle();
-			assert.equal(
+			assert.strictEqual(
 				actualPageTitle.toUpperCase(),
 				pageTitle.toUpperCase(),
 				'The published blog page title is not correct'
@@ -179,7 +183,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		test.it( 'Can see correct page content', async function() {
 			const viewPagePage = await ViewPagePage.Expect( driver );
 			let content = await viewPagePage.pageContent();
-			assert.equal(
+			assert.strictEqual(
 				content.indexOf( pageQuote ) > -1,
 				true,
 				'The page content (' +
@@ -193,7 +197,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		test.it( "Can't see sharing buttons", async function() {
 			const viewPagePage = await ViewPagePage.Expect( driver );
 			let visible = await viewPagePage.sharingButtonsVisible();
-			assert.equal(
+			assert.strictEqual(
 				visible,
 				false,
 				'Sharing buttons are shown even though they were disabled when creating the page.'
@@ -203,7 +207,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		test.it( 'Can see the image uploaded displayed', async function() {
 			const viewPagePage = await ViewPagePage.Expect( driver );
 			let imageDisplayed = await viewPagePage.imageDisplayed( fileDetails );
-			assert.equal( imageDisplayed, true, 'Could not see the image in the published page' );
+			assert.strictEqual( imageDisplayed, true, 'Could not see the image in the published page' );
 		} );
 
 		test.after( async function() {
@@ -252,7 +256,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			test.it( 'Can view page title as logged in user', async function() {
 				const viewPagePage = await ViewPagePage.Expect( driver );
 				const actualPageTitle = await viewPagePage.pageTitle();
-				assert.equal(
+				assert.strictEqual(
 					actualPageTitle.toUpperCase(),
 					( 'Private: ' + pageTitle ).toUpperCase(),
 					'The published blog page title is not correct'
@@ -262,7 +266,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			test.it( 'Can view page content as logged in user', async function() {
 				const viewPagePage = await ViewPagePage.Expect( driver );
 				const content = await viewPagePage.pageContent();
-				assert.equal(
+				assert.strictEqual(
 					content.indexOf( pageQuote ) > -1,
 					true,
 					'The page content (' +
@@ -279,7 +283,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 				const notFoundPage = await NotFoundPage.Expect( driver );
 				const displayed = await notFoundPage.displayed();
-				assert.equal(
+				assert.strictEqual(
 					displayed,
 					true,
 					'Could not see the not found (404) page. Check that it is displayed'
@@ -295,7 +299,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			test.it( "Can't view page title or content as non-logged in user", async function() {
 				const notFoundPage = await NotFoundPage.Expect( driver );
 				const displayed = await notFoundPage.displayed();
-				assert.equal(
+				assert.strictEqual(
 					displayed,
 					true,
 					'Could not see the not found (404) page. Check that it is displayed'
@@ -344,7 +348,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( 'Can view page title', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const actualPageTitle = await viewPagePage.pageTitle();
-					assert.equal(
+					assert.strictEqual(
 						actualPageTitle.toUpperCase(),
 						( 'Protected: ' + pageTitle ).toUpperCase()
 					);
@@ -353,7 +357,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( 'Can see password field', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const isPasswordProtected = await viewPagePage.isPasswordProtected();
-					assert.equal(
+					assert.strictEqual(
 						isPasswordProtected,
 						true,
 						'The page does not appear to be password protected'
@@ -363,7 +367,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( "Can't see content when no password is entered", async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const content = await viewPagePage.pageContent();
-					assert.equal(
+					assert.strictEqual(
 						content.indexOf( pageQuote ) === -1,
 						true,
 						'The page content (' +
@@ -384,7 +388,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( 'Can view page title', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const actualPageTitle = await viewPagePage.pageTitle();
-					assert.equal(
+					assert.strictEqual(
 						actualPageTitle.toUpperCase(),
 						( 'Protected: ' + pageTitle ).toUpperCase()
 					);
@@ -393,7 +397,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( 'Can see password field', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const isPasswordProtected = await viewPagePage.isPasswordProtected();
-					assert.equal(
+					assert.strictEqual(
 						isPasswordProtected,
 						true,
 						'The page does not appear to be password protected'
@@ -403,7 +407,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( "Can't see content when incorrect password is entered", async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const content = await viewPagePage.pageContent();
-					assert.equal(
+					assert.strictEqual(
 						content.indexOf( pageQuote ) === -1,
 						true,
 						'The page content (' +
@@ -424,7 +428,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( 'Can view page title', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const actualPageTitle = await viewPagePage.pageTitle();
-					assert.equal(
+					assert.strictEqual(
 						actualPageTitle.toUpperCase(),
 						( 'Protected: ' + pageTitle ).toUpperCase()
 					);
@@ -433,7 +437,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( "Can't see password field", async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const isPasswordProtected = await viewPagePage.isPasswordProtected();
-					assert.equal(
+					assert.strictEqual(
 						isPasswordProtected,
 						false,
 						'The page still seems to be password protected'
@@ -443,7 +447,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( 'Can see page content', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const content = await viewPagePage.pageContent();
-					assert.equal(
+					assert.strictEqual(
 						content.indexOf( pageQuote ) > -1,
 						true,
 						'The page content (' +
@@ -466,7 +470,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( 'Can view page title', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const actualPageTitle = await viewPagePage.pageTitle();
-					assert.equal(
+					assert.strictEqual(
 						actualPageTitle.toUpperCase(),
 						( 'Protected: ' + pageTitle ).toUpperCase()
 					);
@@ -475,7 +479,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( 'Can see password field', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const isPasswordProtected = await viewPagePage.isPasswordProtected();
-					assert.equal(
+					assert.strictEqual(
 						isPasswordProtected,
 						true,
 						'The page does not appear to be password protected'
@@ -485,7 +489,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( "Can't see content when no password is entered", async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const content = await viewPagePage.pageContent();
-					assert.equal(
+					assert.strictEqual(
 						content.indexOf( pageQuote ) === -1,
 						true,
 						'The page content (' +
@@ -506,7 +510,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( 'Can view page title', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const actualPageTitle = await viewPagePage.pageTitle();
-					assert.equal(
+					assert.strictEqual(
 						actualPageTitle.toUpperCase(),
 						( 'Protected: ' + pageTitle ).toUpperCase()
 					);
@@ -515,7 +519,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( 'Can see password field', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const isPasswordProtected = await viewPagePage.isPasswordProtected();
-					assert.equal(
+					assert.strictEqual(
 						isPasswordProtected,
 						true,
 						'The page does not appear to be password protected'
@@ -525,7 +529,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( "Can't see content when incorrect password is entered", async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const content = await viewPagePage.pageContent();
-					assert.equal(
+					assert.strictEqual(
 						content.indexOf( pageQuote ) === -1,
 						true,
 						'The page content (' +
@@ -546,7 +550,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( 'Can view page title', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const actualPageTitle = await viewPagePage.pageTitle();
-					assert.equal(
+					assert.strictEqual(
 						actualPageTitle.toUpperCase(),
 						( 'Protected: ' + pageTitle ).toUpperCase()
 					);
@@ -555,7 +559,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( "Can't see password field", async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const isPasswordProtected = await viewPagePage.isPasswordProtected();
-					assert.equal(
+					assert.strictEqual(
 						isPasswordProtected,
 						false,
 						'The page still seems to be password protected'
@@ -565,7 +569,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				test.it( 'Can see page content', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const content = await viewPagePage.pageContent();
-					assert.equal(
+					assert.strictEqual(
 						content.indexOf( pageQuote ) > -1,
 						true,
 						'The page content (' +
@@ -612,7 +616,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			await editorPage.insertPaymentButton( null, paymentButtonDetails );
 
 			let errorShown = await editorPage.errorDisplayed();
-			return assert.equal( errorShown, false, 'There is an error shown on the editor page!' );
+			return assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
 		} );
 
 		test.it( 'Can see the payment button inserted into the visual editor', async function() {
@@ -629,14 +633,18 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		test.it( 'Can see the payment button in our published page', async function() {
 			const viewPagePage = await ViewPagePage.Expect( driver );
 			let displayed = await viewPagePage.paymentButtonDisplayed();
-			assert.equal( displayed, true, 'The published page does not contain the payment button' );
+			assert.strictEqual(
+				displayed,
+				true,
+				'The published page does not contain the payment button'
+			);
 		} );
 
 		test.it(
 			'The payment button in our published page opens a new Paypal window for payment',
 			async function() {
 				let numberOfOpenBrowserWindows = await driverHelper.numberOfOpenWindows( driver );
-				assert.equal(
+				assert.strictEqual(
 					numberOfOpenBrowserWindows,
 					1,
 					'There is more than one open browser window before clicking payment button'
@@ -647,7 +655,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				await driverHelper.switchToWindowByIndex( driver, 1 );
 				const paypalCheckoutPage = await PaypalCheckoutPage.Expect( driver );
 				const amountDisplayed = await paypalCheckoutPage.priceDisplayed();
-				assert.equal(
+				assert.strictEqual(
 					amountDisplayed,
 					`${ paymentButtonDetails.symbol }${ paymentButtonDetails.price } ${
 						paymentButtonDetails.currency
