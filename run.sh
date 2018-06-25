@@ -20,6 +20,9 @@ if [ "$NODE_ENV" = "" ]; then
 	exit 1
 fi
 
+#disable selenium promise manager
+export SELENIUM_PROMISE_MANAGER=0
+
 # Function to join arrays into a string
 function joinStr { local IFS="$1"; shift; echo "$*"; }
 

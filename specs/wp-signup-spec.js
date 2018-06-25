@@ -142,15 +142,15 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				const viewBlogPage = await ViewBlogPage.Expect( driver );
 				await viewBlogPage.waitForTrampolineWelcomeMessage();
 				let displayed = await viewBlogPage.isTrampolineWelcomeDisplayed();
-				assert.equal( displayed, true, 'The trampoline welcome message is not displayed' );
+				assert.strictEqual( displayed, true, 'The trampoline welcome message is not displayed' );
 				let url = await viewBlogPage.urlDisplayed();
-				assert.equal(
+				assert.strictEqual(
 					url,
 					'https://' + newBlogAddress + '/',
 					'The displayed URL on the view blog page is not as expected'
 				);
 				let title = await viewBlogPage.title();
-				return assert.equal(
+				return assert.strictEqual(
 					title,
 					blogName,
 					'The expected blog title is not displaying correctly'
@@ -169,7 +169,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					emails.find( email => email.subject.includes( 'WordPress.com' ) );
 				let emails = await emailClient.pollEmailsByRecipient( emailAddress, validator );
 				//Disabled due to a/b test on activation email. See https://github.com/Automattic/wp-e2e-tests/issues/819
-				//assert.equal( emails.length, 2, 'The number of newly registered emails is not equal to 2 (activation and magic link)' );
+				//assert.strictEqual( emails.length, 2, 'The number of newly registered emails is not equal to 2 (activation and magic link)' );
 				for ( let email of emails ) {
 					if ( email.subject.includes( 'WordPress.com' ) ) {
 						return ( magicLoginLink = email.html.links[ 0 ].href );
@@ -261,7 +261,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				const findADomainComponent = await FindADomainComponent.Expect( driver );
 				let displayed = await findADomainComponent.displayed();
 				await eyesHelper.eyesScreenshot( driver, eyes, 'Domains Page' );
-				return assert.equal( displayed, true, 'The choose a domain page is not displayed' );
+				return assert.strictEqual( displayed, true, 'The choose a domain page is not displayed' );
 			} );
 
 			test.it(
@@ -288,7 +288,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				const pickAPlanPage = await PickAPlanPage.Expect( driver );
 				let displayed = await pickAPlanPage.displayed();
 				await eyesHelper.eyesScreenshot( driver, eyes, 'Plans Page' );
-				assert.equal( displayed, true, 'The pick a plan page is not displayed' );
+				assert.strictEqual( displayed, true, 'The pick a plan page is not displayed' );
 				return await pickAPlanPage.selectPremiumPlan();
 			} );
 
@@ -319,9 +319,13 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					await eyesHelper.eyesScreenshot( driver, eyes, 'Secure Payment Page' );
 					const premiumPlanInCart = await securePaymentComponent.containsPremiumPlan();
-					assert.equal( premiumPlanInCart, true, "The cart doesn't contain the premium plan" );
+					assert.strictEqual(
+						premiumPlanInCart,
+						true,
+						"The cart doesn't contain the premium plan"
+					);
 					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
-					return assert.equal(
+					return assert.strictEqual(
 						numberOfProductsInCart,
 						1,
 						"The cart doesn't contain the expected number of products"
@@ -335,7 +339,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					if ( driverManager.currentScreenSize() === 'desktop' ) {
 						const totalShown = await securePaymentComponent.cartTotalDisplayed();
-						assert.equal(
+						assert.strictEqual(
 							totalShown.indexOf( expectedCurrencySymbol ),
 							0,
 							`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
@@ -361,7 +365,11 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				const checkOutThankyouPage = await CheckOutThankyouPage.Expect( driver );
 				let displayed = await checkOutThankyouPage.displayed();
 				await eyesHelper.eyesScreenshot( driver, eyes, 'Checkout Thank You Page' );
-				return assert.equal( displayed, true, 'The checkout thank you page is not displayed' );
+				return assert.strictEqual(
+					displayed,
+					true,
+					'The checkout thank you page is not displayed'
+				);
 			} );
 
 			test.it( 'Can delete the plan', async function() {
@@ -498,7 +506,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					if ( driverManager.currentScreenSize() === 'desktop' ) {
 						const totalShown = await securePaymentComponent.cartTotalDisplayed();
-						assert.equal(
+						assert.strictEqual(
 							totalShown.indexOf( expectedCurrencySymbol ),
 							0,
 							`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
@@ -517,9 +525,13 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				async function() {
 					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					const premiumPlanInCart = await securePaymentComponent.containsPremiumPlan();
-					assert.equal( premiumPlanInCart, true, "The cart doesn't contain the premium plan" );
+					assert.strictEqual(
+						premiumPlanInCart,
+						true,
+						"The cart doesn't contain the premium plan"
+					);
 					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
-					return assert.equal(
+					return assert.strictEqual(
 						numberOfProductsInCart,
 						1,
 						"The cart doesn't contain the expected number of products"
@@ -668,7 +680,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					if ( driverManager.currentScreenSize() === 'desktop' ) {
 						const totalShown = await securePaymentComponent.cartTotalDisplayed();
-						assert.equal(
+						assert.strictEqual(
 							totalShown.indexOf( expectedCurrencySymbol ),
 							0,
 							`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
@@ -687,9 +699,13 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				async function() {
 					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					const personalPlanInCart = await securePaymentComponent.containsPersonalPlan();
-					assert.equal( personalPlanInCart, true, "The cart doesn't contain the personal plan" );
+					assert.strictEqual(
+						personalPlanInCart,
+						true,
+						"The cart doesn't contain the personal plan"
+					);
 					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
-					return assert.equal(
+					return assert.strictEqual(
 						numberOfProductsInCart,
 						1,
 						"The cart doesn't contain the expected number of products"
@@ -839,15 +855,19 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				async function() {
 					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					const domainInCart = await securePaymentComponent.containsDotLiveDomain();
-					assert.equal( domainInCart, true, "The cart doesn't contain the .live domain product" );
+					assert.strictEqual(
+						domainInCart,
+						true,
+						"The cart doesn't contain the .live domain product"
+					);
 					const privateWhoISInCart = await securePaymentComponent.containsPrivateWhois();
-					assert.equal(
+					assert.strictEqual(
 						privateWhoISInCart,
 						true,
 						"The cart doesn't contain the private domain product"
 					);
 					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
-					return assert.equal(
+					return assert.strictEqual(
 						numberOfProductsInCart,
 						2,
 						"The cart doesn't contain the expected number of products"
@@ -861,7 +881,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					if ( driverManager.currentScreenSize() === 'desktop' ) {
 						const totalShown = await securePaymentComponent.cartTotalDisplayed();
-						assert.equal(
+						assert.strictEqual(
 							totalShown.indexOf( expectedCurrencySymbol ),
 							0,
 							`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
@@ -903,7 +923,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it( 'We should only one option - the settings option', async function() {
 				const sideBarComponent = await SideBarComponent.Expect( driver );
 				let numberMenuItems = await sideBarComponent.numberOfMenuItems();
-				assert.equal(
+				assert.strictEqual(
 					numberMenuItems,
 					1,
 					'There is not a single menu item for a domain only site'
@@ -926,7 +946,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 					const managePurchasePage = await ManagePurchasePage.Expect( driver );
 					let domainDisplayed = await managePurchasePage.domainDisplayed();
-					assert.equal(
+					assert.strictEqual(
 						domainDisplayed,
 						expectedDomainName,
 						'The domain displayed on the manage purchase page is unexpected'
@@ -1046,21 +1066,25 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				async function() {
 					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					const domainInCart = await securePaymentComponent.containsDotLiveDomain();
-					assert.equal( domainInCart, true, "The cart doesn't contain the .live domain product" );
+					assert.strictEqual(
+						domainInCart,
+						true,
+						"The cart doesn't contain the .live domain product"
+					);
 					const privateWhoISInCart = await securePaymentComponent.containsPrivateWhois();
-					assert.equal(
+					assert.strictEqual(
 						privateWhoISInCart,
 						true,
 						"The cart doesn't contain the private domain product"
 					);
 					const businessPlanInCart = await securePaymentComponent.containsBusinessPlan();
-					assert.equal(
+					assert.strictEqual(
 						businessPlanInCart,
 						true,
 						"The cart doesn't contain the business plan product"
 					);
 					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
-					return assert.equal(
+					return assert.strictEqual(
 						numberOfProductsInCart,
 						3,
 						"The cart doesn't contain the expected number of products"
@@ -1074,7 +1098,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					if ( driverManager.currentScreenSize() === 'desktop' ) {
 						const totalShown = await securePaymentComponent.cartTotalDisplayed();
-						assert.equal(
+						assert.strictEqual(
 							totalShown.indexOf( expectedCurrencySymbol ),
 							0,
 							`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
@@ -1207,14 +1231,18 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				const viewBlogPage = await ViewBlogPage.Expect( driver );
 				viewBlogPage.waitForTrampolineWelcomeMessage();
 				let displayed = await viewBlogPage.isTrampolineWelcomeDisplayed();
-				return assert.equal( displayed, true, 'The trampoline welcome message is not displayed' );
+				return assert.strictEqual(
+					displayed,
+					true,
+					'The trampoline welcome message is not displayed'
+				);
 			}
 		);
 
 		test.it( 'Can see the correct blog URL displayed', async function() {
 			const viewBlogPage = await ViewBlogPage.Expect( driver );
 			const url = await viewBlogPage.urlDisplayed();
-			return assert.equal(
+			return assert.strictEqual(
 				url,
 				'https://' + newBlogAddress + '/',
 				'The displayed URL on the view blog page is not as expected'
@@ -1225,7 +1253,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it( 'Can see the correct blog title displayed', async function() {
 				const viewBlogPage = await ViewBlogPage.Expect( driver );
 				const title = await viewBlogPage.title();
-				return assert.equal(
+				return assert.strictEqual(
 					title,
 					'Site Title',
 					'The expected blog title is not displaying correctly'
@@ -1322,7 +1350,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 						`First product in cart is not ${ chosenThemeName }`
 					);
 					const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
-					return assert.equal(
+					return assert.strictEqual(
 						numberOfProductsInCart,
 						1,
 						"The cart doesn't contain the expected number of products"
@@ -1336,7 +1364,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 					if ( driverManager.currentScreenSize() === 'desktop' ) {
 						const totalShown = await securePaymentComponent.cartTotalDisplayed();
-						assert.equal(
+						assert.strictEqual(
 							totalShown.indexOf( expectedCurrencySymbol ),
 							0,
 							`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`

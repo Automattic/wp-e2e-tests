@@ -2,7 +2,8 @@
 
 ## Async / Await
 
-We use async functions and await to wait for commands to finish. 
+We use async functions and `await` to wait for commands to finish. This lets asynchronous methods execute like synchronous methods.
+For every method which returns a promise or thenable object `await` should be used. Keep in mind that `await` is only valid inside async function.
 
 We don't chain function calls together and avoid using `.then` calls.
 

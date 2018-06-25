@@ -69,7 +69,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			await wizardNavigationComponent.skipStep();
 			const summaryPage = await SummaryPage.Expect( driver );
 			let toDoCount = await summaryPage.countToDoSteps();
-			assert.equal( toDoCount, 4, 'Expected and actual steps are not equal.' );
+			assert.strictEqual( toDoCount, 4, 'Expected and actual steps are not equal.' );
 		} );
 
 		test.it( 'Can go back to first step in flow from summary page', async function() {
@@ -122,14 +122,18 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		test.it( 'Can see onboarding summary page', async function() {
 			const summaryPage = await SummaryPage.Expect( driver );
 			let toDoCount = await summaryPage.countToDoSteps();
-			assert.equal( toDoCount, 0, 'Expected and actual steps are not equal.' );
+			assert.strictEqual( toDoCount, 0, 'Expected and actual steps are not equal.' );
 			return await summaryPage.selectVisitSite();
 		} );
 
 		test.it( 'Can see site home page', async function() {
 			const viewPagePage = await ViewPagePage.Expect( driver );
 			let title = await viewPagePage.pageTitle();
-			return assert.equal( title.toUpperCase(), 'HOME PAGE', 'Homepage not set to a static page' );
+			return assert.strictEqual(
+				title.toUpperCase(),
+				'HOME PAGE',
+				'Homepage not set to a static page'
+			);
 		} );
 	} );
 
@@ -222,7 +226,7 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		test.it( 'Can see onboarding summary page', async function() {
 			const summaryPage = await SummaryPage.Expect( driver );
 			let toDoCount = await summaryPage.countToDoSteps();
-			assert.equal( toDoCount, 1, 'Expected and actual steps are not equal.' );
+			assert.strictEqual( toDoCount, 1, 'Expected and actual steps are not equal.' );
 			return await summaryPage.selectVisitSite();
 		} );
 
@@ -232,20 +236,24 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			const businessAddress = [ address, city, stateCode, postalCode, countryCode ];
 
 			let title = await viewSitePage.siteTitle();
-			assert.equal( title.toUpperCase(), blogTitle.toUpperCase(), 'Site title not is not correct' );
+			assert.strictEqual(
+				title.toUpperCase(),
+				blogTitle.toUpperCase(),
+				'Site title not is not correct'
+			);
 
 			let tagline = await viewSitePage.siteTagline();
-			assert.equal( tagline, blogTagline, 'Site tagline not is not correct' );
+			assert.strictEqual( tagline, blogTagline, 'Site tagline not is not correct' );
 
 			let siteBusinessName = await widgetContactInfoComponent.getName();
-			assert.equal(
+			assert.strictEqual(
 				siteBusinessName.toUpperCase(),
 				businessName.toUpperCase(),
 				'Business name not found on page'
 			);
 
 			let siteBusinessAddress = await widgetContactInfoComponent.getAddress();
-			return assert.equal(
+			return assert.strictEqual(
 				siteBusinessAddress,
 				businessAddress.join( ' ' ),
 				'Business address not found on page'
@@ -330,20 +338,20 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			test.it( 'Can see onboarding summary page', async function() {
 				const summaryPage = await SummaryPage.Expect( driver );
 				let toDoCount = await summaryPage.countToDoSteps();
-				assert.equal( toDoCount, 2, 'Expected and actual steps are not equal.' );
+				assert.strictEqual( toDoCount, 2, 'Expected and actual steps are not equal.' );
 				return await summaryPage.selectVisitSite();
 			} );
 
 			test.it( 'Can see site home page', async function() {
 				const viewSitePage = await ViewSitePage.Expect( driver );
 				let title = await viewSitePage.siteTitle();
-				assert.equal(
+				assert.strictEqual(
 					title.toUpperCase(),
 					blogTitle.toUpperCase(),
 					'Site title not is not correct'
 				);
 				let tagline = await viewSitePage.siteTagline();
-				return assert.equal( tagline, blogTagline, 'Site tagline not is not correct' );
+				return assert.strictEqual( tagline, blogTagline, 'Site tagline not is not correct' );
 			} );
 		}
 	);
@@ -431,20 +439,20 @@ test.describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 			test.it( 'Can see onboarding summary page', async function() {
 				const summaryPage = await SummaryPage.Expect( driver );
 				let toDoCount = await summaryPage.countToDoSteps();
-				assert.equal( toDoCount, 0, 'Expected and actual steps are not equal.' );
+				assert.strictEqual( toDoCount, 0, 'Expected and actual steps are not equal.' );
 				return await summaryPage.selectVisitSite();
 			} );
 
 			test.it( 'Can see site home page', async function() {
 				const viewSitePage = await ViewSitePage.Expect( driver );
 				let title = await viewSitePage.siteTitle();
-				assert.equal(
+				assert.strictEqual(
 					title.toUpperCase(),
 					blogTitle.toUpperCase(),
 					'Site title not is not correct'
 				);
 				let tagline = await viewSitePage.siteTagline();
-				return assert.equal( tagline, blogTagline, 'Site tagline not is not correct' );
+				return assert.strictEqual( tagline, blogTagline, 'Site tagline not is not correct' );
 			} );
 		}
 	);
