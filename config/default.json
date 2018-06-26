@@ -80,6 +80,6 @@
 		[ "domainSuggestionKrakenV321_20180524", "domainsbot" ],
 		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
 		[ "staleCartNotice_20180618", "siteDeservesBoost" ],
-		[ "includeDotBlogSubdomain_20180702", "no" ],
+		[ "includeDotBlogSubdomain_20180702", "no" ]
 	]
 }
