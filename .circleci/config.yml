@@ -15,8 +15,9 @@ jobs:
       # Cache first on exact package-lock.json
       # Fallback cache on Node version
       - restore_cache:
-          key: npm-v1-{{ checksum ".nvmrc" }}-{{ checksum "package-lock.json" }}
-          key: npm-v1-{{ checksum ".nvmrc" }}
+          keys:
+            - npm-v1-{{ checksum ".nvmrc" }}-{{ checksum "package-lock.json" }}
+            - npm-v1-{{ checksum ".nvmrc" }}
       - run: npm ci
       - save_cache:
           key: npm-v1-{{ checksum ".nvmrc" }}-{{ checksum "package-lock.json" }}

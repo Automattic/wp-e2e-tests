@@ -63,7 +63,7 @@ test.describe(
 				const pluginDetailsPage = await PluginDetailsPage.Expect( driver );
 				await pluginDetailsPage.waitForSuccessNotice();
 				let successMessageText = await pluginDetailsPage.getSuccessNoticeText();
-				return assert.equal(
+				return assert.strictEqual(
 					successMessageText.indexOf( expectedPartialText ) > -1,
 					true,
 					`The success message '${ successMessageText }' does not include '${ expectedPartialText }'`
