@@ -55,8 +55,8 @@ test.describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function
 
 		test.it( 'Can open Jetpack dashboard', async function() {
 			await WPAdminSidebar.refreshIfJNError( driver );
-			this.wpAdminSidebar = await WPAdminSidebar.Expect( driver );
-			return await this.wpAdminSidebar.selectJetpack();
+			const wpAdminSidebar = await WPAdminSidebar.Expect( driver );
+			return await wpAdminSidebar.selectJetpack();
 		} );
 
 		test.it( 'Can find and click Upgrade nudge button', async function() {
