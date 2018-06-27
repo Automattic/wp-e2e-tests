@@ -1,7 +1,7 @@
 /** @format */
 
 import test from 'selenium-webdriver/testing';
-import { assert } from 'chai';
+import assert from 'assert';
 
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
@@ -64,7 +64,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 
 			test.it( 'should show a menu', async function() {
 				let displayed = await this.themesPage.popOverMenuDisplayed();
-				assert( displayed, true, 'Popover menu not displayed' );
+				assert( displayed, 'Popover menu not displayed' );
 			} );
 
 			test.describe( 'when "Try & Customize" is clicked', function() {
@@ -75,7 +75,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 
 				test.it( 'should show the site selector', async function() {
 					let siteSelectorShown = await this.siteSelector.displayed();
-					return assert.strictEqual( siteSelectorShown, true, 'The site selector was not shown' );
+					return assert( siteSelectorShown, 'The site selector was not shown' );
 				} );
 
 				test.describe( 'when a site is selected, and Customize is clicked', function() {
@@ -84,14 +84,11 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 						await this.siteSelector.ok();
 					} );
 
-					test.it( 'should open the customizer with the selected site and theme', async function(
-						done
-					) {
+					test.it( 'should open the customizer with the selected site and theme', async function() {
 						this.customizerPage = await CustomizerPage.Expect( driver );
 						let url = await driver.getCurrentUrl();
-						assert.include( url, this.siteSelector.selectedSiteDomain, 'Wrong site domain' );
-						assert.include( url, this.themeSearchName, 'Wrong theme' );
-						done();
+						assert( url.indexOf( this.siteSelector.selectedSiteDomain ) > -1, 'Wrong site domain' );
+						assert( url.indexOf( this.themeSearchName ) > -1, 'Wrong theme' );
 					} );
 
 					test.after( async function() {
@@ -136,7 +133,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 
 			test.it( 'should show a menu', async function() {
 				let displayed = await this.themesPage.popOverMenuDisplayed();
-				assert( displayed, true, 'Popover menu not displayed' );
+				assert( displayed, 'Popover menu not displayed' );
 			} );
 
 			test.describe( 'when Activate is clicked', function() {
@@ -147,7 +144,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 
 				test.it( 'shows the site selector', async function() {
 					let siteSelectorShown = await this.siteSelector.displayed();
-					return assert.strictEqual( siteSelectorShown, true, 'The site selector was not shown' );
+					return assert( siteSelectorShown, 'The site selector was not shown' );
 				} );
 
 				test.it( 'can select the first site sites', async function() {
