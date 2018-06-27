@@ -162,7 +162,7 @@ test.describe(
 		// 				approvePushToken( pushToken, loginFlow.account.bearerToken ).then( () => {
 		// 					const readerPage = new ReaderPage( driver );
 		// 					readerPage.displayed().then( displayed => {
-		// 						assert.equal( displayed, true, 'The reader page is not displayed after log in' );
+		// 						assert.strictEqual( displayed, true, 'The reader page is not displayed after log in' );
 		// 						done();
 		// 					} );
 		// 				} );
@@ -233,7 +233,7 @@ test.describe(
 		// 					magicLoginPage.finishLogin();
 		// 					let readerPage = new ReaderPage( driver );
 		// 					return readerPage.displayed().then( function( displayed ) {
-		// 						return assert.equal( displayed, true, 'The reader page is not displayed after log in' );
+		// 						return assert.strictEqual( displayed, true, 'The reader page is not displayed after log in' );
 		// 					} );
 		// 				} );
 		//

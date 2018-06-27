@@ -100,7 +100,7 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 		await notificationsComponent.selectComments();
 		let content = await notificationsComponent.allCommentsContent();
 		await eyesHelper.eyesScreenshot( driver, eyes, 'Notifications List' );
-		return assert.equal(
+		return assert.strictEqual(
 			content.includes( expectedContent ),
 			true,
 			`The actual notifications content '${ content }' does not contain expected content '${ expectedContent }'`

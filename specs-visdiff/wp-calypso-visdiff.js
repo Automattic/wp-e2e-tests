@@ -66,7 +66,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 			this.editorPage = await EditorPage.Expect( driver );
 			await this.editorPage.waitForTitle();
 			let titleShown = await this.editorPage.titleShown();
-			assert.equal( titleShown, defaultPageTitle, 'The page title shown was unexpected' );
+			assert.strictEqual( titleShown, defaultPageTitle, 'The page title shown was unexpected' );
 		} );
 
 		test.it( 'Close sidebar for editor screenshot', async function() {
@@ -127,7 +127,7 @@ test.describe( `Calypso Visual Diff (${ screenSize })`, function() {
 			this.editorPage = await EditorPage.Expect( driver );
 			await this.editorPage.waitForTitle();
 			let titleShown = await this.editorPage.titleShown();
-			assert.equal( titleShown, defaultPostTitle, 'The post title shown was unexpected' );
+			assert.strictEqual( titleShown, defaultPostTitle, 'The post title shown was unexpected' );
 		} );
 
 		test.it( 'Can open the editor media modal', async function() {
