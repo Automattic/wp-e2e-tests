@@ -1,3 +1,4 @@
 --require @babel/register
+--require test/mocha.env.js
 lib/before.js
 lib/after.js
