@@ -63,7 +63,7 @@
 		"checklistThankYouForPaidUser",
 		"springSale30PercentOff",
 		"jetpackSignupGoogleTop",
-		"domainSuggestionKrakenV322",
+		"domainSuggestionKrakenV321",
 		"domainSearchTLDFilterPlacement",
 		"staleCartNotice"
 	],
@@ -74,7 +74,7 @@
 		[ "checklistThankYouForPaidUser_20171204", "hide" ],
 		[ "springSale30PercentOff_20180413", "control" ],
 		[ "jetpackSignupGoogleTop_20180427", "original" ],
-		[ "domainSuggestionKrakenV322_20180621", "domainsbot" ],
+		[ "domainSuggestionKrakenV321_20180524", "domainsbot" ],
 		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
 		[ "staleCartNotice_20180618", "siteDeservesBoost" ]
 	]
