@@ -577,6 +577,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 			test.describe( 'Set to private which publishes it', function() {
 				test.it( 'Ensure the post is saved', async function() {
+					await EditorPage.Expect( driver );
 					const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 					await postEditorToolbarComponent.ensureSaved();
 				} );
