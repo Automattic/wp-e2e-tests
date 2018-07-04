@@ -74,7 +74,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 			const peoplePage = await PeoplePage.Expect( driver );
 			await peoplePage.selectInvites();
-			return await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
+			return await peoplePage.waitUntilPendingInviteDisplayedFor( newInviteEmailAddress );
 		} );
 
 		test.it( 'Can see an invitation email received for the invite', async function() {
@@ -182,7 +182,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 				const peoplePage = await PeoplePage.Expect( driver );
 				await peoplePage.selectInvites();
-				await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
+				await peoplePage.waitUntilPendingInviteDisplayedFor( newInviteEmailAddress );
 
 				await peoplePage.goToRevokeInvitePage( newInviteEmailAddress );
 
@@ -253,7 +253,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 				const peoplePage = await PeoplePage.Expect( driver );
 				await peoplePage.selectInvites();
-				return await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
+				return await peoplePage.waitUntilPendingInviteDisplayedFor( newInviteEmailAddress );
 			} );
 
 			test.it( 'Can see an invitation email received for the invite', async function() {
@@ -377,7 +377,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 				const peoplePage = await PeoplePage.Expect( driver );
 				await peoplePage.selectInvites();
-				return await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
+				return await peoplePage.waitUntilPendingInviteDisplayedFor( newInviteEmailAddress );
 			} );
 
 			test.it( 'Can see an invitation email received for the invite', async function() {

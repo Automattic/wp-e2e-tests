@@ -572,7 +572,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			test.it( 'Can allow comments', async function() {
 				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 				await postEditorSidebarComponent.expandMoreOptions();
-				await postEditorSidebarComponent.setCommentsForPost( true );
+				return await postEditorSidebarComponent.setCommentsForPost( true );
 			} );
 
 			test.describe( 'Set to private which publishes it', function() {
