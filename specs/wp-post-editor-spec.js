@@ -638,7 +638,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 						test.describe( 'As a non-logged in user ', function() {
 							test.before( async function() {
-								await driverManager.ensureNotLoggedIn( driver );
+								await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 								await driver.navigate().refresh();
 							} );
 
@@ -904,7 +904,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				} );
 				test.describe( 'As a non-logged in user', function() {
 					test.before( async function() {
-						await driverManager.ensureNotLoggedIn( driver );
+						await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 						await driver.navigate().refresh();
 					} );
 					test.describe( 'With no password entered', function() {
