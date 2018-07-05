@@ -51,7 +51,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		let fileDetails;
 
 		test.before( async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		// Create image file for upload
@@ -375,8 +375,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	test.describe( 'Basic Public Post @canary @parallel @jetpack', function() {
 		this.bailSuite( true );
 
-		test.it( 'Delete Cookies and Local Storage', async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.describe( 'Publish a New Post', function() {
@@ -428,8 +428,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		const blogPostQuote =
 			'“We are what we pretend to be, so we must be careful about what we pretend to be.”\n- Kurt Vonnegut';
 
-		test.it( 'Delete Cookies and Local Storage', async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.it( 'Can log in', async function() {
@@ -475,8 +475,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		this.bailSuite( true );
 		let publishDate;
 
-		test.it( 'Delete Cookies and Local Storage', async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.describe( 'Schedule a New Post', function() {
@@ -543,7 +543,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 	test.describe( 'Private Posts: @parallel @jetpack', function() {
 		test.before( async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.describe( 'Publish a Private Post', function() {
@@ -637,8 +637,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 						} );
 
 						test.describe( 'As a non-logged in user ', function() {
-							test.it( 'Delete cookies (log out)', async function() {
-								driverManager.clearCookiesAndDeleteLocalStorage( driver );
+							test.before( async function() {
+								await driverManager.ensureNotLoggedIn( driver );
 								await driver.navigate().refresh();
 							} );
 
@@ -676,7 +676,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		this.bailSuite( true );
 
 		test.before( async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.describe( 'Publish a Password Protected Post', function() {
@@ -904,7 +904,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				} );
 				test.describe( 'As a non-logged in user', function() {
 					test.before( async function() {
-						await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+						await driverManager.ensureNotLoggedIn( driver );
 						await driver.navigate().refresh();
 					} );
 					test.describe( 'With no password entered', function() {
@@ -1094,7 +1094,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		this.bailSuite( true );
 
 		test.before( async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.describe( 'Trash a New Post', function() {
@@ -1133,8 +1133,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	test.describe( 'Edit a Post: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
-		test.it( 'Delete Cookies and Local Storage', async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.describe( 'Publish a New Post', function() {
@@ -1236,8 +1236,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	test.describe( 'Insert a contact form: @parallel @jetpack', function() {
 		this.bailSuite( true );
 
-		test.it( 'Delete Cookies and Local Storage', async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.describe( 'Publish a New Post with a Contact Form', function() {
@@ -1303,8 +1303,8 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 		} );
 
-		test.it( 'Delete Cookies and Local Storage', async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.it( 'Can log in', async function() {
@@ -1386,7 +1386,7 @@ test.describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		this.bailSuite( true );
 
 		test.before( async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.describe( 'Publish a new post', function() {
