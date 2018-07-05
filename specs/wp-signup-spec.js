@@ -1401,12 +1401,11 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		}
 	);
 
-	test.describe.only( 'Basic sign up for a free site @parallel', function() {
+	test.describe( 'Sign up for free subdomain site @parallel', function() {
 		this.bailSuite( true );
 
 		const blogName = dataHelper.getNewBlogName();
 		const expectedDomainName = `${ blogName }.art.blog`;
-		let newBlogAddress = '';
 
 		test.it( 'Ensure we are not logged in as anyone', async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -1415,7 +1414,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		test.it( 'Can enter the subdomains flow and select design type', async function() {
 			await driver.get( config.get( 'calypsoBaseURL' ) + '/start/subdomain/?vertical=a8c.1' );
 			const designTypePage = await DesignTypePage.Expect( driver );
-			await designTypePage.setABTestControlGroupsInLocalStorage( { flow: 'subdomain' });
+			await designTypePage.setABTestControlGroupsInLocalStorage( { flow: 'subdomain' } );
 			return await designTypePage.selectFirstDesignType();
 		} );
 
@@ -1428,7 +1427,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		);
 
 		test.it(
-			'Can then see the domains page, and Can search for a blog name, can see and select a free .wordpress address in the results',
+			'Can then see the domains page, and Can search for a blog name, can see and select a free .art.blog address in the results',
 			async function() {
 				const findADomainComponent = await FindADomainComponent.Expect( driver );
 				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
@@ -1441,7 +1440,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 					expectedDomainName.indexOf( actualAddress ) > -1,
 					`The displayed blog address: '${ actualAddress }' was not the expected addresses: '${ expectedDomainName }'`
 				);
-				newBlogAddress = actualAddress;
 				return await findADomainComponent.selectFreeAddress();
 			}
 		);
@@ -1475,7 +1473,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			'We are on the view blog page, can see trampoline, our URL and title',
 			async function() {
 				const viewBlogPage = await ViewBlogPage.Expect( driver );
-				viewBlogPage.waitForTrampolineWelcomeMessage();
+				await viewBlogPage.waitForTrampolineWelcomeMessage();
 				let displayed = await viewBlogPage.isTrampolineWelcomeDisplayed();
 				return assert.strictEqual(
 					displayed,
@@ -1484,26 +1482,5 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				);
 			}
 		);
-
-		test.it( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
-		} );
-
 	} );
 } );
