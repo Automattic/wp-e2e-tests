@@ -1401,20 +1401,28 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		}
 	);
 
-	test.describe( 'Sign up for free subdomain site @parallel', function() {
+	test.describe.only( 'Sign up for free subdomain site @parallel', function() {
 		this.bailSuite( true );
 
 		const blogName = dataHelper.getNewBlogName();
 		const expectedDomainName = `${ blogName }.art.blog`;
 
-		test.it( 'Ensure we are not logged in as anyone', async function() {
-			return await driverManager.ensureNotLoggedIn( driver );
+		test.before( async function() {
+			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.it( 'Can enter the subdomains flow and select design type', async function() {
-			await driver.get( config.get( 'calypsoBaseURL' ) + '/start/subdomain/?vertical=a8c.1' );
+			const signupFlow = 'subdomain';
+			const startPage = await StartPage.Visit(
+				driver,
+				StartPage.getStartURL( {
+					culture: locale,
+					flow: signupFlow,
+					query: 'vertical=a8c.1'
+				} )
+			);
+			await startPage.setABTestControlGroupsInLocalStorage( { flow: signupFlow} );
 			const designTypePage = await DesignTypePage.Expect( driver );
-			await designTypePage.setABTestControlGroupsInLocalStorage( { flow: 'subdomain' } );
 			return await designTypePage.selectFirstDesignType();
 		} );
 
@@ -1462,7 +1470,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		test.it(
 			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
 			async function() {
-				await SignupProcessingPage.hideFloatiesinIE11( driver );
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
 				await signupProcessingPage.waitForContinueButtonToBeEnabled();
 				return await signupProcessingPage.continueAlong();
@@ -1475,6 +1482,12 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				const viewBlogPage = await ViewBlogPage.Expect( driver );
 				await viewBlogPage.waitForTrampolineWelcomeMessage();
 				let displayed = await viewBlogPage.isTrampolineWelcomeDisplayed();
+				let url = await viewBlogPage.urlDisplayed();
+				assert.strictEqual(
+					url,
+					'http://' + expectedDomainName + '/',
+					'The displayed URL on the view blog page is not as expected'
+				);
 				return assert.strictEqual(
 					displayed,
 					true,
