@@ -107,7 +107,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 		} );
 	} );
 
-	test.describe( 'Map a domain to an existing site @parallel', function() {
+	test.xdescribe( 'Map a domain to an existing site @parallel', function() {
 		this.bailSuite( true );
 
 		const blogName = 'myawesomedomain.com';
