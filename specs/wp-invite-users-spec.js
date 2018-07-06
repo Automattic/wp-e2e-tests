@@ -53,7 +53,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		let acceptInviteURL = '';
 
 		test.before( async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.it( 'Can log in and navigate to Invite People page', async function() {
@@ -161,7 +161,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			let acceptInviteURL = '';
 
 			test.before( async function() {
-				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			test.it( 'Can log in and navigate to Invite People page', async function() {
@@ -228,7 +228,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			let acceptInviteURL = '';
 
 			test.before( async function() {
-				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			test.it( 'As an anonymous user I can not see a private site', async function() {
@@ -356,7 +356,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			let acceptInviteURL = '';
 
 			test.before( async function() {
-				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			test.it( 'Can log in and navigate to Invite People page', async function() {
