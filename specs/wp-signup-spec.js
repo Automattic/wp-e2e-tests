@@ -1401,7 +1401,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		}
 	);
 
-	test.describe.only( 'Sign up for free subdomain site @parallel', function() {
+	test.describe( 'Sign up for free subdomain site @parallel', function() {
 		this.bailSuite( true );
 
 		const blogName = dataHelper.getNewBlogName();
