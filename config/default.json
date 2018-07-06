@@ -65,7 +65,8 @@
 		"jetpackSignupGoogleTop",
 		"domainSuggestionKrakenV321",
 		"domainSearchTLDFilterPlacement",
-		"staleCartNotice"
+		"staleCartNotice",
+		"aboutSuggestionMatches"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -76,6 +77,7 @@
 		[ "jetpackSignupGoogleTop_20180427", "original" ],
 		[ "domainSuggestionKrakenV321_20180524", "domainsbot" ],
 		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
-		[ "staleCartNotice_20180618", "siteDeservesBoost" ]
+		[ "staleCartNotice_20180618", "siteDeservesBoost" ],
+		[ "aboutSuggestionMatches_20180704", "control" ]
 	]
 }

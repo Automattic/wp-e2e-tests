@@ -77,7 +77,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 			let magicLoginLink;
 
-			test.it( 'Ensure we are not logged in as anyone', async function() {
+			test.before( async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
@@ -159,7 +159,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can log out and request a magic link', async function() {
-				await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				await driverManager.ensureNotLoggedIn( driver );
 				const loginPage = await LoginPage.Visit( driver );
 				return await loginPage.requestMagicLink( emailAddress );
 			} );
@@ -228,7 +228,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 			} );
 
-			test.it( 'Ensure we are not logged in as anyone', async function() {
+			test.before( async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
@@ -792,7 +792,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				}
 			} );
 
-			test.it( 'Ensure we are not logged in as anyone', async function() {
+			test.before( async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
@@ -991,7 +991,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				}
 			} );
 
-			test.it( 'Ensure we are not logged in as anyone', async function() {
+			test.before( async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
@@ -1164,7 +1164,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		const blogName = dataHelper.getNewBlogName();
 		let newBlogAddress = '';
 
-		test.it( 'Ensure we are not logged in as anyone', async function() {
+		test.before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -1275,7 +1275,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const expectedCurrencySymbol = 'A$';
 			let chosenThemeName = '';
 
-			test.it( 'Ensure we are not logged in as anyone', async function() {
+			test.before( async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 

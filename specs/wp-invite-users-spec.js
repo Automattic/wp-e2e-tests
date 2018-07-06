@@ -53,7 +53,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		let acceptInviteURL = '';
 
 		test.before( async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.it( 'Can log in and navigate to Invite People page', async function() {
@@ -74,7 +74,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 			const peoplePage = await PeoplePage.Expect( driver );
 			await peoplePage.selectInvites();
-			return await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
+			return await peoplePage.waitForPendingInviteDisplayedFor( newInviteEmailAddress );
 		} );
 
 		test.it( 'Can see an invitation email received for the invite', async function() {
@@ -161,7 +161,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			let acceptInviteURL = '';
 
 			test.before( async function() {
-				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			test.it( 'Can log in and navigate to Invite People page', async function() {
@@ -182,7 +182,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 				const peoplePage = await PeoplePage.Expect( driver );
 				await peoplePage.selectInvites();
-				await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
+				await peoplePage.waitForPendingInviteDisplayedFor( newInviteEmailAddress );
 
 				await peoplePage.goToRevokeInvitePage( newInviteEmailAddress );
 
@@ -228,7 +228,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			let acceptInviteURL = '';
 
 			test.before( async function() {
-				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			test.it( 'As an anonymous user I can not see a private site', async function() {
@@ -253,7 +253,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 				const peoplePage = await PeoplePage.Expect( driver );
 				await peoplePage.selectInvites();
-				return await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
+				return await peoplePage.waitForPendingInviteDisplayedFor( newInviteEmailAddress );
 			} );
 
 			test.it( 'Can see an invitation email received for the invite', async function() {
@@ -356,7 +356,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			let acceptInviteURL = '';
 
 			test.before( async function() {
-				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			test.it( 'Can log in and navigate to Invite People page', async function() {
@@ -377,7 +377,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 				const peoplePage = await PeoplePage.Expect( driver );
 				await peoplePage.selectInvites();
-				return await peoplePage.pendingInviteDisplayedFor( newInviteEmailAddress );
+				return await peoplePage.waitForPendingInviteDisplayedFor( newInviteEmailAddress );
 			} );
 
 			test.it( 'Can see an invitation email received for the invite', async function() {

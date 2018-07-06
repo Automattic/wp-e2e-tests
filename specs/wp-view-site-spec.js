@@ -34,7 +34,7 @@ test.describe(
 
 		test.describe( 'View site and close:', function() {
 			test.before( async function() {
-				await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				await driverManager.ensureNotLoggedIn( driver );
 
 				let testEnvironment = 'WordPress.com';
 				let testName = `My Sites [${ global.browserName }] [${ screenSize }]`;

@@ -45,7 +45,7 @@ test.describe( `[${ host }] Switching Themes: (${ screenSize })`, function() {
 
 	test.describe( 'Switching Themes @parallel @jetpack @visdiff', function() {
 		test.it( 'Delete Cookies and Login', async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			await driverManager.ensureNotLoggedIn( driver );
 			let loginFlow = new LoginFlow( driver );
 			await loginFlow.loginAndSelectThemes();
 		} );
@@ -103,7 +103,7 @@ test.describe(
 		test.describe( 'Activating Themes:', function() {
 			// Ensure logged out
 			test.before( async function() {
-				await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			test.it( 'Login', async function() {
