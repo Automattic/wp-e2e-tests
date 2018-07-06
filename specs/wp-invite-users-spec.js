@@ -423,8 +423,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await navbarComponent.clickCreateNewPost();
 
 				const editorPage = await EditorPage.Expect( driver );
-				let urlDisplayed = await driver.getCurrentUrl();
-				await editorPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
+				await editorPage.setABTestControlGroupsInLocalStorage();
 				await editorPage.enterTitle( reviewPostTitle );
 				return await editorPage.enterContent( postQuote );
 			} );
@@ -478,8 +477,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				await navBarComponent.clickCreateNewPost();
 
 				const editorPage = await EditorPage.Expect( driver );
-				let urlDisplayed = await driver.getCurrentUrl();
-				await editorPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
+				await editorPage.setABTestControlGroupsInLocalStorage();
 				await editorPage.enterTitle( publishPostTitle );
 				await editorPage.enterContent( postQuote );
 

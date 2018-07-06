@@ -58,8 +58,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 
 		test.it( 'Can see the Domains page and choose add a domain', async function() {
 			const domainsPage = await DomainsPage.Expect( driver );
-			let urlDisplayed = await driver.getCurrentUrl();
-			await domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
+			await domainsPage.setABTestControlGroupsInLocalStorage();
 			return await domainsPage.clickAddDomain();
 		} );
 
@@ -122,8 +121,7 @@ test.describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, func
 
 		test.it( 'Can see the Domains page and choose add a domain', async function() {
 			const domainsPage = await DomainsPage.Expect( driver );
-			let urlDisplayed = await driver.getCurrentUrl();
-			await domainsPage.setABTestControlGroupsInLocalStorage( urlDisplayed );
+			await domainsPage.setABTestControlGroupsInLocalStorage();
 			return await domainsPage.clickAddDomain();
 		} );
 

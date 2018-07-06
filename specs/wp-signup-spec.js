@@ -81,11 +81,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can visit the start page', async function() {
-				const startPage = await StartPage.Visit(
-					driver,
-					StartPage.getStartURL( { culture: locale } )
-				);
-				return await startPage.setABTestControlGroupsInLocalStorage();
+				await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale } ) );
 			} );
 
 			test.it( 'Can see the "About" page, and enter some site information', async function() {
@@ -240,11 +236,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can visit the start page', async function() {
-				const startPage = await StartPage.Visit(
-					driver,
-					StartPage.getStartURL( { culture: locale } )
-				);
-				return await startPage.setABTestControlGroupsInLocalStorage();
+				await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale } ) );
 			} );
 
 			test.it( 'Can see the "About" page, and enter some site information', async function() {
@@ -444,11 +436,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can visit the start page', async function() {
-				const startPage = await StartPage.Visit(
+				await StartPage.Visit(
 					driver,
 					StartPage.getStartURL( { culture: locale, flow: 'premium' } )
 				);
-				await startPage.setABTestControlGroupsInLocalStorage( { flow: 'premium' } );
 			} );
 
 			test.it( 'Can see the about page and accept defaults', async function() {
@@ -618,11 +609,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can visit the start page', async function() {
-				const startPage = await StartPage.Visit(
+				await StartPage.Visit(
 					driver,
 					StartPage.getStartURL( { culture: locale, flow: 'personal' } )
 				);
-				await startPage.setABTestControlGroupsInLocalStorage( { flow: 'personal' } );
 			} );
 
 			test.it( 'Can see the about page and accept defaults', async function() {
@@ -803,7 +793,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can visit the domains start page', async function() {
-				const startPage = await StartPage.Visit(
+				await StartPage.Visit(
 					driver,
 					StartPage.getStartURL( {
 						culture: locale,
@@ -812,7 +802,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 						domainFirstDomain: expectedDomainName,
 					} )
 				);
-				await startPage.setABTestControlGroupsInLocalStorage( { flow: 'domain-first' } );
 			} );
 
 			test.it( 'Can select domain only from the domain first choice page', async function() {
@@ -1002,11 +991,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can visit the start page', async function() {
-				const startPage = await StartPage.Visit(
+				await StartPage.Visit(
 					driver,
 					StartPage.getStartURL( { culture: locale, flow: 'business' } )
 				);
-				await startPage.setABTestControlGroupsInLocalStorage( { flow: 'business' } );
 			} );
 
 			test.it( 'Can see the about page and accept defaults', async function() {
@@ -1168,11 +1156,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		} );
 
 		test.it( 'Can visit the start page', async function() {
-			const startPage = await StartPage.Visit(
-				driver,
-				StartPage.getStartURL( { culture: locale } )
-			);
-			await startPage.setABTestControlGroupsInLocalStorage();
+			await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale } ) );
 		} );
 
 		test.it( 'Can see the about page and accept defaults', async function() {
@@ -1288,7 +1272,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it( 'Can see the themes page and select premium theme ', async function() {
 				const themesPage = await ThemesPage.Visit( driver, ThemesPage.getStartURL() );
 				await themesPage.waitUntilThemesLoaded();
-				await themesPage.setABTestControlGroupsInLocalStorage( { flow: 'with-theme' } );
+				await themesPage.setABTestControlGroupsInLocalStorage();
 				await themesPage.showOnlyPremiumThemes();
 				chosenThemeName = await themesPage.getFirstThemeName();
 				return await themesPage.selectNewTheme();
