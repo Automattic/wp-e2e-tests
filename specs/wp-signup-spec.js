@@ -34,6 +34,7 @@ import ThemesPage from '../lib/pages/themes-page';
 import ThemeDetailPage from '../lib/pages/theme-detail-page';
 import AccountSettingsPage from '../lib/pages/account/account-settings-page';
 import CloseAccountPage from '../lib/pages/account/close-account-page';
+import DesignTypePage from '../lib/pages/signup/design-type-page';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
@@ -76,16 +77,12 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 			let magicLoginLink;
 
-			test.it( 'Ensure we are not logged in as anyone', async function() {
+			test.before( async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			test.it( 'Can visit the start page', async function() {
-				const startPage = await StartPage.Visit(
-					driver,
-					StartPage.getStartURL( { culture: locale } )
-				);
-				return await startPage.setABTestControlGroupsInLocalStorage();
+				await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale } ) );
 			} );
 
 			test.it( 'Can see the "About" page, and enter some site information', async function() {
@@ -158,7 +155,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can log out and request a magic link', async function() {
-				await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				await driverManager.ensureNotLoggedIn( driver );
 				const loginPage = await LoginPage.Visit( driver );
 				return await loginPage.requestMagicLink( emailAddress );
 			} );
@@ -227,7 +224,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 			} );
 
-			test.it( 'Ensure we are not logged in as anyone', async function() {
+			test.before( async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
@@ -240,11 +237,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can visit the start page', async function() {
-				const startPage = await StartPage.Visit(
-					driver,
-					StartPage.getStartURL( { culture: locale } )
-				);
-				return await startPage.setABTestControlGroupsInLocalStorage();
+				await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale } ) );
 			} );
 
 			test.it( 'Can see the "About" page, and enter some site information', async function() {
@@ -444,11 +437,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can visit the start page', async function() {
-				const startPage = await StartPage.Visit(
+				await StartPage.Visit(
 					driver,
 					StartPage.getStartURL( { culture: locale, flow: 'premium' } )
 				);
-				await startPage.setABTestControlGroupsInLocalStorage( { flow: 'premium' } );
 			} );
 
 			test.it( 'Can see the about page and accept defaults', async function() {
@@ -618,11 +610,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can visit the start page', async function() {
-				const startPage = await StartPage.Visit(
+				await StartPage.Visit(
 					driver,
 					StartPage.getStartURL( { culture: locale, flow: 'personal' } )
 				);
-				await startPage.setABTestControlGroupsInLocalStorage( { flow: 'personal' } );
 			} );
 
 			test.it( 'Can see the about page and accept defaults', async function() {
@@ -791,7 +782,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				}
 			} );
 
-			test.it( 'Ensure we are not logged in as anyone', async function() {
+			test.before( async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
@@ -803,7 +794,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can visit the domains start page', async function() {
-				const startPage = await StartPage.Visit(
+				await StartPage.Visit(
 					driver,
 					StartPage.getStartURL( {
 						culture: locale,
@@ -812,7 +803,6 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 						domainFirstDomain: expectedDomainName,
 					} )
 				);
-				await startPage.setABTestControlGroupsInLocalStorage( { flow: 'domain-first' } );
 			} );
 
 			test.it( 'Can select domain only from the domain first choice page', async function() {
@@ -990,7 +980,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				}
 			} );
 
-			test.it( 'Ensure we are not logged in as anyone', async function() {
+			test.before( async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
@@ -1002,11 +992,10 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 
 			test.it( 'Can visit the start page', async function() {
-				const startPage = await StartPage.Visit(
+				await StartPage.Visit(
 					driver,
 					StartPage.getStartURL( { culture: locale, flow: 'business' } )
 				);
-				await startPage.setABTestControlGroupsInLocalStorage( { flow: 'business' } );
 			} );
 
 			test.it( 'Can see the about page and accept defaults', async function() {
@@ -1163,16 +1152,12 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		const blogName = dataHelper.getNewBlogName();
 		let newBlogAddress = '';
 
-		test.it( 'Ensure we are not logged in as anyone', async function() {
+		test.before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.it( 'Can visit the start page', async function() {
-			const startPage = await StartPage.Visit(
-				driver,
-				StartPage.getStartURL( { culture: locale } )
-			);
-			await startPage.setABTestControlGroupsInLocalStorage();
+			await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale } ) );
 		} );
 
 		test.it( 'Can see the about page and accept defaults', async function() {
@@ -1274,7 +1259,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const expectedCurrencySymbol = 'A$';
 			let chosenThemeName = '';
 
-			test.it( 'Ensure we are not logged in as anyone', async function() {
+			test.before( async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
@@ -1288,7 +1273,7 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			test.it( 'Can see the themes page and select premium theme ', async function() {
 				const themesPage = await ThemesPage.Visit( driver, ThemesPage.getStartURL() );
 				await themesPage.waitUntilThemesLoaded();
-				await themesPage.setABTestControlGroupsInLocalStorage( { flow: 'with-theme' } );
+				await themesPage.setABTestControlGroupsInLocalStorage();
 				await themesPage.showOnlyPremiumThemes();
 				chosenThemeName = await themesPage.getFirstThemeName();
 				return await themesPage.selectNewTheme();
@@ -1399,4 +1384,100 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			} );
 		}
 	);
+
+	test.describe( 'Sign up for free subdomain site @parallel', function() {
+		this.bailSuite( true );
+
+		const blogName = dataHelper.getNewBlogName();
+		const expectedDomainName = `${ blogName }.art.blog`;
+
+		test.before( async function() {
+			await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		test.it( 'Can enter the subdomains flow and select design type', async function() {
+			const signupFlow = 'subdomain';
+			const startPage = await StartPage.Visit(
+				driver,
+				StartPage.getStartURL( {
+					culture: locale,
+					flow: signupFlow,
+					query: 'vertical=a8c.1'
+				} )
+			);
+			await startPage.setABTestControlGroupsInLocalStorage( { flow: signupFlow} );
+			const designTypePage = await DesignTypePage.Expect( driver );
+			return await designTypePage.selectFirstDesignType();
+		} );
+
+		test.it(
+			'Can see the choose a theme page as the starting page, and select the first theme',
+			async function() {
+				const chooseAThemePage = await ChooseAThemePage.Expect( driver );
+				return await chooseAThemePage.selectFirstTheme();
+			}
+		);
+
+		test.it(
+			'Can then see the domains page, and Can search for a blog name, can see and select a free .art.blog address in the results',
+			async function() {
+				const findADomainComponent = await FindADomainComponent.Expect( driver );
+				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
+					expectedDomainName,
+					blogName
+				);
+				let actualAddress = await findADomainComponent.freeBlogAddress();
+				assert(
+					expectedDomainName.indexOf( actualAddress ) > -1,
+					`The displayed blog address: '${ actualAddress }' was not the expected addresses: '${ expectedDomainName }'`
+				);
+				return await findADomainComponent.selectFreeAddress();
+			}
+		);
+
+		test.it( 'Can then see the plans page and pick the free plan', async function() {
+			const pickAPlanPage = await PickAPlanPage.Expect( driver );
+			return await pickAPlanPage.selectFreePlan();
+		} );
+
+		test.it( 'Can then enter account details and continue', async function() {
+			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
+			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+			return await createYourAccountPage.enterAccountDetailsAndSubmit(
+				emailAddress,
+				blogName,
+				passwordForTestAccounts
+			);
+		} );
+
+		test.it(
+			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			async function() {
+				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
+				await signupProcessingPage.waitForContinueButtonToBeEnabled();
+				return await signupProcessingPage.continueAlong();
+			}
+		);
+
+		test.it(
+			'We are on the view blog page, can see trampoline, our URL and title',
+			async function() {
+				const viewBlogPage = await ViewBlogPage.Expect( driver );
+				await viewBlogPage.waitForTrampolineWelcomeMessage();
+				let displayed = await viewBlogPage.isTrampolineWelcomeDisplayed();
+				let url = await viewBlogPage.urlDisplayed();
+				assert.strictEqual(
+					url,
+					'http://' + expectedDomainName + '/',
+					'The displayed URL on the view blog page is not as expected'
+				);
+				return assert.strictEqual(
+					displayed,
+					true,
+					'The trampoline welcome message is not displayed'
+				);
+			}
+		);
+	} );
 } );

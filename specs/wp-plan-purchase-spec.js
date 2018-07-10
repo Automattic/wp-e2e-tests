@@ -33,7 +33,7 @@ test.describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, functi
 		this.bailSuite( true );
 
 		test.before( async function() {
-			return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.it( 'Login and Select My Site', async function() {

@@ -43,7 +43,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			'If you have the same problem for a long time, maybe it’s not a problem. Maybe it’s a fact..\n— Itzhak Rabin';
 
 		test.before( async function() {
-			return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		// Create image file for upload
@@ -224,7 +224,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			'Few people know how to take a walk. The qualifications are endurance, plain clothes, old shoes, an eye for nature, good humor, vast curiosity, good speech, good silence and nothing too much.\n— Ralph Waldo Emerson\n';
 
 		test.before( async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.it( 'Can log in', async function() {
@@ -317,7 +317,7 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		const postPassword = 'e2e' + new Date().getTime().toString();
 
 		test.before( async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.describe( 'Publish a Password Protected Page', function() {
@@ -596,8 +596,8 @@ test.describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			email: 'test@wordpress.com',
 		};
 
-		test.it( 'Delete Cookies and Local Storage', async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		test.before( async function() {
+			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		test.it( 'Can log in', async function() {
