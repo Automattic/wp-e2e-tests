@@ -32,7 +32,7 @@ describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 	this.timeout( mochaTimeOut );
 
 	before( async function() {
-		await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		await driverManager.ensureNotLoggedIn( driver );
 
 		let testEnvironment = 'WordPress.com';
 		let testName = `Reader [${ global.browserName }] [${ screenSize }]`;
@@ -69,8 +69,8 @@ describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 
 			describe( 'Delete the new comment', function() {
 				before( async function() {
-					await driverManager.clearCookiesAndDeleteLocalStorage( driver );
-					driver.get( dataHelper.configGet( 'calypsoBaseURL' ) );
+					await driverManager.ensureNotLoggedIn( driver );
+					await driver.get( dataHelper.configGet( 'calypsoBaseURL' ) );
 				} );
 
 				step( 'Can log in as test site owner', async function() {

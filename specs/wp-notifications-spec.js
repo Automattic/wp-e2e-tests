@@ -40,7 +40,7 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 	let commentedPostTitle;
 
 	test.before( async function() {
-		await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		await driverManager.ensureNotLoggedIn( driver );
 
 		let testEnvironment = 'WordPress.com';
 		let testName = `Notifications [${ global.browserName }] [${ screenSize }]`;

@@ -52,7 +52,7 @@ test.describe(
 
 		test.describe( 'Logging In and Out:', function() {
 			test.before( async function() {
-				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			test.describe( 'Can Log In', function() {
@@ -407,7 +407,7 @@ test.describe( `[${ host }] User Agent: (${ screenSize }) @parallel @jetpack`, f
 	this.bailSuite( true );
 
 	test.before( async function() {
-		await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		await driverManager.ensureNotLoggedIn( driver );
 	} );
 
 	test.it( 'Can see the correct user agent set', async function() {
