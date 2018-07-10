@@ -73,5 +73,8 @@
 		// Common top-of-file requires, expressions between external, interal
 		"vars-on-top": 1,
 		"yoda": 0
-	}
+	},
+  	"globals": {
+	  "step": false
+  	}
 }

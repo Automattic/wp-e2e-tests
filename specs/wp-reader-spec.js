@@ -1,6 +1,5 @@
 /** @format */
 
-import test from 'selenium-webdriver/testing';
 import config from 'config';
 import assert from 'assert';
 
@@ -24,16 +23,15 @@ let driver;
 
 let eyes = eyesHelper.eyesSetup( true );
 
-test.before( async function() {
+before( async function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = await driverManager.startBrowser();
 } );
 
-test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
-	this.bailSuite( true );
+describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 	this.timeout( mochaTimeOut );
 
-	test.before( async function() {
+	before( async function() {
 		await driverManager.ensureNotLoggedIn( driver );
 
 		let testEnvironment = 'WordPress.com';
@@ -41,19 +39,18 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 	} );
 
-	test.describe( 'Log in as commenting user', function() {
-		test.it( 'Can log in as commenting user', async function() {
+	describe( 'Log in as commenting user', function() {
+		step( 'Can log in as commenting user', async function() {
 			this.loginFlow = new LoginFlow( driver, 'commentingUser' );
 			return await this.loginFlow.login();
 		} );
 
-		test.describe( 'Leave a comment on the latest post in the Reader', function() {
-			test.it( 'Can see the Reader stream', async function() {
-				const readerPage = await ReaderPage.Expect( driver );
-				return await readerPage.waitForPage();
+		describe( 'Leave a comment on the latest post in the Reader', function() {
+			step( 'Can see the Reader stream', async function() {
+				await ReaderPage.Expect( driver );
 			} );
 
-			test.it( 'The latest post is on the expected test site', async function() {
+			step( 'The latest post is on the expected test site', async function() {
 				const testSiteForNotifications = dataHelper.configGet( 'testSiteForNotifications' );
 				const readerPage = await ReaderPage.Expect( driver );
 				let siteOfLatestPost = await readerPage.siteOfLatestPost();
@@ -64,25 +61,25 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 				);
 			} );
 
-			test.it( 'Can comment on the latest post', async function() {
+			step( 'Can comment on the latest post', async function() {
 				this.comment = dataHelper.randomPhrase();
 				const readerPage = await ReaderPage.Expect( driver );
 				await readerPage.commentOnLatestPost( this.comment, eyes );
 			} );
 
-			test.describe( 'Delete the new comment', function() {
-				test.before( async function() {
+			describe( 'Delete the new comment', function() {
+				before( async function() {
 					await driverManager.ensureNotLoggedIn( driver );
 					await driver.get( dataHelper.configGet( 'calypsoBaseURL' ) );
 				} );
 
-				test.it( 'Can log in as test site owner', async function() {
+				step( 'Can log in as test site owner', async function() {
 					this.loginFlow = new LoginFlow( driver, 'notificationsUser' );
 					return await this.loginFlow.login();
 				} );
 
-				test.it(
-					'Can delete the new comment (and wait for UNDO grace period so it is actually deleted)',
+				step(
+					'Can delete the new comment (and wait for UNDO grace period so step is actually deleted)',
 					async function() {
 						await eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
 						this.navBarComponent = await NavBarComponent.Expect( driver );
@@ -95,8 +92,8 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 					}
 				);
 
-				test.describe( 'Manage Followed Sites', function() {
-					test.it( 'Can see the Manage page', async function() {
+				describe( 'Manage Followed Sites', function() {
+					step( 'Can see the Manage page', async function() {
 						this.readerManagePage = await ReaderManagePage.Visit( driver );
 						await this.readerManagePage.waitForSites();
 						await eyesHelper.eyesScreenshot(
@@ -117,7 +114,7 @@ test.describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 		} );
 	} );
 
-	test.after( async function() {
+	after( async function() {
 		await eyesHelper.eyesClose( eyes );
 	} );
 } );
