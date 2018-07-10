@@ -32,7 +32,7 @@ test.describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @je
 		let editorPage;
 
 		test.before( async function() {
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			await driverManager.ensureNotLoggedIn( driver );
 			const loginFlow = new LoginFlow( driver );
 			await loginFlow.loginAndStartNewPage();
 			editorPage = await EditorPage.Expect( driver );

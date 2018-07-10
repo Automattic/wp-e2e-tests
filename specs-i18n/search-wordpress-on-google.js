@@ -50,8 +50,7 @@ function doGoogleAdSearch( search_params ) {
 		} );
 
 		test.beforeEach( async function() {
-			await driver.manage().deleteAllCookies();
-			await driverManager.deleteLocalStorage( driver );
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
 		test.it( 'Google search contains our ad', async function() {

@@ -39,7 +39,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 			this.themeSearchName = 'twenty';
 			this.expectedTheme = 'Twenty F';
 
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			await driverManager.ensureNotLoggedIn( driver );
 
 			this.loginFlow = new LoginFlow( driver, 'multiSiteUser' );
 			await this.loginFlow.loginAndSelectAllSites();
@@ -107,7 +107,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 			this.themeSearchName = 'twenty';
 			this.expectedTheme = 'Twenty F';
 
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			await driverManager.ensureNotLoggedIn( driver );
 
 			this.loginFlow = new LoginFlow( driver, 'multiSiteUser' );
 			await this.loginFlow.loginAndSelectAllSites();
