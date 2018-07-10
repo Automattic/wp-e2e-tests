@@ -1396,16 +1396,14 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		} );
 
 		test.it( 'Can enter the subdomains flow and select design type', async function() {
-			const signupFlow = 'subdomain';
-			const startPage = await StartPage.Visit(
+			await StartPage.Visit(
 				driver,
 				StartPage.getStartURL( {
 					culture: locale,
-					flow: signupFlow,
-					query: 'vertical=a8c.1'
+					flow: 'subdomain',
+					query: 'vertical=a8c.1',
 				} )
 			);
-			await startPage.setABTestControlGroupsInLocalStorage( { flow: signupFlow} );
 			const designTypePage = await DesignTypePage.Expect( driver );
 			return await designTypePage.selectFirstDesignType();
 		} );
