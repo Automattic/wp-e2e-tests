@@ -217,7 +217,7 @@ test.describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		}
 	);
 
-	test.describe(
+	test.describe.only(
 		'Inviting New User as a Viewer of a WordPress.com Private Site: @parallel',
 		function() {
 			this.bailSuite( true );

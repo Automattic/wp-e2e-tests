@@ -38,7 +38,7 @@ elif [ "$CIRCLE_BRANCH" == "master" ]; then
 fi
 
 if [ "$liveBranches" == "true" ]; then
-  TESTARGS+=" -b $branchName"
+  TESTARGS+=" -b $hash"
 fi
 
 # If on CI and the -x flag is not yet set, set it
