@@ -136,9 +136,9 @@ instead of:
 new StartPage( driver, true, 'en', '', true, '' ).displayed();
 ```
 
-## Nesting test.it blocks
+## Nesting step blocks
 
-Since we have a bail suite option, it is not necessary to nest `test.it` blocks.
+Since we have a bail suite option, it is not necessary to nest `step` blocks.
 
 This is a general structure of an e2e test scenario:
 
@@ -167,12 +167,12 @@ describe(
 );
 ```
 
-**Note:** The `test.describe` blocks shouldn't be `async`
+**Note:** The `describe` blocks shouldn't be `async`
 
 
-## Catching errors in a test.it block
+## Catching errors in a step block
 
-Sometimes we don't want a `test.it` block to fail on error - say if we're cleaning up after doing an action and it doesn't matter what happens. As we use async methods using a standard try/catch won't work as the promise itself will still fail. Instead, return an async method that catches the error result:
+Sometimes we don't want a `step` block to fail on error - say if we're cleaning up after doing an action and it doesn't matter what happens. As we use async methods using a standard try/catch won't work as the promise itself will still fail. Instead, return an async method that catches the error result:
 ```
 step( 'Can delete our newly created account', async function() {
 	return ( async () => {

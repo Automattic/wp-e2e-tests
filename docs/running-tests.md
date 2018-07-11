@@ -28,7 +28,7 @@ Note: you can also change the spec _temporarily_ the use the `.only` syntax so i
 
 eg.
 
-`test.describe.only( 'Logging In and Out:', function() {`
+`describe.only( 'Logging In and Out:', function() {`
 
 ## To run with different modes
 
