@@ -1,6 +1,5 @@
 /** @format */
 
-import test from 'selenium-webdriver/testing';
 import config from 'config';
 
 import * as driverManager from '../lib/driver-manager';
@@ -29,55 +28,53 @@ const host = dataHelper.getJetpackHost();
 
 let driver;
 
-test.before( async function() {
+before( async function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = await driverManager.startBrowser();
 } );
 
-test.describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function() {
+describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Purchase Premium Plan:', function() {
-		this.bailSuite( true );
-
-		test.before( async function() {
+	describe( 'Purchase Premium Plan:', function() {
+		before( async function() {
 			return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.it( 'Can log into WordPress.com', async function() {
+		step( 'Can log into WordPress.com', async function() {
 			this.loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
 			return await this.loginFlow.login();
 		} );
 
-		test.it( 'Can log into site via Jetpack SSO', async function() {
+		step( 'Can log into site via Jetpack SSO', async function() {
 			return await this.loginFlow.login( { jetpackSSO: true } );
 		} );
 
-		test.it( 'Can open Jetpack dashboard', async function() {
+		step( 'Can open Jetpack dashboard', async function() {
 			await WPAdminSidebar.refreshIfJNError( driver );
 			const wpAdminSidebar = await WPAdminSidebar.Expect( driver );
 			return await wpAdminSidebar.selectJetpack();
 		} );
 
-		test.it( 'Can find and click Upgrade nudge button', async function() {
+		step( 'Can find and click Upgrade nudge button', async function() {
 			await driverHelper.refreshIfJNError( driver );
 			const jetpackDashboard = await WPAdminJetpackPage.Expect( driver );
 			await driver.sleep( 3000 ); // The nudge buttons are loaded after the page, and there's no good loaded status indicator to key off of
 			return await jetpackDashboard.clickUpgradeNudge();
 		} );
 
-		test.it( 'Can click the Proceed button', async function() {
+		step( 'Can click the Proceed button', async function() {
 			const jetpackPlanSalesPage = await JetpackPlanSalesPage.Expect( driver );
 			await driver.sleep( 3000 ); // The upgrade buttons are loaded after the page, and there's no good loaded status indicator to key off of
 			return await jetpackPlanSalesPage.clickPurchaseButton();
 		} );
 
-		test.it( 'Can then see secure payment component', async function() {
+		step( 'Can then see secure payment component', async function() {
 			return await SecurePaymentComponent.Expect( driver );
 		} );
 
 		// Remove all items from basket for clean up
-		test.after( async function() {
+		after( async function() {
 			await ReaderPage.Visit( driver );
 
 			const navbarComponent = await NavBarComponent.Expect( driver );
