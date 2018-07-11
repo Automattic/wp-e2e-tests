@@ -46,7 +46,7 @@
     "junit-viewer": "4.9.6",
     "lodash": "^4.13.1",
     "mailosaur": "4.0.0",
-    "mocha": "github:Automattic/mocha#90a9db1",
+    "mocha": "^5.2.0",
     "mocha-steps": "^1.1.0",
     "node-slack-upload": "1.2.1",
     "png-itxt": "1.3.0",

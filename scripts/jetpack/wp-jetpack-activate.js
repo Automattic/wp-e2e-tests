@@ -1,6 +1,5 @@
 /** @format */
 
-import test from 'selenium-webdriver/testing';
 import config from 'config';
 
 import * as driverManager from '../../lib/driver-manager';
@@ -23,54 +22,52 @@ const host = dataHelper.getJetpackHost();
 
 var driver;
 
-test.before( function() {
+before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 } );
 
-test.describe( `[${ host }] Jetpack Connection: (${ screenSize }) @jetpack`, function() {
+describe( `[${ host }] Jetpack Connection: (${ screenSize }) @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Activate Jetpack Plugin:', function() {
-		this.bailSuite( true );
-
-		test.before( async function() {
+	describe( 'Activate Jetpack Plugin:', function() {
+		before( async function() {
 			return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.it( 'Can log into WordPress.com', async function() {
+		step( 'Can log into WordPress.com', async function() {
 			this.loginFlow = new LoginFlow( driver, 'jetpackUserCI' );
 			return await this.loginFlow.login();
 		} );
 
-		test.it( 'Can log into site via wp-login.php', async function() {
+		step( 'Can log into site via wp-login.php', async function() {
 			return await this.loginFlow.login( { jetpackDIRECT: true } );
 		} );
 
-		test.it( 'Can open Plugins page', async function() {
+		step( 'Can open Plugins page', async function() {
 			await WPAdminSidebar.refreshIfJNError( driver );
 			this.wpAdminSidebar = await WPAdminSidebar.Expect( driver );
 			return await this.wpAdminSidebar.selectPlugins();
 		} );
 
-		test.it( 'Can activate Jetpack', async function() {
+		step( 'Can activate Jetpack', async function() {
 			await driverHelper.refreshIfJNError( driver );
 			this.wpAdminPlugins = await WPAdminPluginsPage.Expect( driver );
 			return await this.wpAdminPlugins.activateJetpack();
 		} );
 
-		test.it( 'Can connect Jetpack', async function() {
+		step( 'Can connect Jetpack', async function() {
 			this.wpAdminPlugins.connectJetpackAfterActivation();
 			this.jetpackAuthorizePage = await JetpackAuthorizePage.Expect( driver );
 			await this.jetpackAuthorizePage.approveConnection();
 		} );
 
-		test.it( 'Can select Free plan', async function() {
+		step( 'Can select Free plan', async function() {
 			const pickAPlanPage = await PickAPlanPage.Expect( driver );
 			return await pickAPlanPage.selectFreePlan();
 		} );
 
-		test.it( 'Can activate recommended features', async function() {
+		step( 'Can activate recommended features', async function() {
 			await driverHelper.refreshIfJNError( driver );
 			this.jetpackDashboard = await WPAdminJetpackPage.Expect( driver );
 			return await this.jetpackDashboard.activateRecommendedFeatures();

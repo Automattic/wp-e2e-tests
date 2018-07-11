@@ -1,7 +1,6 @@
 /** @format */
 
 import assert from 'assert';
-import test from 'selenium-webdriver/testing';
 
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
@@ -26,20 +25,19 @@ let driver;
 
 let eyes = eyesHelper.eyesSetup( false );
 
-test.before( async function() {
+before( async function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = await driverManager.startBrowser();
 } );
 
-test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`, function() {
+describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`, function() {
 	this.timeout( mochaTimeOut );
-	this.bailSuite( true );
 
 	const commentingUser = dataHelper.getAccountConfig( 'commentingUser' )[ 0 ];
 	const comment = dataHelper.randomPhrase() + ' TBD';
 	let commentedPostTitle;
 
-	test.before( async function() {
+	before( async function() {
 		await driverManager.ensureNotLoggedIn( driver );
 
 		let testEnvironment = 'WordPress.com';
@@ -47,12 +45,12 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 	} );
 
-	test.it( 'Can log in as commenting user', async function() {
+	step( 'Can log in as commenting user', async function() {
 		const loginFlow = new LoginFlow( driver, 'commentingUser' );
 		return await loginFlow.login();
 	} );
 
-	test.it( 'Can view the first post', async function() {
+	step( 'Can view the first post', async function() {
 		const testSiteForInvitationsURL = `https://${ dataHelper.configGet(
 			'testSiteForNotifications'
 		) }`;
@@ -60,17 +58,17 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 		return await viewBlogPage.viewFirstPost();
 	} );
 
-	test.it( 'Can see the first post page and capture the title', async function() {
+	step( 'Can see the first post page and capture the title', async function() {
 		const viewPostPage = await ViewPostPage.Expect( driver );
 		commentedPostTitle = await viewPostPage.postTitle();
 	} );
 
-	test.it( 'Can leave a comment', async function() {
+	step( 'Can leave a comment', async function() {
 		const viewPostPage = await ViewPostPage.Expect( driver );
 		return await viewPostPage.leaveAComment( comment );
 	} );
 
-	test.it( 'Can see the comment', async function() {
+	step( 'Can see the comment', async function() {
 		const viewPostPage = await ViewPostPage.Expect( driver );
 		const shown = await viewPostPage.commentEventuallyShown( comment );
 		if ( shown === false ) {
@@ -80,19 +78,19 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 		}
 	} );
 
-	test.it( 'Can log in as notifications user', async function() {
+	step( 'Can log in as notifications user', async function() {
 		const loginFlow = new LoginFlow( driver, 'notificationsUser' );
 		return await loginFlow.login();
 	} );
 
-	test.it( 'Can open notifications tab with keyboard shortcut', async function() {
+	step( 'Can open notifications tab with keyboard shortcut', async function() {
 		const navBarComponent = await NavBarComponent.Expect( driver );
 		await navBarComponent.openNotificationsShortcut();
 		const present = await navBarComponent.confirmNotificationsOpen();
 		return assert( present, 'Notifications tab is not open' );
 	} );
 
-	test.it( 'Can see the notification of the comment', async function() {
+	step( 'Can see the notification of the comment', async function() {
 		const expectedContent = `${ commentingUser } commented on ${ commentedPostTitle }\n${ comment }`;
 		const navBarComponent = await NavBarComponent.Expect( driver );
 		await navBarComponent.openNotifications();
@@ -107,7 +105,7 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 		);
 	} );
 
-	test.it(
+	step(
 		'Can delete the comment (and wait for UNDO grace period so it is actually deleted)',
 		async function() {
 			const notificationsComponent = await NotificationsComponent.Expect( driver );
@@ -119,7 +117,7 @@ test.describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`
 		}
 	);
 
-	test.after( async function() {
+	after( async function() {
 		await eyesHelper.eyesClose( eyes );
 	} );
 } );

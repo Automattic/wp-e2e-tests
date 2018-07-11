@@ -4,7 +4,6 @@
  * @format
  */
 
-import test from 'selenium-webdriver/testing';
 import config from 'config';
 
 /**
@@ -22,14 +21,14 @@ const locale = driverManager.currentLocale();
 
 let driver;
 
-test.before( function() {
+before( function() {
 	this.timeout( startBrowserTimeoutMS );
 } );
 
-test.describe( `Logged out homepage redirect test @i18n (${ locale })`, function() {
+describe( `Logged out homepage redirect test @i18n (${ locale })`, function() {
 	this.timeout( mochaTimeOut );
 
-	test.it( `should redirect to the correct url for wordpress.com (${ locale })`, async function() {
+	step( `should redirect to the correct url for wordpress.com (${ locale })`, async function() {
 		driver = await driverManager.startBrowser();
 
 		// No culture here implies 'en'

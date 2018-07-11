@@ -1,6 +1,5 @@
 /** @format */
 
-import test from 'selenium-webdriver/testing';
 import config from 'config';
 
 const fs = require( 'fs' );
@@ -35,22 +34,21 @@ function writeJNCredentials( url, username, password ) {
 	} );
 }
 
-test.before( function() {
+before( function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = driverManager.startBrowser();
 	return driverManager.clearCookiesAndDeleteLocalStorage( driver );
 } );
 
-test.describe( `[${ host }] Jurassic Ninja Connection: (${ screenSize }) @jetpack`, function() {
+describe( `[${ host }] Jurassic Ninja Connection: (${ screenSize }) @jetpack`, function() {
 	this.timeout( mochaTimeOut );
-	this.bailSuite( true );
 
-	test.it( 'Can connect from WP Admin', async function() {
+	step( 'Can connect from WP Admin', async function() {
 		this.jnFlow = new JetpackConnectFlow( driver, 'jetpackUserJN', 'jetpackMaster' );
 		return await this.jnFlow.connectFromWPAdmin();
 	} );
 
-	test.it( 'Can logout from WP admin', async function() {
+	step( 'Can logout from WP admin', async function() {
 		const wpDashboard = await WPAdminDashboardPage.Visit(
 			driver,
 			WPAdminDashboardPage.getUrl( this.jnFlow.url )
@@ -58,11 +56,11 @@ test.describe( `[${ host }] Jurassic Ninja Connection: (${ screenSize }) @jetpac
 		return wpDashboard.logout();
 	} );
 
-	test.it( 'Can save JN credentials to file', async function() {
+	step( 'Can save JN credentials to file', async function() {
 		writeJNCredentials( this.jnFlow.url, 'demo', this.jnFlow.password );
 	} );
 
-	test.it( 'Can remove diconnected sites', async function() {
+	step( 'Can remove diconnected sites', async function() {
 		await this.jnFlow.removeSites();
 	} );
 } );
