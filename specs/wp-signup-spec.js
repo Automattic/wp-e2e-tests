@@ -41,6 +41,7 @@ import SecurePaymentComponent from '../lib/components/secure-payment-component.j
 import NavBarComponent from '../lib/components/nav-bar-component';
 import SideBarComponent from '../lib/components/sidebar-component';
 import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component';
+import NoSitesComponent from '../lib/components/no-sites-component';
 
 import * as SlackNotifier from '../lib/slack-notifier';
 
@@ -1477,5 +1478,50 @@ test.describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				);
 			}
 		);
+	} );
+
+	describe( 'Sign up for an account only (no site) @parallel', function() {
+		const userName = dataHelper.getNewBlogName();
+
+		before( async function() {
+			await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		step( 'Can enter the account flow and see the account details page', async function() {
+			await StartPage.Visit(
+				driver,
+				StartPage.getStartURL( {
+					culture: locale,
+					flow: 'account',
+				} )
+			);
+			await CreateYourAccountPage.Expect( driver );
+		} );
+
+		step( 'Can then enter account details and continue', async function() {
+			const emailAddress = dataHelper.getEmailAddress( userName, signupInboxId );
+			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+			return await createYourAccountPage.enterAccountDetailsAndSubmit(
+				emailAddress,
+				userName,
+				passwordForTestAccounts
+			);
+		} );
+
+		step(
+			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			async function() {
+				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
+				await signupProcessingPage.waitForContinueButtonToBeEnabled();
+				return await signupProcessingPage.continueAlong();
+			}
+		);
+
+		step( 'We are then on the Reader page and have no sites', async function() {
+			await ReaderPage.Expect( driver );
+			const navBarComponent = await NavBarComponent.Expect( driver );
+			await navBarComponent.clickMySites();
+			await NoSitesComponent.Expect( driver );
+		} );
 	} );
 } );
