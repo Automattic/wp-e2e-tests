@@ -1,6 +1,5 @@
 /** @format */
 
-import test from 'selenium-webdriver/testing';
 import config from 'config';
 import assert from 'assert';
 
@@ -21,38 +20,36 @@ const host = dataHelper.getJetpackHost();
 
 let driver;
 
-test.before( async function() {
+before( async function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = await driverManager.startBrowser();
 } );
 
-test.describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, function() {
+describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
-	test.describe( 'Comparing Plans:', function() {
-		this.bailSuite( true );
-
-		test.before( async function() {
-			return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+	describe( 'Comparing Plans:', function() {
+		before( async function() {
+			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.it( 'Login and Select My Site', async function() {
+		step( 'Login and Select My Site', async function() {
 			const loginFlow = new LoginFlow( driver );
 			return await loginFlow.loginAndSelectMySite();
 		} );
 
-		test.it( 'Can Select Plans', async function() {
+		step( 'Can Select Plans', async function() {
 			const statsPage = await StatsPage.Expect( driver );
 			await statsPage.waitForPage();
 			const sideBarComponent = await SidebarComponent.Expect( driver );
 			return await sideBarComponent.selectPlan();
 		} );
 
-		test.it( 'Can See Plans', async function() {
+		step( 'Can See Plans', async function() {
 			return await PlansPage.Expect( driver );
 		} );
 
-		test.it( 'Can Compare Plans', async function() {
+		step( 'Can Compare Plans', async function() {
 			const plansPage = await PlansPage.Expect( driver );
 			if ( host === 'WPCOM' ) {
 				await plansPage.openPlansTab();
@@ -65,7 +62,7 @@ test.describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, functi
 		} );
 
 		if ( host === 'WPCOM' ) {
-			test.it( 'Can Verify Current Plan', async function() {
+			step( 'Can Verify Current Plan', async function() {
 				const planName = 'premium';
 				const plansPage = await PlansPage.Expect( driver );
 				const present = await plansPage.confirmCurrentPlan( planName );

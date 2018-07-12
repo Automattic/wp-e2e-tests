@@ -1,6 +1,5 @@
 /** @format */
 
-import test from 'selenium-webdriver/testing';
 import config from 'config';
 
 import * as driverManager from '../lib/driver-manager.js';
@@ -18,12 +17,12 @@ const test_data = localization_data[ locale ];
 
 let driver;
 
-test.before( async function() {
+before( async function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = await driverManager.startBrowser();
 } );
 
-test.after( function( done ) {
+after( function( done ) {
 	// Wait between tests to not overload Google
 	let wait_seconds = 10;
 	this.timeout( ( wait_seconds + 2 ) * 1e3 );
@@ -39,22 +38,19 @@ function doGoogleAdSearch( search_params ) {
 		' from ' +
 		search_params.comment_location;
 
-	test.describe( description + ' @i18n (' + locale + ')', function() {
+	describe( description + ' @i18n (' + locale + ')', function() {
 		this.timeout( mochaTimeOut );
-		this.bailSuite( true );
-
-		test.before( function() {
+		before( function() {
 			if ( locale === 'tr' || locale === 'ar' || locale === 'zh-tw' ) {
 				this.skip( 'Currently no advertising in this locale' );
 			}
 		} );
 
-		test.beforeEach( async function() {
-			await driver.manage().deleteAllCookies();
-			await driverManager.deleteLocalStorage( driver );
+		beforeEach( async function() {
+			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 		} );
 
-		test.it( 'Google search contains our ad', async function() {
+		step( 'Google search contains our ad', async function() {
 			const googleFlow = new GoogleFlow( driver );
 			await googleFlow.resize( 'desktop' );
 			const that = this;
@@ -66,14 +62,14 @@ function doGoogleAdSearch( search_params ) {
 			}
 		} );
 
-		test.it( 'Our landing page exists', async function() {
+		step( 'Our landing page exists', async function() {
 			const that = this;
 			let url = await this.searchPage.getAdUrl();
 			that.landingPage = await LandingPage.Visit( driver, url );
 			return await that.landingPage.checkURL();
 		} );
 
-		test.it( 'Localized string found on landing page', async function() {
+		step( 'Localized string found on landing page', async function() {
 			await this.landingPage.checkLocalizedString( test_data.wpcom_landing_page_string );
 		} );
 	} );

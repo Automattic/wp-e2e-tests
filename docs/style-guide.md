@@ -35,7 +35,7 @@ All pages have asynchronous functions. Constructors for pages can't be asynchron
 Don't do:
 
 ```
-test.it( 'Can select domain only from the domain first choice page', function() {
+step( 'Can select domain only from the domain first choice page', function() {
 	const domainFirstChoicePage = new DomainFirstPage( driver );
 	return await domainFirstChoicePage.chooseJustBuyTheDomain();
 } );
@@ -44,7 +44,7 @@ test.it( 'Can select domain only from the domain first choice page', function() 
 Instead you should do this if you're expecting a page to appear during a flow:
 
 ```
-test.it( 'Can select domain only from the domain first choice page', function() {
+step( 'Can select domain only from the domain first choice page', function() {
 	const domainFirstChoicePage = await DomainFirstPage.Expect( driver );
 	return await domainFirstChoicePage.chooseJustBuyTheDomain();
 } );
@@ -54,7 +54,7 @@ or this to directly visit a page:
 
 
 ```
-test.it( 'Can select domain only from the domain first choice page', function() {
+step( 'Can select domain only from the domain first choice page', function() {
 	const domainFirstChoicePage = await DomainFirstPage.Visit( driver );
 	return await domainFirstChoicePage.chooseJustBuyTheDomain();
 } );
@@ -69,7 +69,7 @@ It is preferred to use `const`, or `lets`, instead of `this.`, as the scope is n
 For example:
 
 ```
-test.it( 'Can select domain only from the domain first choice page', function() {
+step( 'Can select domain only from the domain first choice page', function() {
 	this.domainFirstChoicePage = await DomainFirstPage.Expect( driver );
 	return await this.domainFirstChoicePage.chooseJustBuyTheDomain();
 } );
@@ -78,7 +78,7 @@ test.it( 'Can select domain only from the domain first choice page', function() 
 can use a `const` instead:
 
 ```
-test.it( 'Can select domain only from the domain first choice page', function() {
+step( 'Can select domain only from the domain first choice page', function() {
 	const domainFirstChoicePage = new DomainFirstPage( driver );
 	return await domainFirstChoicePage.chooseJustBuyTheDomain();
 } );
@@ -91,7 +91,7 @@ Passing arrow functions (“lambdas”) to Mocha is discouraged. Lambdas lexical
 Avoid:
 
 ```
-test.it( 'We can set the sandbox cookie for payments', () => {
+step( 'We can set the sandbox cookie for payments', () => {
 	const wPHomePage = await WPHomePage.Visit( driver );
 	await wPHomePage.checkURL( locale );
 } );
@@ -100,7 +100,7 @@ test.it( 'We can set the sandbox cookie for payments', () => {
 instead:
 
 ```
-test.it( 'We can set the sandbox cookie for payments', async function() {
+step( 'We can set the sandbox cookie for payments', async function() {
 	const wPHomePage = await WPHomePage.Visit( driver );
 	await wPHomePage.checkURL( locale );
 } );
@@ -136,45 +136,45 @@ instead of:
 new StartPage( driver, true, 'en', '', true, '' ).displayed();
 ```
 
-## Nesting test.it blocks
+## Nesting step blocks
 
-Since we have a bail suite option, it is not necessary to nest `test.it` blocks.
+Since we have a bail suite option, it is not necessary to nest `step` blocks.
 
 This is a general structure of an e2e test scenario:
 
 ```
-test.describe(
+describe(
 	'An e2e test scenario @parallel',
 	function() {
-		this.bailSuite( true );
 		
-		test.before( async function() {
+		
+		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		test.it( 'First step', async function() {
+		step( 'First step', async function() {
 			// Do something with a page
 		} );
 
-		test.it( 'Second step', async function() {
+		step( 'Second step', async function() {
 			// Do something next - this will only execute if the first step doesn't fail
 		} );
 		
-		test.after( async function() {
+		after( async function() {
 			// Do some cleanup
 		} );	
 	}
 );
 ```
 
-**Note:** The `test.describe` blocks shouldn't be `async`
+**Note:** The `describe` blocks shouldn't be `async`
 
 
-## Catching errors in a test.it block
+## Catching errors in a step block
 
-Sometimes we don't want a `test.it` block to fail on error - say if we're cleaning up after doing an action and it doesn't matter what happens. As we use async methods using a standard try/catch won't work as the promise itself will still fail. Instead, return an async method that catches the error result:
+Sometimes we don't want a `step` block to fail on error - say if we're cleaning up after doing an action and it doesn't matter what happens. As we use async methods using a standard try/catch won't work as the promise itself will still fail. Instead, return an async method that catches the error result:
 ```
-test.it( 'Can delete our newly created account', async function() {
+step( 'Can delete our newly created account', async function() {
 	return ( async () => {
 		const closeAccountPage = await new CloseAccountPage( driver );
 		await closeAccountPage.chooseCloseAccount();

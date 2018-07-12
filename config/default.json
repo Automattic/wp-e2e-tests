@@ -62,11 +62,11 @@
 		"checklistThankYouForFreeUser",
 		"checklistThankYouForPaidUser",
 		"springSale30PercentOff",
-		"multiyearSubscriptions",
 		"jetpackSignupGoogleTop",
-		"domainSuggestionKrakenV321",
+		"domainSuggestionKrakenV322",
 		"domainSearchTLDFilterPlacement",
 		"staleCartNotice",
+		"aboutSuggestionMatches",
 		"includeDotBlogSubdomain"
 	],
 	"overrideABTests": [
@@ -75,11 +75,11 @@
 		[ "checklistThankYouForFreeUser_20171204", "hide" ],
 		[ "checklistThankYouForPaidUser_20171204", "hide" ],
 		[ "springSale30PercentOff_20180413", "control" ],
-		[ "multiyearSubscriptions_20180601", "hide" ],
 		[ "jetpackSignupGoogleTop_20180427", "original" ],
-		[ "domainSuggestionKrakenV321_20180524", "domainsbot" ],
+		[ "domainSuggestionKrakenV322_20180709", "domainsbot" ],
 		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
 		[ "staleCartNotice_20180618", "siteDeservesBoost" ],
+		[ "aboutSuggestionMatches_20180704", "control" ],
 		[ "includeDotBlogSubdomain_20180723", "no" ]
 	]
 }

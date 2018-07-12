@@ -1,7 +1,6 @@
 /** @format */
 
-import test from 'selenium-webdriver/testing';
-import { assert } from 'chai';
+import assert from 'assert';
 
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
@@ -25,21 +24,20 @@ const host = dataHelper.getJetpackHost();
 
 let driver;
 
-test.before( async function() {
+before( async function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = await driverManager.startBrowser();
 } );
 
-test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
-	test.describe( 'Preview a theme @parallel', function() {
-		this.bailSuite( true );
+describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
+	describe( 'Preview a theme @parallel', function() {
 		this.timeout( mochaTimeOut );
 
-		test.it( 'Login and select themes', async function() {
+		step( 'Login and select themes', async function() {
 			this.themeSearchName = 'twenty';
 			this.expectedTheme = 'Twenty F';
 
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			await driverManager.ensureNotLoggedIn( driver );
 
 			this.loginFlow = new LoginFlow( driver, 'multiSiteUser' );
 			await this.loginFlow.loginAndSelectAllSites();
@@ -48,7 +46,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 			await this.sidebarComponent.selectThemes();
 		} );
 
-		test.it( 'can search for free themes', async function() {
+		step( 'can search for free themes', async function() {
 			this.themesPage = await ThemesPage.Expect( driver );
 			await this.themesPage.waitUntilThemesLoaded();
 			await this.themesPage.showOnlyFreeThemes();
@@ -57,44 +55,41 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 			await this.themesPage.waitForThemeStartingWith( this.expectedTheme );
 		} );
 
-		test.describe( 'when a theme more button is clicked', function() {
-			test.it( 'click theme more button', async function() {
+		describe( 'when a theme more button is clicked', function() {
+			step( 'click theme more button', async function() {
 				await this.themesPage.clickNewThemeMoreButton();
 			} );
 
-			test.it( 'should show a menu', async function() {
+			step( 'should show a menu', async function() {
 				let displayed = await this.themesPage.popOverMenuDisplayed();
-				assert( displayed, true, 'Popover menu not displayed' );
+				assert( displayed, 'Popover menu not displayed' );
 			} );
 
-			test.describe( 'when "Try & Customize" is clicked', function() {
-				test.it( 'click try and customize popover', async function() {
+			describe( 'when "Try & Customize" is clicked', function() {
+				step( 'click try and customize popover', async function() {
 					await this.themesPage.clickPopoverItem( 'Try & Customize' );
 					this.siteSelector = await SiteSelectorComponent.Expect( driver );
 				} );
 
-				test.it( 'should show the site selector', async function() {
+				step( 'should show the site selector', async function() {
 					let siteSelectorShown = await this.siteSelector.displayed();
-					return assert.strictEqual( siteSelectorShown, true, 'The site selector was not shown' );
+					return assert( siteSelectorShown, 'The site selector was not shown' );
 				} );
 
-				test.describe( 'when a site is selected, and Customize is clicked', function() {
-					test.it( 'select first site', async function() {
+				describe( 'when a site is selected, and Customize is clicked', function() {
+					step( 'select first site', async function() {
 						await this.siteSelector.selectFirstSite();
 						await this.siteSelector.ok();
 					} );
 
-					test.it( 'should open the customizer with the selected site and theme', async function(
-						done
-					) {
+					step( 'should open the customizer with the selected site and theme', async function() {
 						this.customizerPage = await CustomizerPage.Expect( driver );
 						let url = await driver.getCurrentUrl();
-						assert.include( url, this.siteSelector.selectedSiteDomain, 'Wrong site domain' );
-						assert.include( url, this.themeSearchName, 'Wrong theme' );
-						done();
+						assert( url.indexOf( this.siteSelector.selectedSiteDomain ) > -1, 'Wrong site domain' );
+						assert( url.indexOf( this.themeSearchName ) > -1, 'Wrong theme' );
 					} );
 
-					test.after( async function() {
+					after( async function() {
 						await this.customizerPage.close();
 					} );
 				} );
@@ -102,15 +97,14 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 		} );
 	} );
 
-	test.describe( 'Activate a theme @parallel', function() {
-		this.bailSuite( true );
+	describe( 'Activate a theme @parallel', function() {
 		this.timeout( mochaTimeOut );
 
-		test.it( 'Login and select themes', async function() {
+		step( 'Login and select themes', async function() {
 			this.themeSearchName = 'twenty';
 			this.expectedTheme = 'Twenty F';
 
-			await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			await driverManager.ensureNotLoggedIn( driver );
 
 			this.loginFlow = new LoginFlow( driver, 'multiSiteUser' );
 			await this.loginFlow.loginAndSelectAllSites();
@@ -119,7 +113,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 			await this.sidebarComponent.selectThemes();
 		} );
 
-		test.it( 'can search for free themes', async function() {
+		step( 'can search for free themes', async function() {
 			this.themesPage = await ThemesPage.Expect( driver );
 			await this.themesPage.waitUntilThemesLoaded();
 			await this.themesPage.showOnlyFreeThemes();
@@ -129,39 +123,39 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 			this.currentThemeName = await this.themesPage.getFirstThemeName();
 		} );
 
-		test.describe( 'when a theme more button is clicked', function() {
-			test.it( 'click new theme more button', async function() {
+		describe( 'when a theme more button is clicked', function() {
+			step( 'click new theme more button', async function() {
 				await this.themesPage.clickNewThemeMoreButton();
 			} );
 
-			test.it( 'should show a menu', async function() {
+			step( 'should show a menu', async function() {
 				let displayed = await this.themesPage.popOverMenuDisplayed();
-				assert( displayed, true, 'Popover menu not displayed' );
+				assert( displayed, 'Popover menu not displayed' );
 			} );
 
-			test.describe( 'when Activate is clicked', function() {
-				test.it( 'can click activate', async function() {
+			describe( 'when Activate is clicked', function() {
+				step( 'can click activate', async function() {
 					await this.themesPage.clickPopoverItem( 'Activate' );
 					return ( this.siteSelector = await SiteSelectorComponent.Expect( driver ) );
 				} );
 
-				test.it( 'shows the site selector', async function() {
+				step( 'shows the site selector', async function() {
 					let siteSelectorShown = await this.siteSelector.displayed();
-					return assert.strictEqual( siteSelectorShown, true, 'The site selector was not shown' );
+					return assert( siteSelectorShown, 'The site selector was not shown' );
 				} );
 
-				test.it( 'can select the first site sites', async function() {
+				step( 'can select the first site sites', async function() {
 					await this.siteSelector.selectFirstSite();
 					return await this.siteSelector.ok();
 				} );
 
-				test.describe( 'Successful activation dialog', function() {
-					test.it( 'should show the successful activation dialog', async function() {
+				describe( 'Successful activation dialog', function() {
+					step( 'should show the successful activation dialog', async function() {
 						const themeDialogComponent = await ThemeDialogComponent.Expect( driver );
 						return await themeDialogComponent.goToThemeDetail();
 					} );
 
-					test.it( 'should show the correct theme in the current theme bar', async function() {
+					step( 'should show the correct theme in the current theme bar', async function() {
 						this.themeDetailPage = await ThemeDetailPage.Expect( driver );
 						await this.themeDetailPage.goBackToAllThemes();
 						this.currentThemeComponent = await CurrentThemeComponent.Expect( driver );
@@ -169,7 +163,7 @@ test.describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 						return assert.strictEqual( name, this.currentThemeName );
 					} );
 
-					test.it( 'should highlight the current theme as active', async function() {
+					step( 'should highlight the current theme as active', async function() {
 						await this.themesPage.showOnlyFreeThemes();
 						await this.themesPage.searchFor( this.themeSearchName );
 						let name = await this.themesPage.getActiveThemeName();
