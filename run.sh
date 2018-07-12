@@ -36,7 +36,8 @@ usage () {
 -a [workers]	  - Number of parallel workers in Magellan (defaults to 3)
 -R		  - Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
 -p 		  - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop)
--b [commitHash]	  - Run tests on given commit via https://calypso.live
+-S [commitHash]   - Run tests on given commit via https://calypso.live
+-b [branch]	  - Run tests on given branch via https://calypso.live
 -B [branch]	  - Run Jetpack tests on given Jetpack branch via https://jurassic.ninja
 -s		  - Screensizes in a comma-separated list (defaults to mobile,desktop)
 -g		  - Execute general tests in the specs/ directory
@@ -65,7 +66,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":a:Rpb:B:s:gjWCJH:wzl:cm:fiIUvxu:h" opt; do
+while getopts ":a:RpS:b:B:s:gjWCJH:wzl:cm:fiIUvxu:h" opt; do
   case $opt in
     a)
       WORKERS=$OPTARG
@@ -83,9 +84,14 @@ while getopts ":a:Rpb:B:s:gjWCJH:wzl:cm:fiIUvxu:h" opt; do
       CLEAN=1
       continue
       ;;
-    b)
+    S)
       export LIVEBRANCHES="true"
       NODE_CONFIG_ARGS+=("\"liveBranch\":\"true\",\"commitHash\":\"$OPTARG\",\"calypsoBaseURL\":\"https://calypso.live\"")
+      continue
+      ;;
+    b)
+      export LIVEBRANCHES="true"
+      NODE_CONFIG_ARGS+=("\"liveBranch\":\"true\",\"branchName\":\"$OPTARG\",\"calypsoBaseURL\":\"https://calypso.live\"")
       continue
       ;;
     B)
