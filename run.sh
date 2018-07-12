@@ -36,7 +36,7 @@ usage () {
 -a [workers]	  - Number of parallel workers in Magellan (defaults to 3)
 -R		  - Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
 -p 		  - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop)
--S [commitHash]   - Run tests on given commit via https://calypso.live
+-S [commitHash]   - Run tests against given commit via https://calypso.live
 -b [branch]	  - Run tests on given branch via https://calypso.live
 -B [branch]	  - Run Jetpack tests on given Jetpack branch via https://jurassic.ninja
 -s		  - Screensizes in a comma-separated list (defaults to mobile,desktop)
