@@ -39,6 +39,10 @@ fi
 
 if [ "$liveBranches" == "true" ]; then
   TESTARGS+=" -b $branchName"
+
+  if [ $hash != "" ]; then
+    TESTARGS+=" -S $hash"
+  fi
 fi
 
 # If on CI and the -x flag is not yet set, set it
