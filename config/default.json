@@ -80,6 +80,6 @@
 		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
 		[ "staleCartNotice_20180618", "siteDeservesBoost" ],
 		[ "aboutSuggestionMatches_20180704", "control" ],
-		[ "plansBannerFromDomainNudge", "noShow" ],
+		[ "plansBannerFromDomainNudge_20180712", "noShow" ],
 	]
 }
