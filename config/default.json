@@ -67,7 +67,7 @@
 		"domainSearchTLDFilterPlacement",
 		"staleCartNotice",
 		"aboutSuggestionMatches",
-		"plansBannerFromDomainNudge",
+		"plansBannerFromDomainNudge"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -80,6 +80,6 @@
 		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
 		[ "staleCartNotice_20180618", "siteDeservesBoost" ],
 		[ "aboutSuggestionMatches_20180704", "control" ],
-		[ "plansBannerFromDomainNudge_20180712", "noShow" ],
+		[ "plansBannerFromDomainNudge_20180712", "noShow" ]
 	]
 }
