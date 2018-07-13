@@ -21,6 +21,10 @@ import NavBarComponent from '../lib/components/nav-bar-component.js';
 
 import WPAdminSidebar from '../lib/pages/wp-admin/wp-admin-sidebar';
 
+import ProfilePage from '../lib/pages/profile-page.js';
+import PurchasesPage from '../lib/pages/purchases-page.js';
+import ManagePurchasePage from '../lib/pages/manage-purchase-page.js';
+
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
@@ -88,6 +92,30 @@ describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function() {
 			await PlansPage.Expect( driver );
 			const shoppingCartWidgetComponent = await ShoppingCartWidgetComponent.Expect( driver );
 			await shoppingCartWidgetComponent.empty();
+		} );
+	} );
+
+	describe( 'Renew Premium Plan:', function() {
+		before( async function() {
+			return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		} );
+
+		step( 'Can log into WordPress.com', async function() {
+			this.loginFlow = new LoginFlow( driver, 'jetpackUserPREMIUM' );
+			return await this.loginFlow.login();
+		} );
+
+		step( 'Can renew Premium plan', async function() {
+			const navBarComponent = await NavBarComponent.Expect( driver );
+			await navBarComponent.clickProfileLink();
+			const profilePage = await ProfilePage.Expect( driver );
+			await profilePage.chooseManagePurchases();
+			const purchasesPage = await PurchasesPage.Expect( driver );
+			await purchasesPage.dismissGuidedTour();
+			await purchasesPage.selectPremiumPlan();
+			const managePurchasePage = await ManagePurchasePage.Expect( driver );
+			await managePurchasePage.chooseRenewNow();
+			return await SecurePaymentComponent.Expect( driver );
 		} );
 	} );
 } );
