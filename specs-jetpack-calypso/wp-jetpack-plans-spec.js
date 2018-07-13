@@ -112,7 +112,7 @@ describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function() {
 			await profilePage.chooseManagePurchases();
 			const purchasesPage = await PurchasesPage.Expect( driver );
 			await purchasesPage.dismissGuidedTour();
-			await purchasesPage.selectPremiumPlan();
+			await purchasesPage.selectPremiumPlanOnConnectedSite();
 			const managePurchasePage = await ManagePurchasePage.Expect( driver );
 			await managePurchasePage.chooseRenewNow();
 			return await SecurePaymentComponent.Expect( driver );
