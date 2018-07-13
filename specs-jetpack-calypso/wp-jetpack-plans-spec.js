@@ -105,7 +105,7 @@ describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function() {
 			return await this.loginFlow.login();
 		} );
 
-		step( 'Can renew Premium plan', async function() {
+		step( '"Renew Now" link takes user to Payment Details form', async function() {
 			const navBarComponent = await NavBarComponent.Expect( driver );
 			await navBarComponent.clickProfileLink();
 			const profilePage = await ProfilePage.Expect( driver );
