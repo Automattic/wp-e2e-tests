@@ -67,7 +67,8 @@
 		"domainSearchTLDFilterPlacement",
 		"staleCartNotice",
 		"aboutSuggestionMatches",
-		"includeDotBlogSubdomain"
+		"includeDotBlogSubdomain",
+		"plansBannerFromDomainNudge"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -80,6 +81,7 @@
 		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
 		[ "staleCartNotice_20180618", "siteDeservesBoost" ],
 		[ "aboutSuggestionMatches_20180704", "control" ],
-		[ "includeDotBlogSubdomain_20180723", "no" ]
+		[ "includeDotBlogSubdomain_20180723", "no" ],
+		[ "plansBannerFromDomainNudge_20180712", "noShow" ]
 	]
 }
