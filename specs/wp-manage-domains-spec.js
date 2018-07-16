@@ -15,7 +15,6 @@ import ShoppingCartWidgetComponent from '../lib/components/shopping-cart-widget-
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavBarComponent from '../lib/components/nav-bar-component.js';
 import MyOwnDomainPage from '../lib/pages/domain-my-own-page';
-import MapADomainComponent from '../lib/components/map-a-domain-component';
 import MapADomainPage from '../lib/pages/domain-map-page';
 import EnterADomainComponent from '../lib/components/enter-a-domain-component';
 import MapADomainCheckoutPage from '../lib/pages/domain-map-checkout-page';
@@ -99,7 +98,7 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 		} );
 	} );
 
-	xdescribe( 'Map a domain to an existing site @parallel', function() {
+	describe( 'Map a domain to an existing site @parallel', function() {
 		const blogName = 'myawesomedomain.com';
 
 		before( async function() {
@@ -130,9 +129,9 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 			return await MyOwnDomainPage.Expect( driver );
 		} );
 
-		step( 'Can select to manually connect existing domain component', async function() {
-			const mapADomainComponent = await MapADomainComponent.Expect( driver );
-			return await mapADomainComponent.selectManuallyConnectExistingDomain();
+		step( 'Can select to buy domain mapping', async function() {
+			const myOwnDomainPage = await MyOwnDomainPage.Expect( driver );
+			return await myOwnDomainPage.selectBuyDomainMapping();
 		} );
 
 		step( 'Can see enter a domain component', async function() {

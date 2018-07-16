@@ -66,7 +66,8 @@
 		"domainSuggestionKrakenV322",
 		"domainSearchTLDFilterPlacement",
 		"staleCartNotice",
-		"aboutSuggestionMatches"
+		"aboutSuggestionMatches",
+		"plansBannerFromDomainNudge"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -78,6 +79,7 @@
 		[ "domainSuggestionKrakenV322_20180709", "domainsbot" ],
 		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
 		[ "staleCartNotice_20180618", "siteDeservesBoost" ],
-		[ "aboutSuggestionMatches_20180704", "control" ]
+		[ "aboutSuggestionMatches_20180704", "control" ],
+		[ "plansBannerFromDomainNudge_20180712", "noShow" ]
 	]
 }
