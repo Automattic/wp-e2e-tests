@@ -68,7 +68,7 @@
 		"staleCartNotice",
 		"aboutSuggestionMatches",
 		"plansBannerFromDomainNudge",
-	    "nudgeAPalooza"
+		"nudgeAPalooza"
 
 	],
 	"overrideABTests": [
@@ -83,6 +83,6 @@
 		[ "staleCartNotice_20180618", "siteDeservesBoost" ],
 		[ "aboutSuggestionMatches_20180704", "control" ],
 		[ "plansBannerFromDomainNudge_20180712", "noShow" ],
-	    [ "nudgeAPalooza_20180711", "control" ]
+		[ "nudgeAPalooza_20180711", "control" ]
 	]
 }
