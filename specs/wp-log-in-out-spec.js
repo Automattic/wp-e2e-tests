@@ -21,7 +21,8 @@ import WPHomePage from '../lib/pages/wp-home-page';
 import NavBarComponent from '../lib/components/nav-bar-component.js';
 import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component';
 
-import LoginFlow from '../lib/flows/login-flow.js';
+import LoginFlow from '../lib/flows/login-flow';
+import LoginPage from '../lib/pages/login-page';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -35,6 +36,20 @@ let eyes = eyesHelper.eyesSetup( true );
 before( async function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = await driverManager.startBrowser();
+} );
+
+describe( `[${ host }] Auth Screen Canary: (${ screenSize }) @parallel @safaricanary`, function() {
+	this.timeout( mochaTimeOut );
+
+	describe( 'Loading the log-in screen', function() {
+		before( async function() {
+			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		step( 'Can see the log in screen', async function() {
+			await LoginPage.Visit( driver, LoginPage.getLoginURL() );
+		} );
+	} );
 } );
 
 describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @visdiff`, function() {
