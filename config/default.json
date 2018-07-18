@@ -35,7 +35,7 @@
 			"platform": "OS X 10.11",
 			"screenResolution": "2048x1536",
 			"nativeEvents": true,
-			"version": "9.0"
+			"version": "10"
 		},
 		"win-firefox": {
 			"browserName": "firefox",

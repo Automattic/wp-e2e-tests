@@ -28,6 +28,7 @@ function joinStr { local IFS="$1"; shift; echo "$*"; }
 
 I18N_CONFIG="\"browser\":\"chrome\",\"proxy\":\"system\",\"saveAllScreenshots\":true"
 IE11_CONFIG="\"sauce\":\"true\",\"sauceConfig\":\"win-ie11\""
+SAFARI_CONFIG="\"sauce\":\"true\",\"sauceConfig\":\"osx-safari\""
 
 declare -a MAGELLAN_CONFIGS
 
@@ -48,6 +49,7 @@ usage () {
 -H [host]	  - Specify an alternate host for Jetpack tests
 -w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
 -z		  - Only execute canary tests on Windows/IE11, not compatible with -g flag
+-y		  - Only execute canary tests on Safari 10 on Mac, not compatible with -g flag
 -l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration
 -c		  - Exit with status code 0 regardless of test results
 -m [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
@@ -66,7 +68,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":a:RpS:b:B:s:gjWCJH:wzl:cm:fiIUvxu:h" opt; do
+while getopts ":a:RpS:b:B:s:gjWCJH:wzyl:cm:fiIUvxu:h" opt; do
   case $opt in
     a)
       WORKERS=$OPTARG
@@ -128,6 +130,11 @@ while getopts ":a:RpS:b:B:s:gjWCJH:wzl:cm:fiIUvxu:h" opt; do
       NODE_CONFIG_ARGS+=$IE11_CONFIG
       SCREENSIZES="desktop"
       MAGELLAN_CONFIG="magellan-ie11-canary.json"
+      ;;
+    y)
+      NODE_CONFIG_ARGS+=$SAFARI_CONFIG
+      SCREENSIZES="desktop"
+      MAGELLAN_CONFIG="magellan-safari-canary.json"
       ;;
     l)
       NODE_CONFIG_ARGS+=("\"sauce\":\"true\",\"sauceConfig\":\"$OPTARG\"")
