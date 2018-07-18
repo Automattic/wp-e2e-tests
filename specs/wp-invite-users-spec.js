@@ -528,7 +528,7 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 
 		step( 'User has been added as a Follower', async function() {
-			const noticesComponent = await NoticesComponent.Expect( driver )
+			const noticesComponent = await NoticesComponent.Expect( driver );
 			const followMessageDisplayed = noticesComponent.followMessageTitle();
 			assert(
 				followMessageDisplayed.includes( 'following' ),
