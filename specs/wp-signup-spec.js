@@ -765,9 +765,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 				driver,
 				StartPage.getStartURL( {
 					culture: locale,
-					flow: 'domain-first',
-					domainFirst: true,
-					domainFirstDomain: expectedDomainName,
+					flow: 'domain-first/site-or-domain',
+					query: `new=${ expectedDomainName }`,
 				} )
 			);
 		} );
