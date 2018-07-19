@@ -1,5 +1,5 @@
 {
-	"calypsoBaseURL": "https://wordpress.com",
+	"calypsoBaseURL": "https://calypso.live",
 	"explicitWaitMS": 20000,
 	"emailWaitMS": 60000,
 	"mochaTimeoutMS": 160000,
@@ -16,6 +16,8 @@
 	"reportWarningsToSlack": false,
 	"closeBrowserOnComplete": true,
 	"highlightElements": false,
+	"liveBranch": true,
+	"commitHash": "6b0846d929b012d0fda7b9950a463e003f2eca5b",
 	"sauceConfigurations": {
 		"osx-chrome": {
 			"browserName": "chrome",
