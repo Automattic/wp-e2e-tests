@@ -65,7 +65,6 @@
 		"jetpackSignupGoogleTop",
 		"domainSuggestionKrakenV322",
 		"domainSearchTLDFilterPlacement",
-		"staleCartNotice",
 		"aboutSuggestionMatches",
 		"plansBannerFromDomainNudge",
 		"nudgeAPalooza"
@@ -80,7 +79,6 @@
 		[ "jetpackSignupGoogleTop_20180427", "original" ],
 		[ "domainSuggestionKrakenV322_20180709", "domainsbot" ],
 		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
-		[ "staleCartNotice_20180618", "siteDeservesBoost" ],
 		[ "aboutSuggestionMatches_20180704", "control" ],
 		[ "plansBannerFromDomainNudge_20180712", "noShow" ],
 		[ "nudgeAPalooza_20180711", "control" ]
