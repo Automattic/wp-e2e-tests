@@ -96,7 +96,7 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 			return await SecurePaymentComponent.Expect( driver );
 		} );
 
-		after( async function() {
+		step( async function() {
 			// Empty the cart
 			await ReaderPage.Visit( driver );
 			const navBarComponent = await NavBarComponent.Expect( driver );
@@ -174,7 +174,7 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 			return await MapADomainCheckoutPage.Expect( driver );
 		} );
 
-		after( async function() {
+		step( async function() {
 			// Empty the cart
 			await ReaderPage.Visit( driver );
 			const navBarComponent = await NavBarComponent.Expect( driver );
