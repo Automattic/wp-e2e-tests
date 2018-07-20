@@ -469,4 +469,114 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			return await postEditorToolbar.publishAndViewContent( { useConfirmStep: true } );
 		} );
 	} );
+
+	// Disabled pending wp-calypso issue 26178
+	xdescribe( 'Inviting New User as a Follower: @parallel @jetpack', function() {
+		const newUserName = 'e2eflowtestingfollower' + new Date().getTime().toString();
+		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
+		let acceptInviteURL = '';
+
+		before( async function() {
+			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		step( 'Can log in and navigate to Invite People page', async function() {
+			await new LoginFlow( driver ).loginAndSelectPeople();
+			await new PeoplePage( driver ).inviteUser();
+		} );
+
+		step( 'Can invite a new user as an editor and see its pending', async function() {
+			const invitePeoplePage = await InvitePeoplePage.Expect( driver );
+			await invitePeoplePage.inviteNewUser(
+				newInviteEmailAddress,
+				'follower',
+				'Automated e2e testing'
+			);
+			await invitePeoplePage.inviteSent();
+			await invitePeoplePage.backToPeopleMenu();
+
+			const peoplePage = await PeoplePage.Expect( driver );
+			await peoplePage.selectInvites();
+			await peoplePage.waitForPendingInviteDisplayedFor( newInviteEmailAddress );
+		} );
+
+		step( 'Can see an invitation email received for the invite', async function() {
+			let emails = await emailClient.pollEmailsByRecipient( newInviteEmailAddress );
+			let links = emails[ 0 ].html.links;
+			let link = links.find( l => l.href.includes( 'accept-invite' ) );
+			acceptInviteURL = dataHelper.adjustInviteLinkToCorrectEnvironment( link.href );
+			return assert.notStrictEqual(
+				acceptInviteURL,
+				'',
+				'Could not locate the accept invite URL in the invite email'
+			);
+		} );
+
+		step( 'Can sign up as new user for the blog via invite link', async function() {
+			await driverManager.ensureNotLoggedIn( driver );
+
+			await driver.get( acceptInviteURL );
+			const acceptInvitePage = await AcceptInvitePage.Expect( driver );
+
+			let actualEmailAddress = await acceptInvitePage.getEmailPreFilled();
+			let headerInviteText = await acceptInvitePage.getHeaderInviteText();
+			assert.strictEqual( actualEmailAddress, newInviteEmailAddress );
+			assert( headerInviteText.includes( 'follow' ) );
+
+			await acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
+			return await acceptInvitePage.waitUntilNotVisible();
+		} );
+
+		step( 'User has been added as a Follower', async function() {
+			const noticesComponent = await NoticesComponent.Expect( driver );
+			const followMessageDisplayed = noticesComponent.followMessageTitle();
+			assert(
+				followMessageDisplayed.includes( 'following' ),
+				`The follow message '${ followMessageDisplayed }' does not include 'following'`
+			);
+			await new ReaderPage( driver ).displayed();
+		} );
+
+		step( 'As the original user, can see new user added to site', async function() {
+			await driverManager.ensureNotLoggedIn( driver );
+			await new LoginFlow( driver ).loginAndSelectPeople();
+
+			const peoplePage = await PeoplePage.Expect( driver );
+			await peoplePage.selectEmailFollowers();
+			await peoplePage.searchForUser( newUserName );
+			let numberPeopleShown = await peoplePage.numberSearchResults();
+			assert.strictEqual(
+				numberPeopleShown,
+				1,
+				`The number of people search results for '${ newUserName }' was incorrect`
+			);
+		} );
+
+		step( 'Can remove the email follower from the site', async function() {
+			const peoplePage = await PeoplePage.Expect( driver );
+			await peoplePage.removeOnlyEmailFollowerDisplayed();
+			await peoplePage.searchForUser( newUserName );
+			let numberPeopleShown = await peoplePage.numberSearchResults();
+			assert.strictEqual(
+				numberPeopleShown,
+				0,
+				`After deletion, the number of email follower search results for '${ newUserName }' was incorrect`
+			);
+			await peoplePage.cancelSearch();
+		} );
+
+		step( 'Can remove the follower account from the site', async function() {
+			const peoplePage = new PeoplePage.Expect( driver );
+			await peoplePage.selectFollowers();
+			await peoplePage.waitForSearchResults();
+			await peoplePage.removeUserByName( newUserName );
+			await peoplePage.waitForSearchResults();
+			let displayed = await peoplePage.viewerDisplayed( newUserName );
+			assert.strictEqual(
+				displayed,
+				false,
+				`The username of '${ newUserName }' was still displayed as a site viewer`
+			);
+		} );
+	} );
 } );
