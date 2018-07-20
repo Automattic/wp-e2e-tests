@@ -21,6 +21,8 @@ import MapADomainCheckoutPage from '../lib/pages/domain-map-checkout-page';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
+import * as SlackNotifier from '../lib/slack-notifier';
+
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
@@ -42,6 +44,16 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 		const domainEmailAddress = dataHelper.getEmailAddress( blogName, domainsInboxId );
 		const expectedDomainName = blogName + '.com';
 		const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( domainEmailAddress );
+
+		before( async function() {
+			if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
+				await SlackNotifier.warn(
+					'Domains tests are currently disabled as SKIP_DOMAIN_TESTS is set to true',
+					{ suppressDuplicateMessages: true }
+				);
+				return this.skip();
+			}
+		} );
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -100,6 +112,16 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 
 	describe( 'Map a domain to an existing site @parallel', function() {
 		const blogName = 'myawesomedomain.com';
+
+		before( async function() {
+			if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
+				await SlackNotifier.warn(
+					'Domains tests are currently disabled as SKIP_DOMAIN_TESTS is set to true',
+					{ suppressDuplicateMessages: true }
+				);
+				return this.skip();
+			}
+		} );
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
