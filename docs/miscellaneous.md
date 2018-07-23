@@ -45,7 +45,8 @@ Wrapper repo is basically the same Main repo but with parameterized `./run.sh` c
 1. [IE11 tests](https://github.com/Automattic/wp-e2e-tests-ie11) - IE11 tests running in Sauce Labs. Triggered by `cron` job
 1. [Jetpack stable](https://github.com/Automattic/wp-e2e-tests-jetpack) - Jetpack centric tests (specs tagged with `@jetpack` tag) which uses stable Jetpack releases and hosted on Pressable
 1. [Jetpack bleeding edge](https://github.com/Automattic/wp-e2e-tests-jetpack-be) - Jetpack centric tests (specs tagged with `@jetpack` tag) which uses 'bleeding edge' Jetpack releases and hosted on Pressable
-1. [Branches tests](https://github.com/Automattic/wp-e2e-tests-for-branches) - Repo which is used to run e2e tests both canary and full suite against Calypso PR's. Triggered by GitHub labels
+1. [Branches full suite tests](https://github.com/Automattic/wp-e2e-tests-for-branches) - Repo which is used to run e2e full suite tests against Calypso PR's. Triggered by GitHub labels
+1. [Branches canary tests](https://github.com/Automattic/wp-e2e-canary-for-branches) - Repo which is used to run e2e canary tests against Calypso PR's. Triggered by GitHub labels
 1. [Woo tests](https://github.com/Automattic/wp-e2e-tests-woocommerce) - Runs WooCommerce specs
 1. [Visdiff tests](https://github.com/Automattic/wp-e2e-tests-visdiff) - Runs VisDiff tests. Triggered by `cron` job
 1. [I18N tests](https://github.com/Automattic/wp-e2e-tests-i18n) - Runs I18N test suite. Triggered by `cron` job
