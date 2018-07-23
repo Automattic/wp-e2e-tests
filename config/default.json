@@ -67,7 +67,6 @@
 		"domainSearchTLDFilterPlacement",
 		"aboutSuggestionMatches",
 		"includeDotBlogSubdomain",
-		"plansBannerFromDomainNudge",
 		"nudgeAPalooza"
 	],
 	"overrideABTests": [
@@ -81,7 +80,6 @@
 		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
 		[ "aboutSuggestionMatches_20180704", "control" ],
 		[ "includeDotBlogSubdomain_20180723", "no" ],
-		[ "plansBannerFromDomainNudge_20180712", "noShow" ],
 		[ "nudgeAPalooza_20180711", "control" ]
 	]
 }
