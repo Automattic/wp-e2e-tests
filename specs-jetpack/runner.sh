@@ -1,9 +1,8 @@
 #!/bin/bash
 export JETPACKHOST=PRESSABLE
 export TARGET=JETPACK
-# array=( 'goDaddyJetpackUser' 'asoJetpackUser' 'goDaddyJetpackUserSub' 'bluehostJetpackUser'
-# 'bluehostJetpackUserSub' 'bluehostJetpackUserMulti' 'siteGroundJetpackUser' 'sacuraJetpackUser' )
-array=( 'bluehostJetpackUserMulti' )
+array=( 'goDaddyJetpackUser' 'asoJetpackUser' 'goDaddyJetpackUserSub'
+'bluehostJetpackUser' 'bluehostJetpackUserSub' 'siteGroundJetpackUser')
 
 for i in "${array[@]}"
 do

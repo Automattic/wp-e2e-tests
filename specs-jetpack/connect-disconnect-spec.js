@@ -71,7 +71,12 @@ describe( `Jetpack Connect and Disconnect: (${ screenSize })`, function() {
 		} );
 
 		step( 'Can click the free plan button', async function() {
-			if ( jetpackUser === 'siteGroundJetpackUser' ) {
+			// Some of the users are not the plan owners, so skipping this step for them
+			if (
+				[ 'siteGroundJetpackUser', 'bluehostJetpackUserSub', 'goDaddyJetpackUserSub' ].includes(
+					jetpackUser
+				)
+			) {
 				return await WPAdminDashboardPage.Visit( driver, user[ 2 ] );
 			}
 			const pickAPlanPage = await PickAPlanPage.Expect( driver );
