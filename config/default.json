@@ -66,8 +66,8 @@
 		"domainSuggestionKrakenV322",
 		"domainSearchTLDFilterPlacement",
 		"aboutSuggestionMatches",
+		"includeDotBlogSubdomain",
 		"nudgeAPalooza"
-
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -79,6 +79,7 @@
 		[ "domainSuggestionKrakenV322_20180709", "domainsbot" ],
 		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
 		[ "aboutSuggestionMatches_20180704", "control" ],
+		[ "includeDotBlogSubdomain_20180723", "no" ],
 		[ "nudgeAPalooza_20180711", "control" ]
 	]
 }
