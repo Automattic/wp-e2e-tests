@@ -264,7 +264,7 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 
 		step( 'Can see auth code error', async function() {
 			const transferDomainPrecheckPage = await TransferDomainPrecheckPage.Expect( driver );
-			return await transferDomainPrecheckPage.clickCheckAuthCode();
+			return await transferDomainPrecheckPage.authCodeErrorDisplayed();
 		} );
 	} );
 } );
