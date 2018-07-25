@@ -9,13 +9,15 @@ import WPAdminLogonPage from '../lib/pages/wp-admin/wp-admin-logon-page';
 import WPAdminSidebar from '../lib/pages/wp-admin/wp-admin-sidebar.js';
 import JetpackConnectFlow from '../lib/flows/jetpack-connect-flow';
 import WPAdminPostsPage from '../lib/pages/wp-admin/wp-admin-posts-page';
+import WPAdminDashboardPage from '../lib/pages/wp-admin/wp-admin-dashboard-page';
 import * as driverManager from '../lib/driver-manager';
 import * as dataHelper from '../lib/data-helper';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
-const user = dataHelper.getAccountConfig( 'asoJetpackUser' );
+const jetpackUser = process.env.JETPACKUSER;
+const user = dataHelper.getAccountConfig( jetpackUser );
 let driver;
 
 before( async function() {
@@ -27,11 +29,11 @@ describe( 'Disconnect wporg site', function() {
 	this.timeout( mochaTimeOut );
 
 	step( 'Can disconnect wporg site', async function() {
-		await driverManager.ensureNotLoggedIn( driver );
+		await driverManager.clearCookiesAndDeleteLocalStorage( driver, user[ 2 ] );
 		await new JetpackConnectFlow( driver, 'jetpackConnectUser' ).disconnectFromWPAdmin(
-			'asoJetpackUser'
+			jetpackUser
 		);
-		await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		await driverManager.clearCookiesAndDeleteLocalStorage( driver, user[ 2 ] );
 	} );
 } );
 
@@ -69,6 +71,14 @@ describe( `Jetpack Connect and Disconnect: (${ screenSize })`, function() {
 		} );
 
 		step( 'Can click the free plan button', async function() {
+			// Some of the users are not the plan owners, so skipping this step for them
+			if (
+				[ 'siteGroundJetpackUser', 'bluehostJetpackUserSub', 'goDaddyJetpackUserSub' ].includes(
+					jetpackUser
+				)
+			) {
+				return await WPAdminDashboardPage.Visit( driver, user[ 2 ] );
+			}
 			const pickAPlanPage = await PickAPlanPage.Expect( driver );
 			return await pickAPlanPage.selectFreePlanJetpack();
 		} );
@@ -88,7 +98,7 @@ describe( `Jetpack Connect and Disconnect: (${ screenSize })`, function() {
 		step( 'Can disconnect Jetpack connection in wp-admin', async function() {
 			await driverManager.clearCookiesAndDeleteLocalStorage( driver, user[ 2 ] );
 			await new JetpackConnectFlow( driver, 'jetpackConnectUser' ).disconnectFromWPAdmin(
-				'asoJetpackUser'
+				jetpackUser
 			);
 		} );
 
