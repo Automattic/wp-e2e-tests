@@ -28,7 +28,7 @@ jobs:
       - run: npm run decryptconfig
       - run:
           name: Install screen recording dependencies
-          command: apt install -y libxcb1-dev libxcb-shm0-dev libxcb-xfixes0-dev ffmpeg xvfb
+          command: sudo apt install -y libxcb1-dev libxcb-shm0-dev libxcb-xfixes0-dev ffmpeg xvfb
       - run: ./scripts/randomize.sh specs
       - run:
           command: Xvfb -ac :99 -screen 0 1440x1000x16 +extension RANDR > /dev/null 2>&1
