@@ -22,6 +22,9 @@ export TEST_VIDEO="true"
 
 export TESTARGS="-R -p"
 
+echo "display $DISPLAY"
+echo $HEADLESS
+
 if [ "$RUN_SPECIFIED" == "true" ]; then
   TESTARGS=$RUN_ARGS
 elif [[ "$CIRCLE_BRANCH" =~ .*[Jj]etpack.*|.*[Jj][Pp].* ]]; then
