@@ -6,6 +6,7 @@ import assert from 'assert';
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper.js';
 import * as eyesHelper from '../lib/eyes-helper.js';
+import * as videoRecorder from '../lib/video-recorder';
 
 import WPHomePage from '../lib/pages/wp-home-page.js';
 import ChooseAThemePage from '../lib/pages/signup/choose-a-theme-page.js';
@@ -75,7 +76,12 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let magicLoginLink;
 
 		before( async function() {
+			await videoRecorder.start();
 			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		after( function() {
+			videoRecorder.stop();
 		} );
 
 		step( 'Can visit the start page', async function() {
@@ -216,7 +222,12 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		before( async function() {
+			await videoRecorder.start();
 			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		after( function() {
+			videoRecorder.stop();
 		} );
 
 		step( 'We can set the sandbox cookie for payments', async function() {
@@ -405,7 +416,12 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const expectedCurrencySymbol = '¥';
 
 		before( async function() {
+			await videoRecorder.start();
 			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		after( function() {
+			videoRecorder.stop();
 		} );
 
 		step( 'We can set the sandbox cookie for payments', async function() {
@@ -570,7 +586,12 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const expectedCurrencySymbol = '£';
 
 		before( async function() {
+			await videoRecorder.start();
 			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		after( function() {
+			videoRecorder.stop();
 		} );
 
 		step( 'We can set the sandbox cookie for payments', async function() {
@@ -731,7 +752,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a domain only purchase coming in from wordpress.com/domains in EUR currency @parallel', function() {
+	describe.only( 'Sign up for a domain only purchase coming in from wordpress.com/domains in EUR currency @parallel', function() {
 		const siteName = dataHelper.getNewBlogName();
 		const expectedDomainName = `${ siteName }.live`;
 		const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
@@ -751,6 +772,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		before( function() {
+			videoRecorder.start();
+		} );
+
+		after( function() {
+			videoRecorder.stop();
 		} );
 
 		step( 'We can visit set the sandbox cookie for payments', async function() {
@@ -923,7 +952,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow in CAD currency @parallel', function() {
+	describe.only( 'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow in CAD currency @parallel', function() {
 		const siteName = dataHelper.getNewBlogName();
 		const expectedDomainName = `${ siteName }.live`;
 		const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
@@ -943,6 +972,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		before( function() {
+			videoRecorder.start();
+		} );
+
+		after( function() {
+			videoRecorder.stop();
 		} );
 
 		step( 'We can set the sandbox cookie for payments', async function() {
@@ -1111,7 +1148,12 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let newBlogAddress = '';
 
 		before( async function() {
+			await videoRecorder.start();
 			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		after( function() {
+			videoRecorder.stop();
 		} );
 
 		step( 'Can visit the start page', async function() {
@@ -1184,7 +1226,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			const url = await viewBlogPage.urlDisplayed();
 			return assert.strictEqual(
 				url,
-				'https://' + newBlogAddress + '/',
+				'https://' + newBlogAddress + '9/',
 				'The displayed URL on the view blog page is not as expected'
 			);
 		} );
@@ -1211,7 +1253,12 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let chosenThemeName = '';
 
 		before( async function() {
+			await videoRecorder.start();
 			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		after( function() {
+			videoRecorder.stop();
 		} );
 
 		step( 'We can set the sandbox cookie for payments', async function() {
@@ -1340,7 +1387,12 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const expectedDomainName = `${ blogName }.art.blog`;
 
 		before( async function() {
+			await videoRecorder.start();
 			await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		after( function() {
+			videoRecorder.stop();
 		} );
 
 		step( 'Can enter the subdomains flow and select design type', async function() {
@@ -1428,7 +1480,12 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const userName = dataHelper.getNewBlogName();
 
 		before( async function() {
+			await videoRecorder.start();
 			await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		after( function() {
+			videoRecorder.stop();
 		} );
 
 		step( 'Can enter the account flow and see the account details page', async function() {
@@ -1436,7 +1493,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 				driver,
 				StartPage.getStartURL( {
 					culture: locale,
-					flow: 'account',
+					flow: 'accdfount',
 				} )
 			);
 			await CreateYourAccountPage.Expect( driver );
