@@ -7,6 +7,7 @@
 - [Launch Logged-In Window](#launch-logged-in-window)
 - [User account requirements](#user-account-requirements)
 - [List of wrapper repos & friends](#list-of-wrapper-repos--friends)
+- [What to name your branch](#naming-branches)
 
 ## NodeJS Version
 
@@ -55,3 +56,7 @@ Friends:
 
 - [E2E tests Github bridge](https://github.com/Automattic/wp-e2e-tests-gh-bridge) - middleware used to trigger Branches repo by github labels
 - [WP-Desktop Github bridge](https://github.com/Automattic/wp-desktop-gh-bridge) - middleware used to trigger e2e tests to run against wp-desktop by github labels
+
+## What to name your branch
+Use the same naming conventions as listed in [wp-calypso](https://github.com/Automattic/wp-calypso/blob/master/docs/git-workflow.md#branch-naming-scheme)
+- If you have changes to jetpack tests, be sure to add "jetpack" into your branch name so those tests are run on CI
