@@ -1067,7 +1067,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 				const businessPlanInCart = await securePaymentComponent.containsBusinessPlan();
 				assert.strictEqual(
 					businessPlanInCart,
-					true,
+					false,
 					"The cart doesn't contain the business plan product"
 				);
 				const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
