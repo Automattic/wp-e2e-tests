@@ -28,7 +28,7 @@ jobs:
       - run: npm run decryptconfig
       - run:
           name: Install screen recording dependencies
-          command: sudo apt install -y libxcb1-dev libxcb-shm0-dev libxcb-xfixes0-dev ffmpeg xvfb
+          command: sudo apt install -y ffmpeg
       - run: ./scripts/randomize.sh specs
       - run: ./scripts/run-wrapper.sh
       - store_test_results:
