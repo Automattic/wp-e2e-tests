@@ -30,6 +30,7 @@
     "asana-phrase": "0.0.8",
     "babel-runtime": "^6.3.19",
     "chromedriver": "2.35.0",
+    "concurrently": "^3.6.1",
     "config": "1.16.0",
     "esformatter-braces": "^1.2.1",
     "esformatter-collapse-objects-a8c": "^0.1.0",

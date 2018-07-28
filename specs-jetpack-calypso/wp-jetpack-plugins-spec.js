@@ -29,9 +29,7 @@ describe( `[${ host }] Jetpack Sites on Calypso - Existing Plugins: (${ screenSi
 
 	before( async function() {
 		await driverManager.clearCookiesAndDeleteLocalStorage( driver );
-	} );
 
-	before( async function() {
 		let loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
 		await loginFlow.loginAndSelectManagePlugins();
 	} );
@@ -73,9 +71,7 @@ describe( `[${ host }] Jetpack Sites on Calypso - Searching Plugins: (${ screenS
 
 	before( async function() {
 		await driverManager.clearCookiesAndDeleteLocalStorage( driver );
-	} );
 
-	before( async function() {
 		let loginFlow = new LoginFlow( driver, 'jetpackUser' + host );
 		await loginFlow.loginAndSelectPlugins();
 	} );
