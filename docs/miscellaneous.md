@@ -7,7 +7,7 @@
 - [Launch Logged-In Window](#launch-logged-in-window)
 - [User account requirements](#user-account-requirements)
 - [List of wrapper repos & friends](#list-of-wrapper-repos--friends)
-- [What to name your branch](#naming-branches)
+- [What to name your branch](#what-to-name-your-branch)
 
 ## NodeJS Version
 
