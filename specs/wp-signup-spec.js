@@ -45,7 +45,6 @@ import NoSitesComponent from '../lib/components/no-sites-component';
 import * as SlackNotifier from '../lib/slack-notifier';
 
 import EmailClient from '../lib/email-client.js';
-import RegistrationUnavailableComponent from '../lib/components/domain-registration-unavailable-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -94,17 +93,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the domains page, and Can search for a blog name, can see and select a free .wordpress address in the results',
 			async function() {
-				let findADomainComponent;
-				try {
-					findADomainComponent = await FindADomainComponent.Expect( driver );
-				} catch ( err ) {
-					if ( await RegistrationUnavailableComponent.Expect( driver ) ) {
-						await SlackNotifier.warn( 'SKIPPING: Domain registration is currently unavailable. ', {
-							suppressDuplicateMessages: true,
-						} );
-						return this.skip();
-					}
-				}
+				const findADomainComponent = await FindADomainComponent.Expect( driver );
 				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
 				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
 					expectedBlogAddresses,
@@ -253,17 +242,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can then see the domains page ', async function() {
-			let findADomainComponent;
-			try {
-				findADomainComponent = await FindADomainComponent.Expect( driver );
-			} catch ( err ) {
-				if ( await RegistrationUnavailableComponent.Expect( driver ) ) {
-					await SlackNotifier.warn( 'SKIPPING: Domain registration is currently unavailable. ', {
-						suppressDuplicateMessages: true,
-					} );
-					return this.skip();
-				}
-			}
+			const findADomainComponent = await FindADomainComponent.Expect( driver );
 			let displayed = await findADomainComponent.displayed();
 			await eyesHelper.eyesScreenshot( driver, eyes, 'Domains Page' );
 			return assert.strictEqual( displayed, true, 'The choose a domain page is not displayed' );
@@ -459,17 +438,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
 			async function() {
-				let findADomainComponent;
-				try {
-					findADomainComponent = await FindADomainComponent.Expect( driver );
-				} catch ( err ) {
-					if ( await RegistrationUnavailableComponent.Expect( driver ) ) {
-						await SlackNotifier.warn( 'SKIPPING: Domain registration is currently unavailable. ', {
-							suppressDuplicateMessages: true,
-						} );
-						return this.skip();
-					}
-				}
+				const findADomainComponent = await FindADomainComponent.Expect( driver );
 				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
 				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
 					expectedBlogAddresses,
@@ -634,17 +603,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
 			async function() {
-				let findADomainComponent;
-				try {
-					findADomainComponent = await FindADomainComponent.Expect( driver );
-				} catch ( err ) {
-					if ( await RegistrationUnavailableComponent.Expect( driver ) ) {
-						await SlackNotifier.warn( 'SKIPPING: Domain registration is currently unavailable. ', {
-							suppressDuplicateMessages: true,
-						} );
-						return this.skip();
-					}
-				}
+				const findADomainComponent = await FindADomainComponent.Expect( driver );
 				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
 				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
 					expectedBlogAddresses,
@@ -1016,17 +975,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the domains page, and can search for a blog name, can see and select a paid .live address in results ',
 			async function() {
-				let findADomainComponent;
-				try {
-					findADomainComponent = await FindADomainComponent.Expect( driver );
-				} catch ( err ) {
-					if ( await RegistrationUnavailableComponent.Expect( driver ) ) {
-						await SlackNotifier.warn( 'SKIPPING: Domain registration is currently unavailable. ', {
-							suppressDuplicateMessages: true,
-						} );
-						return this.skip();
-					}
-				}
+				const findADomainComponent = await FindADomainComponent.Expect( driver );
 				await findADomainComponent.searchForBlogNameAndWaitForResults( expectedDomainName );
 				return await findADomainComponent.selectDomainAddress( expectedDomainName );
 			}
@@ -1178,17 +1127,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			'Can then see the domains page, and Can search for a blog name, can see and select a free .wordpress address in the results',
 			async function() {
 				const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
-				let findADomainComponent;
-				try {
-					findADomainComponent = await FindADomainComponent.Expect( driver );
-				} catch ( err ) {
-					if ( await RegistrationUnavailableComponent.Expect( driver ) ) {
-						await SlackNotifier.warn( 'SKIPPING: Domain registration is currently unavailable. ', {
-							suppressDuplicateMessages: true,
-						} );
-						return this.skip();
-					}
-				}
+				const findADomainComponent = await FindADomainComponent.Expect( driver );
 				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
 				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
 					expectedBlogAddresses,
@@ -1299,17 +1238,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
 			async function() {
-				let findADomainComponent;
-				try {
-					findADomainComponent = await FindADomainComponent.Expect( driver );
-				} catch ( err ) {
-					if ( await RegistrationUnavailableComponent.Expect( driver ) ) {
-						await SlackNotifier.warn( 'SKIPPING: Domain registration is currently unavailable. ', {
-							suppressDuplicateMessages: true,
-						} );
-						return this.skip();
-					}
-				}
+				const findADomainComponent = await FindADomainComponent.Expect( driver );
 				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
 				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
 					expectedBlogAddresses,
@@ -1438,17 +1367,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the domains page, and Can search for a blog name, can see and select a free .art.blog address in the results',
 			async function() {
-				let findADomainComponent;
-				try {
-					findADomainComponent = await FindADomainComponent.Expect( driver );
-				} catch ( err ) {
-					if ( await RegistrationUnavailableComponent.Expect( driver ) ) {
-						await SlackNotifier.warn( 'SKIPPING: Domain registration is currently unavailable. ', {
-							suppressDuplicateMessages: true,
-						} );
-						return this.skip();
-					}
-				}
+				const findADomainComponent = await FindADomainComponent.Expect( driver );
 				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
 				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
 					expectedDomainName,
