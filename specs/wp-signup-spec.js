@@ -45,6 +45,7 @@ import NoSitesComponent from '../lib/components/no-sites-component';
 import * as SlackNotifier from '../lib/slack-notifier';
 
 import EmailClient from '../lib/email-client.js';
+import NewUserRegistrationUnavailableComponent from '../lib/components/new-user-domain-registration-unavailable-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -977,6 +978,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			async function() {
 				const findADomainComponent = await FindADomainComponent.Expect( driver );
 				await findADomainComponent.searchForBlogNameAndWaitForResults( expectedDomainName );
+				if ( await NewUserRegistrationUnavailableComponent.Expect( driver ) ) {
+					await SlackNotifier.warn( 'SKIPPING: Domain registration is currently unavailable. ' );
+					return this.skip();
+				}
 				return await findADomainComponent.selectDomainAddress( expectedDomainName );
 			}
 		);
