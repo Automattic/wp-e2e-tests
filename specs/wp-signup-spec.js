@@ -978,11 +978,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			async function() {
 				const findADomainComponent = await FindADomainComponent.Expect( driver );
 				await findADomainComponent.searchForBlogNameAndWaitForResults( expectedDomainName );
-				if ( await NewUserRegistrationUnavailableComponent.Expect( driver ) ) {
-					await SlackNotifier.warn( 'SKIPPING: Domain registration is currently unavailable. ' );
-					return this.skip();
+				try {
+					return await findADomainComponent.selectDomainAddress( expectedDomainName );
+				} catch ( err ) {
+					if ( await NewUserRegistrationUnavailableComponent.Expect( driver ) ) {
+						await SlackNotifier.warn( 'SKIPPING: Domain registration is currently unavailable. ' );
+						return this.skip();
+					}
 				}
-				return await findADomainComponent.selectDomainAddress( expectedDomainName );
 			}
 		);
 
