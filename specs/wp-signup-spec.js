@@ -34,6 +34,7 @@ import ThemeDetailPage from '../lib/pages/theme-detail-page';
 import AccountSettingsPage from '../lib/pages/account/account-settings-page';
 import CloseAccountPage from '../lib/pages/account/close-account-page';
 import DesignTypePage from '../lib/pages/signup/design-type-page';
+import SearchDomainsPage from '../lib/pages/signup/search-domains-page';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
@@ -41,6 +42,7 @@ import NavBarComponent from '../lib/components/nav-bar-component';
 import SideBarComponent from '../lib/components/sidebar-component';
 import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component';
 import NoSitesComponent from '../lib/components/no-sites-component';
+import PurchaseDomainOnlyComponent from '../lib/components/purchase-domain-only-component';
 
 import * as SlackNotifier from '../lib/slack-notifier';
 
@@ -762,14 +764,12 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can visit the domains start page', async function() {
-			await StartPage.Visit(
-				driver,
-				StartPage.getStartURL( {
-					culture: locale,
-					flow: 'domain-first/site-or-domain',
-					query: `new=${ expectedDomainName }`,
-				} )
-			);
+			return await SearchDomainsPage.Visit( driver, dataHelper.getCalypsoURL( 'domains' ) );
+		} );
+
+		step( 'Can search and select .live domain', async function() {
+			let purchaseDomainOnlyComponent = await PurchaseDomainOnlyComponent.Expect( driver );
+			return await purchaseDomainOnlyComponent.searchForDomainNameAndSelectRecommended( expectedDomainName );
 		} );
 
 		step( 'Can select domain only from the domain first choice page', async function() {
