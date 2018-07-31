@@ -185,3 +185,33 @@ step( 'Can delete our newly created account', async function() {
 	} );
 } );
 ```
+
+## Waiting for elements
+
+When waiting for elements we should always use a quantity of the config value defined as `explicitWaitMS` instead of hardcoding values. This allows us to change it readily, and also adjust this for different environments, for example the live branch environment is not as fast as production so it waits twice as long.
+
+Instead of:
+```
+export default class TransferDomainPrecheckPage extends AsyncBaseContainer {
+	constructor( driver ) {
+		super( driver, By.css( '.transfer-domain-step__precheck' ), null, 40000 );
+	}
+}
+```
+
+do:
+
+```
+export default class TransferDomainPrecheckPage extends AsyncBaseContainer {
+	constructor( driver ) {
+		super(
+			driver,
+			By.css( '.transfer-domain-step__precheck' ),
+			null,
+			config.get( 'explicitWaitMS' ) * 2
+		);
+	}
+}
+```
+
+this achieves the same thing as the default explicit wait is presently 20000, and it allows us to adjust for environmental performance.
