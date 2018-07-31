@@ -83,15 +83,18 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				} );
 
 				describe( 'Categories and Tags', function() {
-					step( 'Can add a new category', async function() {
+					step( 'Expand Categories and Tags', async function() {
 						const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 						await postEditorSidebarComponent.expandCategoriesAndTags();
+					} );
+
+					step( 'Can add a new category', async function() {
+						const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 						await postEditorSidebarComponent.addNewCategory( newCategoryName );
 					} );
 
 					step( 'Can add a new tag', async function() {
 						const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-						await postEditorSidebarComponent.expandCategoriesAndTags();
 						await postEditorSidebarComponent.addNewTag( newTagName );
 					} );
 
