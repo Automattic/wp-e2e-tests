@@ -1068,7 +1068,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a domain only purchase coming in from wordpress.com/domains in EUR currency @parallel', function() {
+	describe.only( 'Sign up for a domain only purchase coming in from wordpress.com/domains in EUR currency @parallel', function() {
 		const siteName = dataHelper.getNewBlogName();
 		const expectedDomainName = `${ siteName }.live`;
 		const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
@@ -1103,9 +1103,9 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can search and select .live domain', async function() {
 			let purchaseDomainOnlyComponent = await PurchaseDomainOnlyComponent.Expect( driver );
-			return await purchaseDomainOnlyComponent.searchForDomainNameAndSelectRecommended(
-				expectedDomainName
-			);
+			await purchaseDomainOnlyComponent.searchDomain( expectedDomainName );
+			//TODO: Cover case when domain registration is not available
+			return await purchaseDomainOnlyComponent.selectRecommendedDomain();
 		} );
 
 		step( 'Can select domain only from the domain first choice page', async function() {
