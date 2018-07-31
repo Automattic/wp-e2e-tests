@@ -59,8 +59,6 @@
 	"knownABTestKeys": [
 		"businessPlanDescriptionAT",
 		"skipThemesSelectionModal",
-		"checklistThankYouForFreeUser",
-		"checklistThankYouForPaidUser",
 		"springSale30PercentOff",
 		"jetpackSignupGoogleTop",
 		"domainSuggestionKrakenV323",
@@ -72,8 +70,6 @@
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
 		[ "skipThemesSelectionModal_20170904", "show" ],
-		[ "checklistThankYouForFreeUser_20171204", "hide" ],
-		[ "checklistThankYouForPaidUser_20171204", "hide" ],
 		[ "springSale30PercentOff_20180413", "control" ],
 		[ "jetpackSignupGoogleTop_20180427", "original" ],
 		[ "domainSuggestionKrakenV323_20180726", "domainsbot" ],
