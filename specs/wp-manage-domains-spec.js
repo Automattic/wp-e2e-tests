@@ -209,8 +209,8 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 		} );
 	} );
 
-	xdescribe( 'Transfer a domain to an existing site (partial) @parallel', function() {
-		const domain = 'andrija.me';
+	describe( 'Transfer a domain to an existing site (partial) @parallel', function() {
+		const domain = 'automattic.com';
 
 		before( async function() {
 			if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
@@ -281,21 +281,6 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 
 		step( 'Can see the transfer precheck page', async function() {
 			return await TransferDomainPrecheckPage.Expect( driver );
-		} );
-
-		step( 'Can enter auth code on the transfer precheck page', async function() {
-			const transferDomainPrecheckPage = await TransferDomainPrecheckPage.Expect( driver );
-			return await transferDomainPrecheckPage.enterAuthCode( 'random-string' );
-		} );
-
-		step( 'Click check auth code', async function() {
-			const transferDomainPrecheckPage = await TransferDomainPrecheckPage.Expect( driver );
-			return await transferDomainPrecheckPage.clickCheckAuthCode();
-		} );
-
-		step( 'Can see auth code error', async function() {
-			const transferDomainPrecheckPage = await TransferDomainPrecheckPage.Expect( driver );
-			return await transferDomainPrecheckPage.authCodeErrorDisplayed();
 		} );
 	} );
 } );
