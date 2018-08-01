@@ -8,6 +8,7 @@ import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper';
 import * as eyesHelper from '../lib/eyes-helper';
+import * as videoRecorder from '../lib/video-recorder';
 
 // import EmailClient from '../lib/email-client.js';
 // import { listenForSMS } from '../lib/xmpp-client';
@@ -43,11 +44,16 @@ describe( `[${ host }] Auth Screen Canary: (${ screenSize }) @parallel @safarica
 
 	describe( 'Loading the log-in screen', function() {
 		before( async function() {
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		step( 'Can see the log in screen', async function() {
 			await LoginPage.Visit( driver, LoginPage.getLoginURL() );
+		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
 		} );
 	} );
 } );
@@ -67,6 +73,10 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 		} );
 
 		describe( 'Can Log In', function() {
+			before( function() {
+				videoRecorder.startVideo();
+			} );
+
 			step( 'Can log in', async function() {
 				let loginFlow = new LoginFlow( driver );
 				await loginFlow.login( { screenshot: true }, eyes );
@@ -75,11 +85,19 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 			step( 'Can see Reader Page after logging in', async function() {
 				return await ReaderPage.Expect( driver );
 			} );
+
+			after( function() {
+				videoRecorder.stopVideo();
+			} );
 		} );
 
 		// Test Jetpack SSO
 		if ( host !== 'WPCOM' ) {
 			describe( 'Can Log via Jetpack SSO', function() {
+				before( function() {
+					videoRecorder.startVideo();
+				} );
+
 				step( 'Can log into site via Jetpack SSO', async () => {
 					let loginFlow = new LoginFlow( driver );
 					return await loginFlow.login( { jetpackSSO: true } );
@@ -88,10 +106,18 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 				step( 'Can return to Reader', async () => {
 					return await ReaderPage.Visit( driver );
 				} );
+
+				after( function() {
+					videoRecorder.stopVideo();
+				} );
 			} );
 		}
 
 		describe( 'Can Log Out', function() {
+			before( function() {
+				videoRecorder.startVideo();
+			} );
+
 			step( 'Can view profile to log out', async function() {
 				let navbarComponent = await NavBarComponent.Expect( driver );
 				await navbarComponent.clickProfileLink();
@@ -106,6 +132,10 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 
 			step( 'Can see wordpress.com home when after logging out', async function() {
 				return await LoggedOutMasterbarComponent.Expect( driver );
+			} );
+
+			after( function() {
+				videoRecorder.stopVideo();
 			} );
 		} );
 	} );
@@ -416,6 +446,7 @@ describe( `[${ host }] User Agent: (${ screenSize }) @parallel @jetpack`, functi
 	this.timeout( mochaTimeOut );
 
 	before( async function() {
+		await videoRecorder.startVideo();
 		await driverManager.ensureNotLoggedIn( driver );
 	} );
 
@@ -426,5 +457,9 @@ describe( `[${ host }] User Agent: (${ screenSize }) @parallel @jetpack`, functi
 			userAgent.match( 'wp-e2e-tests' ),
 			`User Agent does not contain 'wp-e2e-tests'.  [${ userAgent }]`
 		);
+	} );
+
+	after( function() {
+		videoRecorder.stopVideo();
 	} );
 } );

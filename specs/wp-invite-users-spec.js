@@ -25,6 +25,7 @@ import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-co
 
 import * as dataHelper from '../lib/data-helper.js';
 import * as driverManager from '../lib/driver-manager.js';
+import * as videoRecorder from '../lib/video-recorder.js';
 import EmailClient from '../lib/email-client.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
@@ -51,7 +52,8 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		let acceptInviteURL = '';
 
 		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
+			await videoRecorder.startVideo();
+			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		step( 'Can log in and navigate to Invite People page', async function() {
@@ -148,6 +150,10 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			await navBarComponent.clickMySites();
 			return await NoSitesComponent.Expect( driver );
 		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
+		} );
 	} );
 
 	describe( 'Inviting new user as an Editor and revoke invite: @parallel @jetpack', function() {
@@ -156,6 +162,7 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		let acceptInviteURL = '';
 
 		before( async function() {
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -209,6 +216,10 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			let displayed = await inviteErrorPage.inviteErrorTitleDisplayed();
 			return assert( displayed, 'The invite was not successfully revoked' );
 		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
+		} );
 	} );
 
 	describe( 'Inviting New User as a Viewer of a WordPress.com Private Site: @parallel', function() {
@@ -219,6 +230,7 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		let acceptInviteURL = '';
 
 		before( async function() {
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -316,6 +328,7 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 
 		after( async function() {
+			await videoRecorder.stopVideo();
 			await new LoginFlow( driver, 'privateSiteUser' ).loginAndSelectPeople();
 			const peoplePage = await PeoplePage.Expect( driver );
 
@@ -339,6 +352,7 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		let acceptInviteURL = '';
 
 		before( async function() {
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -468,6 +482,10 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			await postEditorToolbar.ensureSaved();
 			return await postEditorToolbar.publishAndViewContent( { useConfirmStep: true } );
 		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
+		} );
 	} );
 
 	// Disabled pending wp-calypso issue 26178
@@ -477,6 +495,7 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		let acceptInviteURL = '';
 
 		before( async function() {
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -577,6 +596,10 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 				false,
 				`The username of '${ newUserName }' was still displayed as a site viewer`
 			);
+		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
 		} );
 	} );
 } );

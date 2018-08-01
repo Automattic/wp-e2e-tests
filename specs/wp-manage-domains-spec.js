@@ -3,6 +3,7 @@
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper.js';
+import * as videoRecorder from '../lib/video-recorder.js';
 
 import DomainsPage from '../lib/pages/domains-page.js';
 import CheckOutPage from '../lib/pages/signup/checkout-page.js';
@@ -58,6 +59,7 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 		} );
 
 		before( async function() {
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -109,6 +111,10 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 			const shoppingCartWidgetComponent = await ShoppingCartWidgetComponent.Expect( driver );
 			return await shoppingCartWidgetComponent.empty();
 		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
+		} );
 	} );
 
 	describe( 'Map a domain to an existing site @parallel', function() {
@@ -125,6 +131,7 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 		} );
 
 		before( async function() {
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -186,6 +193,10 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 			const shoppingCartWidgetComponent = await ShoppingCartWidgetComponent.Expect( driver );
 			return await shoppingCartWidgetComponent.empty();
 		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
+		} );
 	} );
 
 	xdescribe( 'Transfer a domain to an existing site (partial) @parallel', function() {
@@ -202,6 +213,7 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 		} );
 
 		before( async function() {
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -250,6 +262,10 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 
 		step( 'Can see the transfer precheck page', async function() {
 			return await TransferDomainPrecheckPage.Expect( driver );
+		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
 		} );
 	} );
 } );

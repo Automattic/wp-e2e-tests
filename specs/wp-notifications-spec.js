@@ -7,6 +7,7 @@ import * as driverManager from '../lib/driver-manager.js';
 import * as slackNotifier from '../lib/slack-notifier';
 import * as dataHelper from '../lib/data-helper';
 import * as eyesHelper from '../lib/eyes-helper.js';
+import * as videoRecorder from '../lib/video-recorder.js';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
@@ -38,6 +39,7 @@ describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`, fun
 	let commentedPostTitle;
 
 	before( async function() {
+		await videoRecorder.stopVideo();
 		await driverManager.ensureNotLoggedIn( driver );
 
 		let testEnvironment = 'WordPress.com';
@@ -118,6 +120,7 @@ describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`, fun
 	);
 
 	after( async function() {
+		await videoRecorder.stopVideo();
 		await eyesHelper.eyesClose( eyes );
 	} );
 } );

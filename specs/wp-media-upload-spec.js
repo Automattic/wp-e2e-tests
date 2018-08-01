@@ -10,6 +10,7 @@ import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-co
 import * as driverManager from '../lib/driver-manager.js';
 import * as mediaHelper from '../lib/media-helper.js';
 import * as dataHelper from '../lib/data-helper';
+import * as videoRecorder from '../lib/video-recorder.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -41,6 +42,10 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 			describe( 'Can upload a normal image', function() {
 				let fileDetails;
 
+				before( function() {
+					videoRecorder.startVideo();
+				} );
+
 				step( 'Navigate to Editor page and create image file for upload', async function() {
 					fileDetails = await mediaHelper.createFileWithFilename( 'normal.jpg' );
 				} );
@@ -54,6 +59,7 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 				} );
 
 				after( async function() {
+					await videoRecorder.stopVideo();
 					await editorPage.dismissMediaModal();
 					if ( fileDetails ) {
 						await mediaHelper.deleteFile( fileDetails );
@@ -63,6 +69,10 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 
 			describe( 'Can upload an image with reserved url chars in the filename', function() {
 				let fileDetails;
+
+				before( function() {
+					videoRecorder.startVideo();
+				} );
 
 				step( 'Create image file for upload', async function() {
 					fileDetails = await mediaHelper.createFileWithFilename(
@@ -80,6 +90,7 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 				} );
 
 				after( async function() {
+					await videoRecorder.stopVideo();
 					await editorPage.dismissMediaModal();
 					if ( fileDetails ) {
 						await mediaHelper.deleteFile( fileDetails );
@@ -89,6 +100,10 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 
 			describe( 'Can upload an mp3', function() {
 				let fileDetails;
+
+				before( function() {
+					videoRecorder.startVideo();
+				} );
 
 				step( 'Create mp3 for upload', async function() {
 					fileDetails = await mediaHelper.getMP3FileWithFilename( 'new.mp3' );
@@ -103,6 +118,7 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 				} );
 
 				after( async function() {
+					await videoRecorder.stopVideo();
 					await editorPage.dismissMediaModal();
 					if ( fileDetails ) {
 						await mediaHelper.deleteFile( fileDetails );
@@ -113,6 +129,10 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 			describe( 'Can upload Featured image', () => {
 				let fileDetails;
 				let editorSidebar;
+
+				before( function() {
+					videoRecorder.startVideo();
+				} );
 
 				step( 'Create image file for upload', async function() {
 					fileDetails = await mediaHelper.createFile();
@@ -145,6 +165,7 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 				} );
 
 				after( async function() {
+					await videoRecorder.stopVideo();
 					await editorPage.dismissMediaModal();
 					if ( fileDetails ) {
 						await mediaHelper.deleteFile( fileDetails );

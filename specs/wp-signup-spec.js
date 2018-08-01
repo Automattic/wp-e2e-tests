@@ -66,7 +66,7 @@ before( async function() {
 	driver = await driverManager.startBrowser();
 } );
 
-describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
+describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 	this.timeout( mochaTimeOut );
 
 	describe( 'Sign up for a free non-blog site and log in via a magic link @parallel @email', function() {
@@ -77,12 +77,8 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		let magicLoginLink;
 
 		before( async function() {
-			await videoRecorder.start();
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'Can visit the start page', async function() {
@@ -207,6 +203,10 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				);
 			} );
 		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
+		} );
 	} );
 
 	describe( 'Sign up for a free blog and log in via a magic link @parallel @email', function() {
@@ -216,6 +216,7 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		let magicLoginLink;
 
 		before( async function() {
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -331,6 +332,10 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				);
 			} );
 		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
+		} );
 	} );
 
 	describe( 'Sign up for a non-blog site on a premium paid plan through main flow in USD currency @parallel @visdiff', function() {
@@ -347,12 +352,8 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		} );
 
 		before( async function() {
-			await videoRecorder.start();
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'We can set the sandbox cookie for payments', async function() {
@@ -531,6 +532,7 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		} );
 
 		after( async function() {
+			await videoRecorder.stopVideo();
 			await eyesHelper.eyesClose( eyes );
 		} );
 	} );
@@ -549,6 +551,7 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		} );
 
 		before( async function() {
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -731,6 +734,7 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		} );
 
 		after( async function() {
+			await videoRecorder.stopVideo();
 			await eyesHelper.eyesClose( eyes );
 		} );
 	} );
@@ -744,12 +748,8 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		const expectedCurrencySymbol = '¥';
 
 		before( async function() {
-			await videoRecorder.start();
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'We can set the sandbox cookie for payments', async function() {
@@ -907,6 +907,10 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				);
 			} );
 		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
+		} );
 	} );
 
 	describe( 'Sign up for a site on a personal paid plan coming in via /create as personal flow in GBP currency @parallel', function() {
@@ -917,12 +921,8 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		const expectedCurrencySymbol = '£';
 
 		before( async function() {
-			await videoRecorder.start();
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'We can set the sandbox cookie for payments', async function() {
@@ -1084,6 +1084,10 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				);
 			} );
 		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
+		} );
 	} );
 
 	describe( 'Sign up for a domain only purchase coming in from wordpress.com/domains in EUR currency @parallel', function() {
@@ -1105,15 +1109,8 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		} );
 
 		before( async function() {
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		before( function() {
-			videoRecorder.start();
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'We can visit set the sandbox cookie for payments', async function() {
@@ -1284,6 +1281,10 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				);
 			} );
 		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
+		} );
 	} );
 
 	describe( 'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow in CAD currency @parallel', function() {
@@ -1309,11 +1310,7 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		} );
 
 		before( function() {
-			videoRecorder.start();
-		} );
-
-		after( function() {
-			videoRecorder.stop();
+			videoRecorder.startVideo();
 		} );
 
 		step( 'We can set the sandbox cookie for payments', async function() {
@@ -1475,6 +1472,10 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				);
 			} );
 		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
+		} );
 	} );
 
 	describe( 'Basic sign up for a free non-blog site @parallel @email @canary @ie11canary', function() {
@@ -1482,12 +1483,8 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		let newBlogAddress = '';
 
 		before( async function() {
-			await videoRecorder.start();
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'Can visit the start page', async function() {
@@ -1567,12 +1564,17 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				'The displayed URL on the view blog page is not as expected'
 			);
 		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
+		} );
 	} );
 
 	describe( 'Basic sign up for a free blog @parallel @email', function() {
 		const blogName = dataHelper.getNewBlogName();
 
 		before( async function() {
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -1641,6 +1643,10 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			return assert( subheader, 'The checklist subheader does not exist.' );
 		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
+		} );
 	} );
 
 	describe( 'Sign up while purchasing premium theme in AUD currency @parallel @email', function() {
@@ -1652,12 +1658,8 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		let chosenThemeName = '';
 
 		before( async function() {
-			await videoRecorder.start();
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'We can set the sandbox cookie for payments', async function() {
@@ -1779,6 +1781,10 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 				);
 			} );
 		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
+		} );
 	} );
 
 	describe( 'Sign up for free subdomain site @parallel', function() {
@@ -1786,12 +1792,8 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		const expectedDomainName = `${ blogName }.art.blog`;
 
 		before( async function() {
-			await videoRecorder.start();
+			await videoRecorder.startVideo();
 			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'Can enter the subdomains flow and select design type', async function() {
@@ -1866,18 +1868,18 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 
 			return assert( subheader, 'The checklist subheader does not exist.' );
 		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
+		} );
 	} );
 
 	describe( 'Sign up for an account only (no site) @parallel', function() {
 		const userName = dataHelper.getNewBlogName();
 
 		before( async function() {
-			await videoRecorder.start();
+			await videoRecorder.startVideo();
 			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'Can enter the account flow and see the account details page', async function() {
@@ -1915,6 +1917,10 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			const navBarComponent = await NavBarComponent.Expect( driver );
 			await navBarComponent.clickMySites();
 			await NoSitesComponent.Expect( driver );
+		} );
+
+		after( function() {
+			videoRecorder.stopVideo();
 		} );
 	} );
 } );

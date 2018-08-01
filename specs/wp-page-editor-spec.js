@@ -17,6 +17,7 @@ import * as driverManager from '../lib/driver-manager.js';
 import * as mediaHelper from '../lib/media-helper.js';
 import * as dataHelper from '../lib/data-helper.js';
 import * as driverHelper from '../lib/driver-helper';
+import * as videoRecorder from '../lib/video-recorder.js';
 import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
@@ -41,6 +42,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			'If you have the same problem for a long time, maybe it’s not a problem. Maybe it’s a fact..\n— Itzhak Rabin';
 
 		before( async function() {
+			await videoRecorder.startVideo()
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -209,6 +211,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		after( async function() {
+			await videoRecorder.stopVideo();
 			if ( fileDetails ) {
 				await mediaHelper.deleteFile( fileDetails );
 			}
@@ -221,6 +224,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			'Few people know how to take a walk. The qualifications are endurance, plain clothes, old shoes, an eye for nature, good humor, vast curiosity, good speech, good silence and nothing too much.\n— Ralph Waldo Emerson\n';
 
 		before( async function() {
+			await videoRecorder.startVideo();
 			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -304,6 +308,10 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			} );
 			//TODO: Add Jetpack SSO and verify content actually published
 		}
+
+		after( function() {
+			videoRecorder.stopVideo();
+		} );
 	} );
 
 	describe( 'Password Protected Pages: @parallel @jetpack', function() {
@@ -337,10 +345,18 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 			} );
+
+			after( function() {
+				videoRecorder.stopVideo();
+			} );
 		} );
 
 		describe( 'As a logged in user', function() {
 			describe( 'With no password entered', function() {
+				before( function() {
+					videoRecorder.startVideo();
+				} );
+
 				step( 'Can view page title', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const actualPageTitle = await viewPagePage.pageTitle();
@@ -373,9 +389,17 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 							') when it should be password protected.'
 					);
 				} );
+
+				after( function() {
+					videoRecorder.stopVideo();
+				} );
 			} );
 
 			describe( 'With incorrect password entered', function() {
+				before( function() {
+					videoRecorder.startVideo();
+				} );
+
 				step( 'Enter incorrect password', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					await viewPagePage.enterPassword( 'password' );
@@ -413,9 +437,17 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 							') when it should be password protected.'
 					);
 				} );
+
+				after( function() {
+					videoRecorder.stopVideo();
+				} );
 			} );
 
 			describe( 'With correct password entered', function() {
+				before( function() {
+					videoRecorder.startVideo();
+				} );
+
 				step( 'Enter correct password', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					await viewPagePage.enterPassword( postPassword );
@@ -452,6 +484,10 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 							pageQuote +
 							')'
 					);
+				} );
+
+				after( function() {
+					videoRecorder.stopVideo();
 				} );
 			} );
 		} );
@@ -463,6 +499,10 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			} );
 
 			describe( 'With no password entered', function() {
+				before( function() {
+					videoRecorder.startVideo();
+				} );
+
 				step( 'Can view page title', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					const actualPageTitle = await viewPagePage.pageTitle();
@@ -495,9 +535,17 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 							') when it should be password protected.'
 					);
 				} );
+
+				after( function() {
+					videoRecorder.stopVideo();
+				} );
 			} );
 
 			describe( 'With incorrect password entered', function() {
+				before( function() {
+					videoRecorder.startVideo();
+				} );
+
 				step( 'Enter incorrect password', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					await viewPagePage.enterPassword( 'password' );
@@ -535,9 +583,17 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 							') when it should be password protected.'
 					);
 				} );
+
+				after( function() {
+					videoRecorder.stopVideo();
+				} );
 			} );
 
 			describe( 'With correct password entered', function() {
+				before( function() {
+					videoRecorder.startVideo();
+				} );
+
 				step( 'Enter correct password', async function() {
 					const viewPagePage = await ViewPagePage.Expect( driver );
 					await viewPagePage.enterPassword( postPassword );
@@ -574,6 +630,10 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 							pageQuote +
 							')'
 					);
+				} );
+
+				after( function() {
+					videoRecorder.stopVideo();
 				} );
 			} );
 		} );
@@ -591,6 +651,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		};
 
 		before( async function() {
+			await videoRecorder.startVideo();
 			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -664,6 +725,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		);
 
 		after( async function() {
+			await videoRecorder.stopVideo();
 			await driverHelper.ensurePopupsClosed( driver );
 		} );
 	} );
