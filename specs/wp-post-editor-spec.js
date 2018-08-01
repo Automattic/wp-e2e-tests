@@ -84,12 +84,12 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 				describe( 'Categories and Tags', function() {
 					step( 'Expand Categories and Tags', async function() {
-						let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
+						const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 						await postEditorSidebarComponent.expandCategoriesAndTags();
 					} );
 
 					step( 'Can add a new category', async function() {
-						let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
+						const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 						await postEditorSidebarComponent.addNewCategory( newCategoryName );
 					} );
 
@@ -99,12 +99,12 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					} );
 
 					step( 'Close categories and tags', async function() {
-						let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
+						const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 						await postEditorSidebarComponent.closeCategoriesAndTags();
 					} );
 
 					step( 'Verify categories and tags present after save', async function() {
-						let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
+						const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 						const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 						await postEditorSidebarComponent.hideComponentIfNecessary();
 						await postEditorToolbarComponent.ensureSaved();

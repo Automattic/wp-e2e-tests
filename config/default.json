@@ -59,11 +59,9 @@
 	"knownABTestKeys": [
 		"businessPlanDescriptionAT",
 		"skipThemesSelectionModal",
-		"checklistThankYouForFreeUser",
-		"checklistThankYouForPaidUser",
 		"springSale30PercentOff",
 		"jetpackSignupGoogleTop",
-		"domainSuggestionKrakenV322",
+		"domainSuggestionKrakenV323",
 		"domainSearchTLDFilterPlacement",
 		"aboutSuggestionMatches",
 		"includeDotBlogSubdomain",
@@ -72,14 +70,12 @@
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
 		[ "skipThemesSelectionModal_20170904", "show" ],
-		[ "checklistThankYouForFreeUser_20171204", "hide" ],
-		[ "checklistThankYouForPaidUser_20171204", "hide" ],
 		[ "springSale30PercentOff_20180413", "control" ],
 		[ "jetpackSignupGoogleTop_20180427", "original" ],
-		[ "domainSuggestionKrakenV322_20180709", "domainsbot" ],
+		[ "domainSuggestionKrakenV323_20180726", "domainsbot" ],
 		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
 		[ "aboutSuggestionMatches_20180704", "control" ],
 		[ "includeDotBlogSubdomain_20180723", "no" ],
-		[ "nudgeAPalooza_20180711", "control" ]
+		[ "nudgeAPalooza_20180726", "control" ]
 	]
 }
