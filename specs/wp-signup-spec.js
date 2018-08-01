@@ -35,6 +35,7 @@ import AccountSettingsPage from '../lib/pages/account/account-settings-page';
 import CloseAccountPage from '../lib/pages/account/close-account-page';
 import DesignTypePage from '../lib/pages/signup/design-type-page';
 import ChecklistPage from '../lib/pages/checklist-page';
+import SearchDomainsPage from '../lib/pages/signup/search-domains-page';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
@@ -42,10 +43,12 @@ import NavBarComponent from '../lib/components/nav-bar-component';
 import SideBarComponent from '../lib/components/sidebar-component';
 import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component';
 import NoSitesComponent from '../lib/components/no-sites-component';
+import PurchaseDomainOnlyComponent from '../lib/components/purchase-domain-only-component';
 
 import * as SlackNotifier from '../lib/slack-notifier';
 
 import EmailClient from '../lib/email-client.js';
+import NewUserRegistrationUnavailableComponent from '../lib/components/new-user-domain-registration-unavailable-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -1095,14 +1098,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can visit the domains start page', async function() {
-			await StartPage.Visit(
-				driver,
-				StartPage.getStartURL( {
-					culture: locale,
-					flow: 'domain-first/site-or-domain',
-					query: `new=${ expectedDomainName }`,
-				} )
-			);
+			return await SearchDomainsPage.Visit( driver, dataHelper.getCalypsoURL( 'domains' ) );
+		} );
+
+		step( 'Can search and select .live domain', async function() {
+			let purchaseDomainOnlyComponent = await PurchaseDomainOnlyComponent.Expect( driver );
+			await purchaseDomainOnlyComponent.searchDomain( expectedDomainName );
+			//TODO: Cover case when domain registration is not available
+			return await purchaseDomainOnlyComponent.selectRecommendedDomain();
 		} );
 
 		step( 'Can select domain only from the domain first choice page', async function() {
@@ -1311,7 +1314,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			async function() {
 				const findADomainComponent = await FindADomainComponent.Expect( driver );
 				await findADomainComponent.searchForBlogNameAndWaitForResults( expectedDomainName );
-				return await findADomainComponent.selectDomainAddress( expectedDomainName );
+				try {
+					return await findADomainComponent.selectDomainAddress( expectedDomainName );
+				} catch ( err ) {
+					if ( await NewUserRegistrationUnavailableComponent.Expect( driver ) ) {
+						await SlackNotifier.warn( 'SKIPPING: Domain registration is currently unavailable. ' );
+						return this.skip();
+					}
+				}
 			}
 		);
 
