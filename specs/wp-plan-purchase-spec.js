@@ -5,6 +5,7 @@ import assert from 'assert';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper';
+import * as videoRecorder from '../lib/video-recorder';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
@@ -30,6 +31,7 @@ describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, function() 
 
 	describe( 'Comparing Plans:', function() {
 		before( async function() {
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -69,5 +71,9 @@ describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, function() 
 				return assert( present, `Failed to detect correct plan (${ planName })` );
 			} );
 		}
+
+		after( function() {
+			videoRecorder.stopVideo();
+		} );
 	} );
 } );

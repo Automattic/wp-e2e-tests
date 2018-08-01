@@ -42,7 +42,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			'If you have the same problem for a long time, maybe it’s not a problem. Maybe it’s a fact..\n— Itzhak Rabin';
 
 		before( async function() {
-			await videoRecorder.startVideo()
+			await videoRecorder.startVideo();
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
