@@ -66,7 +66,7 @@ before( async function() {
 	driver = await driverManager.startBrowser();
 } );
 
-describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
+describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 	this.timeout( mochaTimeOut );
 
 	describe( 'Sign up for a free non-blog site and log in via a magic link @parallel @email', function() {
@@ -77,12 +77,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let magicLoginLink;
 
 		before( async function() {
-			await videoRecorder.start();
 			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'Can visit the start page', async function() {
@@ -347,12 +342,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		before( async function() {
-			await videoRecorder.start();
 			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'We can set the sandbox cookie for payments', async function() {
@@ -744,12 +734,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const expectedCurrencySymbol = '¥';
 
 		before( async function() {
-			await videoRecorder.start();
 			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'We can set the sandbox cookie for payments', async function() {
@@ -917,12 +902,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const expectedCurrencySymbol = '£';
 
 		before( async function() {
-			await videoRecorder.start();
 			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'We can set the sandbox cookie for payments', async function() {
@@ -1106,14 +1086,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		before( function() {
-			videoRecorder.start();
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'We can visit set the sandbox cookie for payments', async function() {
@@ -1308,14 +1280,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		before( function() {
-			videoRecorder.start();
-		} );
-
-		after( function() {
-			videoRecorder.stop();
-		} );
-
 		step( 'We can set the sandbox cookie for payments', async function() {
 			const wPHomePage = await WPHomePage.Visit( driver );
 			await wPHomePage.checkURL( locale );
@@ -1482,12 +1446,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let newBlogAddress = '';
 
 		before( async function() {
-			await videoRecorder.start();
 			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'Can visit the start page', async function() {
@@ -1652,12 +1611,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let chosenThemeName = '';
 
 		before( async function() {
-			await videoRecorder.start();
 			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'We can set the sandbox cookie for payments', async function() {
@@ -1786,12 +1740,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const expectedDomainName = `${ blogName }.art.blog`;
 
 		before( async function() {
-			await videoRecorder.start();
 			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'Can enter the subdomains flow and select design type', async function() {
@@ -1872,12 +1821,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const userName = dataHelper.getNewBlogName();
 
 		before( async function() {
-			await videoRecorder.start();
 			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		after( function() {
-			videoRecorder.stop();
 		} );
 
 		step( 'Can enter the account flow and see the account details page', async function() {
