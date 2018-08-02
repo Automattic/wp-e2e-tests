@@ -35,7 +35,6 @@ import AccountSettingsPage from '../lib/pages/account/account-settings-page';
 import CloseAccountPage from '../lib/pages/account/close-account-page';
 import DesignTypePage from '../lib/pages/signup/design-type-page';
 import ChecklistPage from '../lib/pages/checklist-page';
-import SearchDomainsPage from '../lib/pages/signup/search-domains-page';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
@@ -43,7 +42,6 @@ import NavBarComponent from '../lib/components/nav-bar-component';
 import SideBarComponent from '../lib/components/sidebar-component';
 import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component';
 import NoSitesComponent from '../lib/components/no-sites-component';
-import PurchaseDomainOnlyComponent from '../lib/components/purchase-domain-only-component';
 
 import * as SlackNotifier from '../lib/slack-notifier';
 
@@ -1068,7 +1066,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	xdescribe( 'Sign up for a domain only purchase coming in from wordpress.com/domains in EUR currency @parallel', function() {
+	describe( 'Sign up for a domain only purchase coming in from wordpress.com/domains in EUR currency @parallel', function() {
 		const siteName = dataHelper.getNewBlogName();
 		const expectedDomainName = `${ siteName }.live`;
 		const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
@@ -1098,14 +1096,15 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can visit the domains start page', async function() {
-			return await SearchDomainsPage.Visit( driver, dataHelper.getCalypsoURL( 'domains' ) );
-		} );
-
-		step( 'Can search and select .live domain', async function() {
-			let purchaseDomainOnlyComponent = await PurchaseDomainOnlyComponent.Expect( driver );
-			await purchaseDomainOnlyComponent.searchDomain( expectedDomainName );
 			//TODO: Cover case when domain registration is not available
-			return await purchaseDomainOnlyComponent.selectRecommendedDomain();
+			await StartPage.Visit(
+				driver,
+				StartPage.getStartURL( {
+					culture: locale,
+					flow: 'domain-first/site-or-domain',
+					query: `new=${ expectedDomainName }`,
+				} )
+			);
 		} );
 
 		step( 'Can select domain only from the domain first choice page', async function() {
