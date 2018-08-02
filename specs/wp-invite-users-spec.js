@@ -96,7 +96,7 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			let actualEmailAddress = await acceptInvitePage.getEmailPreFilled();
 			let headerInviteText = await acceptInvitePage.getHeaderInviteText();
 			assert.strictEqual( actualEmailAddress, newInviteEmailAddress );
-			assert( headerInviteText.includes( 'editor' ) );
+			assert( headerInviteText.includes( 'editdor' ) );
 
 			await acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
 			return await acceptInvitePage.waitUntilNotVisible();

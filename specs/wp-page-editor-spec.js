@@ -527,7 +527,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 					const content = await viewPagePage.pageContent();
 					assert.strictEqual(
 						content.indexOf( pageQuote ) === -1,
-						true,
+						false,
 						'The page content (' +
 							content +
 							') displays the expected content (' +
@@ -629,7 +629,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			let displayed = await viewPagePage.paymentButtonDisplayed();
 			assert.strictEqual(
 				displayed,
-				true,
+				false,
 				'The published page does not contain the payment button'
 			);
 		} );
