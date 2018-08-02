@@ -6,7 +6,6 @@ import assert from 'assert';
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper.js';
 import * as eyesHelper from '../lib/eyes-helper.js';
-import * as videoRecorder from '../lib/video-recorder';
 
 import WPHomePage from '../lib/pages/wp-home-page.js';
 import ChooseAThemePage from '../lib/pages/signup/choose-a-theme-page.js';
