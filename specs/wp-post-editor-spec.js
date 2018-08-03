@@ -531,6 +531,11 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					'The newly scheduled post is not showing in the editor as scheduled'
 				);
 			} );
+
+			after( async function() {
+				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
+				await postEditorSidebarComponent.trashPost();
+			} );
 		} );
 	} );
 
