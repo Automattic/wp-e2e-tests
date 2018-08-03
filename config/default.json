@@ -66,7 +66,7 @@
 		"aboutSuggestionMatches",
 		"includeDotBlogSubdomain",
 		"nudgeAPalooza",
-		"gsuiteDiscount"
+		"gSuiteDiscount"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
