@@ -65,7 +65,7 @@ before( async function() {
 	driver = await driverManager.startBrowser();
 } );
 
-describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
+describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 	this.timeout( mochaTimeOut );
 
 	describe( 'Sign up for a free non-blog site and log in via a magic link @parallel @email', function() {

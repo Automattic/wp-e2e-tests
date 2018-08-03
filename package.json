@@ -11,7 +11,6 @@
   "defaultTestArgs": "-g -s $BROWSERSIZE",
   "scripts": {
     "lint": "eslint . --max-warnings=0",
-	"fixlint": "eslint . --fix",
     "precommitlint": "LIST=`git diff-index --name-only HEAD | grep js$`; if [ \"$LIST\" ]; then eslint $LIST --max-warnings=0; fi",
     "precommit": "node scripts/pre-commit-hook.js",
     "precommitcirclecivalidate": "./scripts/git-pre-commit-circleci-validate",
