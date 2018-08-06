@@ -527,7 +527,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 					const content = await viewPagePage.pageContent();
 					assert.strictEqual(
 						content.indexOf( pageQuote ) === -1,
-						false,
+						true,
 						'The page content (' +
 							content +
 							') displays the expected content (' +
