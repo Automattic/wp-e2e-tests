@@ -1364,7 +1364,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 				const businessPlanInCart = await securePaymentComponent.containsBusinessPlan();
 				assert.strictEqual(
 					businessPlanInCart,
-					false,
+					true,
 					"The cart doesn't contain the business plan product"
 				);
 				const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
@@ -1521,7 +1521,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			const url = await viewBlogPage.urlDisplayed();
 			return assert.strictEqual(
 				url,
-				'https://' + newBlogAddress + '9/',
+				'https://' + newBlogAddress + '/',
 				'The displayed URL on the view blog page is not as expected'
 			);
 		} );
@@ -1828,7 +1828,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 				driver,
 				StartPage.getStartURL( {
 					culture: locale,
-					flow: 'accdfount',
+					flow: 'account',
 				} )
 			);
 			await CreateYourAccountPage.Expect( driver );

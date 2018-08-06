@@ -629,7 +629,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			let displayed = await viewPagePage.paymentButtonDisplayed();
 			assert.strictEqual(
 				displayed,
-				false,
+				true,
 				'The published page does not contain the payment button'
 			);
 		} );

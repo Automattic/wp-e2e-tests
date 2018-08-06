@@ -100,7 +100,7 @@ describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`, fun
 		await eyesHelper.eyesScreenshot( driver, eyes, 'Notifications List' );
 		return assert.strictEqual(
 			content.includes( expectedContent ),
-			false,
+			true,
 			`The actual notifications content '${ content }' does not contain expected content '${ expectedContent }'`
 		);
 	} );
