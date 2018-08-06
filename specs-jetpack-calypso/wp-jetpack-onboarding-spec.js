@@ -55,9 +55,7 @@ describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		step( 'Can navigate to onboarding flow', async function() {
-			let domain = 'http://calypso.localhost:3000/jetpack/start/';
-			return await driver.get( domain + this.jnFlow.url.substring( 8 ) );
-			// return await driver.get( this.jnFlow.url + onboardingUrlExt );
+			return await driver.get( this.jnFlow.url + onboardingUrlExt );
 		} );
 
 		step( 'Can skip all steps', async function() {
@@ -157,9 +155,7 @@ describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		step( 'Can navigate to onboarding flow', async function() {
-			let domain = 'http://calypso.localhost:3000/jetpack/start/';
-			return await driver.get( domain + this.jnFlow.url.substring( 8 ) );
-			// return await driver.get( this.jnFlow.url + onboardingUrlExt );
+			return await driver.get( this.jnFlow.url + onboardingUrlExt );
 		} );
 
 		step( 'Can fill out site title and tagline', async function() {
@@ -281,9 +277,7 @@ describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		step( 'Can navigate to onboarding flow', async function() {
-			let domain = 'http://calypso.localhost:3000/jetpack/start/';
-			return await driver.get( domain + this.jnFlow.url.substring( 8 ) );
-			// return await driver.get( this.jnFlow.url + onboardingUrlExt );
+			return await driver.get( this.jnFlow.url + onboardingUrlExt );
 		} );
 
 		step( 'Can fill out site title and tagline', async function() {
@@ -395,9 +389,7 @@ describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 		} );
 
 		step( 'Can navigate to onboarding flow', async function() {
-			let domain = 'http://calypso.localhost:3000/jetpack/start/';
-			return await driver.get( domain + this.jnFlow.url.substring( 8 ) );
-			// return await driver.get( this.jnFlow.url + onboardingUrlExt );
+			return await driver.get( this.jnFlow.url + onboardingUrlExt );
 		} );
 
 		step( 'Can fill out site title and tagline', async function() {
