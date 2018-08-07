@@ -1802,6 +1802,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can delete site', async function() {
 			const sidebarComponent = await SidebarComponent.Expect( driver );
+			await sidebarComponent.ensureSidebarMenuVisible();
 			await sidebarComponent.selectSettings();
 			const settingsPage = await SettingsPage.Expect( driver );
 			return await settingsPage.deleteSite( expectedDomainName );
