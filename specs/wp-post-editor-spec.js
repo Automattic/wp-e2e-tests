@@ -472,7 +472,7 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		describe( 'Schedule a New Post', function() {
+		describe( 'Schedule (and remove) a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = '“Worries shared are worries halved.”\n- Unknown';
 
@@ -526,10 +526,15 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorToolbarComponent.waitForPostSucessNotice();
 				const postEditorPage = await EditorPage.Expect( driver );
-				assert(
+				return assert(
 					await postEditorPage.postIsScheduled(),
 					'The newly scheduled post is not showing in the editor as scheduled'
 				);
+			} );
+
+			step( 'Remove scheduled post', async function() {
+				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
+				return await postEditorSidebarComponent.trashPost();
 			} );
 		} );
 	} );

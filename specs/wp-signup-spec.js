@@ -10,6 +10,8 @@ import * as eyesHelper from '../lib/eyes-helper.js';
 import WPHomePage from '../lib/pages/wp-home-page.js';
 import ChooseAThemePage from '../lib/pages/signup/choose-a-theme-page.js';
 import StartPage from '../lib/pages/signup/start-page.js';
+import JetpackAddNewSitePage from '../lib/pages/signup/jetpack-add-new-site-page';
+
 import AboutPage from '../lib/pages/signup/about-page.js';
 import DomainFirstPage from '../lib/pages/signup/domain-first-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page.js';
@@ -46,6 +48,7 @@ import NoSitesComponent from '../lib/components/no-sites-component';
 import * as SlackNotifier from '../lib/slack-notifier';
 
 import EmailClient from '../lib/email-client.js';
+import NewUserRegistrationUnavailableComponent from '../lib/components/new-user-domain-registration-unavailable-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -68,7 +71,7 @@ before( async function() {
 describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 	this.timeout( mochaTimeOut );
 
-	describe( 'Sign up for a free non-blog site and log in via a magic link @parallel @email', function() {
+	describe( 'Sign up for a free WordPress.com site (not blog) from the Jetpack new site page, and log in via a magic link @parallel @email', function() {
 		const blogName = dataHelper.getNewBlogName();
 		let newBlogAddress = '';
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
@@ -79,9 +82,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		step( 'Can visit the start page', async function() {
-			await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale } ) );
-		} );
+		step(
+			'Can visit the Jetpack Add New Site page and choose "Create a shiny new WordPress.com site"',
+			async function() {
+				const jetpackAddNewSitePage = await JetpackAddNewSitePage.Visit( driver );
+				await jetpackAddNewSitePage.createNewWordPressDotComSite();
+			}
+		);
 
 		step( 'Can see the "About" page, and enter some site information', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
@@ -203,11 +210,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a free blog and log in via a magic link @parallel @email', function() {
+	describe( 'Sign up for a free blog and see the onboarding checklist @parallel', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-		let magicLoginLink;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -274,36 +280,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			assert( header, 'The checklist header does not exist.' );
 
 			return assert( subheader, 'The checklist subheader does not exist.' );
-		} );
-
-		step( 'Can log out and request a magic link', async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-			const loginPage = await LoginPage.Visit( driver );
-			return await loginPage.requestMagicLink( emailAddress );
-		} );
-
-		step( 'Can see email containing magic link', async function() {
-			const emailClient = new EmailClient( signupInboxId );
-			const validator = emails => emails.find( email => email.subject.includes( 'WordPress.com' ) );
-			let emails = await emailClient.pollEmailsByRecipient( emailAddress, validator );
-			//Disabled due to a/b test on activation email. See https://github.com/Automattic/wp-e2e-tests/issues/819
-			//assert.strictEqual( emails.length, 2, 'The number of newly registered emails is not equal to 2 (activation and magic link)' );
-			for ( let email of emails ) {
-				if ( email.subject.includes( 'WordPress.com' ) ) {
-					return ( magicLoginLink = email.html.links[ 0 ].href );
-				}
-			}
-			return assert(
-				magicLoginLink !== undefined,
-				'Could not locate the magic login link email link'
-			);
-		} );
-
-		step( 'Can visit the magic link and we should be logged in', async function() {
-			await driver.get( magicLoginLink );
-			const magicLoginPage = await MagicLoginPage.Expect( driver );
-			await magicLoginPage.finishLogin();
-			return await ReaderPage.Expect( driver );
 		} );
 
 		step( 'Can delete our newly created account', async function() {
@@ -1095,6 +1071,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can visit the domains start page', async function() {
+			//TODO: Cover case when domain registration is not available
 			await StartPage.Visit(
 				driver,
 				StartPage.getStartURL( {
@@ -1311,7 +1288,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			async function() {
 				const findADomainComponent = await FindADomainComponent.Expect( driver );
 				await findADomainComponent.searchForBlogNameAndWaitForResults( expectedDomainName );
-				return await findADomainComponent.selectDomainAddress( expectedDomainName );
+				try {
+					return await findADomainComponent.selectDomainAddress( expectedDomainName );
+				} catch ( err ) {
+					if ( await NewUserRegistrationUnavailableComponent.Expect( driver ) ) {
+						await SlackNotifier.warn( 'SKIPPING: Domain registration is currently unavailable. ' );
+						return this.skip();
+					}
+				}
 			}
 		);
 

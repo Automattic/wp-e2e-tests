@@ -10,6 +10,7 @@ import ReaderPage from '../lib/pages/reader-page.js';
 import StatsPage from '../lib/pages/stats-page.js';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
+import RegistrationUnavailableComponent from '../lib/components/domain-registration-unavailable-component';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
 import ShoppingCartWidgetComponent from '../lib/components/shopping-cart-widget-component.js';
 import SidebarComponent from '../lib/components/sidebar-component.js';
@@ -72,7 +73,17 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 		} );
 
 		step( 'Can see the domain search component', async function() {
-			const findADomainComponent = await FindADomainComponent.Expect( driver );
+			let findADomainComponent;
+			try {
+				findADomainComponent = await FindADomainComponent.Expect( driver );
+			} catch ( err ) {
+				if ( await RegistrationUnavailableComponent.Expect( driver ) ) {
+					await SlackNotifier.warn( 'SKIPPING: Domain registration is currently unavailable. ', {
+						suppressDuplicateMessages: true,
+					} );
+					return this.skip();
+				}
+			}
 			return await findADomainComponent.waitForResults();
 		} );
 
@@ -139,7 +150,17 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 		} );
 
 		step( 'Can see the domain search component', async function() {
-			const findADomainComponent = await FindADomainComponent.Expect( driver );
+			let findADomainComponent;
+			try {
+				findADomainComponent = await FindADomainComponent.Expect( driver );
+			} catch ( err ) {
+				if ( await RegistrationUnavailableComponent.Expect( driver ) ) {
+					await SlackNotifier.warn( 'SKIPPING: Domain registration is currently unavailable. ', {
+						suppressDuplicateMessages: true,
+					} );
+					return this.skip();
+				}
+			}
 			return await findADomainComponent.waitForResults();
 		} );
 
@@ -188,7 +209,7 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 		} );
 	} );
 
-	xdescribe( 'Transfer a domain to an existing site (partial) @parallel', function() {
+	describe( 'Transfer a domain to an existing site (partial) @parallel', function() {
 		const domain = 'automattic.com';
 
 		before( async function() {
@@ -216,7 +237,17 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 		} );
 
 		step( 'Can see the domain search component', async function() {
-			const findADomainComponent = await FindADomainComponent.Expect( driver );
+			let findADomainComponent;
+			try {
+				findADomainComponent = await FindADomainComponent.Expect( driver );
+			} catch ( err ) {
+				if ( await RegistrationUnavailableComponent.Expect( driver ) ) {
+					await SlackNotifier.warn( 'SKIPPING: Domain registration is currently unavailable. ', {
+						suppressDuplicateMessages: true,
+					} );
+					return this.skip();
+				}
+			}
 			return await findADomainComponent.waitForResults();
 		} );
 
