@@ -26,6 +26,9 @@ jobs:
 
       - run: npm run lint
       - run: npm run decryptconfig
+      - run:
+          name: Install screen recording dependencies
+          command: sudo apt install -y ffmpeg
       - run: ./scripts/randomize.sh specs
       - run: ./scripts/run-wrapper.sh
       - store_test_results:
