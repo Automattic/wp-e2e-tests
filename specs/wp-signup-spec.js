@@ -35,6 +35,7 @@ import AccountSettingsPage from '../lib/pages/account/account-settings-page';
 import CloseAccountPage from '../lib/pages/account/close-account-page';
 import DesignTypePage from '../lib/pages/signup/design-type-page';
 import ChecklistPage from '../lib/pages/checklist-page';
+import SettingsPage from '../lib/pages/settings-page';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
@@ -42,6 +43,7 @@ import NavBarComponent from '../lib/components/nav-bar-component';
 import SideBarComponent from '../lib/components/sidebar-component';
 import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component';
 import NoSitesComponent from '../lib/components/no-sites-component';
+import SidebarComponent from '../lib/components/sidebar-component';
 
 import * as SlackNotifier from '../lib/slack-notifier';
 
@@ -1820,8 +1822,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			const subheader = await checklistPage.subheaderExists();
 
 			assert( header, 'The checklist header does not exist.' );
-
 			return assert( subheader, 'The checklist subheader does not exist.' );
+		} );
+
+		step( 'Can delete site', async function() {
+			const sidebarComponent = await SidebarComponent.Expect( driver );
+			await sidebarComponent.selectSettings();
+			const settingsPage = await SettingsPage.Expect( driver );
+			return await settingsPage.deleteSite( expectedDomainName );
 		} );
 	} );
 
