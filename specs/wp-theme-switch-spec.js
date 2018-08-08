@@ -138,7 +138,7 @@ describe( `[${ host }] Activating Themes: (${ screenSize }) @parallel @jetpack @
 				} );
 
 				step( 'Can customize the site from the theme thanks dialog', async function() {
-					await WPAdminCustomizerPage.refreshIfError( driver );
+					await WPAdminCustomizerPage.refreshIfJNError( driver );
 					return await WPAdminCustomizerPage.Expect( driver );
 				} );
 			}
