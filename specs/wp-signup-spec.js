@@ -1112,7 +1112,19 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can see checkout page, choose domain privacy option and enter registrar details',
 			async function() {
-				const checkOutPage = await CheckOutPage.Expect( driver );
+				let checkOutPage;
+				try {
+					checkOutPage = await CheckOutPage.Expect( driver );
+				} catch ( err ) {
+					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
+					let numberOfItems = await securePaymentComponent.numberOfProductsInCart();
+					if ( numberOfItems === 0 ) {
+						await SlackNotifier.warn(
+							'OOPS! Something went wrong! Check if domains registrations is available.'
+						);
+						return this.skip();
+					}
+				}
 				await checkOutPage.selectAddPrivacyProtectionCheckbox();
 				await checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
 				return await checkOutPage.submitForm();
