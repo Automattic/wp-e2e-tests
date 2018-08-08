@@ -375,6 +375,8 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		step( 'Can activate Jetpack', async function() {
+			this.timeout( mochaTimeOut * 2 );
+
 			const wooWizardJetpackPage = await WooWizardJetpackPage.Expect( driver );
 			return await wooWizardJetpackPage.selectContinueWithJetpack();
 		} );
