@@ -1073,7 +1073,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can visit the domains start page', async function() {
-			//TODO: Cover case when domain registration is not available
 			await StartPage.Visit(
 				driver,
 				StartPage.getStartURL( {
@@ -1112,7 +1111,20 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can see checkout page, choose domain privacy option and enter registrar details',
 			async function() {
-				const checkOutPage = await CheckOutPage.Expect( driver );
+				let checkOutPage;
+				try {
+					checkOutPage = await CheckOutPage.Expect( driver );
+				} catch ( err ) {
+					//TODO: Check this code once more when domain registration is not available
+					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
+					let numberOfItems = await securePaymentComponent.numberOfProductsInCart();
+					if ( numberOfItems === 0 ) {
+						await SlackNotifier.warn(
+							'OOPS! Something went wrong! Check if domains registrations is available.'
+						);
+						return this.skip();
+					}
+				}
 				await checkOutPage.selectAddPrivacyProtectionCheckbox();
 				await checkOutPage.enterRegistarDetails( testDomainRegistarDetails );
 				return await checkOutPage.submitForm();
