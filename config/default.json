@@ -76,6 +76,7 @@
 		[ "domainSuggestionKrakenV323_20180726", "domainsbot" ],
 		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
 		[ "aboutSuggestionMatches_20180704", "control" ],
+		[ "includeDotBlogSubdomain_20180723", "no" ],
 		[ "includeDotBlogSubdomainV2_20180813", "no" ],
 		[ "gSuiteDiscount_20180803", "control" ],
                 [ "nudgeAPalooza_20180806", "control" ]
