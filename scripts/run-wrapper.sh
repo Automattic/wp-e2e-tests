@@ -18,6 +18,7 @@ fi
 
 #disable selenium promise manager
 export SELENIUM_PROMISE_MANAGER=0
+export TEST_VIDEO="true"
 
 export TESTARGS="-R -p"
 

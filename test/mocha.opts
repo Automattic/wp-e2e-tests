@@ -2,4 +2,4 @@
 --require test/mocha.env.js
 --require mocha-steps
 lib/before.js
-lib/after.js
+lib/mocha-hooks.js
