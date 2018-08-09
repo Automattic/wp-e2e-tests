@@ -163,7 +163,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 		dataHelper.hasAccountWithFeatures( '+2fa-push -passwordless' ) &&
 		! dataHelper.isRunningOnLiveBranch()
 	) {
-		describe.only( 'Can Log in on with 2fa push account', function() {
+		describe( 'Can Log in on with 2fa push account', function() {
 			let loginFlow, twoFALoginPage;
 
 			before( async function() {
@@ -183,17 +183,11 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 			} );
 
 			step( "Approve push 2fa token and we're logged in", async function() {
-				subscribeToPush( loginFlow.account.pushConfig, pushToken => {
-					approvePushToken( pushToken, loginFlow.account.bearerToken ).then( () => {
-						const readerPage = new ReaderPage( driver );
-						readerPage.displayed().then( displayed => {
-							assert.strictEqual(
-								displayed,
-								true,
-								'The reader page is not displayed after log in'
-							);
-						} );
-					} );
+				subscribeToPush( loginFlow.account.pushConfig, async pushToken => {
+					await approvePushToken( pushToken, loginFlow.account.bearerToken );
+					const readerPage = new ReaderPage( driver );
+					let displayed = await readerPage.displayed();
+					assert.strictEqual( displayed, true, 'The reader page is not displayed after log in' );
 				} );
 			} );
 		} );
@@ -203,34 +197,32 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 		dataHelper.hasAccountWithFeatures( '+2fa-otp -passwordless' ) &&
 		! dataHelper.isRunningOnLiveBranch()
 	) {
-		describe( 'Can Log in on a 2fa account', function() {
+		describe.only( 'Can Log in on a 2fa account', function() {
 			let loginFlow, twoFALoginPage;
-			before( function() {
-				return driverManager.clearCookiesAndDeleteLocalStorage( driver ).then( function() {
-					loginFlow = new LoginFlow( driver, [ '+2fa-otp', '-passwordless' ] );
-					loginFlow.login();
-					twoFALoginPage = new LoginPage( driver );
-					return twoFALoginPage.use2FAMethod( 'otp' );
-				} );
+
+			before( async function() {
+				await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				loginFlow = new LoginFlow( driver, [ '+2fa-otp', '-passwordless' ] );
+				await loginFlow.login();
+				twoFALoginPage = new LoginPage( driver );
+				return twoFALoginPage.use2FAMethod( 'otp' );
 			} );
 
-			step( 'Should be on the /log-in/authenticator page', function() {
-				return twoFALoginPage.displayed().then( function() {
-					return driver.getCurrentUrl().then( urlDisplayed => {
-						assert(
-							urlDisplayed.indexOf( '/log-in/authenticator' ) !== -1,
-							'The 2fa authenticator page is not displayed after log in'
-						);
-					} );
-				} );
+			step( 'Should be on the /log-in/authenticator page', async function() {
+				await twoFALoginPage.displayed();
+				let urlDisplayed = await driver.getCurrentUrl();
+				assert(
+					urlDisplayed.indexOf( '/log-in/authenticator' ) !== -1,
+					'The 2fa authenticator page is not displayed after log in'
+				);
 			} );
 
-			step( "Enter the 2fa code and we're logged in", function() {
+			step( "Enter the 2fa code and we're logged in", async function() {
 				const twoFACode = speakeasy.totp( {
 					secret: loginFlow.account[ '2faOTPsecret' ],
 					encoding: 'base32',
 				} );
-				return twoFALoginPage.enter2FACode( twoFACode );
+				return await twoFALoginPage.enter2FACode( twoFACode );
 			} );
 		} );
 	}
