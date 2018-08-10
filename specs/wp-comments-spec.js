@@ -35,7 +35,7 @@ describe( `[${ host }] Comments: (${ screenSize })`, function() {
 		return fileDetails;
 	} );
 
-	describe( 'Commenting and replying to newly created post: @parallel @jetpack', function() {
+	describe( 'Commenting and replying to newly created post', function() {
 		before( async function() {
 			await driverManager.ensureNotLoggedIn( driver );
 		} );
