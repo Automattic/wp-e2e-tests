@@ -197,7 +197,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 		dataHelper.hasAccountWithFeatures( '+2fa-otp -passwordless' ) &&
 		! dataHelper.isRunningOnLiveBranch()
 	) {
-		describe.only( 'Can Log in on a 2fa account', function() {
+		describe( 'Can Log in on a 2fa account', function() {
 			let loginFlow, twoFALoginPage;
 
 			before( async function() {
@@ -231,56 +231,45 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 		dataHelper.hasAccountWithFeatures( '+passwordless -2fa' ) &&
 		! dataHelper.isRunningOnLiveBranch()
 	) {
-		describe( 'Can Log in on a passwordless account', function() {
-			before( function() {
-				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		describe.only( 'Can Log in on a passwordless account', function() {
+			before( async function() {
+				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			} );
 
 			describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
 				let magicLoginLink, loginFlow, magicLinkEmail, emailClient;
-				before( function() {
+				before( async function() {
 					loginFlow = new LoginFlow( driver, [ '+passwordless', '-2fa' ] );
 					emailClient = new EmailClient( get( loginFlow.account, 'mailosaur.inboxId' ) );
-					return loginFlow.login();
+					await loginFlow.login( { emailSSO: true } );
 				} );
 
-				step( 'Can find the magic link in the email received', function() {
-					return emailClient
-						.pollEmailsByRecipient( loginFlow.account.email )
-						.then( function( emails ) {
-							magicLinkEmail = emails.find(
-								email => email.subject.indexOf( 'WordPress.com' ) > -1
-							);
-							assert( magicLinkEmail !== undefined, 'Could not find the magic login email' );
-							magicLoginLink = magicLinkEmail.html.links[ 0 ].href;
-							assert(
-								magicLoginLink !== undefined,
-								'Could not locate the magic login link in the email'
-							);
-							return true;
-						} );
+				step( 'Can find the magic link in the email received', async function() {
+					let emails = await emailClient.pollEmailsByRecipient( loginFlow.account.email );
+					magicLinkEmail = emails.find( email => email.subject.indexOf( 'WordPress.com' ) > -1 );
+					assert( magicLinkEmail !== undefined, 'Could not find the magic login email' );
+					magicLoginLink = magicLinkEmail.html.links[ 0 ].href;
+					assert(
+						magicLoginLink !== undefined,
+						'Could not locate the magic login link in the email'
+					);
 				} );
 
 				describe( 'Can use the magic link to log in', function() {
 					let magicLoginPage;
-					step( "Visit the magic link and we're logged in", function() {
+					step( "Visit the magic link and we're logged in", async function() {
 						driver.get( magicLoginLink );
 						magicLoginPage = new MagicLoginPage( driver );
-						magicLoginPage.finishLogin();
+						await magicLoginPage.finishLogin();
 						let readerPage = new ReaderPage( driver );
-						return readerPage.displayed().then( function( displayed ) {
-							return assert.strictEqual(
-								displayed,
-								true,
-								'The reader page is not displayed after log in'
-							);
-						} );
+						let displayed = await readerPage.displayed();
+						assert.strictEqual( displayed, true, 'The reader page is not displayed after log in' );
 					} );
 
 					// we should always remove a magic link email once the magic link has been used (even if login failed)
-					after( function() {
+					after( async function() {
 						if ( magicLinkEmail ) {
-							return emailClient.deleteAllEmailByID( magicLinkEmail.id );
+							return await emailClient.deleteAllEmailByID( magicLinkEmail.id );
 						}
 					} );
 				} );
