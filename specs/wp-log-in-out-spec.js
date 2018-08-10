@@ -231,7 +231,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 		dataHelper.hasAccountWithFeatures( '+passwordless -2fa' ) &&
 		! dataHelper.isRunningOnLiveBranch()
 	) {
-		describe.only( 'Can Log in on a passwordless account', function() {
+		describe( 'Can Log in on a passwordless account', function() {
 			before( async function() {
 				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			} );
@@ -241,7 +241,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 				before( async function() {
 					loginFlow = new LoginFlow( driver, [ '+passwordless', '-2fa' ] );
 					emailClient = new EmailClient( get( loginFlow.account, 'mailosaur.inboxId' ) );
-					await loginFlow.login( { emailSSO: true } );
+					return await loginFlow.login( { emailSSO: true } );
 				} );
 
 				step( 'Can find the magic link in the email received', async function() {
@@ -287,77 +287,74 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 		dataHelper.hasAccountWithFeatures( '+passwordless +2fa-sms' ) &&
 		! dataHelper.isRunningOnLiveBranch()
 	) {
-		describe( 'Can Log in on a passwordless account with 2fa using sms', function() {
-			before( function() {
-				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+		describe.only( 'Can Log in on a passwordless account with 2fa using sms', function() {
+			before( async function() {
+				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			} );
 
 			describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
 				let magicLoginLink, loginFlow, magicLinkEmail, emailClient;
-				before( function() {
+				before( async function() {
 					loginFlow = new LoginFlow( driver, [ '+passwordless', '+2fa-sms' ] );
 					emailClient = new EmailClient( get( loginFlow.account, 'mailosaur.inboxId' ) );
-					return loginFlow.login();
+					return await loginFlow.login( { emailSSO: true } );
 				} );
 
-				step( 'Can find the magic link in the email received', function() {
-					return emailClient
-						.pollEmailsByRecipient( loginFlow.account.email )
-						.then( function( emails ) {
-							magicLinkEmail = emails.find(
-								email => email.subject.indexOf( 'WordPress.com' ) > -1
-							);
-							assert( magicLinkEmail !== undefined, 'Could not find the magic login email' );
-							magicLoginLink = magicLinkEmail.html.links[ 0 ].href;
-							assert(
-								magicLoginLink !== undefined,
-								'Could not locate the magic login link in the email'
-							);
-							return true;
-						} );
+				step( 'Can find the magic link in the email received', async function() {
+					let emails = await emailClient.pollEmailsByRecipient( loginFlow.account.email );
+					magicLinkEmail = emails.find( email => email.subject.indexOf( 'WordPress.com' ) > -1 );
+					assert( magicLinkEmail !== undefined, 'Could not find the magic login email' );
+					magicLoginLink = magicLinkEmail.html.links[ 0 ].href;
+					assert(
+						magicLoginLink !== undefined,
+						'Could not locate the magic login link in the email'
+					);
 				} );
 
 				describe( 'Can use the magic link and the code received via sms to log in', function() {
 					let magicLoginPage, twoFALoginPage, twoFACode;
-					before( function( done ) {
-						driver.get( magicLoginLink );
+					before( async function() {
+						await driver.get( magicLoginLink );
 						magicLoginPage = new MagicLoginPage( driver );
 						// make sure we listen for SMS before we trigger any
 						const xmppClient = listenForSMS( loginFlow.account );
-						xmppClient.once( 'e2e:ready', () => {
-							// send sms now!
-							magicLoginPage.finishLogin();
-							twoFALoginPage = new LoginPage( driver );
-							twoFALoginPage.use2FAMethod( 'sms' );
-						} );
-						xmppClient.on( 'e2e:sms', sms => {
-							const twoFACodeMatches = sms.body.match( /^\d+/ );
-							twoFACode = twoFACodeMatches && twoFACodeMatches[ 0 ];
-							if ( twoFACode ) {
-								xmppClient.stop().then( () => done() );
-							}
-						} );
-					} );
-
-					step( 'Should be on the /log-in/sms page', function() {
-						return twoFALoginPage.displayed().then( function() {
-							return driver.getCurrentUrl().then( urlDisplayed => {
-								assert(
-									urlDisplayed.indexOf( '/log-in/sms' ) !== -1,
-									'The 2fa sms page is not displayed after log in'
-								);
+						return await new Promise( ( resolve, reject ) => {
+							xmppClient.once( 'e2e:ready', async () => {
+								// send sms now!
+								await magicLoginPage.finishLogin();
+								twoFALoginPage = new LoginPage( driver );
+								twoFALoginPage.use2FAMethod( 'sms' );
 							} );
+							xmppClient.on( 'e2e:sms', async function( sms ) {
+								const twoFACodeMatches = sms.body.match( /\d+/g );
+								twoFACode = twoFACodeMatches[ 0 ] + twoFACodeMatches[ 1 ];
+								if ( twoFACode ) {
+									xmppClient.stop();
+									resolve();
+								}
+							} );
+							xmppClient.on( 'error', reject );
 						} );
 					} );
 
-					step( "Enter the 2fa code and we're logged in", function() {
-						return twoFALoginPage.enter2FACode( twoFACode );
+					step( 'Should be on the /log-in/sms page', async function() {
+						await twoFALoginPage.displayed();
+						let urlDisplayed = await driver.getCurrentUrl();
+
+						assert(
+							urlDisplayed.indexOf( '/log-in/sms' ) !== -1,
+							'The 2fa sms page is not displayed after log in'
+						);
+					} );
+
+					step( "Enter the 2fa code and we're logged in", async function() {
+						return await twoFALoginPage.enter2FACode( twoFACode );
 					} );
 
 					// we should always remove a magic link email once the magic link has been used (even if login failed)
-					after( function() {
+					after( async function() {
 						if ( magicLinkEmail ) {
-							return emailClient.deleteAllEmailByID( magicLinkEmail.id );
+							return await emailClient.deleteAllEmailByID( magicLinkEmail.id );
 						}
 					} );
 				} );
