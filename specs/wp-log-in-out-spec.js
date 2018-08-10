@@ -287,7 +287,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 		dataHelper.hasAccountWithFeatures( '+passwordless +2fa-sms' ) &&
 		! dataHelper.isRunningOnLiveBranch()
 	) {
-		describe.only( 'Can Log in on a passwordless account with 2fa using sms', function() {
+		describe( 'Can Log in on a passwordless account with 2fa using sms', function() {
 			before( async function() {
 				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			} );
@@ -373,68 +373,60 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 		! dataHelper.isRunningOnLiveBranch()
 	) {
 		describe( 'Can Log in on a passwordless account with 2fa using authenticator', function() {
-			before( function() {
-				return driverManager.clearCookiesAndDeleteLocalStorage( driver );
+			before( async function() {
+				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
 			} );
 
 			describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
 				let magicLoginLink, loginFlow, magicLinkEmail, emailClient;
-				before( function() {
-					loginFlow = new LoginFlow( driver, [ '+passwordless', '+2fa-otp' ] );
+				before( async function() {
+					loginFlow = new LoginFlow( driver, [ '+passwordless', '+2fa-sms' ] );
 					emailClient = new EmailClient( get( loginFlow.account, 'mailosaur.inboxId' ) );
-					return loginFlow.login();
+					return await loginFlow.login( { emailSSO: true } );
 				} );
 
-				step( 'Can find the magic link in the email received', function() {
-					return emailClient
-						.pollEmailsByRecipient( loginFlow.account.email )
-						.then( function( emails ) {
-							magicLinkEmail = emails.find(
-								email => email.subject.indexOf( 'WordPress.com' ) > -1
-							);
-							assert( magicLinkEmail !== undefined, 'Could not find the magic login email' );
-							magicLoginLink = magicLinkEmail.html.links[ 0 ].href;
-							assert(
-								magicLoginLink !== undefined,
-								'Could not locate the magic login link in the email'
-							);
-							return true;
-						} );
+				step( 'Can find the magic link in the email received', async function() {
+					let emails = await emailClient.pollEmailsByRecipient( loginFlow.account.email );
+					magicLinkEmail = emails.find( email => email.subject.indexOf( 'WordPress.com' ) > -1 );
+					assert( magicLinkEmail !== undefined, 'Could not find the magic login email' );
+					magicLoginLink = magicLinkEmail.html.links[ 0 ].href;
+					assert(
+						magicLoginLink !== undefined,
+						'Could not locate the magic login link in the email'
+					);
 				} );
 
 				describe( 'Can use the magic link and the code received via sms to log in', function() {
 					let magicLoginPage, twoFALoginPage;
-					before( function() {
+					before( async function() {
 						driver.get( magicLoginLink );
 						magicLoginPage = new MagicLoginPage( driver );
-						magicLoginPage.finishLogin();
+						await magicLoginPage.finishLogin();
 						twoFALoginPage = new LoginPage( driver );
-						return twoFALoginPage.use2FAMethod( 'otp' );
+						return await twoFALoginPage.use2FAMethod( 'otp' );
 					} );
 
-					step( 'Should be on the /log-in/authenticator page', function() {
-						return twoFALoginPage.displayed().then( function() {
-							return driver.getCurrentUrl().then( urlDisplayed => {
-								assert(
-									urlDisplayed.indexOf( '/log-in/authenticator' ) !== -1,
-									'The 2fa authenticator page is not displayed after log in'
-								);
-							} );
-						} );
+					step( 'Should be on the /log-in/authenticator page', async function() {
+						await twoFALoginPage.displayed();
+						let urlDisplayed = await driver.getCurrentUrl();
+						assert(
+							urlDisplayed.indexOf( '/log-in/authenticator' ) !== -1,
+							'The 2fa authenticator page is not displayed after log in'
+						);
 					} );
 
-					step( "Enter the 2fa code and we're logged in", function() {
+					step( "Enter the 2fa code and we're logged in", async function() {
 						const twoFACode = speakeasy.totp( {
 							secret: loginFlow.account[ '2faOTPsecret' ],
 							encoding: 'base32',
 						} );
-						return twoFALoginPage.enter2FACode( twoFACode );
+						return await twoFALoginPage.enter2FACode( twoFACode );
 					} );
 
 					// we should always remove a magic link email once the magic link has been used (even if login failed)
-					after( function() {
+					after( async function() {
 						if ( magicLinkEmail ) {
-							return emailClient.deleteAllEmailByID( magicLinkEmail.id );
+							return await emailClient.deleteAllEmailByID( magicLinkEmail.id );
 						}
 					} );
 				} );
