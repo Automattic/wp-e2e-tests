@@ -65,6 +65,7 @@
 		"domainSearchTLDFilterPlacement",
 		"aboutSuggestionMatches",
 		"includeDotBlogSubdomain",
+		"includeDotBlogSubdomainV2",
 		"nudgeAPalooza",
 		"gSuiteDiscount"
 	],
