@@ -305,6 +305,219 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
+	describe.only( 'Sign up for a non-blog site on a premium paid plan through main flow in USD currency using a coupon @parallel @visdiff', function() {
+		const blogName = dataHelper.getNewBlogName();
+		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
+		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
+		const currencyValue = 'USD';
+		const expectedCurrencySymbol = '$';
+		let originalCartAmount;
+
+		before( function() {
+			let testEnvironment = 'WordPress.com';
+			let testName = `Signup [${ global.browserName }] [${ screenSize }]`;
+			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
+		} );
+
+		before( async function() {
+			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		step( 'We can set the sandbox cookie for payments', async function() {
+			const wPHomePage = await WPHomePage.Visit( driver );
+			await wPHomePage.checkURL( locale );
+			await eyesHelper.eyesScreenshot( driver, eyes, 'Logged Out Homepage' );
+			await wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+			return await wPHomePage.setCurrencyForPayments( currencyValue );
+		} );
+
+		step( 'Can visit the start page', async function() {
+			await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale } ) );
+		} );
+
+		step( 'Can see the "About" page, and enter some site information', async function() {
+			const aboutPage = await AboutPage.Expect( driver );
+			await aboutPage.enterSiteDetails( blogName, '', {
+				showcase: true,
+			} );
+			return await eyesHelper.eyesScreenshot( driver, eyes, 'About Page' );
+		} );
+
+		step( 'Can accept defaults for about page', async function() {
+			const aboutPage = await AboutPage.Expect( driver );
+			await aboutPage.submitForm();
+		} );
+
+		step( 'Can then see the domains page ', async function() {
+			const findADomainComponent = await FindADomainComponent.Expect( driver );
+			let displayed = await findADomainComponent.displayed();
+			await eyesHelper.eyesScreenshot( driver, eyes, 'Domains Page' );
+			return assert.strictEqual( displayed, true, 'The choose a domain page is not displayed' );
+		} );
+
+		step(
+			'Can search for a blog name, can see and select a free WordPress.com blog address in results',
+			async function() {
+				const findADomainComponent = await FindADomainComponent.Expect( driver );
+				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
+					expectedBlogAddresses,
+					blogName
+				);
+				let actualAddress = await findADomainComponent.freeBlogAddress();
+				assert(
+					expectedBlogAddresses.indexOf( actualAddress ) > -1,
+					`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+				);
+
+				await eyesHelper.eyesScreenshot( driver, eyes, 'Domains Page Site Address Search' );
+				return await findADomainComponent.selectFreeAddress();
+			}
+		);
+
+		step( 'Can then see the plans page and select the premium plan ', async function() {
+			const pickAPlanPage = await PickAPlanPage.Expect( driver );
+			let displayed = await pickAPlanPage.displayed();
+			await eyesHelper.eyesScreenshot( driver, eyes, 'Plans Page' );
+			assert.strictEqual( displayed, true, 'The pick a plan page is not displayed' );
+			return await pickAPlanPage.selectPremiumPlan();
+		} );
+
+		step( 'Can then enter account details', async function() {
+			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+			await eyesHelper.eyesScreenshot( driver, eyes, 'Create Account Page' );
+			return await createYourAccountPage.enterAccountDetailsAndSubmit(
+				emailAddress,
+				blogName,
+				passwordForTestAccounts
+			);
+		} );
+
+		step(
+			'Can then see the sign up processing page which will automatically move along',
+			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
+				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
+				return await signupProcessingPage.waitToDisappear();
+			}
+		);
+
+		step(
+			'Can then see the secure payment page with the premium plan in the cart',
+			async function() {
+				const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
+				await eyesHelper.eyesScreenshot( driver, eyes, 'Secure Payment Page' );
+				const premiumPlanInCart = await securePaymentComponent.containsPremiumPlan();
+				assert.strictEqual( premiumPlanInCart, true, "The cart doesn't contain the premium plan" );
+				const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
+				return assert.strictEqual(
+					numberOfProductsInCart,
+					1,
+					"The cart doesn't contain the expected number of products"
+				);
+			}
+		);
+
+		step(
+			'Can then see the secure payment page with the expected currency in the cart',
+			async function() {
+				const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
+				if ( driverManager.currentScreenSize() === 'desktop' ) {
+					const totalShown = await securePaymentComponent.cartTotalDisplayed();
+					assert.strictEqual(
+						totalShown.indexOf( expectedCurrencySymbol ),
+						0,
+						`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
+					);
+				}
+				const paymentButtonText = await securePaymentComponent.paymentButtonText();
+				return assert(
+					paymentButtonText.includes( expectedCurrencySymbol ),
+					`The payment button text '${ paymentButtonText }' does not contain the expected currency symbol: '${ expectedCurrencySymbol }'`
+				);
+			}
+		);
+
+		step( 'Can Correctly Apply Coupon discount', async function() {
+			const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
+			await securePaymentComponent.toggleCartSummary();
+			originalCartAmount = await securePaymentComponent.cartTotalAmount();
+
+			await securePaymentComponent.enterCouponCode( dataHelper.getTestCouponCode() );
+
+			let newCartAmount = await securePaymentComponent.cartTotalAmount();
+			let expectedCartAmount = originalCartAmount * 0.99;
+			assert(
+				expectedCartAmount === newCartAmount,
+				`Expected ${ expectedCartAmount } after applying coupon to ${ originalCartAmount } but got ${ newCartAmount } instead`
+			);
+		} );
+
+		step( 'Can enter and submit test payment details', async function() {
+			const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
+			const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
+			await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+			await securePaymentComponent.submitPaymentDetails();
+			return await securePaymentComponent.waitForPageToDisappear();
+		} );
+
+		step( 'Can see the secure check out thank you page', async function() {
+			const checkOutThankyouPage = await CheckOutThankyouPage.Expect( driver );
+			let displayed = await checkOutThankyouPage.displayed();
+			await eyesHelper.eyesScreenshot( driver, eyes, 'Checkout Thank You Page' );
+			return assert.strictEqual( displayed, true, 'The checkout thank you page is not displayed' );
+		} );
+
+		step( 'Can delete the plan', async function() {
+			return ( async () => {
+				const navBarComponent = await NavBarComponent.Expect( driver );
+				await navBarComponent.clickProfileLink();
+				const profilePage = await ProfilePage.Expect( driver );
+				await profilePage.chooseManagePurchases();
+				const purchasesPage = await PurchasesPage.Expect( driver );
+				await purchasesPage.dismissGuidedTour();
+				await purchasesPage.selectPremiumPlan();
+				const managePurchasePage = await ManagePurchasePage.Expect( driver );
+				await managePurchasePage.chooseCancelAndRefund();
+				const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
+				await cancelPurchasePage.clickCancelPurchase();
+				await cancelPurchasePage.completeCancellationSurvey();
+				return await cancelPurchasePage.waitAndDismissSuccessNotice();
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
+		} );
+
+		step( 'Can delete our newly created account', async function() {
+			return ( async () => {
+				const navBarComponent = await NavBarComponent.Expect( driver );
+				await navBarComponent.clickProfileLink();
+				const profilePage = await ProfilePage.Expect( driver );
+				await profilePage.chooseAccountSettings();
+				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
+				await accountSettingsPage.chooseCloseYourAccount();
+				const closeAccountPage = await CloseAccountPage.Expect( driver );
+				await closeAccountPage.chooseCloseAccount();
+				await closeAccountPage.enterAccountNameAndClose( blogName );
+				await LoggedOutMasterbarComponent.Expect( driver );
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
+		} );
+
+		after( async function() {
+			await eyesHelper.eyesClose( eyes );
+		} );
+	} );
+
 	describe( 'Sign up for a non-blog site on a premium paid plan through main flow in USD currency @parallel @visdiff', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );

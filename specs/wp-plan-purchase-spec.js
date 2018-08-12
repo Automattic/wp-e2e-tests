@@ -10,6 +10,7 @@ import LoginFlow from '../lib/flows/login-flow.js';
 
 import PlansPage from '../lib/pages/plans-page.js';
 import StatsPage from '../lib/pages/stats-page.js';
+import PlanCheckoutPage from '../lib/pages/plan-checkout-page';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
 
@@ -27,24 +28,25 @@ before( async function() {
 
 describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
+	let loginFlow;
+
+	before( async function() {
+		return await driverManager.ensureNotLoggedIn( driver );
+	} );
+
+	step( 'Login and Select My Site', async function() {
+		loginFlow = new LoginFlow( driver );
+		return await loginFlow.loginAndSelectMySite();
+	} );
+
+	step( 'Can Select Plans', async function() {
+		const statsPage = await StatsPage.Expect( driver );
+		await statsPage.waitForPage();
+		const sideBarComponent = await SidebarComponent.Expect( driver );
+		return await sideBarComponent.selectPlan();
+	} );
 
 	describe( 'Comparing Plans:', function() {
-		before( async function() {
-			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		step( 'Login and Select My Site', async function() {
-			const loginFlow = new LoginFlow( driver );
-			return await loginFlow.loginAndSelectMySite();
-		} );
-
-		step( 'Can Select Plans', async function() {
-			const statsPage = await StatsPage.Expect( driver );
-			await statsPage.waitForPage();
-			const sideBarComponent = await SidebarComponent.Expect( driver );
-			return await sideBarComponent.selectPlan();
-		} );
-
 		step( 'Can See Plans', async function() {
 			return await PlansPage.Expect( driver );
 		} );
@@ -69,5 +71,58 @@ describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, function() 
 				return assert( present, `Failed to detect correct plan (${ planName })` );
 			} );
 		}
+	} );
+
+	describe( 'Viewing a specific plan with coupon:', function() {
+		let originalCartAmount;
+
+		step( 'Can Select Plans tab', async function() {
+			let route = `plans/${ loginFlow.account.loginURL }`;
+			return await driver.get( dataHelper.getCalypsoURL( route ) );
+		} );
+
+		step( 'Select Business Plan', async function() {
+			const plansPage = await PlansPage.Expect( driver );
+			return await plansPage.selectBusinessPlan();
+		} );
+
+		step( 'Can Correctly Apply Coupon', async function() {
+			const planCheckoutPage = await PlanCheckoutPage.Expect( driver );
+
+			await planCheckoutPage.toggleCartSummary();
+			originalCartAmount = await planCheckoutPage.cartTotalAmount();
+
+			await planCheckoutPage.enterCouponCode( dataHelper.getTestCouponCode() );
+
+			let newCartAmount = await planCheckoutPage.cartTotalAmount();
+			let expectedCartAmount = originalCartAmount * 0.99;
+			assert(
+				expectedCartAmount === newCartAmount,
+				`Expected ${ expectedCartAmount } after applying coupon to ${ originalCartAmount } but got ${ newCartAmount } instead`
+			);
+		} );
+
+		step( 'Can Remove Coupon', async function() {
+			const planCheckoutPage = await PlanCheckoutPage.Expect( driver );
+
+			await planCheckoutPage.removeCoupon();
+
+			// Needs a little time for the coupon changes to take effect
+			// Had a driver.sleep( 1000 ) here but it might it seems the time it takes to attempt to toggle twice covers it
+			await planCheckoutPage.toggleCartSummary();
+			await planCheckoutPage.toggleCartSummary();
+
+			let removedCouponAmount = await planCheckoutPage.cartTotalAmount();
+			assert(
+				removedCouponAmount === originalCartAmount,
+				`Expected ${ originalCartAmount } after removing coupon but got ${ removedCouponAmount } instead`
+			);
+		} );
+
+		step( 'Remove from cart', async function() {
+			const planCheckoutPage = await PlanCheckoutPage.Expect( driver );
+
+			return await planCheckoutPage.removeFromCart();
+		} );
 	} );
 } );
