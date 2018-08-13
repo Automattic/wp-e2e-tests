@@ -28,25 +28,24 @@ before( async function() {
 
 describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
-	let loginFlow;
-
-	before( async function() {
-		return await driverManager.ensureNotLoggedIn( driver );
-	} );
-
-	step( 'Login and Select My Site', async function() {
-		loginFlow = new LoginFlow( driver );
-		return await loginFlow.loginAndSelectMySite();
-	} );
-
-	step( 'Can Select Plans', async function() {
-		const statsPage = await StatsPage.Expect( driver );
-		await statsPage.waitForPage();
-		const sideBarComponent = await SidebarComponent.Expect( driver );
-		return await sideBarComponent.selectPlan();
-	} );
 
 	describe( 'Comparing Plans:', function() {
+		before( async function() {
+			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		step( 'Login and Select My Site', async function() {
+			const loginFlow = new LoginFlow( driver );
+			return await loginFlow.loginAndSelectMySite();
+		} );
+
+		step( 'Can Select Plans', async function() {
+			const statsPage = await StatsPage.Expect( driver );
+			await statsPage.waitForPage();
+			const sideBarComponent = await SidebarComponent.Expect( driver );
+			return await sideBarComponent.selectPlan();
+		} );
+
 		step( 'Can See Plans', async function() {
 			return await PlansPage.Expect( driver );
 		} );
@@ -73,8 +72,24 @@ describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, function() 
 		}
 	} );
 
-	describe( 'Viewing a specific plan with coupon:', function() {
-		let originalCartAmount;
+	describe.only( 'Viewing a specific plan with coupon:', function() {
+		let originalCartAmount, loginFlow;
+
+		before( async function() {
+			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		step( 'Login and Select My Site', async function() {
+			loginFlow = new LoginFlow( driver );
+			return await loginFlow.loginAndSelectMySite();
+		} );
+
+		step( 'Can Select Plans', async function() {
+			const statsPage = await StatsPage.Expect( driver );
+			await statsPage.waitForPage();
+			const sideBarComponent = await SidebarComponent.Expect( driver );
+			return await sideBarComponent.selectPlan();
+		} );
 
 		step( 'Can Select Plans tab', async function() {
 			let route = `plans/${ loginFlow.account.loginURL }`;
@@ -95,11 +110,9 @@ describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, function() 
 			await planCheckoutPage.enterCouponCode( dataHelper.getTestCouponCode() );
 
 			let newCartAmount = await planCheckoutPage.cartTotalAmount();
-			let expectedCartAmount = originalCartAmount * 0.99;
-			assert(
-				expectedCartAmount === newCartAmount,
-				`Expected ${ expectedCartAmount } after applying coupon to ${ originalCartAmount } but got ${ newCartAmount } instead`
-			);
+			let expectedCartAmount = parseFloat( ( originalCartAmount * 0.99 ).toFixed( 2 ) );
+
+			assert.strictEqual( newCartAmount, expectedCartAmount, 'Coupon not applied properly' );
 		} );
 
 		step( 'Can Remove Coupon', async function() {
@@ -113,10 +126,7 @@ describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, function() 
 			await planCheckoutPage.toggleCartSummary();
 
 			let removedCouponAmount = await planCheckoutPage.cartTotalAmount();
-			assert(
-				removedCouponAmount === originalCartAmount,
-				`Expected ${ originalCartAmount } after removing coupon but got ${ removedCouponAmount } instead`
-			);
+			assert.strictEqual( removedCouponAmount, originalCartAmount, 'Coupon not removed properly' );
 		} );
 
 		step( 'Remove from cart', async function() {

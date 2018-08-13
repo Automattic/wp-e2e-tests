@@ -448,11 +448,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			await securePaymentComponent.enterCouponCode( dataHelper.getTestCouponCode() );
 
 			let newCartAmount = await securePaymentComponent.cartTotalAmount();
-			let expectedCartAmount = originalCartAmount * 0.99;
-			assert(
-				expectedCartAmount === newCartAmount,
-				`Expected ${ expectedCartAmount } after applying coupon to ${ originalCartAmount } but got ${ newCartAmount } instead`
-			);
+			let expectedCartAmount = parseFloat( ( originalCartAmount * 0.99 ).toFixed( 2 ) );
+			assert.strictEqual( newCartAmount, expectedCartAmount, 'Coupon not applied properly' );
 		} );
 
 		step( 'Can enter and submit test payment details', async function() {
