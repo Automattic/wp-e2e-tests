@@ -23,4 +23,8 @@ head-changed-file () {
         [[ $1 != $2 ]]
 }
 
-head-changed-file .nvmrc && update-wrapper-node-version
+if head-changed-file .nvmrc ; then
+   update-wrapper-node-version
+else
+   echo ".nvmrc file not updated"
+fi
