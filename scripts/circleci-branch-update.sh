@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version=cat .nvmrc
+version=$(<.nvmrc)
 version=${version:1}
 config=( $(jq -r '.circleCIToken' ./config/local-${NODE_ENV}.json) )
 token=${config[0]}
