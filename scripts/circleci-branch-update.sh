@@ -13,7 +13,6 @@ update-wrapper-node-version () {
     curl --write-out %{http_code} --silent --output /dev/null -X POST --header "Content-Type: application/json" -d "{\"name\":\"NODE_VERSION\", \"value\":\"$version\"}" https://circleci.com/api/v1.1/project/github/automattic/wp-e2e-tests-jetpack/envvar?circle-token=${token}
     curl --write-out %{http_code} --silent --output /dev/null -X POST --header "Content-Type: application/json" -d "{\"name\":\"NODE_VERSION\", \"value\":\"$version\"}" https://circleci.com/api/v1.1/project/github/automattic/wp-e2e-tests-jetpack-be/envvar?circle-token=${token}
     curl --write-out %{http_code} --silent --output /dev/null -X POST --header "Content-Type: application/json" -d "{\"name\":\"NODE_VERSION\", \"value\":\"$version\"}" https://circleci.com/api/v1.1/project/github/automattic/wp-e2e-tests-woocommerce/envvar?circle-token=${token}
-    curl --write-out %{http_code} --silent --output /dev/null -X POST --header "Content-Type: application/json" -d "{\"name\":\"NODE_VERSION\", \"value\":\"$version\"}" https://circleci.com/api/v1.1/project/github/automattic/wp-e2e-tests-visdiff/envvar?circle-token=${token}
     curl --write-out %{http_code} --silent --output /dev/null -X POST --header "Content-Type: application/json" -d "{\"name\":\"NODE_VERSION\", \"value\":\"$version\"}" https://circleci.com/api/v1.1/project/github/automattic/wp-e2e-tests-i18n/envvar?circle-token=${token}
 }
 
@@ -23,7 +22,7 @@ head-changed-file () {
         [[ $1 != $2 ]]
 }
 
-if head-changed-file .nvmrc ; then
+if [head-changed-file .nvmrc]  && [$CIRCLE_BRANCH == "master"]; then
    update-wrapper-node-version
 else
    echo ".nvmrc file not updated"
