@@ -213,6 +213,7 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 
 		step( 'Log out from WP Admin', async function() {
 			await driverManager.ensureNotLoggedIn( driver );
+			await WPAdminDashboardPage.refreshIfJNError( driver );
 			const wPAdminDashboardPage = await WPAdminDashboardPage.Visit(
 				driver,
 				WPAdminDashboardPage.getUrl( siteName )
@@ -339,6 +340,7 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		step( 'Can enter WooCommerce Wizard', async function() {
+			await WPAdminDashboardPage.refreshIfJNError( driver );
 			const wPAdminDashboardPage = await WPAdminDashboardPage.Expect( driver );
 			return await wPAdminDashboardPage.enterWooCommerceWizard();
 		} );
@@ -373,6 +375,8 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		step( 'Can activate Jetpack', async function() {
+			this.timeout( mochaTimeOut * 5 );
+
 			const wooWizardJetpackPage = await WooWizardJetpackPage.Expect( driver );
 			return await wooWizardJetpackPage.selectContinueWithJetpack();
 		} );

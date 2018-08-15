@@ -60,11 +60,9 @@ describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 
 		step( 'Can skip all steps', async function() {
 			const wizardNavigationComponent = await WizardNavigationComponent.Expect( driver );
-			await wizardNavigationComponent.skipStep();
-			await wizardNavigationComponent.skipStep();
-			await wizardNavigationComponent.skipStep();
-			await wizardNavigationComponent.skipStep();
-			await wizardNavigationComponent.skipStep();
+			for ( let step_number = 1; step_number < 6; step_number++ ) {
+				await wizardNavigationComponent.skipStep( step_number );
+			}
 			const summaryPage = await SummaryPage.Expect( driver );
 			let toDoCount = await summaryPage.countToDoSteps();
 			assert.strictEqual( toDoCount, 4, 'Expected and actual steps are not equal.' );
@@ -179,7 +177,7 @@ describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 
 		step( 'Can skip add a contact form', async function() {
 			const wizardNavigationComponent = await WizardNavigationComponent.Expect( driver );
-			return await wizardNavigationComponent.skipStep();
+			return await wizardNavigationComponent.skipStep( 4 );
 		} );
 
 		step( 'Can select add a business address', async function() {
@@ -301,12 +299,12 @@ describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 
 		step( 'Can skip add a contact form', async function() {
 			const wizardNavigationComponent = await WizardNavigationComponent.Expect( driver );
-			return await wizardNavigationComponent.skipStep();
+			return await wizardNavigationComponent.skipStep( 4 );
 		} );
 
 		step( 'Can skip add a business address', async function() {
 			const wizardNavigationComponent = await WizardNavigationComponent.Expect( driver );
-			return await wizardNavigationComponent.skipStep();
+			return await wizardNavigationComponent.skipStep( 5 );
 		} );
 
 		step( 'Can make business an online store', async function() {
