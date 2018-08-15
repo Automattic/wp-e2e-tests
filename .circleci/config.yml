@@ -26,9 +26,7 @@ jobs:
 
       - run: npm run lint
       - run: npm run decryptconfig
-      - run:
-          name: Update node in wrapper repos
-          command: ./scripts/circleci-branch-update.sh
+      - run: ./scripts/circleci-branch-update.sh
       - run:
           name: Install screen recording dependencies
           command: sudo apt install -y ffmpeg
