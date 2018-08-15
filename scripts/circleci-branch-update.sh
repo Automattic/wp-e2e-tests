@@ -1,9 +1,5 @@
 #!/bin/bash
 
-head-changed-file .nvmrc && update-wrapper-node-version
-
-
-
 update-wrapper-node-version () {
     version=$(<.nvmrc)
     version=${version:1}
@@ -26,3 +22,5 @@ head-changed-file () {
         set -- $(git rev-parse "@:$1" "@~:$1")
         [[ $1 != $2 ]]
 }
+
+head-changed-file .nvmrc && update-wrapper-node-version
