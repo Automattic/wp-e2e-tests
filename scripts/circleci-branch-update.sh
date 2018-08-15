@@ -22,7 +22,7 @@ head-changed-file () {
         [[ $1 != $2 ]]
 }
 
-if [[ (head-changed-file .nvmrc)  && ($CIRCLE_BRANCH == "master") ]]; then
+if head-changed-file ".nvmrc" && [ "$CIRCLE_BRANCH" = "master" ]; then
    update-wrapper-node-version
 else
    echo ".nvmrc file not updated or is not on master"
