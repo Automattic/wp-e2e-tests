@@ -51,8 +51,10 @@ describe( `[${ host }] Comments: (${ screenSize })`, function() {
 
 		step( 'Can publish and visit site', async function() {
 			const postEditorToolbar = await PostEditorToolbarComponent.Expect( driver );
-			await postEditorToolbar.publishThePost( { useConfirmStep: true } );
-			await postEditorToolbar.visitSite();
+			await postEditorToolbar.ensureSaved();
+			await postEditorToolbar.publishAndViewContent( { useConfirmStep: true } );
+			// await postEditorToolbar.publishThePost( { useConfirmStep: true } );
+			// await postEditorToolbar.visitSite();
 		} );
 
 		step( 'Can post a comment', async function() {
