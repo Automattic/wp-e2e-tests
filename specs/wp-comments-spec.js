@@ -53,8 +53,6 @@ describe( `[${ host }] Comments: (${ screenSize })`, function() {
 			const postEditorToolbar = await PostEditorToolbarComponent.Expect( driver );
 			await postEditorToolbar.ensureSaved();
 			await postEditorToolbar.publishAndViewContent( { useConfirmStep: true } );
-			// await postEditorToolbar.publishThePost( { useConfirmStep: true } );
-			// await postEditorToolbar.visitSite();
 		} );
 
 		step( 'Can post a comment', async function() {
