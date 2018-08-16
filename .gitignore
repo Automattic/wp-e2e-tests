@@ -18,3 +18,5 @@ config/local-*
 
 # http://direnv.net
 .envrc
+/allure-report/
+/allure-results/

@@ -16,7 +16,8 @@
     "precommitcirclecivalidate": "./scripts/git-pre-commit-circleci-validate",
     "test": "./run.sh ${TESTARGS:-$npm_package_defaultTestArgs}",
     "encryptconfig": "openssl enc -aes-256-cbc -pass env:CONFIG_KEY -out ./config/encrypted.enc -in ./config/local-$NODE_ENV.json",
-    "decryptconfig": "openssl enc -aes-256-cbc -d -pass env:CONFIG_KEY -in ./config/encrypted.enc -out ./config/local-$NODE_ENV.json"
+    "decryptconfig": "openssl enc -aes-256-cbc -d -pass env:CONFIG_KEY -in ./config/encrypted.enc -out ./config/local-$NODE_ENV.json",
+	"report": "allure generate allure-results --clean -o allure-report && allure open allure-report"
   },
   "husky": {
     "hooks": {
@@ -48,6 +49,7 @@
     "lodash": "^4.13.1",
     "mailosaur": "4.0.0",
     "mocha": "^5.2.0",
+    "mocha-allure-reporter": "^1.4.0",
     "mocha-steps": "^1.1.0",
     "node-slack-upload": "1.2.1",
     "png-itxt": "1.3.0",

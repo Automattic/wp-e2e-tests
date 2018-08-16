@@ -24,6 +24,13 @@ jobs:
           paths:
             - ~/.npm
 
+      - run:
+          name: Install Allure
+          command: |
+            sudo apt-add-repository ppa:qameta/allure
+            sudo apt-get update
+            sudo apt-get install allure
+
       - run: npm run lint
       - run: npm run decryptconfig
       - run: ./scripts/circleci-branch-update.sh
@@ -32,9 +39,12 @@ jobs:
           command: sudo apt install -y ffmpeg
       - run: ./scripts/randomize.sh specs
       - run: ./scripts/run-wrapper.sh
+      - run: npm run report
       - store_test_results:
           path: reports/
       - store_artifacts:
           path: reports/
       - store_artifacts:
           path: screenshots/
+      - store_artifacts:
+          path: allure-report/
