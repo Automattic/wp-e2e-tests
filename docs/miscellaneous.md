@@ -52,6 +52,8 @@ Wrapper repo is basically the same Main repo but with parameterized `./run.sh` c
 1. [Visdiff tests](https://github.com/Automattic/wp-e2e-tests-visdiff) - Runs VisDiff tests. Triggered by `cron` job
 1. [I18N tests](https://github.com/Automattic/wp-e2e-tests-i18n) - Runs I18N test suite. Triggered by `cron` job
 
+**Note- If adding to this list, also add to /scripts/circleci-branch-update.sh to ensure they stay up to date on node version
+
 Friends:
 
 - [E2E tests Github bridge](https://github.com/Automattic/wp-e2e-tests-gh-bridge) - middleware used to trigger Branches repo by github labels

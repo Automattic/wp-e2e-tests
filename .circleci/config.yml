@@ -26,6 +26,7 @@ jobs:
 
       - run: npm run lint
       - run: npm run decryptconfig
+      - run: ./scripts/circleci-branch-update.sh
       - run:
           name: Install screen recording dependencies
           command: sudo apt install -y ffmpeg
