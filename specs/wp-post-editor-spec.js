@@ -27,7 +27,6 @@ import * as driverHelper from '../lib/driver-helper';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
 import * as eyesHelper from '../lib/eyes-helper.js';
-import * as SlackNotifier from '../lib/slack-notifier';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -422,13 +421,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		const blogPostTitle = dataHelper.randomPhrase();
 		const blogPostQuote =
 			'“We are what we pretend to be, so we must be careful about what we pretend to be.”\n- Kurt Vonnegut';
-
-		before( async function() {
-			await SlackNotifier.warn( 'Activity Log tests currently disabled due to issues', {
-				suppressDuplicateMessages: true,
-			} );
-			return this.skip();
-		} );
 
 		before( async function() {
 			await driverManager.ensureNotLoggedIn( driver );
