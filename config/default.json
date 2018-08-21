@@ -66,7 +66,7 @@
 		"aboutSuggestionMatches",
 		"includeDotBlogSubdomainV2",
 		"nudgeAPalooza",
-		"gSuiteDiscount"
+		"gSuiteDiscountV2"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -77,7 +77,7 @@
 		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
 		[ "aboutSuggestionMatches_20180704", "control" ],
 		[ "includeDotBlogSubdomainV2_20180813", "no" ],
-		[ "gSuiteDiscount_20180803", "control" ],
+		[ "gSuiteDiscountV2_20180822", "control" ],
 		[ "nudgeAPalooza_20180806", "control" ]
 	]
 }
