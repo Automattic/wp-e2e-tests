@@ -63,7 +63,7 @@ describe( `[${ host }] Comments: (${ screenSize })`, function() {
 		} );
 
 		step( 'Can post a reply', async function() {
-			await driver.sleep( 15000 ); // Wait to not to post too quickly
+			await driver.sleep( 10000 ); // Wait to not to post too quickly
 			const commentArea = await CommentsAreaComponent.Expect( driver );
 			await commentArea.reply(
 				{
