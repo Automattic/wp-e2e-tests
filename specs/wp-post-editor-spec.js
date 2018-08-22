@@ -26,7 +26,6 @@ import * as driverManager from '../lib/driver-manager';
 import * as driverHelper from '../lib/driver-helper';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
-import * as eyesHelper from '../lib/eyes-helper.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -34,8 +33,6 @@ const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
 
 let driver;
-
-let eyes = eyesHelper.eyesSetup( true );
 
 before( async function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -1274,7 +1271,7 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe( 'Insert a payment button: @parallel @jetpack @visdiff', function() {
+	describe( 'Insert a payment button: @parallel @jetpack', function() {
 		const paymentButtonDetails = {
 			title: 'Button',
 			description: 'Description',
@@ -1284,12 +1281,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			allowQuantity: true,
 			email: 'test@wordpress.com',
 		};
-
-		before( async function() {
-			const testEnvironment = 'WordPress.com';
-			const testName = `Post Editor - Payment Button [${ global.browserName }] [${ screenSize }]`;
-			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
-		} );
 
 		before( async function() {
 			await driverManager.ensureNotLoggedIn( driver );
@@ -1308,7 +1299,7 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 			const editorPage = await EditorPage.Expect( driver );
 			await editorPage.enterTitle( blogPostTitle );
-			await editorPage.insertPaymentButton( eyes, paymentButtonDetails );
+			await editorPage.insertPaymentButton( paymentButtonDetails );
 
 			let errorShown = await editorPage.errorDisplayed();
 			return assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
@@ -1366,7 +1357,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 		after( async function() {
 			await driverHelper.ensurePopupsClosed( driver );
-			await eyesHelper.eyesClose( eyes );
 		} );
 	} );
 

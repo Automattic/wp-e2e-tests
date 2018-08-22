@@ -607,7 +607,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 			const editorPage = await EditorPage.Expect( driver );
 			await editorPage.enterTitle( pageTitle );
-			await editorPage.insertPaymentButton( null, paymentButtonDetails );
+			await editorPage.insertPaymentButton( paymentButtonDetails );
 
 			let errorShown = await editorPage.errorDisplayed();
 			return assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
