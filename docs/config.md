@@ -41,14 +41,12 @@ A full list of config values are:
 | calypsoDocker | A boolean indicating whether the tests will be run against a local Calypso Docker instance (required to ensure login works) | true | No | Yes |
 | explicitWaitMS | The explicit wait time in milliseconds to wait for an element to appear - for example a widget loading data via an API | 10000 | Yes | Yes |
 | mochaTimeoutMS | This is the maximum total time in milliseconds a single mocha end to end test can take to finish - otherwise it will time out. | 120000 | Yes | Yes |
-| mochaDevDocsTimeoutMS | A unique timeout value for visual diff tests on the /devdocs pages | 1000000 | Yes (visdiff testing only) | Yes |
 | startBrowserTimeoutMS | This is the maximum total time in milliseconds that the browser can take to start - this is different from test time as we want it to fail fast | 30000 | Yes | Yes |
 | startAppTimeoutMS | This is the maximum total time in milliseconds that the app can take to start for mobile testing - this is different from test time as we want it to fail fast | 240000 | Yes (for app testing only)| Yes |
 | afterHookTimeoutMS | This is the maximum total time in milliseconds that an after test hook can take including capturing the screenshots | 20000 | Yes | Yes |
 | browser | The browser to use: either `firefox` or `chrome` | `chrome` | Yes |  Yes |
 | proxy | The type of proxy to use: either `system` to use whatever your system is configured to use, or `direct` to use no proxy. Also supports `charles` to send web traffic through the [Charles Proxy](https://www.charlesproxy.com/) app for troubleshooting.| `direct` | Yes |  Yes |
 | saveAllScreenshots | Whether screenshots should be saved for all steps, including those that pass | `false` | Yes |  Yes |
-| neverSaveScreenshots | Overrides the screenshot function so nothing is captured.  This is intended for use with the Applitools visual diff specs, since the screenshots are handled via their utilities instead. | `false` | Yes |  Yes |
 | checkForConsoleErrors | Automatically report on console errors in the browser | `true` | Yes |  Yes |
 | reportWarningsToSlack | Specifies whether warnings should be reported to Slack - should be used for CI builds | `false` | Yes |  Yes |
 | closeBrowserOnComplete | Specifies whether to close the browser window when the tests are done | `true` | Yes |  Yes |
@@ -83,7 +81,6 @@ A full list of config values are:
 
 | Name | Description | Example | Required | Store in file? |
 | ---- | ----------- | ------- | -------- | ------------------- |
-| EYESDEBUG | If this is set, no connection is opened to Applitools, only local screenshots are taken | 1 | No | **NO** |
 | MAGELLANDEBUG | If this is set, the full mocha output is printed while running Magellan | 1 | No | **NO** |
 | SAUCEDEBUG | If this is set, on test failure a breakpoint will be set in SauceLabs, enabling you to continue interacting with the browser for troubleshooting | 1 | No | **NO** |
 

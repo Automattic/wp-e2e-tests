@@ -28,7 +28,6 @@
 	"inviteInboxId": "",
 	"signupInboxId": "",
 	"domainsInboxId": "",
-	"eyesKey": "",
 	"sauceUsername": "",
 	"sauceAccessKey": "",
 	"emailPrefix": "",
@@ -54,10 +53,6 @@
 			"password"
 		],
 		"jetpackUserGODADDY": [
-			"username",
-			"password"
-		],
-		"visualUser": [
 			"username",
 			"password"
 		],

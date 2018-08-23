@@ -50,13 +50,11 @@ usage () {
 -w		  - Only execute signup tests on Windows/IE11, not compatible with -g flag
 -z		  - Only execute canary tests on Windows/IE11, not compatible with -g flag
 -y		  - Only execute canary tests on Safari 10 on Mac, not compatible with -g flag
--l [config]	  - Execute the critical visdiff tests via Sauce Labs with the given configuration
+-l [config]	  - Execute the tests via Sauce Labs with the given configuration
 -c		  - Exit with status code 0 regardless of test results
 -m [browsers]	  - Execute the multi-browser visual-diff tests with the given list of browsers via grunt.  Specify browsers in comma-separated list or 'all'
--f		  - Tell visdiffs to fail the tests rather than just send an alert
 -i		  - Execute i18n NUX screenshot tests, not compatible with -g flag
 -I		  - Execute tests in specs-i18n/ directory
--v		  - Execute the visdiff tests via Sauce Labs
 -x		  - Execute the tests from the context of xvfb-run
 -u [baseUrl]	  - Override the calypsoBaseURL config
 -h		  - This help listing
@@ -140,10 +138,6 @@ while getopts ":a:RpS:b:B:s:gjWCJH:wzyl:cm:fiIUvxu:h" opt; do
       NODE_CONFIG_ARGS+=("\"sauce\":\"true\",\"sauceConfig\":\"$OPTARG\"")
       continue
       ;;
-    v)
-      export VISDIFF=1
-      MAGELLAN_CONFIG="magellan-visdiff.json"
-      ;;
     m)
       BROWSERS=$(echo $OPTARG | sed 's/,/ /g')
       if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
@@ -170,9 +164,6 @@ while getopts ":a:RpS:b:B:s:gjWCJH:wzyl:cm:fiIUvxu:h" opt; do
       ;;
     H)
       export JETPACKHOST=$OPTARG
-      ;;
-    f)
-      NODE_CONFIG_ARGS+=("\"failVisdiffs\":\"true\"")
       ;;
     x)
       NODE_CONFIG_ARGS+=("\"headless\":\"true\"")
