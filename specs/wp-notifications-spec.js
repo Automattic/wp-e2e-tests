@@ -6,7 +6,6 @@ import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 import * as slackNotifier from '../lib/slack-notifier';
 import * as dataHelper from '../lib/data-helper';
-import * as eyesHelper from '../lib/eyes-helper.js';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
@@ -23,14 +22,12 @@ const host = dataHelper.getJetpackHost();
 
 let driver;
 
-let eyes = eyesHelper.eyesSetup( false );
-
 before( async function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = await driverManager.startBrowser();
 } );
 
-describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`, function() {
+describe( `[${ host }] Notifications: (${ screenSize }) @parallel`, function() {
 	this.timeout( mochaTimeOut );
 
 	const commentingUser = dataHelper.getAccountConfig( 'commentingUser' )[ 0 ];
@@ -39,10 +36,6 @@ describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`, fun
 
 	before( async function() {
 		await driverManager.ensureNotLoggedIn( driver );
-
-		let testEnvironment = 'WordPress.com';
-		let testName = `Notifications [${ global.browserName }] [${ screenSize }]`;
-		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
 	} );
 
 	step( 'Can log in as commenting user', async function() {
@@ -97,7 +90,6 @@ describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`, fun
 		const notificationsComponent = await NotificationsComponent.Expect( driver );
 		await notificationsComponent.selectComments();
 		let content = await notificationsComponent.allCommentsContent();
-		await eyesHelper.eyesScreenshot( driver, eyes, 'Notifications List' );
 		return assert.strictEqual(
 			content.includes( expectedContent ),
 			true,
@@ -110,14 +102,9 @@ describe( `[${ host }] Notifications: (${ screenSize }) @parallel @visdiff`, fun
 		async function() {
 			const notificationsComponent = await NotificationsComponent.Expect( driver );
 			await notificationsComponent.selectCommentByText( comment );
-			await eyesHelper.eyesScreenshot( driver, eyes, 'Single Comment Notification' );
 			await notificationsComponent.trashComment();
 			await notificationsComponent.waitForUndoMessage();
 			return await notificationsComponent.waitForUndoMessageToDisappear();
 		}
 	);
-
-	after( async function() {
-		await eyesHelper.eyesClose( eyes );
-	} );
 } );

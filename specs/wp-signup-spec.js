@@ -5,7 +5,6 @@ import assert from 'assert';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper.js';
-import * as eyesHelper from '../lib/eyes-helper.js';
 
 import WPHomePage from '../lib/pages/wp-home-page.js';
 import ChooseAThemePage from '../lib/pages/signup/choose-a-theme-page.js';
@@ -62,8 +61,6 @@ const passwordForTestAccounts = config.get( 'passwordForNewTestSignUps' );
 const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 
 let driver;
-
-let eyes = eyesHelper.eyesSetup( true );
 
 before( async function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -305,18 +302,12 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a non-blog site on a premium paid plan through main flow in USD currency @parallel @visdiff', function() {
+	describe( 'Sign up for a non-blog site on a premium paid plan through main flow in USD currency @parallel', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const currencyValue = 'USD';
 		const expectedCurrencySymbol = '$';
-
-		before( function() {
-			let testEnvironment = 'WordPress.com';
-			let testName = `Signup [${ global.browserName }] [${ screenSize }]`;
-			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
-		} );
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -325,7 +316,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step( 'We can set the sandbox cookie for payments', async function() {
 			const wPHomePage = await WPHomePage.Visit( driver );
 			await wPHomePage.checkURL( locale );
-			await eyesHelper.eyesScreenshot( driver, eyes, 'Logged Out Homepage' );
 			await wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 			return await wPHomePage.setCurrencyForPayments( currencyValue );
 		} );
@@ -336,10 +326,9 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can see the "About" page, and enter some site information', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
-			await aboutPage.enterSiteDetails( blogName, '', {
+			return await aboutPage.enterSiteDetails( blogName, '', {
 				showcase: true,
 			} );
-			return await eyesHelper.eyesScreenshot( driver, eyes, 'About Page' );
 		} );
 
 		step( 'Can accept defaults for about page', async function() {
@@ -350,7 +339,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step( 'Can then see the domains page ', async function() {
 			const findADomainComponent = await FindADomainComponent.Expect( driver );
 			let displayed = await findADomainComponent.displayed();
-			await eyesHelper.eyesScreenshot( driver, eyes, 'Domains Page' );
 			return assert.strictEqual( displayed, true, 'The choose a domain page is not displayed' );
 		} );
 
@@ -369,7 +357,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
 				);
 
-				await eyesHelper.eyesScreenshot( driver, eyes, 'Domains Page Site Address Search' );
 				return await findADomainComponent.selectFreeAddress();
 			}
 		);
@@ -377,14 +364,12 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step( 'Can then see the plans page and select the premium plan ', async function() {
 			const pickAPlanPage = await PickAPlanPage.Expect( driver );
 			let displayed = await pickAPlanPage.displayed();
-			await eyesHelper.eyesScreenshot( driver, eyes, 'Plans Page' );
 			assert.strictEqual( displayed, true, 'The pick a plan page is not displayed' );
 			return await pickAPlanPage.selectPremiumPlan();
 		} );
 
 		step( 'Can then enter account details', async function() {
 			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
-			await eyesHelper.eyesScreenshot( driver, eyes, 'Create Account Page' );
 			return await createYourAccountPage.enterAccountDetailsAndSubmit(
 				emailAddress,
 				blogName,
@@ -407,7 +392,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			'Can then see the secure payment page with the premium plan in the cart',
 			async function() {
 				const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
-				await eyesHelper.eyesScreenshot( driver, eyes, 'Secure Payment Page' );
 				const premiumPlanInCart = await securePaymentComponent.containsPremiumPlan();
 				assert.strictEqual( premiumPlanInCart, true, "The cart doesn't contain the premium plan" );
 				const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
@@ -450,7 +434,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step( 'Can see the secure check out thank you page', async function() {
 			const checkOutThankyouPage = await CheckOutThankyouPage.Expect( driver );
 			let displayed = await checkOutThankyouPage.displayed();
-			await eyesHelper.eyesScreenshot( driver, eyes, 'Checkout Thank You Page' );
 			return assert.strictEqual( displayed, true, 'The checkout thank you page is not displayed' );
 		} );
 
@@ -496,24 +479,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 				);
 			} );
 		} );
-
-		after( async function() {
-			await eyesHelper.eyesClose( eyes );
-		} );
 	} );
 
-	describe( 'Sign up for a blog on a premium paid plan through main flow in USD currency @parallel @visdiff', function() {
+	describe( 'Sign up for a blog on a premium paid plan through main flow in USD currency @parallel', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const currencyValue = 'USD';
 		const expectedCurrencySymbol = '$';
-
-		before( function() {
-			let testEnvironment = 'WordPress.com';
-			let testName = `Signup [${ global.browserName }] [${ screenSize }]`;
-			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
-		} );
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -522,7 +495,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step( 'We can set the sandbox cookie for payments', async function() {
 			const wPHomePage = await WPHomePage.Visit( driver );
 			await wPHomePage.checkURL( locale );
-			await eyesHelper.eyesScreenshot( driver, eyes, 'Logged Out Homepage' );
 			await wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
 			return await wPHomePage.setCurrencyForPayments( currencyValue );
 		} );
@@ -533,10 +505,9 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can see the "About" page, and enter some site information', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
-			await aboutPage.enterSiteDetails( blogName, '', {
+			return await aboutPage.enterSiteDetails( blogName, '', {
 				share: true,
 			} );
-			return await eyesHelper.eyesScreenshot( driver, eyes, 'About Page' );
 		} );
 
 		step( 'Can accept defaults for about page', async function() {
@@ -547,7 +518,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step( 'Can then see the domains page ', async function() {
 			const findADomainComponent = await FindADomainComponent.Expect( driver );
 			let displayed = await findADomainComponent.displayed();
-			await eyesHelper.eyesScreenshot( driver, eyes, 'Domains Page' );
 			return assert.strictEqual( displayed, true, 'The choose a domain page is not displayed' );
 		} );
 
@@ -566,7 +536,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
 				);
 
-				await eyesHelper.eyesScreenshot( driver, eyes, 'Domains Page Site Address Search' );
 				return await findADomainComponent.selectFreeAddress();
 			}
 		);
@@ -574,14 +543,12 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step( 'Can then see the plans page and select the premium plan ', async function() {
 			const pickAPlanPage = await PickAPlanPage.Expect( driver );
 			let displayed = await pickAPlanPage.displayed();
-			await eyesHelper.eyesScreenshot( driver, eyes, 'Plans Page' );
 			assert.strictEqual( displayed, true, 'The pick a plan page is not displayed' );
 			return await pickAPlanPage.selectPremiumPlan();
 		} );
 
 		step( 'Can then enter account details', async function() {
 			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
-			await eyesHelper.eyesScreenshot( driver, eyes, 'Create Account Page' );
 			return await createYourAccountPage.enterAccountDetailsAndSubmit(
 				emailAddress,
 				blogName,
@@ -604,7 +571,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			'Can then see the secure payment page with the premium plan in the cart',
 			async function() {
 				const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
-				await eyesHelper.eyesScreenshot( driver, eyes, 'Secure Payment Page' );
 				const premiumPlanInCart = await securePaymentComponent.containsPremiumPlan();
 				assert.strictEqual( premiumPlanInCart, true, "The cart doesn't contain the premium plan" );
 				const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
@@ -695,10 +661,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					{ suppressDuplicateMessages: true }
 				);
 			} );
-		} );
-
-		after( async function() {
-			await eyesHelper.eyesClose( eyes );
 		} );
 	} );
 
