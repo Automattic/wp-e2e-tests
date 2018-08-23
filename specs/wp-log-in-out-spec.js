@@ -90,7 +90,6 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack`, fu
 
 			step( 'Can logout from profile page', async function() {
 				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.waitForProfileLinks();
 				await profilePage.clickSignOut();
 			} );
 
