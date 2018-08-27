@@ -78,6 +78,9 @@
 		[ "aboutSuggestionMatches_20180704", "control" ],
 		[ "includeDotBlogSubdomainV2_20180813", "no" ],
 		[ "gSuiteDiscountV2_20180822", "control" ],
-		[ "nudgeAPalooza_20180806", "control" ]
+		[ "themesNudgesUpdates_20180824", "control" ],
+		[ "pluginsUpsellLandingPage_20180824", "control" ],
+		[ "themesUpsellLandingPage_20180824", "control" ],
+		[ "plansBannerUpsells_20180824", "control" ]
 	]
 }
