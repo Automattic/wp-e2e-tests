@@ -53,10 +53,11 @@ describe( 'Reader: (' + screenSize + ') @parallel', function() {
 				);
 			} );
 
-			step( 'Can comment on the latest post', async function() {
+			step( 'Can comment on the latest post and see the comment appear', async function() {
 				this.comment = dataHelper.randomPhrase();
 				const readerPage = await ReaderPage.Expect( driver );
 				await readerPage.commentOnLatestPost( this.comment );
+				await readerPage.waitForCommentToAppear( this.comment );
 			} );
 
 			describe( 'Delete the new comment', function() {
