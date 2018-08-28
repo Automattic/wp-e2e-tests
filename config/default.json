@@ -67,10 +67,10 @@
 		"includeDotBlogSubdomainV2",
 		"nudgeAPalooza",
 		"gSuiteDiscountV2",
-		"themesNudgesUpdates_20180824",
-		"pluginsUpsellLandingPage_20180824",
-		"themesUpsellLandingPage_20180824",
-		"plansBannerUpsells_20180824"
+		"themesNudgesUpdates",
+		"pluginsUpsellLandingPage",
+		"themesUpsellLandingPage",
+		"plansBannerUpsells"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
