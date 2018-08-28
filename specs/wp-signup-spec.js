@@ -204,6 +204,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
+		const blogPostTitle = dataHelper.randomPhrase();
+		const blogPostQuote = dataHelper.randomPhrase();
 		let activationLink;
 
 		before( async function() {
@@ -272,9 +274,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can not publish until email is confirmed', async function() {
-			const blogPostTitle = dataHelper.randomPhrase();
-			const blogPostQuote = dataHelper.randomPhrase();
-
 			const editorPage = await EditorPage.Visit( driver );
 			await editorPage.enterTitle( blogPostTitle );
 			await editorPage.enterContent( blogPostQuote + '\n' );
@@ -305,9 +304,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can publish once email is confirmed', async function() {
-			const blogPostTitle = dataHelper.randomPhrase();
-			const blogPostQuote = dataHelper.randomPhrase();
-
 			const editorPage = await EditorPage.Visit( driver );
 			await editorPage.enterTitle( blogPostTitle );
 			await editorPage.enterContent( blogPostQuote + '\n' );
