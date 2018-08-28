@@ -19,6 +19,7 @@ import SignupProcessingPage from '../lib/pages/signup/signup-processing-page.js'
 import CheckOutPage from '../lib/pages/signup/checkout-page';
 import CheckOutThankyouPage from '../lib/pages/signup/checkout-thankyou-page.js';
 import LoginPage from '../lib/pages/login-page';
+import EditorPage from '../lib/pages/editor-page';
 import MagicLoginPage from '../lib/pages/magic-login-page';
 import ReaderPage from '../lib/pages/reader-page';
 import DomainOnlySettingsPage from '../lib/pages/domain-only-settings-page';
@@ -44,6 +45,7 @@ import SideBarComponent from '../lib/components/sidebar-component';
 import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component';
 import NoSitesComponent from '../lib/components/no-sites-component';
 import SidebarComponent from '../lib/components/sidebar-component';
+import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component';
 
 import * as SlackNotifier from '../lib/slack-notifier';
 
@@ -198,7 +200,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a free site and see the onboarding checklist @parallel', function() {
+	describe( 'Sign up for a free site, see the onboarding checklist, activate email and can publish @parallel', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
@@ -268,8 +270,27 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return assert( subheader, 'The checklist subheader does not exist.' );
 		} );
 
+		step( 'Can not publish until email is confirmed', async function() {
+			const blogPostTitle = dataHelper.randomPhrase();
+			const blogPostQuote = dataHelper.randomPhrase();
+
+			const editorPage = await EditorPage.Visit( driver );
+			await editorPage.enterTitle( blogPostTitle );
+			await editorPage.enterContent( blogPostQuote + '\n' );
+
+			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
+			await postEditorToolbarComponent.ensureSaved();
+
+			assert.strictEqual(
+				await editorPage.publishEnabled(),
+				false,
+				'Publish button is not enabled when activation link has not been clicked'
+			);
+		} );
+
 		step( 'Can delete our newly created account', async function() {
 			return ( async () => {
+				await ReaderPage.Visit( driver );
 				const navBarComponent = await NavBarComponent.Expect( driver );
 				await navBarComponent.clickProfileLink();
 				const profilePage = await ProfilePage.Expect( driver );
