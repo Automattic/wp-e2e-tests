@@ -200,7 +200,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe.only( 'Sign up for a free site, see the onboarding checklist, activate email and can publish @parallel', function() {
+	describe( 'Sign up for a free site, see the onboarding checklist, activate email and can publish @parallel', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
