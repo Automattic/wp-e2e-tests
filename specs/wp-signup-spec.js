@@ -200,10 +200,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a free site, see the onboarding checklist, activate email and can publish @parallel', function() {
+	describe.only( 'Sign up for a free site, see the onboarding checklist, activate email and can publish @parallel', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
+		let activationLink;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -284,7 +285,39 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			assert.strictEqual(
 				await editorPage.publishEnabled(),
 				false,
-				'Publish button is not enabled when activation link has not been clicked'
+				'The Publish button is enabled when activation link has not been clicked'
+			);
+		} );
+
+		step( 'Can activate my account from an email and see the checklist page', async function() {
+			const emailClient = new EmailClient( signupInboxId );
+			const validator = emails => emails.find( email => email.subject.includes( 'Activate' ) );
+			let emails = await emailClient.pollEmailsByRecipient( emailAddress, validator );
+			assert.strictEqual(
+				emails.length,
+				1,
+				'The number of newly registered emails is not equal to 1 (activation)'
+			);
+			activationLink = emails[ 0 ].html.links[ 0 ].href;
+			assert( activationLink !== undefined, 'Could not locate the activation link email link' );
+			await driver.get( activationLink );
+			await ChecklistPage.Expect( driver );
+		} );
+
+		step( 'Can publish once email is confirmed', async function() {
+			const blogPostTitle = dataHelper.randomPhrase();
+			const blogPostQuote = dataHelper.randomPhrase();
+
+			const editorPage = await EditorPage.Visit( driver );
+			await editorPage.enterTitle( blogPostTitle );
+			await editorPage.enterContent( blogPostQuote + '\n' );
+
+			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
+			await postEditorToolbarComponent.ensureSaved();
+
+			assert(
+				await editorPage.publishEnabled(),
+				'The Publish button is not enabled when activation link has been clicked'
 			);
 		} );
 
