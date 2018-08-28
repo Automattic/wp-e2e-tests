@@ -1390,6 +1390,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step( 'Can delete our newly created account', async function() {
 			return ( async () => {
 				const navBarComponent = await NavBarComponent.Expect( driver );
+				await navBarComponent.clickMySites();
 				await navBarComponent.clickProfileLink();
 				const profilePage = await ProfilePage.Expect( driver );
 				await profilePage.chooseAccountSettings();
