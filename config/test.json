@@ -1,5 +1,5 @@
 {
-  "calypsoBaseURL": "https://wpcalypso.wordpress.com",
+  "calypsoBaseURL": "https://wordpress.com",
   "saveAllScreenshots": false,
   "reportWarningsToSlack": true,
   "checkForConsoleErrors": false
