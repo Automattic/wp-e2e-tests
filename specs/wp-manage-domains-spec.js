@@ -213,6 +213,14 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 		const domain = 'automattic.com';
 
 		before( async function() {
+			await SlackNotifier.warn(
+				'Currently not running transfer a domain to an existing site due to timeout issues',
+				{ suppressDuplicateMessages: true }
+			);
+			return this.skip();
+		} );
+
+		before( async function() {
 			if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
 				await SlackNotifier.warn(
 					'Domains tests are currently disabled as SKIP_DOMAIN_TESTS is set to true',

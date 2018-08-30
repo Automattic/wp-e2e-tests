@@ -19,6 +19,7 @@ import SignupProcessingPage from '../lib/pages/signup/signup-processing-page.js'
 import CheckOutPage from '../lib/pages/signup/checkout-page';
 import CheckOutThankyouPage from '../lib/pages/signup/checkout-thankyou-page.js';
 import LoginPage from '../lib/pages/login-page';
+import EditorPage from '../lib/pages/editor-page';
 import MagicLoginPage from '../lib/pages/magic-login-page';
 import ReaderPage from '../lib/pages/reader-page';
 import DomainOnlySettingsPage from '../lib/pages/domain-only-settings-page';
@@ -44,6 +45,7 @@ import SideBarComponent from '../lib/components/sidebar-component';
 import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component';
 import NoSitesComponent from '../lib/components/no-sites-component';
 import SidebarComponent from '../lib/components/sidebar-component';
+import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component';
 
 import * as SlackNotifier from '../lib/slack-notifier';
 
@@ -153,8 +155,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			const emailClient = new EmailClient( signupInboxId );
 			const validator = emails => emails.find( email => email.subject.includes( 'WordPress.com' ) );
 			let emails = await emailClient.pollEmailsByRecipient( emailAddress, validator );
-			//Disabled due to a/b test on activation email. See https://github.com/Automattic/wp-e2e-tests/issues/819
-			//assert.strictEqual( emails.length, 2, 'The number of newly registered emails is not equal to 2 (activation and magic link)' );
+			assert.strictEqual(
+				emails.length,
+				2,
+				'The number of newly registered emails is not equal to 2 (activation and magic link)'
+			);
 			for ( let email of emails ) {
 				if ( email.subject.includes( 'WordPress.com' ) ) {
 					return ( magicLoginLink = email.html.links[ 0 ].href );
@@ -194,10 +199,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a free site and see the onboarding checklist @parallel', function() {
+	describe( 'Sign up for a free site, see the onboarding checklist, activate email and can publish @parallel', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
+		const blogPostTitle = dataHelper.randomPhrase();
+		const blogPostQuote = dataHelper.randomPhrase();
+		let activationLink;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -263,8 +271,53 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return assert( subheader, 'The checklist subheader does not exist.' );
 		} );
 
+		step( 'Can not publish until email is confirmed', async function() {
+			const editorPage = await EditorPage.Visit( driver );
+			await editorPage.enterTitle( blogPostTitle );
+			await editorPage.enterContent( blogPostQuote + '\n' );
+
+			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
+			await postEditorToolbarComponent.ensureSaved();
+
+			assert.strictEqual(
+				await editorPage.publishEnabled(),
+				false,
+				'The Publish button is enabled when activation link has not been clicked'
+			);
+		} );
+
+		step( 'Can activate my account from an email and see the checklist page', async function() {
+			const emailClient = new EmailClient( signupInboxId );
+			const validator = emails => emails.find( email => email.subject.includes( 'Activate' ) );
+			let emails = await emailClient.pollEmailsByRecipient( emailAddress, validator );
+			assert.strictEqual(
+				emails.length,
+				1,
+				'The number of newly registered emails is not equal to 1 (activation)'
+			);
+			activationLink = emails[ 0 ].html.links[ 0 ].href;
+			assert( activationLink !== undefined, 'Could not locate the activation link email link' );
+			await driver.get( activationLink );
+			await ChecklistPage.Expect( driver );
+		} );
+
+		step( 'Can publish once email is confirmed', async function() {
+			const editorPage = await EditorPage.Visit( driver );
+			await editorPage.enterTitle( blogPostTitle );
+			await editorPage.enterContent( blogPostQuote + '\n' );
+
+			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
+			await postEditorToolbarComponent.ensureSaved();
+
+			assert(
+				await editorPage.publishEnabled(),
+				'The Publish button is not enabled when activation link has been clicked'
+			);
+		} );
+
 		step( 'Can delete our newly created account', async function() {
 			return ( async () => {
+				await ReaderPage.Visit( driver );
 				const navBarComponent = await NavBarComponent.Expect( driver );
 				await navBarComponent.clickProfileLink();
 				const profilePage = await ProfilePage.Expect( driver );
@@ -1384,6 +1437,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step( 'Can delete our newly created account', async function() {
 			return ( async () => {
 				const navBarComponent = await NavBarComponent.Expect( driver );
+				await navBarComponent.clickMySites();
 				await navBarComponent.clickProfileLink();
 				const profilePage = await ProfilePage.Expect( driver );
 				await profilePage.chooseAccountSettings();
