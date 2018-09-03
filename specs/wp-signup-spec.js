@@ -131,8 +131,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			"Can see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
 			async function() {
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				await signupProcessingPage.waitForContinueButtonToBeEnabled();
-				return signupProcessingPage.continueAlong();
+				return signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -258,8 +257,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			"Can see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
 			async function() {
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				await signupProcessingPage.waitForContinueButtonToBeEnabled();
-				return signupProcessingPage.continueAlong();
+				return signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -339,7 +337,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a site on a premium paid plan through main flow in USD currency @parallel', function() {
+	describe( 'Sign up for a site on a premium paid plan through main flow in USD currency @parallel @canary', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
@@ -414,7 +412,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					return;
 				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear();
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -585,8 +583,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			"Can then see the sign up processing page and it will finish and show a 'Continue' button, which is clicked",
 			async function() {
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				await signupProcessingPage.waitForContinueButtonToBeEnabled();
-				return await signupProcessingPage.continueAlong();
+				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -756,8 +753,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			"Can then see the sign up processing page and it will finish and show a 'Continue' button, which is clicked",
 			async function() {
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				await signupProcessingPage.waitForContinueButtonToBeEnabled();
-				return await signupProcessingPage.continueAlong();
+				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -923,7 +919,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					return;
 				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear();
+				return await signupProcessingPage.waitToDisappear( siteName, passwordForTestAccounts );
 			}
 		);
 
@@ -1148,7 +1144,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					return;
 				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear();
+				return await signupProcessingPage.waitToDisappear( siteName, passwordForTestAccounts );
 			}
 		);
 
@@ -1312,8 +1308,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			async function() {
 				await SignupProcessingPage.hideFloatiesinIE11( driver );
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				await signupProcessingPage.waitForContinueButtonToBeEnabled();
-				return await signupProcessingPage.continueAlong();
+				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1397,8 +1392,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
 			async function() {
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				await signupProcessingPage.waitForContinueButtonToBeEnabled();
-				return await signupProcessingPage.continueAlong();
+				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1528,8 +1522,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
 			async function() {
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				await signupProcessingPage.waitForContinueButtonToBeEnabled();
-				return await signupProcessingPage.continueAlong();
+				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1583,8 +1576,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
 			async function() {
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				await signupProcessingPage.waitForContinueButtonToBeEnabled();
-				return await signupProcessingPage.continueAlong();
+				return await signupProcessingPage.continueAlong( userName, passwordForTestAccounts );
 			}
 		);
 

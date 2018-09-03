@@ -367,7 +367,7 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe( 'Basic Public Post @canary @parallel @jetpack', function() {
+	describe( 'Basic Public Post @parallel @jetpack', function() {
 		before( async function() {
 			await driverManager.ensureNotLoggedIn( driver );
 		} );
