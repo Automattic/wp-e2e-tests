@@ -27,7 +27,7 @@ let driver;
 // Disabled due to p1535659602000200-slack-e2e-testing-discuss
 // tl;dr: There is a bug in my.pressable.com which cause some noise/warnings/errors
 // We shouldn't create new Pressable sites for every test.
-if ( host === false ) {
+if ( false ) {
 	before( async function() {
 		this.timeout( startBrowserTimeoutMS );
 		driver = await driverManager.startBrowser();
