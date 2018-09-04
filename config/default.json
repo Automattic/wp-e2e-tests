@@ -70,7 +70,8 @@
 		"themesNudgesUpdates",
 		"pluginsUpsellLandingPage",
 		"themesUpsellLandingPage",
-		"plansBannerUpsells"
+		"plansBannerUpsells",
+		"readerSearchPlaceholder"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
