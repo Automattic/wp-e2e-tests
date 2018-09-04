@@ -12,7 +12,6 @@ import * as dataHelper from '../lib/data-helper';
 import PressableNUXFlow from '../lib/flows/pressable-nux-flow';
 import ReaderPage from '../lib/pages/reader-page';
 import SidebarComponent from '../lib/components/sidebar-component';
-import StatsPage from '../lib/pages/stats-page';
 import NavBarComponent from '../lib/components/nav-bar-component';
 import JetpackConnectFlow from '../lib/flows/jetpack-connect-flow';
 import LoginFlow from '../lib/flows/login-flow';
@@ -105,9 +104,7 @@ if ( false ) {
 				const sidebarComponent = await SidebarComponent.Expect( driver );
 				await sidebarComponent.selectSiteSwitcher();
 				await sidebarComponent.searchForSite( this.siteName );
-				await sidebarComponent.selectStats();
-				const statsPage = await StatsPage.Expect( driver );
-				return await statsPage.openActivity();
+				await sidebarComponent.selectActivity();
 			} );
 
 			// Disabled due to to longer time is required to make a backup.

@@ -11,7 +11,6 @@ import ViewPostPage from '../lib/pages/view-post-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
 import PostsPage from '../lib/pages/posts-page.js';
 import ReaderPage from '../lib/pages/reader-page';
-import StatsPage from '../lib/pages/stats-page';
 import ActivityPage from '../lib/pages/stats/activity-page';
 import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
 
@@ -450,9 +449,7 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			await navBarComponent.clickMySites();
 			let sidebarComponent = await SidebarComponent.Expect( driver );
 			await sidebarComponent.ensureSidebarMenuVisible();
-			await sidebarComponent.selectStats();
-			const statsPage = await StatsPage.Expect( driver );
-			await statsPage.openActivity();
+			await sidebarComponent.selectActivity();
 			const activityPage = await ActivityPage.Expect( driver );
 			let displayed = await activityPage.postTitleDisplayed( blogPostTitle );
 			return assert(
