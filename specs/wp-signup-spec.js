@@ -892,7 +892,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 				driver,
 				StartPage.getStartURL( {
 					culture: locale,
-					flow: 'domain-first/site-or-domain',
+					flow: 'domain-first',
 					query: `new=${ expectedDomainName }`,
 				} )
 			);
