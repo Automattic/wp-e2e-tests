@@ -3,6 +3,8 @@
 Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Automattic/wp-calypso) client and WordPress.com in general.
 
 [![Circle CI](https://circleci.com/gh/Automattic/wp-e2e-tests/tree/master.svg?style=svg)](https://circleci.com/gh/Automattic/wp-e2e-tests/tree/master)
+[![Code Quality: Javascript](https://img.shields.io/lgtm/grade/javascript/g/Automattic/wp-e2e-tests.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Automattic/wp-e2e-tests/context:javascript)
+[![Total Alerts](https://img.shields.io/lgtm/alerts/g/Automattic/wp-e2e-tests.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Automattic/wp-e2e-tests/alerts)
 
 ## Table of contents
 
