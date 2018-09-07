@@ -72,6 +72,7 @@
 		"themesUpsellLandingPage",
 		"plansBannerUpsells",
 		"readerSearchPlaceholder",
+		"showPlanCreditsApplied",
 		"domainManagementSuggestion"
 	],
 	"overrideABTests": [
@@ -90,6 +91,7 @@
 		[ "themesUpsellLandingPage_20180824", "control" ],
 		[ "plansBannerUpsells_20180824", "control" ],
 		[ "readerSearchPlaceholder_20180830", "justSearch" ],
+		[ "showPlanCreditsApplied_20180903", "control" ],
 		[ "domainManagementSuggestion_20180905", "domainsbot" ]
 	]
 }
