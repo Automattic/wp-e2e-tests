@@ -36,10 +36,6 @@ describe( `[${ host }] Comments: (${ screenSize })`, function() {
 	} );
 
 	describe( 'Commenting and replying to newly created post: @parallel @jetpack', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		step( 'Can login and create a new post', async function() {
 			await new LoginFlow( driver ).loginAndStartNewPost();
 			const editorPage = await EditorPage.Expect( driver );
