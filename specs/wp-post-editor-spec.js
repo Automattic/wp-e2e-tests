@@ -11,7 +11,6 @@ import ViewPostPage from '../lib/pages/view-post-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
 import PostsPage from '../lib/pages/posts-page.js';
 import ReaderPage from '../lib/pages/reader-page';
-import StatsPage from '../lib/pages/stats-page';
 import ActivityPage from '../lib/pages/stats/activity-page';
 import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
 
@@ -367,7 +366,7 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe( 'Basic Public Post @canary @parallel @jetpack', function() {
+	describe( 'Basic Public Post @parallel @jetpack @canary', function() {
 		before( async function() {
 			await driverManager.ensureNotLoggedIn( driver );
 		} );
@@ -413,8 +412,7 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	// TODO: investigate why this doesn't show for Pressable Jetpack site
-	describe( 'Check Activity Log for Public Post @parallel', function() {
+	describe( 'Check Activity Log for Public Post @jetpack @parallel', function() {
 		const blogPostTitle = dataHelper.randomPhrase();
 		const blogPostQuote =
 			'“We are what we pretend to be, so we must be careful about what we pretend to be.”\n- Kurt Vonnegut';
@@ -450,9 +448,7 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			await navBarComponent.clickMySites();
 			let sidebarComponent = await SidebarComponent.Expect( driver );
 			await sidebarComponent.ensureSidebarMenuVisible();
-			await sidebarComponent.selectStats();
-			const statsPage = await StatsPage.Expect( driver );
-			await statsPage.openActivity();
+			await sidebarComponent.selectActivity();
 			const activityPage = await ActivityPage.Expect( driver );
 			let displayed = await activityPage.postTitleDisplayed( blogPostTitle );
 			return assert(

@@ -66,7 +66,13 @@
 		"aboutSuggestionMatches",
 		"includeDotBlogSubdomainV2",
 		"nudgeAPalooza",
-		"gSuiteDiscountV2"
+		"gSuiteDiscountV2",
+		"themesNudgesUpdates",
+		"pluginsUpsellLandingPage",
+		"themesUpsellLandingPage",
+		"plansBannerUpsells",
+		"readerSearchPlaceholder",
+		"domainManagementSuggestion"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -76,11 +82,14 @@
 		[ "domainSuggestionKrakenV325_20180828", "domainsbot" ],
 		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
 		[ "aboutSuggestionMatches_20180704", "control" ],
+		[ "nudgeAPalooza_20180806", "control" ],
 		[ "includeDotBlogSubdomainV2_20180813", "no" ],
 		[ "gSuiteDiscountV2_20180822", "control" ],
 		[ "themesNudgesUpdates_20180824", "control" ],
 		[ "pluginsUpsellLandingPage_20180824", "control" ],
 		[ "themesUpsellLandingPage_20180824", "control" ],
-		[ "plansBannerUpsells_20180824", "control" ]
+		[ "plansBannerUpsells_20180824", "control" ],
+		[ "readerSearchPlaceholder_20180830", "justSearch" ],
+		[ "domainManagementSuggestion_20180905", "domainsbot" ]
 	]
 }
