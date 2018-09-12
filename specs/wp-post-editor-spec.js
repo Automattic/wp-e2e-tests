@@ -448,6 +448,11 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			await navBarComponent.clickMySites();
 			let sidebarComponent = await SidebarComponent.Expect( driver );
 			await sidebarComponent.ensureSidebarMenuVisible();
+
+			if ( host !== 'WPCOM' ) {
+				await sidebarComponent.selectSite( dataHelper.getJetpackSiteName() );
+			}
+
 			await sidebarComponent.selectActivity();
 			const activityPage = await ActivityPage.Expect( driver );
 			let displayed = await activityPage.postTitleDisplayed( blogPostTitle );
