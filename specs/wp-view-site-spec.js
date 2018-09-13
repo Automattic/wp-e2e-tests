@@ -25,10 +25,6 @@ before( async function() {
 describe( `[${ host }] View site from sidebar: (${ screenSize }) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 	describe( 'View site and close:', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		step( 'Can Log In and go to My Sites', async function() {
 			const loginFlow = new LoginFlow( driver );
 			return await loginFlow.loginAndSelectMySite();
