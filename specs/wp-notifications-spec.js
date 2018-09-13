@@ -34,10 +34,6 @@ describe( `[${ host }] Notifications: (${ screenSize }) @parallel`, function() {
 	const comment = dataHelper.randomPhrase() + ' TBD';
 	let commentedPostTitle;
 
-	before( async function() {
-		await driverManager.ensureNotLoggedIn( driver );
-	} );
-
 	step( 'Can log in as commenting user', async function() {
 		const loginFlow = new LoginFlow( driver, 'commentingUser' );
 		return await loginFlow.login();
