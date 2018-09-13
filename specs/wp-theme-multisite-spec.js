@@ -37,8 +37,6 @@ describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 			this.themeSearchName = 'twenty';
 			this.expectedTheme = 'Twenty F';
 
-			await driverManager.ensureNotLoggedIn( driver );
-
 			this.loginFlow = new LoginFlow( driver, 'multiSiteUser' );
 			await this.loginFlow.loginAndSelectAllSites();
 
@@ -103,8 +101,6 @@ describe( `[${ host }] Themes: All sites (${ screenSize })`, function() {
 		step( 'Login and select themes', async function() {
 			this.themeSearchName = 'twenty';
 			this.expectedTheme = 'Twenty F';
-
-			await driverManager.ensureNotLoggedIn( driver );
 
 			this.loginFlow = new LoginFlow( driver, 'multiSiteUser' );
 			await this.loginFlow.loginAndSelectAllSites();
