@@ -34,7 +34,6 @@ describe( `[${ host }] Previewing Themes: (${ screenSize })`, function() {
 
 	describe( 'Previewing Themes @parallel @jetpack', function() {
 		step( 'Delete Cookies and Login', async function() {
-			await driverManager.ensureNotLoggedIn( driver );
 			let loginFlow = new LoginFlow( driver );
 			await loginFlow.loginAndSelectThemes();
 		} );
@@ -65,11 +64,6 @@ describe( `[${ host }] Previewing Themes: (${ screenSize })`, function() {
 describe( `[${ host }] Activating Themes: (${ screenSize }) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 	describe( 'Activating Themes:', function() {
-		// Ensure logged out
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		step( 'Login', async function() {
 			let loginFlow = new LoginFlow( driver );
 			return await loginFlow.loginAndSelectMySite();
