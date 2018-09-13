@@ -26,11 +26,6 @@ before( async function() {
 
 describe( 'Reader: (' + screenSize + ') @parallel', function() {
 	this.timeout( mochaTimeOut );
-
-	before( async function() {
-		await driverManager.ensureNotLoggedIn( driver );
-	} );
-
 	describe( 'Log in as commenting user', function() {
 		step( 'Can log in as commenting user', async function() {
 			this.loginFlow = new LoginFlow( driver, 'commentingUser' );
@@ -61,11 +56,6 @@ describe( 'Reader: (' + screenSize + ') @parallel', function() {
 			} );
 
 			describe( 'Delete the new comment', function() {
-				before( async function() {
-					await driverManager.ensureNotLoggedIn( driver );
-					await driver.get( dataHelper.configGet( 'calypsoBaseURL' ) );
-				} );
-
 				step( 'Can log in as test site owner', async function() {
 					this.loginFlow = new LoginFlow( driver, 'notificationsUser' );
 					return await this.loginFlow.login();
