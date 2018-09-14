@@ -513,7 +513,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a site on a premium paid plan coming in via /create as premium flow in JPY currency @parallel', function() {
+	xdescribe( 'Sign up for a site on a premium paid plan coming in via /create as premium flow in JPY currency @parallel', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
@@ -684,7 +684,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a site on a personal paid plan coming in via /create as personal flow in GBP currency @parallel', function() {
+	xdescribe( 'Sign up for a site on a personal paid plan coming in via /create as personal flow in GBP currency @parallel', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
@@ -1063,7 +1063,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow in CAD currency @parallel', function() {
+	xdescribe( 'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow in CAD currency @parallel', function() {
 		const siteName = dataHelper.getNewBlogName();
 		const expectedDomainName = `${ siteName }.live`;
 		const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
@@ -1456,7 +1456,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for free subdomain site @parallel', function() {
+	xdescribe( 'Sign up for free subdomain site @parallel', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedDomainName = `${ blogName }.art.blog`;
 
