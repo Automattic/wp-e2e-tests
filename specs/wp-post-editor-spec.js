@@ -44,10 +44,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	describe( 'Public Posts: @parallel @jetpack', function() {
 		let fileDetails;
 
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		// Create image file for upload
 		before( async function() {
 			fileDetails = await mediaHelper.createFile();
@@ -367,10 +363,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	} );
 
 	describe( 'Basic Public Post @parallel @jetpack @canary', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		describe( 'Publish a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
@@ -417,10 +409,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		const blogPostQuote =
 			'“We are what we pretend to be, so we must be careful about what we pretend to be.”\n- Kurt Vonnegut';
 
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		step( 'Can log in', async function() {
 			let loginFlow = new LoginFlow( driver );
 			return await loginFlow.loginAndStartNewPost();
@@ -465,10 +453,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 	describe( 'Schedule Basic Public Post @parallel @jetpack', function() {
 		let publishDate;
-
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
 
 		describe( 'Schedule (and remove) a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
@@ -538,10 +522,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	} );
 
 	describe( 'Private Posts: @parallel @jetpack', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		describe( 'Publish a Private Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
@@ -669,10 +649,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	} );
 
 	describe( 'Password Protected Posts: @parallel @jetpack', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		describe( 'Publish a Password Protected Post', function() {
 			let blogPostTitle = dataHelper.randomPhrase();
 			let blogPostQuote =
@@ -1085,10 +1061,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	} );
 
 	describe( 'Trash Post: @parallel @jetpack', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		describe( 'Trash a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
@@ -1123,10 +1095,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	} );
 
 	describe( 'Edit a Post: @parallel @jetpack', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		describe( 'Publish a New Post', function() {
 			const originalBlogPostTitle = dataHelper.randomPhrase();
 			const updatedBlogPostTitle = dataHelper.randomPhrase();
@@ -1224,10 +1192,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	} );
 
 	describe( 'Insert a contact form: @parallel @jetpack', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		describe( 'Publish a New Post with a Contact Form', function() {
 			const originalBlogPostTitle = 'Contact Us: ' + dataHelper.randomPhrase();
 
@@ -1282,10 +1246,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			allowQuantity: true,
 			email: 'test@wordpress.com',
 		};
-
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
 
 		step( 'Can log in', async function() {
 			if ( host === 'WPCOM' ) {
@@ -1362,10 +1322,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	} );
 
 	describe( 'Revert a post to draft: @parallel @jetpack', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		describe( 'Publish a new post', function() {
 			const originalBlogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =

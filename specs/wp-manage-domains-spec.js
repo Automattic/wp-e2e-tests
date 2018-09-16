@@ -58,10 +58,6 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 			}
 		} );
 
-		before( async function() {
-			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		step( 'Log In and Select Domains', async function() {
 			return await new LoginFlow( driver ).loginAndSelectDomains();
 		} );
@@ -133,10 +129,6 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 				);
 				return this.skip();
 			}
-		} );
-
-		before( async function() {
-			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		step( 'Log In and Select Domains', async function() {
@@ -228,10 +220,6 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 				);
 				return this.skip();
 			}
-		} );
-
-		before( async function() {
-			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		step( 'Log In and Select Domains', async function() {
