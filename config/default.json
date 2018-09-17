@@ -67,12 +67,9 @@
 		"includeDotBlogSubdomainV2",
 		"nudgeAPalooza",
 		"gSuiteDiscountV2",
-		"themesNudgesUpdates",
-		"pluginsUpsellLandingPage",
-		"themesUpsellLandingPage",
-		"plansBannerUpsells",
 		"readerSearchPlaceholder",
 		"showPlanCreditsApplied",
+		"cartNudgeUpdateToPremium",
 		"domainManagementSuggestion"
 	],
 	"overrideABTests": [
@@ -86,12 +83,9 @@
 		[ "nudgeAPalooza_20180806", "control" ],
 		[ "includeDotBlogSubdomainV2_20180813", "no" ],
 		[ "gSuiteDiscountV2_20180822", "control" ],
-		[ "themesNudgesUpdates_20180824", "control" ],
-		[ "pluginsUpsellLandingPage_20180824", "control" ],
-		[ "themesUpsellLandingPage_20180824", "control" ],
-		[ "plansBannerUpsells_20180824", "control" ],
 		[ "readerSearchPlaceholder_20180830", "justSearch" ],
 		[ "showPlanCreditsApplied_20180903", "control" ],
+		[ "cartNudgeUpdateToPremium_20180903", "control" ],
 		[ "domainManagementSuggestion_20180905", "domainsbot" ]
 	]
 }
