@@ -292,7 +292,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			let emails = await emailClient.pollEmailsByRecipient( emailAddress, validator );
 			assert.strictEqual(
 				emails.length,
-				1,
+				2,
 				'The number of newly registered emails is not equal to 1 (activation)'
 			);
 			activationLink = emails[ 0 ].html.links[ 0 ].href;
