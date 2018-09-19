@@ -361,6 +361,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can accept defaults for about page', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
+			await aboutPage.enterSiteDetails( 'Step Back', 'Store Test Topic', { sell: true } );
+			await aboutPage.submitForm();
+			await driver.navigate().back();
+			await aboutPage.unsetCheckBox( { sell: true } );
 			await aboutPage.submitForm();
 		} );
 
