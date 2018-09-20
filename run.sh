@@ -86,7 +86,7 @@ while getopts ":a:RpS:b:B:s:gjWCJH:wzyl:cm:fiIUvxu:h" opt; do
       ;;
     S)
       export LIVEBRANCHES="true"
-      NODE_CONFIG_ARGS+=("\"liveBranch\":\"true\",\"commitHash\":\"$OPTARG\",\"calypsoBaseURL\":\"https://calypso.live\"")
+      NODE_CONFIG_ARGS+=("\"liveBranch\":\"true\",\"calypsoBaseURL\":\"https://hash-$OPTARG.calypso.live\"")
       continue
       ;;
     b)

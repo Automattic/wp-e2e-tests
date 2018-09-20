@@ -337,7 +337,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a site on a premium paid plan through main flow in USD currency @parallel', function() {
+	describe( 'Sign up for a site on a premium paid plan through main flow in USD currency @parallel @canary', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
@@ -361,6 +361,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can accept defaults for about page', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
+			await aboutPage.enterSiteDetails( 'Step Back', 'Store Test Topic', { sell: true } );
+			await aboutPage.submitForm();
+			await driver.navigate().back();
+			await aboutPage.unsetCheckBox( { sell: true } );
 			await aboutPage.submitForm();
 		} );
 
@@ -1253,7 +1257,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Basic sign up for a free site @parallel @email @ie11canary @canary', function() {
+	describe( 'Basic sign up for a free site @parallel @email @ie11canary', function() {
 		const blogName = dataHelper.getNewBlogName();
 
 		before( async function() {

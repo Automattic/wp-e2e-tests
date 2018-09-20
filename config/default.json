@@ -70,7 +70,8 @@
 		"readerSearchPlaceholder",
 		"showPlanCreditsApplied",
 		"cartNudgeUpdateToPremium",
-		"domainManagementSuggestion"
+		"domainManagementSuggestion",
+		"userFirstSignup"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -86,6 +87,7 @@
 		[ "readerSearchPlaceholder_20180830", "justSearch" ],
 		[ "showPlanCreditsApplied_20180903", "control" ],
 		[ "cartNudgeUpdateToPremium_20180903", "control" ],
-		[ "domainManagementSuggestion_20180905", "domainsbot" ]
+		[ "domainManagementSuggestion_20180905", "domainsbot" ],
+		[ "userFirstSignup_20180913", "default" ]
 	]
 }
