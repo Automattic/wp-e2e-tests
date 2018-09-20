@@ -74,7 +74,8 @@
 		"readerSearchPlaceholder",
 		"showPlanCreditsApplied",
 		"domainManagementSuggestion",
-		"userFirstSignup"
+		"userFirstSignup",
+		"signupAtomicStoreVsPressable"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
