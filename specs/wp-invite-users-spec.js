@@ -206,7 +206,7 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		const siteName = config.get( 'privateSiteForInvites' );
 		const siteUrl = `https://${ siteName }/`;
-		let removedViewerFlag = false;
+		let removedViewerFlag = true;
 		let acceptInviteURL = '';
 
 		step( 'As an anonymous user I can not see a private site', async function() {
@@ -258,6 +258,7 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			assert( headerInviteText.includes( 'view' ) );
 
 			await acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
+			removedViewerFlag = false;
 			return await acceptInvitePage.waitUntilNotVisible();
 		} );
 
