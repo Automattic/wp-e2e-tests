@@ -280,20 +280,20 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 
 			const peoplePage = await PeoplePage.Expect( driver );
 			await peoplePage.selectViewers();
-			await peoplePage.viewerDisplayed( newUserName );
-			// assert( displayed, `The username of '${ newUserName }' was not displayed as a site viewer` );
+			let displayed = await peoplePage.viewerDisplayed( newUserName );
+			assert( displayed, `The username of '${ newUserName }' was not displayed as a site viewer` );
 
 			await peoplePage.removeUserByName( newUserName );
 			await peoplePage.waitForSearchResults();
-			let displayed = await peoplePage.viewerDisplayed( newUserName );
+			displayed = await peoplePage.viewerDisplayed( newUserName );
 			if ( displayed === false ) {
 				removedViewerFlag = true;
 			}
-			// return assert.strictEqual(
-			// 	displayed,
-			// 	false,
-			// 	`The username of '${ newUserName }' was still displayed as a site viewer`
-			// );
+			return assert.strictEqual(
+				displayed,
+				false,
+				`The username of '${ newUserName }' was still displayed as a site viewer`
+			);
 		} );
 
 		step( 'Can not see the site - see the private site log in page', async function() {
