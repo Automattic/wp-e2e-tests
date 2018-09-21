@@ -206,6 +206,7 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		const siteName = config.get( 'privateSiteForInvites' );
 		const siteUrl = `https://${ siteName }/`;
+		let removedViewerFlag = true;
 		let acceptInviteURL = '';
 
 		step( 'As an anonymous user I can not see a private site', async function() {
@@ -257,6 +258,7 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			assert( headerInviteText.includes( 'view' ) );
 
 			await acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
+			removedViewerFlag = false;
 			return await acceptInvitePage.waitUntilNotVisible();
 		} );
 
@@ -284,6 +286,9 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			await peoplePage.removeUserByName( newUserName );
 			await peoplePage.waitForSearchResults();
 			displayed = await peoplePage.viewerDisplayed( newUserName );
+			if ( displayed === false ) {
+				removedViewerFlag = true;
+			}
 			return assert.strictEqual(
 				displayed,
 				false,
@@ -300,15 +305,17 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 
 		after( async function() {
-			await new LoginFlow( driver, 'privateSiteUser' ).loginAndSelectPeople();
-			const peoplePage = await PeoplePage.Expect( driver );
+			if ( ! removedViewerFlag ) {
+				await new LoginFlow( driver, 'privateSiteUser' ).loginAndSelectPeople();
+				const peoplePage = await PeoplePage.Expect( driver );
 
-			await peoplePage.selectViewers();
-			let displayed = await peoplePage.viewerDisplayed( newUserName );
-			if ( displayed ) {
-				await peoplePage.removeUserByName( newUserName );
+				await peoplePage.selectViewers();
+				let displayed = await peoplePage.viewerDisplayed( newUserName );
+				if ( displayed ) {
+					await peoplePage.removeUserByName( newUserName );
 
-				return await peoplePage.waitForSearchResults();
+					return await peoplePage.waitForSearchResults();
+				}
 			}
 		} );
 	} );
