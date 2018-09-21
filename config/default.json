@@ -95,6 +95,7 @@
 		[ "readerSearchPlaceholder_20180830", "justSearch" ],
 		[ "showPlanCreditsApplied_20180903", "control" ],
 		[ "domainManagementSuggestion_20180905", "domainsbot" ],
-		[ "userFirstSignup_20180913", "default" ]
+		[ "userFirstSignup_20180913", "default" ],
+		[ "signupAtomicStoreVsPressable_20171101", "atomic" ]
 	]
 }
