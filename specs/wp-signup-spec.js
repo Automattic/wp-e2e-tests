@@ -2,8 +2,10 @@
 
 import config from 'config';
 import assert from 'assert';
+import { By } from 'selenium-webdriver';
 
 import * as driverManager from '../lib/driver-manager.js';
+import * as driverHelper from '../lib/driver-helper.js';
 import * as dataHelper from '../lib/data-helper.js';
 
 import WPHomePage from '../lib/pages/wp-home-page.js';
@@ -935,11 +937,9 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					checkOutPage = await CheckOutPage.Expect( driver );
 				} catch ( err ) {
 					//TODO: Check this code once more when domain registration is not available
-					const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
-					let numberOfItems = await securePaymentComponent.numberOfProductsInCart();
-					if ( numberOfItems === 0 ) {
+					if ( driverHelper.isEventuallyPresentAndDisplayed( driver, By.css( '.empty-content' ) ) ) {
 						await SlackNotifier.warn(
-							'OOPS! Something went wrong! Check if domains registrations is available.'
+							'OOPS! Something went wrong, you don\'t have any site! Check if domains registrations is available.'
 						);
 						return this.skip();
 					}
