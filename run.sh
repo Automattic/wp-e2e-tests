@@ -155,7 +155,7 @@ while getopts ":a:RpS:b:B:s:gjWCJH:wzyl:cm:fiIUvxu:h" opt; do
       MAGELLAN_CONFIG="magellan-jetpack-canary.json"
       ;;
     W)
-      SCREENSIZES="desktop,mobile"
+      SCREENSIZES="mobile"
       MAGELLAN_CONFIG="magellan-woocommerce.json"
       ;;
     C)
