@@ -91,7 +91,7 @@
 		[ "cartNudgeUpdateToPremium_20180903", "control" ],
 		[ "userFirstSignup_20180913", "default" ],
 		[ "signupAtomicStoreVsPressable_20171101", "atomic" ],
-		[ "dotBlogSuggestions_20181001", "simple" ]
+		[ "dotBlogSuggestions_20181001", "simple" ],
 		[ "domainManagementSuggestionV2_20181001", "domainsbot_front" ],
 	]
 }
