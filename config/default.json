@@ -72,7 +72,8 @@
 		"cartNudgeUpdateToPremium",
 		"domainManagementSuggestion",
 		"userFirstSignup",
-		"signupAtomicStoreVsPressable"
+		"signupAtomicStoreVsPressable",
+		"dotBlogSuggestions"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -90,6 +91,7 @@
 		[ "cartNudgeUpdateToPremium_20180903", "control" ],
 		[ "domainManagementSuggestion_20180905", "domainsbot" ],
 		[ "userFirstSignup_20180913", "default" ],
-		[ "signupAtomicStoreVsPressable_20171101", "atomic" ]
+		[ "signupAtomicStoreVsPressable_20171101", "atomic" ],
+		[ "dotBlogSuggestions_20181001", "simple" ]
 	]
 }
