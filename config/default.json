@@ -70,10 +70,10 @@
 		"readerSearchPlaceholder",
 		"showPlanCreditsApplied",
 		"cartNudgeUpdateToPremium",
-		"domainManagementSuggestion",
 		"userFirstSignup",
 		"signupAtomicStoreVsPressable",
-		"dotBlogSuggestions"
+		"dotBlogSuggestions",
+		"domainManagementSuggestionV2",
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -89,9 +89,9 @@
 		[ "readerSearchPlaceholder_20180830", "justSearch" ],
 		[ "showPlanCreditsApplied_20180903", "control" ],
 		[ "cartNudgeUpdateToPremium_20180903", "control" ],
-		[ "domainManagementSuggestion_20180905", "domainsbot" ],
 		[ "userFirstSignup_20180913", "default" ],
 		[ "signupAtomicStoreVsPressable_20171101", "atomic" ],
 		[ "dotBlogSuggestions_20181001", "simple" ]
+		[ "domainManagementSuggestionV2_20181001", "domainsbot_front" ],
 	]
 }
