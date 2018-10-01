@@ -14,6 +14,7 @@ import WPAdminJetpackPage from '../../lib/pages/wp-admin/wp-admin-jetpack-page';
 import WPAdminSidebar from '../../lib/pages/wp-admin/wp-admin-sidebar';
 import WPAdminPluginsPage from '../../lib/pages/wp-admin/wp-admin-plugins-page';
 import JetpackAuthorizePage from '../../lib/pages/jetpack-authorize-page';
+import WPAdminLogonPage from '../../lib/pages/wp-admin/wp-admin-logon-page';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -41,7 +42,9 @@ describe( `[${ host }] Jetpack Connection: (${ screenSize }) @jetpack`, function
 		} );
 
 		step( 'Can log into site via wp-login.php', async function() {
-			return await this.loginFlow.login( { jetpackDIRECT: true } );
+			const user = dataHelper.getAccountConfig( 'jetpackUserCI' );
+			const loginPage = await WPAdminLogonPage.Visit( driver, dataHelper.getJetpackSiteName() );
+			await loginPage.login( user[ 0 ], user[ 1 ] );
 		} );
 
 		step( 'Can open Plugins page', async function() {

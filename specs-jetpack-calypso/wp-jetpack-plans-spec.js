@@ -52,7 +52,6 @@ describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function() {
 		} );
 
 		step( 'Can log into site via Jetpack SSO', async function() {
-			// return await this.loginFlow.login( { jetpackSSO: true } );
 			const loginPage = await WPAdminLogonPage.Visit( driver, dataHelper.getJetpackSiteName() );
 			return await loginPage.logonSSO();
 		} );

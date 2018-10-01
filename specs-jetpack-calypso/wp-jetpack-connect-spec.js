@@ -199,7 +199,6 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		step( 'Can log into site via Jetpack SSO', async function() {
-			// return await new LoginFlow( driver ).login( { jetpackSSO: true } );
 			const loginPage = await WPAdminLogonPage.Visit( driver, dataHelper.getJetpackSiteName() );
 			return await loginPage.logonSSO();
 		} );
@@ -233,7 +232,6 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 			await wpAdminLogonPage.logonSSO();
 			const jetpackAuthorizePage = await JetpackAuthorizePage.Expect( driver );
 			return await jetpackAuthorizePage.approveSSOConnection();
-			// return new WPAdminDashboardPage( driver );
 		} );
 	} );
 

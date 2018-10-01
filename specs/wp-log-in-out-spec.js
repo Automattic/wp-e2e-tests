@@ -73,8 +73,6 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack`, fu
 		if ( host !== 'WPCOM' ) {
 			describe( 'Can Log via Jetpack SSO', function() {
 				step( 'Can log into site via Jetpack SSO', async function() {
-					// let loginFlow = new LoginFlow( driver );
-					// return await loginFlow.login( { jetpackSSO: true } );
 					const loginPage = await WPAdminLogonPage.Visit( driver, dataHelper.getJetpackSiteName() );
 					return await loginPage.logonSSO();
 				} );
