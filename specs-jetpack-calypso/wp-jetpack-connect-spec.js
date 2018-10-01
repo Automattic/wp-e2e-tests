@@ -199,7 +199,9 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		step( 'Can log into site via Jetpack SSO', async function() {
-			return await new LoginFlow( driver ).login( { jetpackSSO: true } );
+			// return await new LoginFlow( driver ).login( { jetpackSSO: true } );
+			const loginPage = await WPAdminLogonPage.Visit( driver, dataHelper.getJetpackSiteName() );
+			return await loginPage.logonSSO();
 		} );
 
 		step( 'Add new user as Subscriber in wp-admin', async function() {

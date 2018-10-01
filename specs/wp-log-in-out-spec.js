@@ -22,6 +22,7 @@ import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-
 
 import LoginFlow from '../lib/flows/login-flow';
 import LoginPage from '../lib/pages/login-page';
+import WPAdminLogonPage from '../lib/pages/wp-admin/wp-admin-logon-page.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -71,12 +72,14 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack`, fu
 		// Test Jetpack SSO
 		if ( host !== 'WPCOM' ) {
 			describe( 'Can Log via Jetpack SSO', function() {
-				step( 'Can log into site via Jetpack SSO', async () => {
-					let loginFlow = new LoginFlow( driver );
-					return await loginFlow.login( { jetpackSSO: true } );
+				step( 'Can log into site via Jetpack SSO', async function() {
+					// let loginFlow = new LoginFlow( driver );
+					// return await loginFlow.login( { jetpackSSO: true } );
+					const loginPage = await WPAdminLogonPage.Visit( driver, dataHelper.getJetpackSiteName() );
+					return await loginPage.logonSSO();
 				} );
 
-				step( 'Can return to Reader', async () => {
+				step( 'Can return to Reader', async function() {
 					return await ReaderPage.Visit( driver );
 				} );
 			} );
