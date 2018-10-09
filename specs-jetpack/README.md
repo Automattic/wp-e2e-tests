@@ -19,4 +19,5 @@ To run them locally:
 
 It also possible to run these tests in CI. Visit https://circleci.com/gh/Automattic/wp-e2e-tests-jetpack-smoke/ and re-launch latest CI build.
 
+Wrapper repo: https://github.com/Automattic/wp-e2e-tests-jetpack-smoke
 Internal ref: p9dueE-lw-p2
