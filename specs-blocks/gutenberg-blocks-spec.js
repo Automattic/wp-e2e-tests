@@ -6,7 +6,6 @@ import assert from 'assert';
 import WPAdminSidebar from '../lib/pages/wp-admin/wp-admin-sidebar.js';
 import JetpackConnectFlow from '../lib/flows/jetpack-connect-flow';
 import MarkdownBlockComponent from '../lib/gutenberg/blocks/markdown-block-component.js';
-// import WPAdminLogonPage from '../lib/pages/wp-admin/wp-admin-logon-page.js';
 import PostAreaComponent from '../lib/pages/frontend/post-area-component.js';
 import * as driverManager from '../lib/driver-manager';
 import GutenbergEditorHeaderComponent from '../lib/gutenberg/gutenberg-editor-header-component.js';
@@ -40,11 +39,10 @@ describe( `Gutenberg blocks: (${ screenSize })`, function() {
 		// 	await loginPage.login( 'wordpress', 'wordpress' );
 		// } );
 
-		step( 'Can create wporg site', async function() {
+		step( 'Can create wporg site and connect Jetpack', async function() {
 			this.timeout( mochaTimeOut * 12 );
-
-			this.jnFlow = new JetpackConnectFlow( driver, null, 'gutenpack' );
-			return await this.jnFlow.createJNSite();
+			this.jnFlow = new JetpackConnectFlow( driver, 'jetpackConnectUser', 'gutenpack' );
+			return await this.jnFlow.connectFromWPAdmin();
 		} );
 
 		step( 'Can start new post', async function() {
@@ -55,7 +53,7 @@ describe( `Gutenberg blocks: (${ screenSize })`, function() {
 
 		step( 'Can insert a markdown block', async function() {
 			const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
-			gHeaderComponent.removeNUXNotice();
+			await gHeaderComponent.removeNUXNotice();
 			this.markdownBlockID = await gHeaderComponent.addBlock( 'Markdown' );
 		} );
 
