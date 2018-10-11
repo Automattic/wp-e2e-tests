@@ -91,6 +91,15 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			}
 		);
 
+		step( 'Can see the account page and enter account details', async function() {
+			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+			return await createYourAccountPage.enterAccountDetailsAndSubmit(
+				emailAddress,
+				blogName,
+				passwordForTestAccounts
+			);
+		} );
+
 		step( 'Can see the "About" page, and enter some site information', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
 			await aboutPage.enterSiteDetails( blogName, 'Electronics' );
@@ -118,15 +127,6 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		step( 'Can see the plans page and pick the free plan', async function() {
 			const pickAPlanPage = await PickAPlanPage.Expect( driver );
 			return await pickAPlanPage.selectFreePlan();
-		} );
-
-		step( 'Can see the account page and enter account details', async function() {
-			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
-			return await createYourAccountPage.enterAccountDetailsAndSubmit(
-				emailAddress,
-				blogName,
-				passwordForTestAccounts
-			);
 		} );
 
 		step(
@@ -217,6 +217,15 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale } ) );
 		} );
 
+		step( 'Can see the account page and enter account details', async function() {
+			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+			return await createYourAccountPage.enterAccountDetailsAndSubmit(
+				emailAddress,
+				blogName,
+				passwordForTestAccounts
+			);
+		} );
+
 		step( 'Can see the "About" page, and enter some site information', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
 			await aboutPage.enterSiteDetails( blogName, 'Electronics' );
@@ -244,15 +253,6 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		step( 'Can see the plans page and pick the free plan', async function() {
 			const pickAPlanPage = await PickAPlanPage.Expect( driver );
 			return await pickAPlanPage.selectFreePlan();
-		} );
-
-		step( 'Can see the account page and enter account details', async function() {
-			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
-			return await createYourAccountPage.enterAccountDetailsAndSubmit(
-				emailAddress,
-				blogName,
-				passwordForTestAccounts
-			);
 		} );
 
 		step(
@@ -361,6 +361,15 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale } ) );
 		} );
 
+		step( 'Can then enter account details', async function() {
+			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+			return await createYourAccountPage.enterAccountDetailsAndSubmit(
+				emailAddress,
+				blogName,
+				passwordForTestAccounts
+			);
+		} );
+
 		step( 'Can accept defaults for about page', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
 			await aboutPage.enterSiteDetails( 'Step Back', 'Store Test Topic', { sell: true } );
@@ -400,15 +409,6 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			let displayed = await pickAPlanPage.displayed();
 			assert.strictEqual( displayed, true, 'The pick a plan page is not displayed' );
 			return await pickAPlanPage.selectPremiumPlan();
-		} );
-
-		step( 'Can then enter account details', async function() {
-			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
-			return await createYourAccountPage.enterAccountDetailsAndSubmit(
-				emailAddress,
-				blogName,
-				passwordForTestAccounts
-			);
 		} );
 
 		step(
@@ -1268,6 +1268,16 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 			await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale } ) );
 		} );
 
+		step( 'Can then enter account details and continue', async function() {
+			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
+			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+			return await createYourAccountPage.enterAccountDetailsAndSubmit(
+				emailAddress,
+				blogName,
+				passwordForTestAccounts
+			);
+		} );
+
 		step( 'Can see the about page and accept defaults', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
 			return await aboutPage.submitForm();
@@ -1295,16 +1305,6 @@ describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function()
 		step( 'Can then see the plans page and pick the free plan', async function() {
 			const pickAPlanPage = await PickAPlanPage.Expect( driver );
 			return await pickAPlanPage.selectFreePlan();
-		} );
-
-		step( 'Can then enter account details and continue', async function() {
-			const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
-			return await createYourAccountPage.enterAccountDetailsAndSubmit(
-				emailAddress,
-				blogName,
-				passwordForTestAccounts
-			);
 		} );
 
 		step(
