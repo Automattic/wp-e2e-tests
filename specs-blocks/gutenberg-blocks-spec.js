@@ -70,7 +70,7 @@ if ( screenSize !== 'mobile' ) {
 			step( 'Can fill markdown block with content', async function() {
 				this.markdownBlock = await MarkdownBlockComponent.Expect( driver, this.markdownBlockID );
 				return await this.markdownBlock.setContent(
-				  '### Header\nSome **list**:\n\n- item a\n- item b\n- item c\n'
+					'### Header\nSome **list**:\n\n- item a\n- item b\n- item c\n'
 				);
 			} );
 
