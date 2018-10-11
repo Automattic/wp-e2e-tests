@@ -55,6 +55,11 @@ if ( screenSize !== 'mobile' ) {
 				return await this.wpAdminSidebar.selectNewPost();
 			} );
 
+			step( 'Can insert a markdown block', async function() {
+				const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+				await gHeaderComponent.removeNUXNotice();
+				this.markdownBlockID = await gHeaderComponent.addBlock( 'Markdown' );
+			} );
 
 			step( 'Can insert a markdown block', async function() {
 				const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
@@ -62,18 +67,12 @@ if ( screenSize !== 'mobile' ) {
 				this.markdownBlockID = await gHeaderComponent.addBlock( 'Markdown' );
 			} );
 
-      step( 'Can insert a markdown block', async function() {
-        const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
-        await gHeaderComponent.removeNUXNotice();
-        this.markdownBlockID = await gHeaderComponent.addBlock( 'Markdown' );
-      } );
-
-      step( 'Can fill markdown block with content', async function() {
-        this.markdownBlock = await MarkdownBlockComponent.Expect( driver, this.markdownBlockID );
-        return await this.markdownBlock.setContent(
-          '### Header\nSome **list**:\n\n- item a\n- item b\n- item c\n'
-        );
-      } );
+			step( 'Can fill markdown block with content', async function() {
+				this.markdownBlock = await MarkdownBlockComponent.Expect( driver, this.markdownBlockID );
+				return await this.markdownBlock.setContent(
+				  '### Header\nSome **list**:\n\n- item a\n- item b\n- item c\n'
+				);
+			} );
 
 			step( 'Can see rendered content in preview', async function() {
 				await this.markdownBlock.switchPreview();
