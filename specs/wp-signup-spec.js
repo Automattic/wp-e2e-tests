@@ -720,13 +720,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await aboutPage.submitForm();
 		} );
 
-		step(
-			'Can see the choose a theme page as the starting page, and select the first theme',
-			async function() {
-				const chooseAThemePage = await ChooseAThemePage.Expect( driver );
-				return await chooseAThemePage.selectFirstTheme();
-			}
-		);
+		step( 'Can see the choose a theme page, and select the first theme', async function() {
+			const chooseAThemePage = await ChooseAThemePage.Expect( driver );
+			return await chooseAThemePage.selectFirstTheme();
+		} );
 
 		step(
 			'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
@@ -937,9 +934,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					checkOutPage = await CheckOutPage.Expect( driver );
 				} catch ( err ) {
 					//TODO: Check this code once more when domain registration is not available
-					if ( driverHelper.isEventuallyPresentAndDisplayed( driver, By.css( '.empty-content' ) ) ) {
+					if (
+						driverHelper.isEventuallyPresentAndDisplayed( driver, By.css( '.empty-content' ) )
+					) {
 						await SlackNotifier.warn(
-							'OOPS! Something went wrong, you don\'t have a site! Check if domains registrations is available.'
+							"OOPS! Something went wrong, you don't have a site! Check if domains registrations is available."
 						);
 						return this.skip();
 					}
