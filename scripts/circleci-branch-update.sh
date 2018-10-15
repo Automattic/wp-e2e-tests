@@ -24,8 +24,19 @@ head-changed-file () {
         [[ $1 != $2 ]]
 }
 
+update-node () {
+    version=$(<.nvmrc)
+    version=${version:1}
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+    source ~/.bashrc
+    nvm install $version
+    nvm alias default $version
+}
+
 if head-changed-file ".nvmrc" && [ "$CIRCLE_BRANCH" = "master" ]; then
    update-wrapper-node-version
+elif head-changed-file ".nvmrc"; then
+   update-node
 else
    echo ".nvmrc file not updated or is not on master"
 fi
