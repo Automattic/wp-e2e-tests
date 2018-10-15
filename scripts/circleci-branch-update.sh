@@ -26,9 +26,8 @@ head-changed-file () {
 
 update-node () {
     version=$(<.nvmrc)
-    version=${version:1}
     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
-    source ~/.bashrc
+    source ~/.bashrc &&
     nvm install $version &&
     nvm alias default $version
 }
