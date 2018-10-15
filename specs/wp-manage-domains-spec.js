@@ -119,7 +119,7 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 	} );
 
 	describe( 'Map a domain to an existing site @parallel', function() {
-		const blogName = 'myawesomedomain.com';
+		const blogName = 'go.com';
 
 		before( async function() {
 			if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
