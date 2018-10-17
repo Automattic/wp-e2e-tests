@@ -38,7 +38,6 @@ usage () {
 -R		  - Use custom Slack/Spec/XUnit reporter, otherwise just use Spec reporter
 -p 		  - Execute the tests in parallel via CircleCI envvars (implies -g -s mobile,desktop)
 -S [commitHash]   - Run tests against given commit via https://calypso.live
--b [branch]	  - Run tests on given branch via https://calypso.live
 -B [branch]	  - Run Jetpack tests on given Jetpack branch via https://jurassic.ninja
 -s		  - Screensizes in a comma-separated list (defaults to mobile,desktop)
 -g		  - Execute general tests in the specs/ directory
@@ -66,7 +65,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":a:RpS:b:B:s:gjWCJH:wzyl:cm:fiIUvxu:h" opt; do
+while getopts ":a:RpS:B:s:gjWCJH:wzyl:cm:fiIUvxu:h" opt; do
   case $opt in
     a)
       WORKERS=$OPTARG
@@ -87,11 +86,6 @@ while getopts ":a:RpS:b:B:s:gjWCJH:wzyl:cm:fiIUvxu:h" opt; do
     S)
       export LIVEBRANCHES="true"
       NODE_CONFIG_ARGS+=("\"liveBranch\":\"true\",\"calypsoBaseURL\":\"https://hash-$OPTARG.calypso.live\",\"branchName\":\"$BRANCHNAME\"")
-      continue
-      ;;
-    b)
-      export LIVEBRANCHES="true"
-      NODE_CONFIG_ARGS+=("\"liveBranch\":\"true\",\"branchName\":\"$OPTARG\",\"calypsoBaseURL\":\"https://calypso.live\"")
       continue
       ;;
     B)
