@@ -72,7 +72,7 @@
 		"userFirstSignup",
 		"signupAtomicStoreVsPressable",
 		"dotBlogSuggestionsv2",
-		"domainManagementSuggestionV2"
+		"krackenRebootM327V2"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -87,9 +87,9 @@
 		[ "gSuiteDiscountV2_20180822", "control" ],
 		[ "showPlanCreditsApplied_20180903", "control" ],
 		[ "cartNudgeUpdateToPremium_20180903", "control" ],
-		[ "userFirstSignup_20180913", "default" ],
+		[ "userFirstSignup_20180913", "userFirst" ],
 		[ "signupAtomicStoreVsPressable_20171101", "atomic" ],
 		[ "dotBlogSuggestionsv2_20181012", "simple" ],
-		[ "domainManagementSuggestionV2_20181001", "domainsbot_front" ]
+		[ "krackenRebootM327V2_20181018", "domainsbot_front" ]
 	]
 }

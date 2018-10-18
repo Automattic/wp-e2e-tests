@@ -38,14 +38,6 @@ elif [ "$CIRCLE_BRANCH" == "master" ]; then
   TESTARGS="-R -p" # Parallel execution, implies -g -s mobile,desktop
 fi
 
-if [ "$liveBranches" == "true" ]; then
-  TESTARGS+=" -b $branchName"
-
-  if [ $hash != "" ]; then
-    TESTARGS+=" -S $hash"
-  fi
-fi
-
 # If on CI and the -x flag is not yet set, set it
 #if [ "$CI" == "true" ] && [[ "$TESTARGS" != *"-x"* ]]; then
 #  TESTARGS+=" -x"
