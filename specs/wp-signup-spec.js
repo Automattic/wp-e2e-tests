@@ -14,7 +14,6 @@ import StartPage from '../lib/pages/signup/start-page.js';
 import JetpackAddNewSitePage from '../lib/pages/signup/jetpack-add-new-site-page';
 
 import AboutPage from '../lib/pages/signup/about-page.js';
-import DomainFirstPage from '../lib/pages/signup/domain-first-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page.js';
 import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.js';
 import SignupProcessingPage from '../lib/pages/signup/signup-processing-page.js';
@@ -904,11 +903,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			);
 		} );
 
-		step( 'Can select domain only from the domain first choice page', async function() {
-			const domainFirstPage = await DomainFirstPage.Expect( driver );
-			return await domainFirstPage.chooseJustBuyTheDomain();
-		} );
-
 		step( 'Can then enter account details', async function() {
 			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
 			return await createYourAccountPage.enterAccountDetailsAndSubmit(
@@ -937,9 +931,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					checkOutPage = await CheckOutPage.Expect( driver );
 				} catch ( err ) {
 					//TODO: Check this code once more when domain registration is not available
-					if ( driverHelper.isEventuallyPresentAndDisplayed( driver, By.css( '.empty-content' ) ) ) {
+					if (
+						driverHelper.isEventuallyPresentAndDisplayed( driver, By.css( '.empty-content' ) )
+					) {
 						await SlackNotifier.warn(
-							'OOPS! Something went wrong, you don\'t have a site! Check if domains registrations is available.'
+							"OOPS! Something went wrong, you don't have a site! Check if domains registrations is available."
 						);
 						return this.skip();
 					}
