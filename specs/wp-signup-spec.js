@@ -1593,8 +1593,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe.only( 'Import a site while signing up @parallel', function() {
-		const siteURL = '';
+	describe( 'Import a site while signing up @parallel', function() {
+		const siteURL = 'https://hi6822.wixsite.com/eat-here-its-good';
 		const userName = dataHelper.getNewBlogName();
 		const emailAddress = dataHelper.getEmailAddress( userName, signupInboxId );
 
@@ -1606,11 +1606,22 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale, flow: 'import' } ) );
 		} );
 
-		step( 'Can then enter the url of a site to import', async function() {
+		step( 'Can then enter a valid url of a site to import', async function() {
 			const importFromURLPage = await ImportFromURLPage.Expect( driver );
 
-			await importFromURLPage.enterURL( siteURL );
-			return await importFromURLPage.submitForm();
+			// Invalid URL.
+			await importFromURLPage.submitURL( 'foo' );
+			await importFromURLPage.errorDisplayed();
+
+			// Wix admin URL.
+			await importFromURLPage.submitURL( 'www.wix.com/website/builder' );
+			await importFromURLPage.errorDisplayed();
+
+			// Wix missing site name.
+			await importFromURLPage.submitURL( 'me.wixsite.com' );
+			await importFromURLPage.errorDisplayed();
+
+			return await importFromURLPage.submitURL( siteURL );
 		} );
 
 		step( 'Can then enter account details and continue', async function() {
