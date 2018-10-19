@@ -1648,6 +1648,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			await driver.get( activationLink );
 		} );
 
+		step( 'Can then see the site importer input pane', async function() {
+			const importPage = await ImportPage.Expect( driver );
+			return await importPage.siteImporterInputPane();
+		} );
+
 		step( 'Can then see preview of site to be imported', async function() {
 			const importPage = await ImportPage.Expect( driver );
 			return await importPage.previewSiteToBeImported();
