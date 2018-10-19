@@ -1594,6 +1594,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 	} );
 
 	describe( 'Import a site while signing up @parallel', function() {
+		// Currently must use a Wix site to be importable through this flow.
 		const siteURL = 'https://hi6822.wixsite.com/eat-here-its-good';
 		const userName = dataHelper.getNewBlogName();
 		const emailAddress = dataHelper.getEmailAddress( userName, signupInboxId );
@@ -1617,11 +1618,33 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			await importFromURLPage.submitURL( 'www.wix.com/website/builder' );
 			await importFromURLPage.errorDisplayed();
 
-			// Wix missing site name.
+			// Wix URL missing site name.
 			await importFromURLPage.submitURL( 'me.wixsite.com' );
 			await importFromURLPage.errorDisplayed();
 
-			return await importFromURLPage.submitURL( siteURL );
+			// Retry checking site importability if there's an error.
+			// Cancel test if endpoint still isn't working--can't continue testing this flow.
+			let retries = 1;
+			while ( true ) {
+				try {
+					await importFromURLPage.submitURL( siteURL );
+					return await driverHelper.waitTillNotPresent(
+						driver,
+						By.css( importFromURLPage.containerSelector )
+					);
+				} catch ( e ) {
+					if ( retries-- < 1 ) {
+						await SlackNotifier.warn(
+							`Skipping test because checking site importability was retried and is still unsuccessful: '${ e }'`,
+							{ suppressDuplicateMessages: true }
+						);
+
+						return this.skip();
+					}
+
+					console.log( `Checking site importability didn't work as expected - retrying: '${ e }'` );
+				}
+			}
 		} );
 
 		step( 'Can then enter account details and continue', async function() {
@@ -1648,16 +1671,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			await driver.get( activationLink );
 		} );
 
-		step(
-			'Can then see the site importer pane and preview of site to be imported',
-			async function() {
-				const importPage = await ImportPage.Expect( driver );
+		step( 'Can then see the site importer pane and preview site to be imported', async function() {
+			const importPage = await ImportPage.Expect( driver );
 
-				// Test that we have opened the correct importer and can see the preview.
-				await importPage.siteImporterInputPane();
-				return await importPage.previewSiteToBeImported();
-			}
-		);
+			// Test that we have opened the correct importer and can see the preview.
+			await importPage.siteImporterInputPane();
+			return await importPage.previewSiteToBeImported();
+		} );
 
 		step( 'Can delete our newly created account', async function() {
 			return ( async () => {
