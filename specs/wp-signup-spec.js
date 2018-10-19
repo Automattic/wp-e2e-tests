@@ -1648,15 +1648,16 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			await driver.get( activationLink );
 		} );
 
-		step( 'Can then see the site importer input pane', async function() {
-			const importPage = await ImportPage.Expect( driver );
-			return await importPage.siteImporterInputPane();
-		} );
+		step(
+			'Can then see the site importer pane and preview of site to be imported',
+			async function() {
+				const importPage = await ImportPage.Expect( driver );
 
-		step( 'Can then see preview of site to be imported', async function() {
-			const importPage = await ImportPage.Expect( driver );
-			return await importPage.previewSiteToBeImported();
-		} );
+				// Test that we have opened the correct importer and can see the preview.
+				await importPage.siteImporterInputPane();
+				return await importPage.previewSiteToBeImported();
+			}
+		);
 
 		step( 'Can delete our newly created account', async function() {
 			return ( async () => {
