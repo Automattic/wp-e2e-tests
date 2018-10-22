@@ -58,10 +58,6 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 			}
 		} );
 
-		before( async function() {
-			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		step( 'Log In and Select Domains', async function() {
 			return await new LoginFlow( driver ).loginAndSelectDomains();
 		} );
@@ -123,7 +119,7 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 	} );
 
 	describe( 'Map a domain to an existing site @parallel', function() {
-		const blogName = 'myawesomedomain.com';
+		const blogName = 'go.com';
 
 		before( async function() {
 			if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
@@ -133,10 +129,6 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 				);
 				return this.skip();
 			}
-		} );
-
-		before( async function() {
-			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		step( 'Log In and Select Domains', async function() {
@@ -213,6 +205,14 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 		const domain = 'automattic.com';
 
 		before( async function() {
+			await SlackNotifier.warn(
+				'Transfer a domain to an existing site is skipped due to flakiness',
+				{ suppressDuplicateMessages: true }
+			);
+			return this.skip();
+		} );
+
+		before( async function() {
 			if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
 				await SlackNotifier.warn(
 					'Domains tests are currently disabled as SKIP_DOMAIN_TESTS is set to true',
@@ -220,10 +220,6 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 				);
 				return this.skip();
 			}
-		} );
-
-		before( async function() {
-			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
 		step( 'Log In and Select Domains', async function() {

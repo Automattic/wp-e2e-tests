@@ -12,7 +12,6 @@ import * as dataHelper from '../lib/data-helper';
 import PressableNUXFlow from '../lib/flows/pressable-nux-flow';
 import ReaderPage from '../lib/pages/reader-page';
 import SidebarComponent from '../lib/components/sidebar-component';
-import StatsPage from '../lib/pages/stats-page';
 import NavBarComponent from '../lib/components/nav-bar-component';
 import JetpackConnectFlow from '../lib/flows/jetpack-connect-flow';
 import LoginFlow from '../lib/flows/login-flow';
@@ -24,7 +23,10 @@ const host = dataHelper.getJetpackHost();
 
 let driver;
 
-if ( host === 'PRESSABLE' ) {
+// Disabled due to p1535659602000200-slack-e2e-testing-discuss
+// tl;dr: There is a bug in my.pressable.com which cause some noise/warnings/errors
+// We shouldn't create new Pressable sites for every test.
+if ( false ) {
 	before( async function() {
 		this.timeout( startBrowserTimeoutMS );
 		driver = await driverManager.startBrowser();
@@ -102,9 +104,7 @@ if ( host === 'PRESSABLE' ) {
 				const sidebarComponent = await SidebarComponent.Expect( driver );
 				await sidebarComponent.selectSiteSwitcher();
 				await sidebarComponent.searchForSite( this.siteName );
-				await sidebarComponent.selectStats();
-				const statsPage = await StatsPage.Expect( driver );
-				return await statsPage.openActivity();
+				await sidebarComponent.selectActivity();
 			} );
 
 			// Disabled due to to longer time is required to make a backup.

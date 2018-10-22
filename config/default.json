@@ -61,23 +61,35 @@
 		"skipThemesSelectionModal",
 		"springSale30PercentOff",
 		"jetpackSignupGoogleTop",
-		"domainSuggestionKrakenV323",
+		"domainSuggestionKrakenV325",
 		"domainSearchTLDFilterPlacement",
 		"aboutSuggestionMatches",
 		"includeDotBlogSubdomainV2",
 		"nudgeAPalooza",
-		"gSuiteDiscount"
+		"gSuiteDiscountV2",
+		"showPlanCreditsApplied",
+		"cartNudgeUpdateToPremium",
+		"userFirstSignup",
+		"signupAtomicStoreVsPressable",
+		"dotBlogSuggestionsv2",
+		"krackenRebootM327V2"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
 		[ "skipThemesSelectionModal_20170904", "show" ],
 		[ "springSale30PercentOff_20180413", "control" ],
 		[ "jetpackSignupGoogleTop_20180427", "original" ],
-		[ "domainSuggestionKrakenV323_20180726", "domainsbot" ],
+		[ "domainSuggestionKrakenV325_20180828", "domainsbot" ],
 		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
 		[ "aboutSuggestionMatches_20180704", "control" ],
+		[ "nudgeAPalooza_20180806", "control" ],
 		[ "includeDotBlogSubdomainV2_20180813", "no" ],
-		[ "gSuiteDiscount_20180803", "control" ],
-		[ "nudgeAPalooza_20180806", "control" ]
+		[ "gSuiteDiscountV2_20180822", "control" ],
+		[ "showPlanCreditsApplied_20180903", "control" ],
+		[ "cartNudgeUpdateToPremium_20180903", "control" ],
+		[ "userFirstSignup_20180913", "userFirst" ],
+		[ "signupAtomicStoreVsPressable_20171101", "atomic" ],
+		[ "dotBlogSuggestionsv2_20181012", "simple" ],
+		[ "krackenRebootM327V2_20181018", "domainsbot_front" ]
 	]
 }

@@ -35,24 +35,18 @@ describe( `[${ host }] Comments: (${ screenSize })`, function() {
 		return fileDetails;
 	} );
 
-	describe( 'Commenting and replying to newly created post', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
+	describe( 'Commenting and replying to newly created post: @parallel @jetpack', function() {
 		step( 'Can login and create a new post', async function() {
 			await new LoginFlow( driver ).loginAndStartNewPost();
 			const editorPage = await EditorPage.Expect( driver );
 			await editorPage.enterTitle( blogPostTitle );
 			await editorPage.enterContent( blogPostQuote + '\n' );
-			await editorPage.enterPostImage( fileDetails );
-			await editorPage.waitUntilImageInserted( fileDetails );
 		} );
 
 		step( 'Can publish and visit site', async function() {
 			const postEditorToolbar = await PostEditorToolbarComponent.Expect( driver );
-			await postEditorToolbar.publishThePost( { useConfirmStep: true } );
-			await postEditorToolbar.visitSite();
+			await postEditorToolbar.ensureSaved();
+			await postEditorToolbar.publishAndViewContent( { useConfirmStep: true } );
 		} );
 
 		step( 'Can post a comment', async function() {

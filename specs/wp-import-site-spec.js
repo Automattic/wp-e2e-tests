@@ -26,10 +26,6 @@ before( async function() {
 describe( 'Verify Import Option: (' + screenSize + ') @parallel', function() {
 	this.timeout( mochaTimeOut );
 
-	step( 'Ensure not logged in', async function() {
-		await driverManager.ensureNotLoggedIn( driver );
-	} );
-
 	step( 'Can log in as default user', async function() {
 		const loginFlow = new LoginFlow( driver );
 		return await loginFlow.login();

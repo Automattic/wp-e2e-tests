@@ -30,7 +30,6 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 		let editorPage;
 
 		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
 			const loginFlow = new LoginFlow( driver );
 			await loginFlow.loginAndStartNewPage();
 			editorPage = await EditorPage.Expect( driver );

@@ -11,7 +11,6 @@ import ViewPostPage from '../lib/pages/view-post-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
 import PostsPage from '../lib/pages/posts-page.js';
 import ReaderPage from '../lib/pages/reader-page';
-import StatsPage from '../lib/pages/stats-page';
 import ActivityPage from '../lib/pages/stats/activity-page';
 import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
 
@@ -26,7 +25,6 @@ import * as driverManager from '../lib/driver-manager';
 import * as driverHelper from '../lib/driver-helper';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
-import * as eyesHelper from '../lib/eyes-helper.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -34,8 +32,6 @@ const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
 
 let driver;
-
-let eyes = eyesHelper.eyesSetup( true );
 
 before( async function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -47,10 +43,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 	describe( 'Public Posts: @parallel @jetpack', function() {
 		let fileDetails;
-
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
 
 		// Create image file for upload
 		before( async function() {
@@ -370,11 +362,7 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe( 'Basic Public Post @canary @parallel @jetpack', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
+	describe( 'Basic Public Post @parallel @jetpack @canary', function() {
 		describe( 'Publish a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
@@ -416,15 +404,10 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	// TODO: investigate why this doesn't show for Pressable Jetpack site
-	describe( 'Check Activity Log for Public Post @parallel', function() {
+	describe( 'Check Activity Log for Public Post @jetpack @parallel', function() {
 		const blogPostTitle = dataHelper.randomPhrase();
 		const blogPostQuote =
 			'“We are what we pretend to be, so we must be careful about what we pretend to be.”\n- Kurt Vonnegut';
-
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
 
 		step( 'Can log in', async function() {
 			let loginFlow = new LoginFlow( driver );
@@ -453,9 +436,12 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			await navBarComponent.clickMySites();
 			let sidebarComponent = await SidebarComponent.Expect( driver );
 			await sidebarComponent.ensureSidebarMenuVisible();
-			await sidebarComponent.selectStats();
-			const statsPage = await StatsPage.Expect( driver );
-			await statsPage.openActivity();
+
+			if ( host !== 'WPCOM' ) {
+				await sidebarComponent.selectSite( dataHelper.getJetpackSiteName() );
+			}
+
+			await sidebarComponent.selectActivity();
 			const activityPage = await ActivityPage.Expect( driver );
 			let displayed = await activityPage.postTitleDisplayed( blogPostTitle );
 			return assert(
@@ -467,10 +453,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 	describe( 'Schedule Basic Public Post @parallel @jetpack', function() {
 		let publishDate;
-
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
 
 		describe( 'Schedule (and remove) a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
@@ -540,10 +522,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	} );
 
 	describe( 'Private Posts: @parallel @jetpack', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		describe( 'Publish a Private Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
@@ -671,10 +649,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	} );
 
 	describe( 'Password Protected Posts: @parallel @jetpack', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		describe( 'Publish a Password Protected Post', function() {
 			let blogPostTitle = dataHelper.randomPhrase();
 			let blogPostQuote =
@@ -1087,10 +1061,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	} );
 
 	describe( 'Trash Post: @parallel @jetpack', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		describe( 'Trash a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
@@ -1125,10 +1095,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	} );
 
 	describe( 'Edit a Post: @parallel @jetpack', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		describe( 'Publish a New Post', function() {
 			const originalBlogPostTitle = dataHelper.randomPhrase();
 			const updatedBlogPostTitle = dataHelper.randomPhrase();
@@ -1226,10 +1192,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	} );
 
 	describe( 'Insert a contact form: @parallel @jetpack', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		describe( 'Publish a New Post with a Contact Form', function() {
 			const originalBlogPostTitle = 'Contact Us: ' + dataHelper.randomPhrase();
 
@@ -1274,7 +1236,7 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe( 'Insert a payment button: @parallel @jetpack @visdiff', function() {
+	describe( 'Insert a payment button: @parallel @jetpack', function() {
 		const paymentButtonDetails = {
 			title: 'Button',
 			description: 'Description',
@@ -1284,16 +1246,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			allowQuantity: true,
 			email: 'test@wordpress.com',
 		};
-
-		before( async function() {
-			const testEnvironment = 'WordPress.com';
-			const testName = `Post Editor - Payment Button [${ global.browserName }] [${ screenSize }]`;
-			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
-		} );
-
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
 
 		step( 'Can log in', async function() {
 			if ( host === 'WPCOM' ) {
@@ -1308,7 +1260,7 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 			const editorPage = await EditorPage.Expect( driver );
 			await editorPage.enterTitle( blogPostTitle );
-			await editorPage.insertPaymentButton( eyes, paymentButtonDetails );
+			await editorPage.insertPaymentButton( paymentButtonDetails );
 
 			let errorShown = await editorPage.errorDisplayed();
 			return assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
@@ -1366,15 +1318,10 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 		after( async function() {
 			await driverHelper.ensurePopupsClosed( driver );
-			await eyesHelper.eyesClose( eyes );
 		} );
 	} );
 
 	describe( 'Revert a post to draft: @parallel @jetpack', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		describe( 'Publish a new post', function() {
 			const originalBlogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =

@@ -40,10 +40,6 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		const pageQuote =
 			'If you have the same problem for a long time, maybe it’s not a problem. Maybe it’s a fact..\n— Itzhak Rabin';
 
-		before( async function() {
-			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		// Create image file for upload
 		before( async function() {
 			fileDetails = await mediaHelper.createFile();
@@ -220,10 +216,6 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		let pageQuote =
 			'Few people know how to take a walk. The qualifications are endurance, plain clothes, old shoes, an eye for nature, good humor, vast curiosity, good speech, good silence and nothing too much.\n— Ralph Waldo Emerson\n';
 
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		step( 'Can log in', async function() {
 			const loginFlow = new LoginFlow( driver );
 			await loginFlow.loginAndStartNewPage();
@@ -311,10 +303,6 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		const pageQuote =
 			'If you don’t like something, change it. If you can’t change it, change the way you think about it.\n— Mary Engelbreit\n';
 		const postPassword = 'e2e' + new Date().getTime().toString();
-
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
 
 		describe( 'Publish a Password Protected Page', function() {
 			step( 'Can log in', async function() {
@@ -590,10 +578,6 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			email: 'test@wordpress.com',
 		};
 
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		step( 'Can log in', async function() {
 			if ( host === 'WPCOM' ) {
 				return await new LoginFlow( driver ).loginAndStartNewPage();
@@ -607,7 +591,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 			const editorPage = await EditorPage.Expect( driver );
 			await editorPage.enterTitle( pageTitle );
-			await editorPage.insertPaymentButton( null, paymentButtonDetails );
+			await editorPage.insertPaymentButton( paymentButtonDetails );
 
 			let errorShown = await editorPage.errorDisplayed();
 			return assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );

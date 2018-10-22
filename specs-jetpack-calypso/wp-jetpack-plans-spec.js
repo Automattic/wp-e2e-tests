@@ -24,6 +24,7 @@ import WPAdminSidebar from '../lib/pages/wp-admin/wp-admin-sidebar';
 import ProfilePage from '../lib/pages/profile-page.js';
 import PurchasesPage from '../lib/pages/purchases-page.js';
 import ManagePurchasePage from '../lib/pages/manage-purchase-page.js';
+import WPAdminLogonPage from '../lib/pages/wp-admin/wp-admin-logon-page';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -51,7 +52,8 @@ describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function() {
 		} );
 
 		step( 'Can log into site via Jetpack SSO', async function() {
-			return await this.loginFlow.login( { jetpackSSO: true } );
+			const loginPage = await WPAdminLogonPage.Visit( driver, dataHelper.getJetpackSiteName() );
+			return await loginPage.logonSSO();
 		} );
 
 		step( 'Can open Jetpack dashboard', async function() {
