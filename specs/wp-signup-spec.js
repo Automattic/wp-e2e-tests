@@ -19,6 +19,7 @@ import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.
 import SignupProcessingPage from '../lib/pages/signup/signup-processing-page.js';
 import CheckOutPage from '../lib/pages/signup/checkout-page';
 import CheckOutThankyouPage from '../lib/pages/signup/checkout-thankyou-page.js';
+import ImportFromURLPage from '../lib/pages/signup/import-from-url-page';
 import LoginPage from '../lib/pages/login-page';
 import EditorPage from '../lib/pages/editor-page';
 import MagicLoginPage from '../lib/pages/magic-login-page';
@@ -38,6 +39,7 @@ import CloseAccountPage from '../lib/pages/account/close-account-page';
 import DesignTypePage from '../lib/pages/signup/design-type-page';
 import ChecklistPage from '../lib/pages/checklist-page';
 import SettingsPage from '../lib/pages/settings-page';
+import ImportPage from '../lib/pages/import-page';
 
 import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
@@ -1582,6 +1584,114 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			const navBarComponent = await NavBarComponent.Expect( driver );
 			await navBarComponent.clickMySites();
 			await NoSitesComponent.Expect( driver );
+		} );
+	} );
+
+	describe( 'Import a site while signing up @parallel', function() {
+		// Currently must use a Wix site to be importable through this flow.
+		const siteURL = 'https://hi6822.wixsite.com/eat-here-its-good';
+		const userName = dataHelper.getNewBlogName();
+		const emailAddress = dataHelper.getEmailAddress( userName, signupInboxId );
+
+		before( async function() {
+			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		step( 'Can visit import in signup page', async function() {
+			await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale, flow: 'import' } ) );
+		} );
+
+		step( 'Can then enter a valid url of a site to import', async function() {
+			const importFromURLPage = await ImportFromURLPage.Expect( driver );
+
+			// Invalid URL.
+			await importFromURLPage.submitURL( 'foo' );
+			await importFromURLPage.errorDisplayed();
+
+			// Wix admin URL.
+			await importFromURLPage.submitURL( 'www.wix.com/website/builder' );
+			await importFromURLPage.errorDisplayed();
+
+			// Wix URL missing site name.
+			await importFromURLPage.submitURL( 'me.wixsite.com' );
+			await importFromURLPage.errorDisplayed();
+
+			// Retry checking site importability if there's an error.
+			// Cancel test if endpoint still isn't working--can't continue testing this flow.
+			let retries = 1;
+			while ( true ) {
+				try {
+					await importFromURLPage.submitURL( siteURL );
+					return await driverHelper.waitTillNotPresent(
+						driver,
+						By.css( importFromURLPage.containerSelector )
+					);
+				} catch ( e ) {
+					if ( retries-- < 1 ) {
+						await SlackNotifier.warn(
+							`Skipping test because checking site importability was retried and is still unsuccessful: '${ e }'`,
+							{ suppressDuplicateMessages: true }
+						);
+
+						return this.skip();
+					}
+
+					console.log( `Checking site importability didn't work as expected - retrying: '${ e }'` );
+				}
+			}
+		} );
+
+		step( 'Can then enter account details and continue', async function() {
+			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+
+			return await createYourAccountPage.enterAccountDetailsAndSubmit(
+				emailAddress,
+				userName,
+				passwordForTestAccounts
+			);
+		} );
+
+		step( 'Can activate my account from an email and go to the importers page', async function() {
+			const emailClient = new EmailClient( signupInboxId );
+			const validator = emails => emails.find( email => email.subject.includes( 'Activate' ) );
+			let emails = await emailClient.pollEmailsByRecipient( emailAddress, validator );
+			assert.strictEqual(
+				emails.length,
+				1,
+				'The number of newly registered emails is not equal to 1 (activation)'
+			);
+			const activationLink = emails[ 0 ].html.links[ 0 ].href;
+			assert( activationLink !== undefined, 'Could not locate the activation link email link' );
+			await driver.get( activationLink );
+		} );
+
+		step( 'Can then see the site importer pane and preview site to be imported', async function() {
+			const importPage = await ImportPage.Expect( driver );
+
+			// Test that we have opened the correct importer and can see the preview.
+			await importPage.siteImporterInputPane();
+			return await importPage.previewSiteToBeImported();
+		} );
+
+		step( 'Can delete our newly created account', async function() {
+			return ( async () => {
+				const navBarComponent = await NavBarComponent.Expect( driver );
+				await navBarComponent.clickMySites();
+				await navBarComponent.clickProfileLink();
+				const profilePage = await ProfilePage.Expect( driver );
+				await profilePage.chooseAccountSettings();
+				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
+				await accountSettingsPage.chooseCloseYourAccount();
+				const closeAccountPage = await CloseAccountPage.Expect( driver );
+				await closeAccountPage.chooseCloseAccount();
+				await closeAccountPage.enterAccountNameAndClose( userName );
+				await LoggedOutMasterbarComponent.Expect( driver );
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 	} );
 } );
