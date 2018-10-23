@@ -1458,6 +1458,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const expectedDomainName = `${ blogName }.art.blog`;
 
 		before( async function() {
+			await SlackNotifier.warn(
+				'Sign up for a free subdomain test is currently disabled as .home.blog is always showing - see https://github.com/Automattic/wp-calypso/pull/27965',
+				{ suppressDuplicateMessages: true }
+			);
+			return this.skip();
+		} );
+
+		before( async function() {
 			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
