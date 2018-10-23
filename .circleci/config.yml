@@ -29,7 +29,7 @@ jobs:
       - run: npm run lint
       - run:
           name: Install screen recording dependencies
-          command: sudo apt update && sudo apt autoclean && sudo apt install -y ffmpeg
+          command: sudo apt-get update && sudo apt-get autoclean && sudo apt-get install -y ffmpeg
       - run: ./scripts/randomize.sh specs
       - run: ./scripts/run-wrapper.sh
       - store_test_results:
