@@ -10,6 +10,7 @@ import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-co
 import * as driverManager from '../lib/driver-manager.js';
 import * as mediaHelper from '../lib/media-helper.js';
 import * as dataHelper from '../lib/data-helper';
+import * as SlackNotifier from '../lib/slack-notifier';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -28,6 +29,16 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 
 	describe( 'Image Upload:', function() {
 		let editorPage;
+
+		beforeEach( async function() {
+			if ( dataHelper.getCalypsoURL().indexOf( 'calypso.live' ) > -1 ) {
+				await SlackNotifier.warn(
+					'Media upload tests are being skipped on calypso.live due to https://github.com/Automattic/dserve/issues/69',
+					{ suppressDuplicateMessages: true }
+				);
+				return this.skip();
+			}
+		} );
 
 		before( async function() {
 			const loginFlow = new LoginFlow( driver );
@@ -52,7 +63,7 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 					await editorPage.deleteMedia();
 				} );
 
-				after( async function() {
+				step( 'Clean up', async function() {
 					await editorPage.dismissMediaModal();
 					if ( fileDetails ) {
 						await mediaHelper.deleteFile( fileDetails );
@@ -78,7 +89,7 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 					await editorPage.deleteMedia();
 				} );
 
-				after( async function() {
+				step( 'Clean up', async function() {
 					await editorPage.dismissMediaModal();
 					if ( fileDetails ) {
 						await mediaHelper.deleteFile( fileDetails );
@@ -101,7 +112,7 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 					await editorPage.deleteMedia();
 				} );
 
-				after( async function() {
+				step( 'Clean up', async function() {
 					await editorPage.dismissMediaModal();
 					if ( fileDetails ) {
 						await mediaHelper.deleteFile( fileDetails );
@@ -143,7 +154,7 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 					await editorPage.deleteMedia();
 				} );
 
-				after( async function() {
+				step( 'Clean up', async function() {
 					await editorPage.dismissMediaModal();
 					if ( fileDetails ) {
 						await mediaHelper.deleteFile( fileDetails );
