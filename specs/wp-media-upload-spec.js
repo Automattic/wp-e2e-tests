@@ -30,7 +30,7 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 	describe( 'Image Upload:', function() {
 		let editorPage;
 
-		before( async function() {
+		beforeEach( async function() {
 			if ( dataHelper.getCalypsoURL().indexOf( 'calypso.live' ) > -1 ) {
 				await SlackNotifier.warn(
 					'Media upload tests are being skipped on calypso.live due to https://github.com/Automattic/dserve/issues/69',
