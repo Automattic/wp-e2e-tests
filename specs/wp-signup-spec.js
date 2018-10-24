@@ -290,23 +290,15 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a non-blog site on a premium paid plan through main flow in USD currency using a coupon @parallel @visdiff', function() {
+	describe.only( 'Sign up for a non-blog site on a premium paid plan through main flow in USD currency using a coupon @parallel @visdiff', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-		const currencyValue = 'USD';
 		const expectedCurrencySymbol = '$';
 		let originalCartAmount;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
-		} );
-
-		step( 'We can set the sandbox cookie for payments', async function() {
-			const wPHomePage = await WPHomePage.Visit( driver );
-			await wPHomePage.checkURL( locale );
-			await wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
-			return await wPHomePage.setCurrencyForPayments( currencyValue );
 		} );
 
 		step( 'Can visit the start page', async function() {
@@ -424,61 +416,18 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			assert.strictEqual( newCartAmount, expectedCartAmount, 'Coupon not applied properly' );
 		} );
 
-		step( 'Can enter and submit test payment details', async function() {
-			const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
+		step( 'Can Remove Coupon', async function() {
 			const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
-			await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
-			await securePaymentComponent.submitPaymentDetails();
-			return await securePaymentComponent.waitForPageToDisappear();
-		} );
 
-		step( 'Can see the secure check out thank you page', async function() {
-			const checkOutThankyouPage = await CheckOutThankyouPage.Expect( driver );
-			let displayed = await checkOutThankyouPage.displayed();
-			return assert.strictEqual( displayed, true, 'The checkout thank you page is not displayed' );
-		} );
+			await securePaymentComponent.removeCoupon();
 
-		step( 'Can delete the plan', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseManagePurchases();
-				const purchasesPage = await PurchasesPage.Expect( driver );
-				await purchasesPage.dismissGuidedTour();
-				await purchasesPage.selectPremiumPlan();
-				const managePurchasePage = await ManagePurchasePage.Expect( driver );
-				await managePurchasePage.chooseCancelAndRefund();
-				const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
-				await cancelPurchasePage.clickCancelPurchase();
-				await cancelPurchasePage.completeCancellationSurvey();
-				return await cancelPurchasePage.waitAndDismissSuccessNotice();
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
-		} );
+			// Needs a little time for the coupon changes to take effect
+			// Had a driver.sleep( 1000 ) here but it might it seems the time it takes to attempt to toggle twice covers it
+			await securePaymentComponent.toggleCartSummary();
+			await securePaymentComponent.toggleCartSummary();
 
-		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			let removedCouponAmount = await securePaymentComponent.cartTotalAmount();
+			assert.strictEqual( removedCouponAmount, originalCartAmount, 'Coupon not removed properly' );
 		} );
 	} );
 
