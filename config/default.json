@@ -71,7 +71,8 @@
 		"userFirstSignup",
 		"signupAtomicStoreVsPressable",
 		"dotBlogSuggestionsv2",
-		"krackenRebootM327V2"
+		"krackenRebootM327V2",
+		"improvedOnboarding"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
