@@ -25,6 +25,7 @@ import * as driverManager from '../lib/driver-manager';
 import * as driverHelper from '../lib/driver-helper';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
+import * as SlackNotifier from '../lib/slack-notifier';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -43,6 +44,16 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 	describe( 'Public Posts: @parallel @jetpack', function() {
 		let fileDetails;
+
+		before( async function() {
+			if ( dataHelper.getCalypsoURL().indexOf( 'calypso.live' ) > -1 ) {
+				await SlackNotifier.warn(
+					'Media upload tests are being skipped on calypso.live due to https://github.com/Automattic/dserve/issues/69',
+					{ suppressDuplicateMessages: true }
+				);
+				return this.skip();
+			}
+		} );
 
 		// Create image file for upload
 		before( async function() {

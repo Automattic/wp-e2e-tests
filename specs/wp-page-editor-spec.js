@@ -18,6 +18,7 @@ import * as mediaHelper from '../lib/media-helper.js';
 import * as dataHelper from '../lib/data-helper.js';
 import * as driverHelper from '../lib/driver-helper';
 import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
+import * as SlackNotifier from '../lib/slack-notifier';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -39,6 +40,16 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		const pageTitle = dataHelper.randomPhrase();
 		const pageQuote =
 			'If you have the same problem for a long time, maybe it’s not a problem. Maybe it’s a fact..\n— Itzhak Rabin';
+
+		before( async function() {
+			if ( dataHelper.getCalypsoURL().indexOf( 'calypso.live' ) > -1 ) {
+				await SlackNotifier.warn(
+					'Media upload tests are being skipped on calypso.live due to https://github.com/Automattic/dserve/issues/69',
+					{ suppressDuplicateMessages: true }
+				);
+				return this.skip();
+			}
+		} );
 
 		// Create image file for upload
 		before( async function() {
