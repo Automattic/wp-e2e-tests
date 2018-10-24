@@ -72,7 +72,8 @@
 		"signupAtomicStoreVsPressable",
 		"dotBlogSuggestionsv2",
 		"krackenRebootM327V2",
-		"improvedOnboarding"
+		"improvedOnboarding",
+		"skipDomainOrSiteStep"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -90,6 +91,7 @@
 		[ "userFirstSignup_20180913", "userFirst" ],
 		[ "signupAtomicStoreVsPressable_20171101", "atomic" ],
 		[ "dotBlogSuggestionsv2_20181012", "simple" ],
-		[ "krackenRebootM327V2_20181018", "domainsbot_front" ]
+		[ "krackenRebootM327V2_20181018", "domainsbot_front" ],
+		[ "skipDomainOrSiteStep_20181025", "yes" ]
 	]
 }
