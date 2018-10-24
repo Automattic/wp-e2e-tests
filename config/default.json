@@ -82,6 +82,7 @@
 		[ "aboutSuggestionMatches_20180704", "control" ],
 		[ "nudgeAPalooza_20180806", "control" ],
 		[ "includeDotBlogSubdomainV2_20180813", "no" ],
+		[ "improvedOnboarding_20181023", "main" ],
 		[ "gSuiteDiscountV2_20180822", "control" ],
 		[ "showPlanCreditsApplied_20180903", "control" ],
 		[ "cartNudgeUpdateToPremium_20180903", "control" ],
