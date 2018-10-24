@@ -27,18 +27,18 @@ before( async function() {
 describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
-	before( async function() {
-		if ( dataHelper.getCalypsoURL().indexOf( 'calypso.live' ) > -1 ) {
-			await SlackNotifier.warn(
-				'Media upload tests are being skipped on calypso.live due to https://github.com/Automattic/dserve/issues/69',
-				{ suppressDuplicateMessages: true }
-			);
-			return this.skip();
-		}
-	} );
-
 	describe( 'Image Upload:', function() {
 		let editorPage;
+
+		before( async function() {
+			if ( dataHelper.getCalypsoURL().indexOf( 'calypso.live' ) > -1 ) {
+				await SlackNotifier.warn(
+					'Media upload tests are being skipped on calypso.live due to https://github.com/Automattic/dserve/issues/69',
+					{ suppressDuplicateMessages: true }
+				);
+				return this.skip();
+			}
+		} );
 
 		before( async function() {
 			const loginFlow = new LoginFlow( driver );

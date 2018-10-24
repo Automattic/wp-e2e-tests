@@ -45,16 +45,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 	describe( 'Public Posts: @parallel @jetpack', function() {
 		let fileDetails;
 
-		before( async function() {
-			if ( dataHelper.getCalypsoURL().indexOf( 'calypso.live' ) > -1 ) {
-				await SlackNotifier.warn(
-					'Media upload tests are being skipped on calypso.live due to https://github.com/Automattic/dserve/issues/69',
-					{ suppressDuplicateMessages: true }
-				);
-				return this.skip();
-			}
-		} );
-
 		// Create image file for upload
 		before( async function() {
 			fileDetails = await mediaHelper.createFile();
@@ -62,6 +52,16 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		describe( 'Preview and Publish a Public Post', function() {
+			before( async function() {
+				if ( dataHelper.getCalypsoURL().indexOf( 'calypso.live' ) > -1 ) {
+					await SlackNotifier.warn(
+						'Media upload tests are being skipped on calypso.live due to https://github.com/Automattic/dserve/issues/69',
+						{ suppressDuplicateMessages: true }
+					);
+					return this.skip();
+				}
+			} );
+
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
 				'The foolish man seeks happiness in the distance. The wise grows it under his feet.\n— James Oppenheim';
