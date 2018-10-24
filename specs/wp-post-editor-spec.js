@@ -51,7 +51,7 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		const newTagName = 'Tag ' + new Date().getTime().toString();
 		const publicizeMessage = dataHelper.randomPhrase();
 
-		before( async function() {
+		beforeEach( async function() {
 			if ( dataHelper.getCalypsoURL().indexOf( 'calypso.live' ) > -1 ) {
 				await SlackNotifier.warn(
 					'Media upload tests are being skipped on calypso.live due to https://github.com/Automattic/dserve/issues/69',
