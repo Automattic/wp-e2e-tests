@@ -1543,8 +1543,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for an account only (no site) @parallel', function() {
+	describe( 'Sign up for an account only (no site) then add a site @parallel', function() {
 		const userName = dataHelper.getNewBlogName();
+		const blogName = dataHelper.getNewBlogName();
+		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 
 		before( async function() {
 			await driverManager.ensureNotLoggedIn( driver );
@@ -1579,11 +1581,82 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		step( 'We are then on the Reader page and have no sites', async function() {
-			await ReaderPage.Expect( driver );
-			const navBarComponent = await NavBarComponent.Expect( driver );
-			await navBarComponent.clickMySites();
-			await NoSitesComponent.Expect( driver );
+		step(
+			'We are then on the Reader page and have no sites - we click Create Site',
+			async function() {
+				await ReaderPage.Expect( driver );
+				const navBarComponent = await NavBarComponent.Expect( driver );
+				await navBarComponent.clickMySites();
+				const noSitesComponent = await NoSitesComponent.Expect( driver );
+				return await noSitesComponent.createSite();
+			}
+		);
+
+		step( 'Can see the "About" page, and enter some site information', async function() {
+			const aboutPage = await AboutPage.Expect( driver );
+			await aboutPage.enterSiteDetails( blogName, 'Electronics' );
+			return await aboutPage.submitForm();
+		} );
+
+		step(
+			'Can then see the domains page, and Can search for a blog name, can see and select a free .wordpress address in the results',
+			async function() {
+				const findADomainComponent = await FindADomainComponent.Expect( driver );
+				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
+					expectedBlogAddresses,
+					blogName
+				);
+				let actualAddress = await findADomainComponent.freeBlogAddress();
+				assert(
+					expectedBlogAddresses.indexOf( actualAddress ) > -1,
+					`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+				);
+				return await findADomainComponent.selectFreeAddress();
+			}
+		);
+
+		step( 'Can see the plans page and pick the free plan', async function() {
+			const pickAPlanPage = await PickAPlanPage.Expect( driver );
+			return await pickAPlanPage.selectFreePlan();
+		} );
+
+		step(
+			"Can see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			async function() {
+				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
+				return signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+			}
+		);
+
+		step( 'Can then see the onboarding checklist', async function() {
+			const checklistPage = await ChecklistPage.Expect( driver );
+			const header = await checklistPage.headerExists();
+			const subheader = await checklistPage.subheaderExists();
+
+			assert( header, 'The checklist header does not exist.' );
+
+			return assert( subheader, 'The checklist subheader does not exist.' );
+		} );
+
+		step( 'Can delete our newly created account', async function() {
+			return ( async () => {
+				const navBarComponent = await NavBarComponent.Expect( driver );
+				await navBarComponent.clickProfileLink();
+				const profilePage = await ProfilePage.Expect( driver );
+				await profilePage.chooseAccountSettings();
+				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
+				await accountSettingsPage.chooseCloseYourAccount();
+				const closeAccountPage = await CloseAccountPage.Expect( driver );
+				await closeAccountPage.chooseCloseAccount();
+				await closeAccountPage.enterAccountNameAndClose( userName );
+				await LoggedOutMasterbarComponent.Expect( driver );
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 	} );
 
