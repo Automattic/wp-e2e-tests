@@ -68,7 +68,7 @@ describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, function() 
 		}
 	} );
 
-	describe.only( 'Viewing a specific plan with coupon:', function() {
+	describe( 'Viewing a specific plan with coupon:', function() {
 		let originalCartAmount, loginFlow;
 
 		before( async function() {
