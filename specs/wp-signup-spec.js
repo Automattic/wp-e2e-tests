@@ -375,6 +375,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			const aboutPage = await AboutPage.Expect( driver );
 			await aboutPage.enterSiteDetails( 'Step Back', 'Store Test Topic', { sell: true } );
 			await aboutPage.submitForm();
+			await driverHelper.waitTillNotPresent( driver, By.css( '.signup is-store-nux' ) ); // Wait for /start/store-nux/themes to load
 			await driver.navigate().back();
 			await aboutPage.unsetCheckBox( { sell: true } );
 			await aboutPage.submitForm();
