@@ -97,6 +97,14 @@ describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, function() 
 			return await plansPage.selectBusinessPlan();
 		} );
 
+		step( 'Remove any existing coupon', async function() {
+			const planCheckoutPage = await PlanCheckoutPage.Expect( driver );
+
+			if ( await planCheckoutPage.hasCouponApplied() ) {
+				await planCheckoutPage.removeCoupon();
+			}
+		} );
+
 		step( 'Can Correctly Apply Coupon', async function() {
 			const planCheckoutPage = await PlanCheckoutPage.Expect( driver );
 
@@ -115,11 +123,6 @@ describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, function() 
 			const planCheckoutPage = await PlanCheckoutPage.Expect( driver );
 
 			await planCheckoutPage.removeCoupon();
-
-			// Needs a little time for the coupon changes to take effect
-			// Had a driver.sleep( 1000 ) here but it might it seems the time it takes to attempt to toggle twice covers it
-			await planCheckoutPage.toggleCartSummary();
-			await planCheckoutPage.toggleCartSummary();
 
 			let removedCouponAmount = await planCheckoutPage.cartTotalAmount();
 			assert.strictEqual( removedCouponAmount, originalCartAmount, 'Coupon not removed properly' );

@@ -288,7 +288,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a non-blog site on a premium paid plan through main flow in USD currency using a coupon @parallel @visdiff', function() {
+	describe.only( 'Sign up for a non-blog site on a premium paid plan through main flow in USD currency using a coupon @parallel @visdiff', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
@@ -418,11 +418,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 
 			await securePaymentComponent.removeCoupon();
-
-			// Needs a little time for the coupon changes to take effect
-			// Had a driver.sleep( 1000 ) here but it might it seems the time it takes to attempt to toggle twice covers it
-			await securePaymentComponent.toggleCartSummary();
-			await securePaymentComponent.toggleCartSummary();
 
 			let removedCouponAmount = await securePaymentComponent.cartTotalAmount();
 			assert.strictEqual( removedCouponAmount, originalCartAmount, 'Coupon not removed properly' );
