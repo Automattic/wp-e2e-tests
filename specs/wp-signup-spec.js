@@ -1757,8 +1757,20 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		step( 'Can visit import in signup page', async function() {
-			await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale, flow: 'import' } ) );
+		step( 'Can visit import in signup page and prefill url', async function() {
+			await StartPage.Visit(
+				driver,
+				StartPage.getStartURL( { culture: locale, flow: 'import', query: `url=${ siteURL }` } )
+			);
+
+			const importFromURLPage = await ImportFromURLPage.Expect( driver );
+			const urlValue = await importFromURLPage.getURLInputValue();
+
+			assert.strictEqual(
+				urlValue,
+				siteURL,
+				"The url input value doesn't match the url query argument"
+			);
 		} );
 
 		step( 'Can then enter a valid url of a site to import', async function() {
