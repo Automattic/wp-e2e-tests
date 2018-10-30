@@ -366,6 +366,7 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 
 		step( 'Can continue through shipping information', async function() {
 			const wooWizardShippingPage = await WooWizardShippingPage.Expect( driver );
+			await wooWizardShippingPage.fillFlatRates();
 			return await wooWizardShippingPage.selectContinue();
 		} );
 

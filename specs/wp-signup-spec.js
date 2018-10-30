@@ -21,7 +21,6 @@ import CheckOutPage from '../lib/pages/signup/checkout-page';
 import CheckOutThankyouPage from '../lib/pages/signup/checkout-thankyou-page.js';
 import ImportFromURLPage from '../lib/pages/signup/import-from-url-page';
 import LoginPage from '../lib/pages/login-page';
-import EditorPage from '../lib/pages/editor-page';
 import MagicLoginPage from '../lib/pages/magic-login-page';
 import ReaderPage from '../lib/pages/reader-page';
 import DomainOnlySettingsPage from '../lib/pages/domain-only-settings-page';
@@ -48,7 +47,6 @@ import SideBarComponent from '../lib/components/sidebar-component';
 import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component';
 import NoSitesComponent from '../lib/components/no-sites-component';
 import SidebarComponent from '../lib/components/sidebar-component';
-import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component';
 
 import * as SlackNotifier from '../lib/slack-notifier';
 
@@ -206,9 +204,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-		const blogPostTitle = dataHelper.randomPhrase();
-		const blogPostQuote = dataHelper.randomPhrase();
-		let activationLink;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -274,53 +269,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return assert( subheader, 'The checklist subheader does not exist.' );
 		} );
 
-		step( 'Can not publish until email is confirmed', async function() {
-			const editorPage = await EditorPage.Visit( driver );
-			await editorPage.enterTitle( blogPostTitle );
-			await editorPage.enterContent( blogPostQuote + '\n' );
-
-			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-			await postEditorToolbarComponent.ensureSaved();
-
-			assert.strictEqual(
-				await editorPage.publishEnabled(),
-				false,
-				'The Publish button is enabled when activation link has not been clicked'
-			);
-		} );
-
-		step( 'Can activate my account from an email and see the checklist page', async function() {
-			const emailClient = new EmailClient( signupInboxId );
-			const validator = emails => emails.find( email => email.subject.includes( 'Activate' ) );
-			let emails = await emailClient.pollEmailsByRecipient( emailAddress, validator );
-			assert.strictEqual(
-				emails.length,
-				1,
-				'The number of newly registered emails is not equal to 1 (activation)'
-			);
-			activationLink = emails[ 0 ].html.links[ 0 ].href;
-			assert( activationLink !== undefined, 'Could not locate the activation link email link' );
-			await driver.get( activationLink );
-			await ChecklistPage.Expect( driver );
-		} );
-
-		step( 'Can publish once email is confirmed', async function() {
-			const editorPage = await EditorPage.Visit( driver );
-			await editorPage.enterTitle( blogPostTitle );
-			await editorPage.enterContent( blogPostQuote + '\n' );
-
-			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-			await postEditorToolbarComponent.ensureSaved();
-
-			assert(
-				await editorPage.publishEnabled(),
-				'The Publish button is not enabled when activation link has been clicked'
-			);
-		} );
-
 		step( 'Can delete our newly created account', async function() {
 			return ( async () => {
-				await ReaderPage.Visit( driver );
 				const navBarComponent = await NavBarComponent.Expect( driver );
 				await navBarComponent.clickProfileLink();
 				const profilePage = await ProfilePage.Expect( driver );
@@ -337,6 +287,142 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					{ suppressDuplicateMessages: true }
 				);
 			} );
+		} );
+	} );
+
+	describe( 'Sign up for a non-blog site on a premium paid plan through main flow in USD currency using a coupon @parallel @visdiff', function() {
+		const blogName = dataHelper.getNewBlogName();
+		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
+		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
+		const expectedCurrencySymbol = '$';
+		let originalCartAmount;
+
+		before( async function() {
+			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		step( 'Can visit the start page', async function() {
+			await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale } ) );
+		} );
+
+		step( 'Can see the account page and enter account details', async function() {
+			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+			return await createYourAccountPage.enterAccountDetailsAndSubmit(
+				emailAddress,
+				blogName,
+				passwordForTestAccounts
+			);
+		} );
+
+		step( 'Can see the "About" page, and enter some site information', async function() {
+			const aboutPage = await AboutPage.Expect( driver );
+			return await aboutPage.enterSiteDetails( blogName, '', {
+				showcase: true,
+			} );
+		} );
+
+		step( 'Can accept defaults for about page', async function() {
+			const aboutPage = await AboutPage.Expect( driver );
+			await aboutPage.submitForm();
+		} );
+
+		step( 'Can then see the domains page ', async function() {
+			const findADomainComponent = await FindADomainComponent.Expect( driver );
+			let displayed = await findADomainComponent.displayed();
+			return assert.strictEqual( displayed, true, 'The choose a domain page is not displayed' );
+		} );
+
+		step(
+			'Can search for a blog name, can see and select a free WordPress.com blog address in results',
+			async function() {
+				const findADomainComponent = await FindADomainComponent.Expect( driver );
+				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
+					expectedBlogAddresses,
+					blogName
+				);
+				let actualAddress = await findADomainComponent.freeBlogAddress();
+				assert(
+					expectedBlogAddresses.indexOf( actualAddress ) > -1,
+					`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+				);
+
+				return await findADomainComponent.selectFreeAddress();
+			}
+		);
+
+		step( 'Can then see the plans page and select the premium plan ', async function() {
+			const pickAPlanPage = await PickAPlanPage.Expect( driver );
+			let displayed = await pickAPlanPage.displayed();
+			assert.strictEqual( displayed, true, 'The pick a plan page is not displayed' );
+			return await pickAPlanPage.selectPremiumPlan();
+		} );
+
+		step(
+			'Can then see the sign up processing page which will automatically move along',
+			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
+				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
+				return await signupProcessingPage.waitToDisappear();
+			}
+		);
+
+		step(
+			'Can then see the secure payment page with the premium plan in the cart',
+			async function() {
+				const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
+				const premiumPlanInCart = await securePaymentComponent.containsPremiumPlan();
+				assert.strictEqual( premiumPlanInCart, true, "The cart doesn't contain the premium plan" );
+				const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
+				return assert.strictEqual(
+					numberOfProductsInCart,
+					1,
+					"The cart doesn't contain the expected number of products"
+				);
+			}
+		);
+
+		step(
+			'Can then see the secure payment page with the expected currency in the cart',
+			async function() {
+				const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
+				if ( driverManager.currentScreenSize() === 'desktop' ) {
+					const totalShown = await securePaymentComponent.cartTotalDisplayed();
+					assert.strictEqual(
+						totalShown.indexOf( expectedCurrencySymbol ),
+						0,
+						`The cart total '${ totalShown }' does not begin with '${ expectedCurrencySymbol }'`
+					);
+				}
+				const paymentButtonText = await securePaymentComponent.paymentButtonText();
+				return assert(
+					paymentButtonText.includes( expectedCurrencySymbol ),
+					`The payment button text '${ paymentButtonText }' does not contain the expected currency symbol: '${ expectedCurrencySymbol }'`
+				);
+			}
+		);
+
+		step( 'Can Correctly Apply Coupon discount', async function() {
+			const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
+			await securePaymentComponent.toggleCartSummary();
+			originalCartAmount = await securePaymentComponent.cartTotalAmount();
+
+			await securePaymentComponent.enterCouponCode( dataHelper.getTestCouponCode() );
+
+			let newCartAmount = await securePaymentComponent.cartTotalAmount();
+			let expectedCartAmount = parseFloat( ( originalCartAmount * 0.99 ).toFixed( 2 ) );
+			assert.strictEqual( newCartAmount, expectedCartAmount, 'Coupon not applied properly' );
+		} );
+
+		step( 'Can Remove Coupon', async function() {
+			const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
+
+			await securePaymentComponent.removeCoupon();
+
+			let removedCouponAmount = await securePaymentComponent.cartTotalAmount();
+			assert.strictEqual( removedCouponAmount, originalCartAmount, 'Coupon not removed properly' );
 		} );
 	} );
 
@@ -375,6 +461,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			const aboutPage = await AboutPage.Expect( driver );
 			await aboutPage.enterSiteDetails( 'Step Back', 'Store Test Topic', { sell: true } );
 			await aboutPage.submitForm();
+			await driverHelper.waitTillNotPresent( driver, By.css( '.signup is-store-nux' ) ); // Wait for /start/store-nux/themes to load
 			await driver.navigate().back();
 			await aboutPage.unsetCheckBox( { sell: true } );
 			await aboutPage.submitForm();
