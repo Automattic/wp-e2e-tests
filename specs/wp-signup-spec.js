@@ -1795,6 +1795,26 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step( 'We are then on the Reader page', async function() {
 			await ReaderPage.Expect( driver );
 		} );
+
+		step( 'Can delete our newly created account', async function() {
+			return ( async () => {
+				const navBarComponent = await NavBarComponent.Expect( driver );
+				await navBarComponent.clickProfileLink();
+				const profilePage = await ProfilePage.Expect( driver );
+				await profilePage.chooseAccountSettings();
+				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
+				await accountSettingsPage.chooseCloseYourAccount();
+				const closeAccountPage = await CloseAccountPage.Expect( driver );
+				await closeAccountPage.chooseCloseAccount();
+				await closeAccountPage.enterAccountNameAndClose( userName );
+				await LoggedOutMasterbarComponent.Expect( driver );
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
+		} );
 	} );
 
 	describe( 'Import a site while signing up @parallel', function() {
