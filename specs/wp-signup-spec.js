@@ -14,6 +14,7 @@ import StartPage from '../lib/pages/signup/start-page.js';
 import JetpackAddNewSitePage from '../lib/pages/signup/jetpack-add-new-site-page';
 
 import AboutPage from '../lib/pages/signup/about-page.js';
+import ReaderLandingPage from '../lib/pages/signup/reader-landing-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page.js';
 import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.js';
 import SignupProcessingPage from '../lib/pages/signup/signup-processing-page.js';
@@ -1724,6 +1725,75 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			assert( header, 'The checklist header does not exist.' );
 
 			return assert( subheader, 'The checklist subheader does not exist.' );
+		} );
+
+		step( 'Can delete our newly created account', async function() {
+			return ( async () => {
+				const navBarComponent = await NavBarComponent.Expect( driver );
+				await navBarComponent.clickProfileLink();
+				const profilePage = await ProfilePage.Expect( driver );
+				await profilePage.chooseAccountSettings();
+				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
+				await accountSettingsPage.chooseCloseYourAccount();
+				const closeAccountPage = await CloseAccountPage.Expect( driver );
+				await closeAccountPage.chooseCloseAccount();
+				await closeAccountPage.enterAccountNameAndClose( userName );
+				await LoggedOutMasterbarComponent.Expect( driver );
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
+		} );
+	} );
+
+	describe( 'Sign up for a Reader account @parallel', function() {
+		const userName = dataHelper.getNewBlogName();
+
+		before( async function() {
+			await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		step( 'Can enter the reader flow and see the Reader landing page', async function() {
+			await StartPage.Visit(
+				driver,
+				StartPage.getStartURL( {
+					culture: locale,
+					flow: 'reader',
+				} )
+			);
+			return await ReaderLandingPage.Expect( driver );
+		} );
+
+		step( 'Can choose Start Using The Reader', async function() {
+			const readerLandingPage = await ReaderLandingPage.Expect( driver );
+			return await readerLandingPage.clickStartUsingTheReader();
+		} );
+
+		step(
+			'Can see the account details page and enter account details and continue',
+			async function() {
+				const emailAddress = dataHelper.getEmailAddress( userName, signupInboxId );
+				const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+				return await createYourAccountPage.enterAccountDetailsAndSubmit(
+					emailAddress,
+					userName,
+					passwordForTestAccounts
+				);
+			}
+		);
+
+		step(
+			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			async function() {
+				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
+				return await signupProcessingPage.continueAlong( userName, passwordForTestAccounts );
+			}
+		);
+
+		step( 'We are then on the Reader page', async function() {
+			await ReaderPage.Expect( driver );
 		} );
 
 		step( 'Can delete our newly created account', async function() {
