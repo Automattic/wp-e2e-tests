@@ -1747,7 +1747,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Import a site while signing up @parallel', function() {
+	describe.only( 'Import a site while signing up @parallel', function() {
 		// Currently must use a Wix site to be importable through this flow.
 		const siteURL = 'https://hi6822.wixsite.com/eat-here-its-good';
 		const userName = dataHelper.getNewBlogName();
@@ -1790,7 +1790,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 			// Retry checking site importability if there's an error.
 			// Cancel test if endpoint still isn't working--can't continue testing this flow.
-			let retries = 1;
+			let attempts = 2;
 			while ( true ) {
 				try {
 					await importFromURLPage.submitURL( siteURL );
@@ -1799,16 +1799,29 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 						By.css( importFromURLPage.containerSelector )
 					);
 				} catch ( e ) {
-					if ( retries-- < 1 ) {
-						await SlackNotifier.warn(
-							`Skipping test because checking site importability was retried and is still unsuccessful: '${ e }'`,
-							{ suppressDuplicateMessages: true }
-						);
+					attempts--;
 
-						return this.skip();
+					const importabilityErrorMessage =
+						'There was an error with the importer, please try again.';
+					const urlInputMessage = await importFromURLPage.getURLInputMessage();
+
+					// `is-site-importable` was unresponsive or returned an error.
+					if ( urlInputMessage === importabilityErrorMessage ) {
+						// Last attempt, skip the test.
+						if ( attempts < 1 ) {
+							await SlackNotifier.warn(
+								`Skipping test because checking site importability was retried and was still unsuccessful: ${ e }`,
+								{ suppressDuplicateMessages: true }
+							);
+							return this.skip();
+						}
+
+						// More attempts are left, retry site importability check.
+						console.log( `Checking site importability didn't work as expected - retrying: ${ e }` );
+					} else {
+						// Some other error, test failed.
+						throw e;
 					}
-
-					console.log( `Checking site importability didn't work as expected - retrying: '${ e }'` );
 				}
 			}
 		} );
