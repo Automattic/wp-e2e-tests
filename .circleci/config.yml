@@ -40,4 +40,4 @@ jobs:
           path: screenshots/
 notify:
   webhooks:
-  - url: https://6578b9f2.ngrok.io/circleciwebhook
+  - url: https://a8c-gh-e2e-bridge.go-vip.co/circleciwebhook
