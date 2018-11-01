@@ -10,6 +10,8 @@ import PostAreaComponent from '../lib/pages/frontend/post-area-component.js';
 import GutenbergEditorHeaderComponent from '../lib/gutenberg/gutenberg-editor-header-component.js';
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper.js';
+import WPAdminJetpackModulesPage from '../lib/pages/wp-admin/wp-admin-jetpack-modules-page.js';
+import WPAdminJetpackPage from '../lib/pages/wp-admin/wp-admin-jetpack-page.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -17,6 +19,7 @@ const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
 
 let driver;
+let url;
 
 // FIXME: Skip mobile tests for now. https://github.com/Automattic/wp-e2e-tests/issues/1509
 if ( screenSize !== 'mobile' ) {
@@ -45,8 +48,20 @@ if ( screenSize !== 'mobile' ) {
 
 			step( 'Can create wporg site and connect Jetpack', async function() {
 				this.timeout( mochaTimeOut * 12 );
+				// const jnFlow = new JetpackConnectFlow( driver, 'jetpackConnectUser' );
 				const jnFlow = new JetpackConnectFlow( driver, 'jetpackConnectUser', 'gutenpack' );
-				return await jnFlow.connectFromWPAdmin();
+				await jnFlow.connectFromWPAdmin();
+				url = jnFlow.url;
+			} );
+
+			step( 'Can activate Markdown module', async function() {
+				await WPAdminSidebar.refreshIfJNError( driver );
+				const jetpackModulesPage = await WPAdminJetpackModulesPage.Visit(
+					driver,
+					WPAdminJetpackModulesPage.getPageURL( url )
+				);
+				await jetpackModulesPage.activateMarkdown();
+				await WPAdminJetpackPage.Expect( driver );
 			} );
 
 			step( 'Can start new post', async function() {
