@@ -34,8 +34,6 @@ import CancelDomainPage from '../lib/pages/cancel-domain-page';
 import GSuiteUpsellPage from '../lib/pages/gsuite-upsell-page';
 import ThemesPage from '../lib/pages/themes-page';
 import ThemeDetailPage from '../lib/pages/theme-detail-page';
-import AccountSettingsPage from '../lib/pages/account/account-settings-page';
-import CloseAccountPage from '../lib/pages/account/close-account-page';
 import DesignTypePage from '../lib/pages/signup/design-type-page';
 import ChecklistPage from '../lib/pages/checklist-page';
 import SettingsPage from '../lib/pages/settings-page';
@@ -45,7 +43,6 @@ import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
 import NavBarComponent from '../lib/components/nav-bar-component';
 import SideBarComponent from '../lib/components/sidebar-component';
-import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component';
 import NoSitesComponent from '../lib/components/no-sites-component';
 import SidebarComponent from '../lib/components/sidebar-component';
 
@@ -53,6 +50,7 @@ import * as SlackNotifier from '../lib/slack-notifier';
 
 import EmailClient from '../lib/email-client.js';
 import NewUserRegistrationUnavailableComponent from '../lib/components/new-user-domain-registration-unavailable-component';
+import DeleteAccountFlow from '../lib/flows/delete-account-flow';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -181,23 +179,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -271,23 +253,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -588,23 +554,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -759,23 +709,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -930,23 +864,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -1522,24 +1440,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		);
 
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickMySites();
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -1728,23 +1629,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( userName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
 	} );
 
@@ -1797,23 +1682,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( userName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
 	} );
 
@@ -1904,24 +1773,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickMySites();
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( userName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
 	} );
 } );
