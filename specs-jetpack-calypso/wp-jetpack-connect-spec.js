@@ -103,7 +103,7 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		step( 'Has site URL in route', async function( done ) {
-			const siteSlug = this.jnFlow.url.replace( /^https?:\/\//, '' );
+			const siteSlug = dataHelper.getSiteSlug( this.jnFlow.url );
 			let url = await driver.getCurrentUrl();
 			if ( url.includes( siteSlug ) ) {
 				return done();
