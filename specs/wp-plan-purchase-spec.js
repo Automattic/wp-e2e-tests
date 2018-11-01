@@ -88,8 +88,15 @@ describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, function() 
 		} );
 
 		step( 'Can Select Plans tab', async function() {
-			let route = `plans/${ loginFlow.account.loginURL }`;
-			return await driver.get( dataHelper.getCalypsoURL( route ) );
+			const plansPage = await PlansPage.Expect( driver );
+			if ( host === 'WPCOM' ) {
+				await plansPage.openPlansTab();
+				return await plansPage.waitForComparison();
+			}
+
+			// Jetpack
+			const displayed = await plansPage.planTypesShown( 'jetpack' );
+			return assert( displayed, 'The Jetpack plans are NOT displayed' );
 		} );
 
 		step( 'Select Business Plan', async function() {
