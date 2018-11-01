@@ -38,3 +38,6 @@ jobs:
           path: reports/
       - store_artifacts:
           path: screenshots/
+notify:
+  webhooks:
+  - url: https://6578b9f2.ngrok.io/circleciwebhook
