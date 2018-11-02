@@ -51,6 +51,7 @@ import * as SlackNotifier from '../lib/slack-notifier';
 import EmailClient from '../lib/email-client.js';
 import NewUserRegistrationUnavailableComponent from '../lib/components/new-user-domain-registration-unavailable-component';
 import DeleteAccountFlow from '../lib/flows/delete-account-flow';
+import DeletePlanFlow from '../lib/flows/delete-plan-flow';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -531,26 +532,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete the plan', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseManagePurchases();
-				const purchasesPage = await PurchasesPage.Expect( driver );
-				await purchasesPage.dismissGuidedTour();
-				await purchasesPage.selectPremiumPlan();
-				const managePurchasePage = await ManagePurchasePage.Expect( driver );
-				await managePurchasePage.chooseCancelAndRefund();
-				const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
-				await cancelPurchasePage.clickCancelPurchase();
-				await cancelPurchasePage.completeCancellationSurvey();
-				return await cancelPurchasePage.waitAndDismissSuccessNotice();
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeletePlanFlow( driver ).deletePlan( 'premium' );
 		} );
 
 		step( 'Can delete our newly created account', async function() {
@@ -686,26 +668,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete the plan', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseManagePurchases();
-				const purchasesPage = await PurchasesPage.Expect( driver );
-				await purchasesPage.dismissGuidedTour();
-				await purchasesPage.selectPremiumPlan();
-				const managePurchasePage = await ManagePurchasePage.Expect( driver );
-				await managePurchasePage.chooseCancelAndRefund();
-				const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
-				await cancelPurchasePage.clickCancelPurchase();
-				await cancelPurchasePage.completeCancellationSurvey();
-				return await cancelPurchasePage.waitAndDismissSuccessNotice();
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeletePlanFlow( driver ).deletePlan( 'premium' );
 		} );
 
 		step( 'Can delete our newly created account', async function() {
@@ -841,26 +804,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete the plan', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseManagePurchases();
-				const purchasesPage = await PurchasesPage.Expect( driver );
-				await purchasesPage.dismissGuidedTour();
-				await purchasesPage.selectPersonalPlan();
-				const managePurchasePage = await ManagePurchasePage.Expect( driver );
-				await managePurchasePage.chooseCancelAndRefund();
-				const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
-				await cancelPurchasePage.clickCancelPurchase();
-				await cancelPurchasePage.completeCancellationSurvey();
-				return await cancelPurchasePage.waitAndDismissSuccessNotice();
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeletePlanFlow( driver ).deletePlan( 'personal' );
 		} );
 
 		step( 'Can delete our newly created account', async function() {
