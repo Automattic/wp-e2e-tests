@@ -1172,8 +1172,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await gSuiteUpsellPage.declineEmail();
 		} );
 
-		step( 'Can see the secure check out thank you page', async function() {
-			return await CheckOutThankyouPage.Expect( driver );
+		step( 'Can then see the onboarding checklist', async function() {
+			const checklistPage = await ChecklistPage.Expect( driver );
+			const header = await checklistPage.headerExists();
+			const subheader = await checklistPage.subheaderExists();
+
+			assert( header, 'The checklist header does not exist.' );
+
+			return assert( subheader, 'The checklist subheader does not exist.' );
 		} );
 
 		step( 'Can cancel the domain', async function() {
