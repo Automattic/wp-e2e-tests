@@ -199,7 +199,8 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		step( 'Can log into site via Jetpack SSO', async function() {
-			return await new LoginFlow( driver ).login( { jetpackSSO: true } );
+			const loginPage = await WPAdminLogonPage.Visit( driver, dataHelper.getJetpackSiteName() );
+			return await loginPage.logonSSO();
 		} );
 
 		step( 'Add new user as Subscriber in wp-admin', async function() {
@@ -213,6 +214,7 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 
 		step( 'Log out from WP Admin', async function() {
 			await driverManager.ensureNotLoggedIn( driver );
+			await WPAdminDashboardPage.refreshIfJNError( driver );
 			const wPAdminDashboardPage = await WPAdminDashboardPage.Visit(
 				driver,
 				WPAdminDashboardPage.getUrl( siteName )
@@ -230,7 +232,6 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 			await wpAdminLogonPage.logonSSO();
 			const jetpackAuthorizePage = await JetpackAuthorizePage.Expect( driver );
 			return await jetpackAuthorizePage.approveSSOConnection();
-			// return new WPAdminDashboardPage( driver );
 		} );
 	} );
 
@@ -339,6 +340,7 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		step( 'Can enter WooCommerce Wizard', async function() {
+			await WPAdminDashboardPage.refreshIfJNError( driver );
 			const wPAdminDashboardPage = await WPAdminDashboardPage.Expect( driver );
 			return await wPAdminDashboardPage.enterWooCommerceWizard();
 		} );
@@ -364,6 +366,7 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 
 		step( 'Can continue through shipping information', async function() {
 			const wooWizardShippingPage = await WooWizardShippingPage.Expect( driver );
+			await wooWizardShippingPage.fillFlatRates();
 			return await wooWizardShippingPage.selectContinue();
 		} );
 
@@ -373,6 +376,8 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 		} );
 
 		step( 'Can activate Jetpack', async function() {
+			this.timeout( mochaTimeOut * 5 );
+
 			const wooWizardJetpackPage = await WooWizardJetpackPage.Expect( driver );
 			return await wooWizardJetpackPage.selectContinueWithJetpack();
 		} );

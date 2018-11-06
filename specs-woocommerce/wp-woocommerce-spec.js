@@ -37,7 +37,7 @@ describe( `Can see WooCommerce Store option in Calypso '${ screenSize }' @parall
 	} );
 
 	// Login as WooCommerce store user and open the sidebar
-	before( async function() {
+	step( 'Log In', async function() {
 		const loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
 		await loginFlow.login();
 		const navBarComponent = await NavBarComponent.Expect( driver );
@@ -71,7 +71,7 @@ describe( `Can see WooCommerce products in Calypso '${ screenSize }' @parallel`,
 	} );
 
 	// Login as WooCommerce store user and open the woo store
-	before( async function() {
+	step( 'Log In', async function() {
 		const loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
 		return await loginFlow.loginAndOpenWooStore();
 	} );
@@ -106,7 +106,7 @@ describe( `Can add a new WooCommerce product in Calypso '${ screenSize }' @paral
 	} );
 
 	// Login as WooCommerce store user and open the woo store
-	before( async function() {
+	step( 'Log In', async function() {
 		const loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
 		return await loginFlow.loginAndOpenWooStore();
 	} );
@@ -152,7 +152,7 @@ describe( `Can see WooCommerce orders in Calypso '${ screenSize }' @parallel`, f
 	} );
 
 	// Login as WooCommerce store user and open the woo store
-	before( async function() {
+	step( 'Log In', async function() {
 		const loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
 		return await loginFlow.loginAndOpenWooStore();
 	} );
@@ -200,7 +200,7 @@ describe( `Can see WooCommerce settings in Calypso '${ screenSize }' @parallel`,
 	} );
 
 	// Login as WooCommerce store user and open the woo store
-	before( async function() {
+	step( 'Log In', async function() {
 		const loginFlow = new LoginFlow( driver, 'wooCommerceUser' );
 		return await loginFlow.loginAndOpenWooStore();
 	} );

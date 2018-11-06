@@ -6,14 +6,12 @@ import assert from 'assert';
 import LoginFlow from '../lib/flows/login-flow.js';
 
 import ReaderPage from '../lib/pages/reader-page.js';
-import ReaderManagePage from '../lib/pages/reader-manage-page.js';
 
 import NavBarComponent from '../lib/components/nav-bar-component.js';
 import NotificationsComponent from '../lib/components/notifications-component.js';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper.js';
-import * as eyesHelper from '../lib/eyes-helper.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -21,24 +19,13 @@ const screenSize = driverManager.currentScreenSize();
 
 let driver;
 
-let eyes = eyesHelper.eyesSetup( true );
-
 before( async function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = await driverManager.startBrowser();
 } );
 
-describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
+describe( 'Reader: (' + screenSize + ') @parallel', function() {
 	this.timeout( mochaTimeOut );
-
-	before( async function() {
-		await driverManager.ensureNotLoggedIn( driver );
-
-		let testEnvironment = 'WordPress.com';
-		let testName = `Reader [${ global.browserName }] [${ screenSize }]`;
-		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
-	} );
-
 	describe( 'Log in as commenting user', function() {
 		step( 'Can log in as commenting user', async function() {
 			this.loginFlow = new LoginFlow( driver, 'commentingUser' );
@@ -61,18 +48,14 @@ describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 				);
 			} );
 
-			step( 'Can comment on the latest post', async function() {
+			step( 'Can comment on the latest post and see the comment appear', async function() {
 				this.comment = dataHelper.randomPhrase();
 				const readerPage = await ReaderPage.Expect( driver );
-				await readerPage.commentOnLatestPost( this.comment, eyes );
+				await readerPage.commentOnLatestPost( this.comment );
+				await readerPage.waitForCommentToAppear( this.comment );
 			} );
 
 			describe( 'Delete the new comment', function() {
-				before( async function() {
-					await driverManager.ensureNotLoggedIn( driver );
-					await driver.get( dataHelper.configGet( 'calypsoBaseURL' ) );
-				} );
-
 				step( 'Can log in as test site owner', async function() {
 					this.loginFlow = new LoginFlow( driver, 'notificationsUser' );
 					return await this.loginFlow.login();
@@ -81,7 +64,6 @@ describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 				step(
 					'Can delete the new comment (and wait for UNDO grace period so step is actually deleted)',
 					async function() {
-						await eyesHelper.eyesScreenshot( driver, eyes, 'Followed Sites Feed' );
 						this.navBarComponent = await NavBarComponent.Expect( driver );
 						await this.navBarComponent.openNotifications();
 						this.notificationsComponent = await NotificationsComponent.Expect( driver );
@@ -91,30 +73,7 @@ describe( 'Reader: (' + screenSize + ') @parallel @visdiff', function() {
 						return await this.notificationsComponent.waitForUndoMessageToDisappear();
 					}
 				);
-
-				describe( 'Manage Followed Sites', function() {
-					step( 'Can see the Manage page', async function() {
-						this.readerManagePage = await ReaderManagePage.Visit( driver );
-						await this.readerManagePage.waitForSites();
-						await eyesHelper.eyesScreenshot(
-							driver,
-							eyes,
-							'Manage - Recommended Sites',
-							this.readerManagePage.recommendedSitesSection
-						);
-						await eyesHelper.eyesScreenshot(
-							driver,
-							eyes,
-							'Manage - Followed Sites',
-							this.readerManagePage.followedSitesSection
-						);
-					} );
-				} );
 			} );
 		} );
-	} );
-
-	after( async function() {
-		await eyesHelper.eyesClose( eyes );
 	} );
 } );

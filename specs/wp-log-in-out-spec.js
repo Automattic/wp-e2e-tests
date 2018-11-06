@@ -7,7 +7,6 @@ import speakeasy from 'speakeasy';
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper';
-import * as eyesHelper from '../lib/eyes-helper';
 
 import EmailClient from '../lib/email-client.js';
 import { listenForSMS } from '../lib/xmpp-client';
@@ -22,6 +21,7 @@ import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-
 
 import LoginFlow from '../lib/flows/login-flow';
 import LoginPage from '../lib/pages/login-page';
+import WPAdminLogonPage from '../lib/pages/wp-admin/wp-admin-logon-page.js';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -29,8 +29,6 @@ const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
 
 let driver;
-
-let eyes = eyesHelper.eyesSetup( true );
 
 before( async function() {
 	this.timeout( startBrowserTimeoutMS );
@@ -51,14 +49,8 @@ describe( `[${ host }] Auth Screen Canary: (${ screenSize }) @parallel @safarica
 	} );
 } );
 
-describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @visdiff`, function() {
+describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
-
-	before( function() {
-		let testEnvironment = 'WordPress.com';
-		let testName = `Log In and Out [${ global.browserName }] [${ screenSize }]`;
-		eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
-	} );
 
 	describe( 'Logging In and Out:', function() {
 		before( async function() {
@@ -68,7 +60,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 		describe( 'Can Log In', function() {
 			step( 'Can log in', async function() {
 				let loginFlow = new LoginFlow( driver );
-				await loginFlow.login( { screenshot: true }, eyes );
+				await loginFlow.login();
 			} );
 
 			step( 'Can see Reader Page after logging in', async function() {
@@ -79,12 +71,12 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 		// Test Jetpack SSO
 		if ( host !== 'WPCOM' ) {
 			describe( 'Can Log via Jetpack SSO', function() {
-				step( 'Can log into site via Jetpack SSO', async () => {
-					let loginFlow = new LoginFlow( driver );
-					return await loginFlow.login( { jetpackSSO: true } );
+				step( 'Can log into site via Jetpack SSO', async function() {
+					const loginPage = await WPAdminLogonPage.Visit( driver, dataHelper.getJetpackSiteName() );
+					return await loginPage.logonSSO();
 				} );
 
-				step( 'Can return to Reader', async () => {
+				step( 'Can return to Reader', async function() {
 					return await ReaderPage.Visit( driver );
 				} );
 			} );
@@ -98,8 +90,6 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 
 			step( 'Can logout from profile page', async function() {
 				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.waitForProfileLinks();
-				await eyesHelper.eyesScreenshot( driver, eyes, 'Me Profile Page' );
 				await profilePage.clickSignOut();
 			} );
 
@@ -113,11 +103,11 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 		dataHelper.hasAccountWithFeatures( '+2fa-sms -passwordless' ) &&
 		! dataHelper.isRunningOnLiveBranch()
 	) {
-		describe( 'Can Log in on a 2fa account', function() {
+		describe.only( 'Can Log in on a 2fa account', function() {
 			let loginFlow, twoFALoginPage, twoFACode;
 
 			before( async function() {
-				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			before( async function() {
@@ -133,7 +123,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 					} );
 					xmppClient.on( 'e2e:sms', async function( sms ) {
 						const twoFACodeMatches = sms.body.match( /\d+/g );
-						twoFACode = twoFACodeMatches[ 0 ] + twoFACodeMatches[ 1 ];
+						twoFACode = twoFACodeMatches[ 0 ];
 						if ( twoFACode ) {
 							xmppClient.stop();
 							resolve();
@@ -167,7 +157,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 			let loginFlow, twoFALoginPage;
 
 			before( async function() {
-				await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				await driverManager.ensureNotLoggedIn( driver );
 				loginFlow = new LoginFlow( driver, [ '+2fa-push', '-passwordless' ] );
 				await loginFlow.login();
 				twoFALoginPage = new LoginPage( driver );
@@ -201,7 +191,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 			let loginFlow, twoFALoginPage;
 
 			before( async function() {
-				await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				await driverManager.ensureNotLoggedIn( driver );
 				loginFlow = new LoginFlow( driver, [ '+2fa-otp', '-passwordless' ] );
 				await loginFlow.login();
 				twoFALoginPage = new LoginPage( driver );
@@ -233,7 +223,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 	) {
 		describe( 'Can Log in on a passwordless account', function() {
 			before( async function() {
-				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
@@ -289,7 +279,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 	) {
 		describe( 'Can Log in on a passwordless account with 2fa using sms', function() {
 			before( async function() {
-				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
@@ -327,13 +317,15 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 							} );
 							xmppClient.on( 'e2e:sms', async function( sms ) {
 								const twoFACodeMatches = sms.body.match( /\d+/g );
-								twoFACode = twoFACodeMatches[ 0 ] + twoFACodeMatches[ 1 ];
+								twoFACode = twoFACodeMatches[ 0 ];
 								if ( twoFACode ) {
 									xmppClient.stop();
 									resolve();
 								}
 							} );
-							xmppClient.on( 'error', reject );
+							xmppClient.on( 'error', async function() {
+								reject();
+							} );
 						} );
 					} );
 
@@ -374,7 +366,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 	) {
 		describe( 'Can Log in on a passwordless account with 2fa using authenticator', function() {
 			before( async function() {
-				return await driverManager.clearCookiesAndDeleteLocalStorage( driver );
+				return await driverManager.ensureNotLoggedIn( driver );
 			} );
 
 			describe( 'Can request a magic link email by entering the email of an account which does not have a password defined', function() {
@@ -439,10 +431,6 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack @vis
 			} );
 		} );
 	}
-
-	after( async function() {
-		await eyesHelper.eyesClose( eyes );
-	} );
 } );
 
 describe( `[${ host }] User Agent: (${ screenSize }) @parallel @jetpack`, function() {

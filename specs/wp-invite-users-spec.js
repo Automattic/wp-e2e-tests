@@ -50,10 +50,6 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		let acceptInviteURL = '';
 
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-		} );
-
 		step( 'Can log in and navigate to Invite People page', async function() {
 			await new LoginFlow( driver ).loginAndSelectPeople();
 			const peoplePage = await PeoplePage.Expect( driver );
@@ -114,7 +110,6 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 
 		step( 'As the original user can see and remove new user', async function() {
-			await driverManager.ensureNotLoggedIn( driver );
 			await new LoginFlow( driver ).loginAndSelectPeople();
 
 			const peoplePage = await PeoplePage.Expect( driver );
@@ -139,7 +134,6 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 
 		step( 'As the invited user, I am no longer an editor on the site', async function() {
-			await driverManager.ensureNotLoggedIn( driver );
 			const loginPage = await LoginPage.Visit( driver );
 			await loginPage.login( newUserName, password );
 			await ReaderPage.Expect( driver );
@@ -154,10 +148,6 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		const newUserName = 'e2eflowtestingeditor' + new Date().getTime().toString();
 		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		let acceptInviteURL = '';
-
-		before( async function() {
-			return await driverManager.ensureNotLoggedIn( driver );
-		} );
 
 		step( 'Can log in and navigate to Invite People page', async function() {
 			await new LoginFlow( driver ).loginAndSelectPeople();
@@ -216,11 +206,8 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		const siteName = config.get( 'privateSiteForInvites' );
 		const siteUrl = `https://${ siteName }/`;
+		let removedViewerFlag = true;
 		let acceptInviteURL = '';
-
-		before( async function() {
-			return await driverManager.ensureNotLoggedIn( driver );
-		} );
 
 		step( 'As an anonymous user I can not see a private site', async function() {
 			return await PrivateSiteLoginPage.Visit( driver, siteUrl );
@@ -271,6 +258,7 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			assert( headerInviteText.includes( 'view' ) );
 
 			await acceptInvitePage.enterUsernameAndPasswordAndSignUp( newUserName, password );
+			removedViewerFlag = false;
 			return await acceptInvitePage.waitUntilNotVisible();
 		} );
 
@@ -288,7 +276,6 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 
 		step( 'Can see new user added and can be removed', async function() {
-			await driverManager.ensureNotLoggedIn( driver );
 			await new LoginFlow( driver, 'privateSiteUser' ).loginAndSelectPeople();
 
 			const peoplePage = await PeoplePage.Expect( driver );
@@ -299,6 +286,9 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			await peoplePage.removeUserByName( newUserName );
 			await peoplePage.waitForSearchResults();
 			displayed = await peoplePage.viewerDisplayed( newUserName );
+			if ( displayed === false ) {
+				removedViewerFlag = true;
+			}
 			return assert.strictEqual(
 				displayed,
 				false,
@@ -307,7 +297,6 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 
 		step( 'Can not see the site - see the private site log in page', async function() {
-			await driverManager.ensureNotLoggedIn( driver );
 			const loginPage = await LoginPage.Visit( driver );
 			await loginPage.login( newUserName, password );
 
@@ -316,15 +305,17 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 
 		after( async function() {
-			await new LoginFlow( driver, 'privateSiteUser' ).loginAndSelectPeople();
-			const peoplePage = await PeoplePage.Expect( driver );
+			if ( ! removedViewerFlag ) {
+				await new LoginFlow( driver, 'privateSiteUser' ).loginAndSelectPeople();
+				const peoplePage = await PeoplePage.Expect( driver );
 
-			await peoplePage.selectViewers();
-			let displayed = await peoplePage.viewerDisplayed( newUserName );
-			if ( displayed ) {
-				await peoplePage.removeUserByName( newUserName );
+				await peoplePage.selectViewers();
+				let displayed = await peoplePage.viewerDisplayed( newUserName );
+				if ( displayed ) {
+					await peoplePage.removeUserByName( newUserName );
 
-				return await peoplePage.waitForSearchResults();
+					return await peoplePage.waitForSearchResults();
+				}
 			}
 		} );
 	} );
@@ -337,10 +328,6 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		const postQuote =
 			'We are all in the gutter, but some of us are looking at the stars.\n— Oscar Wilde, Lady Windermere’s Fan';
 		let acceptInviteURL = '';
-
-		before( async function() {
-			return await driverManager.ensureNotLoggedIn( driver );
-		} );
 
 		step( 'Can log in and navigate to Invite People page', async function() {
 			await new LoginFlow( driver ).loginAndSelectPeople();
@@ -421,7 +408,6 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 
 		step( 'As the original user, can see new user added to site', async function() {
-			await driverManager.ensureNotLoggedIn( driver );
 			await new LoginFlow( driver ).loginAndSelectPeople();
 			const peoplePage = await PeoplePage.Expect( driver );
 			await peoplePage.selectTeam();
@@ -451,8 +437,6 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		);
 
 		step( 'As the invited user, I can now publish a post', async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-
 			const loginPage = await LoginPage.Visit( driver );
 			await loginPage.login( newUserName, password );
 			await ReaderPage.Expect( driver );
@@ -475,10 +459,6 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		const newUserName = 'e2eflowtestingfollower' + new Date().getTime().toString();
 		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		let acceptInviteURL = '';
-
-		before( async function() {
-			return await driverManager.ensureNotLoggedIn( driver );
-		} );
 
 		step( 'Can log in and navigate to Invite People page', async function() {
 			await new LoginFlow( driver ).loginAndSelectPeople();
@@ -538,7 +518,6 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 
 		step( 'As the original user, can see new user added to site', async function() {
-			await driverManager.ensureNotLoggedIn( driver );
 			await new LoginFlow( driver ).loginAndSelectPeople();
 
 			const peoplePage = await PeoplePage.Expect( driver );

@@ -4,11 +4,13 @@ jobs:
     parallelism: 2
     working_directory: ~/wp-e2e-tests
     docker:
-      - image: 'circleci/node:10.6.0-browsers'
+      - image: 'circleci/node:$NODE_VERSION-browsers'
         environment:
           NODE_ENV: test
     steps:
       - checkout
+      - run: npm run decryptconfig
+      - run: ./scripts/circleci-branch-update.sh
 
       # npm ci removes node_modules and reinstalls exact package-lock
       # Cache the npm cache so all packages do not need to go over the network
@@ -25,7 +27,6 @@ jobs:
             - ~/.npm
 
       - run: npm run lint
-      - run: npm run decryptconfig
       - run:
           name: Install screen recording dependencies
           command: sudo apt install -y ffmpeg

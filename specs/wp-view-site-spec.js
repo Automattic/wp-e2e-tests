@@ -5,7 +5,6 @@ import assert from 'assert';
 import config from 'config';
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper';
-import * as eyesHelper from '../lib/eyes-helper.js';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import SiteViewComponent from '../lib/components/site-view-component.js';
@@ -18,24 +17,14 @@ const host = dataHelper.getJetpackHost();
 
 let driver;
 
-let eyes = eyesHelper.eyesSetup( true );
-
 before( async function() {
 	this.timeout( startBrowserTimeoutMS );
 	driver = await driverManager.startBrowser();
 } );
 
-describe( `[${ host }] View site from sidebar: (${ screenSize }) @parallel @jetpack @visdiff`, function() {
+describe( `[${ host }] View site from sidebar: (${ screenSize }) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 	describe( 'View site and close:', function() {
-		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
-
-			let testEnvironment = 'WordPress.com';
-			let testName = `My Sites [${ global.browserName }] [${ screenSize }]`;
-			eyesHelper.eyesOpen( driver, eyes, testEnvironment, testName );
-		} );
-
 		step( 'Can Log In and go to My Sites', async function() {
 			const loginFlow = new LoginFlow( driver );
 			return await loginFlow.loginAndSelectMySite();
@@ -69,7 +58,6 @@ describe( `[${ host }] View site from sidebar: (${ screenSize }) @parallel @jetp
 		if ( screenSize !== 'mobile' ) {
 			step( 'Can see the Search & Social preview', async function() {
 				await this.siteViewComponent.selectSearchAndSocialPreview();
-				await eyesHelper.eyesScreenshot( driver, eyes, 'Search And Social Preview' );
 			} );
 		}
 
@@ -83,9 +71,5 @@ describe( `[${ host }] View site from sidebar: (${ screenSize }) @parallel @jetp
 				return assert( displayed, 'The sidebar was not displayed' );
 			} );
 		}
-
-		after( async function() {
-			await eyesHelper.eyesClose( eyes );
-		} );
 	} );
 } );

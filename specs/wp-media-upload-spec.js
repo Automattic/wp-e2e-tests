@@ -30,7 +30,6 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 		let editorPage;
 
 		before( async function() {
-			await driverManager.ensureNotLoggedIn( driver );
 			const loginFlow = new LoginFlow( driver );
 			await loginFlow.loginAndStartNewPage();
 			editorPage = await EditorPage.Expect( driver );
@@ -53,7 +52,7 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 					await editorPage.deleteMedia();
 				} );
 
-				after( async function() {
+				step( 'Clean up', async function() {
 					await editorPage.dismissMediaModal();
 					if ( fileDetails ) {
 						await mediaHelper.deleteFile( fileDetails );
@@ -79,7 +78,7 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 					await editorPage.deleteMedia();
 				} );
 
-				after( async function() {
+				step( 'Clean up', async function() {
 					await editorPage.dismissMediaModal();
 					if ( fileDetails ) {
 						await mediaHelper.deleteFile( fileDetails );
@@ -102,7 +101,7 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 					await editorPage.deleteMedia();
 				} );
 
-				after( async function() {
+				step( 'Clean up', async function() {
 					await editorPage.dismissMediaModal();
 					if ( fileDetails ) {
 						await mediaHelper.deleteFile( fileDetails );
@@ -144,7 +143,7 @@ describe( `[${ host }] Editor: Media Upload (${ screenSize }) @parallel @jetpack
 					await editorPage.deleteMedia();
 				} );
 
-				after( async function() {
+				step( 'Clean up', async function() {
 					await editorPage.dismissMediaModal();
 					if ( fileDetails ) {
 						await mediaHelper.deleteFile( fileDetails );
