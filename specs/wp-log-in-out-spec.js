@@ -103,7 +103,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack`, fu
 		dataHelper.hasAccountWithFeatures( '+2fa-sms -passwordless' ) &&
 		! dataHelper.isRunningOnLiveBranch()
 	) {
-		describe.only( 'Can Log in on a 2fa account', function() {
+		describe( 'Can Log in on a 2fa account', function() {
 			let loginFlow, twoFALoginPage, twoFACode;
 
 			before( async function() {
