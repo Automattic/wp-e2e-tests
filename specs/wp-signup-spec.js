@@ -851,7 +851,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 				} )
 			);
 
-			// Skip tests for a test we're currently running
+			// Skip for this A/B test variation (back-end test)
 			if ( ! driverHelper.isElementPresent( driver, '#domain-search' ) ) {
 				this.skip();
 			}
