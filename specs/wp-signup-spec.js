@@ -850,6 +850,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					query: `new=${ expectedDomainName }`,
 				} )
 			);
+
+			// Skip tests for a test we're currently running
+			if ( ! driverHelper.isElementPresent( driver, '#domain-search' ) ) {
+				this.skip();
+			}
 		} );
 
 		step( 'Can then enter account details', async function() {
