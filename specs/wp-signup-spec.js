@@ -162,7 +162,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 				'The number of newly registered emails is not equal to 2 (activation and magic link)'
 			);
 			for ( let email of emails ) {
-				if ( email.subject.includes( 'WordPreasdfss.com' ) ) {
+				if ( email.subject.includes( 'WordPress.com' ) ) {
 					return ( magicLoginLink = email.html.links[ 0 ].href );
 				}
 			}
