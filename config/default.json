@@ -72,8 +72,7 @@
 		"dotBlogSuggestionsv2",
 		"krackenRebootM33",
 		"improvedOnboarding",
-		"skipDomainOrSiteStep",
-		"send_slash_domains_to_nux"
+		"skipDomainOrSiteStep"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -91,7 +90,6 @@
 		[ "signupAtomicStoreVsPressable_20171101", "atomic" ],
 		[ "dotBlogSuggestionsv2_20181012", "simple" ],
 		[ "krackenRebootM33_20181108", "domainsbot_front" ],
-		[ "skipDomainOrSiteStep_20181025", "yes" ],
-		[ "send_slash_domains_to_nux_20181108", "old-flow" ]
+		[ "skipDomainOrSiteStep_20181025", "yes" ]
 	]
 }
