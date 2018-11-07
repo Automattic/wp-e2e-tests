@@ -30,7 +30,7 @@ jobs:
       - run:
           name: Install screen recording dependencies
           command: |
-            sudo apt install -y ffmpeg || echo 'export TEST_VIDEO=false' >> $BASH_ENV
+            sudo apt install -y ffmpe43g || echo 'export TEST_VIDEO=false' >> $BASH_ENV
       - run: ./scripts/randomize.sh specs
       - run: ./scripts/run-wrapper.sh
       - store_test_results:
