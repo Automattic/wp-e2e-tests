@@ -43,6 +43,7 @@ usage () {
 -g		  - Execute general tests in the specs/ directory
 -j 		  - Execute Jetpack tests in the specs-jetpack-calypso/ directory (desktop and mobile)
 -W		  - Execute WooCommerce tests in the specs-woocommerce/ directory (desktop and mobile)
+-F		  - Execute tests tagged with @secure-auth
 -C		  - Execute tests tagged with @canary
 -J		  - Execute Jetpack connect tests tagged with @canary
 -H [host]	  - Specify an alternate host for Jetpack tests
@@ -65,7 +66,7 @@ if [ $# -eq 0 ]; then
   usage
 fi
 
-while getopts ":a:RpS:B:s:gjWCJH:wzyl:cm:fiIUvxu:h" opt; do
+while getopts ":a:RpS:B:s:gjWCJH:wzyl:cm:fiIUvxu:h:F" opt; do
   case $opt in
     a)
       WORKERS=$OPTARG
@@ -155,6 +156,10 @@ while getopts ":a:RpS:B:s:gjWCJH:wzyl:cm:fiIUvxu:h" opt; do
     C)
       SCREENSIZES="mobile"
       MAGELLAN_CONFIG="magellan-canary.json"
+      ;;
+    F)
+      SCREENSIZES="desktop"
+      MAGELLAN_CONFIG="magellan-2fa.json"
       ;;
     H)
       export JETPACKHOST=$OPTARG

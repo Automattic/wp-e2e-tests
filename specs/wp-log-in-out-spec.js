@@ -103,7 +103,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack`, fu
 		dataHelper.hasAccountWithFeatures( '+2fa-sms -passwordless' ) &&
 		! dataHelper.isRunningOnLiveBranch()
 	) {
-		describe( 'Can Log in on a 2fa account', function() {
+		describe( 'Can Log in on a 2fa account @secure-auth', function() {
 			let loginFlow, twoFALoginPage, twoFACode;
 
 			before( async function() {
@@ -153,7 +153,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack`, fu
 		dataHelper.hasAccountWithFeatures( '+2fa-push -passwordless' ) &&
 		! dataHelper.isRunningOnLiveBranch()
 	) {
-		describe( 'Can Log in on with 2fa push account', function() {
+		describe( 'Can Log in on with 2fa push account @secure-auth', function() {
 			let loginFlow, twoFALoginPage;
 
 			before( async function() {
@@ -187,7 +187,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack`, fu
 		dataHelper.hasAccountWithFeatures( '+2fa-otp -passwordless' ) &&
 		! dataHelper.isRunningOnLiveBranch()
 	) {
-		describe( 'Can Log in on a 2fa account', function() {
+		describe( 'Can Log in on a 2fa account @secure-auth', function() {
 			let loginFlow, twoFALoginPage;
 
 			before( async function() {
@@ -221,7 +221,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack`, fu
 		dataHelper.hasAccountWithFeatures( '+passwordless -2fa' ) &&
 		! dataHelper.isRunningOnLiveBranch()
 	) {
-		describe( 'Can Log in on a passwordless account', function() {
+		describe( 'Can Log in on a passwordless account @secure-auth', function() {
 			before( async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
@@ -277,7 +277,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack`, fu
 		dataHelper.hasAccountWithFeatures( '+passwordless +2fa-sms' ) &&
 		! dataHelper.isRunningOnLiveBranch()
 	) {
-		describe( 'Can Log in on a passwordless account with 2fa using sms', function() {
+		describe( 'Can Log in on a passwordless account with 2fa using sms @secure-auth', function() {
 			before( async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
@@ -364,7 +364,7 @@ describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack`, fu
 		dataHelper.hasAccountWithFeatures( '+passwordless +2fa-otp' ) &&
 		! dataHelper.isRunningOnLiveBranch()
 	) {
-		describe( 'Can Log in on a passwordless account with 2fa using authenticator', function() {
+		describe( 'Can Log in on a passwordless account with 2fa using authenticator @secure-auth', function() {
 			before( async function() {
 				return await driverManager.ensureNotLoggedIn( driver );
 			} );
