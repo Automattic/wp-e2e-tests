@@ -52,6 +52,7 @@ import EmailClient from '../lib/email-client.js';
 import NewUserRegistrationUnavailableComponent from '../lib/components/new-user-domain-registration-unavailable-component';
 import DeleteAccountFlow from '../lib/flows/delete-account-flow';
 import DeletePlanFlow from '../lib/flows/delete-plan-flow';
+import ThemeDialogComponent from '../lib/components/theme-dialog-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -1388,6 +1389,23 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 				);
 			}
 		);
+
+		step( 'Can submit test payment details', async function() {
+			const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
+			const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
+			await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+			await securePaymentComponent.submitPaymentDetails();
+			return await securePaymentComponent.waitForPageToDisappear();
+		} );
+
+		step( 'Can see the theme thanks dialog', async function() {
+			const themeDialogComponent = await ThemeDialogComponent.Expect( driver );
+			await themeDialogComponent.goToThemeDetail();
+		} );
+
+		step( 'Can delete the plan', async function() {
+			return await new DeletePlanFlow( driver ).deletePlan( 'theme' );
+		} );
 
 		step( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
