@@ -70,7 +70,7 @@
 		"userFirstSignup",
 		"signupAtomicStoreVsPressable",
 		"dotBlogSuggestionsv2",
-		"krackenRebootM327V2",
+		"krackenRebootM33",
 		"improvedOnboarding",
 		"skipDomainOrSiteStep"
 	],
@@ -89,7 +89,7 @@
 		[ "userFirstSignup_20180913", "userFirst" ],
 		[ "signupAtomicStoreVsPressable_20171101", "atomic" ],
 		[ "dotBlogSuggestionsv2_20181012", "simple" ],
-		[ "krackenRebootM327V2_20181018", "domainsbot_front" ],
+		[ "krackenRebootM33_20181108", "domainsbot_front" ],
 		[ "skipDomainOrSiteStep_20181025", "yes" ]
 	]
 }
