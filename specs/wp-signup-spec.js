@@ -302,19 +302,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can search for a blog name, can see and select a free WordPress.com blog address in results',
 			async function() {
-				const findADomainComponent = await FindADomainComponent.Expect( driver );
-				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
-					expectedBlogAddresses,
-					blogName
+				return await new SignUpFlow( driver ).selectFreeWordPressDotComAddresss(
+					blogName,
+					expectedBlogAddresses
 				);
-				let actualAddress = await findADomainComponent.freeBlogAddress();
-				assert(
-					expectedBlogAddresses.indexOf( actualAddress ) > -1,
-					`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
-				);
-
-				return await findADomainComponent.selectFreeAddress();
 			}
 		);
 
