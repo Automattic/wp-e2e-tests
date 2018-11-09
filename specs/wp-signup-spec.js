@@ -130,10 +130,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -237,10 +240,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -334,7 +340,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					return;
 				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear();
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -608,10 +614,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can then see the sign up processing page and it will finish and show a 'Continue' button, which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -740,10 +749,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can then see the sign up processing page and it will finish and show a 'Continue' button, which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1260,11 +1272,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				await SignupProcessingPage.hideFloatiesinIE11( driver );
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1345,10 +1359,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1475,10 +1492,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1531,10 +1551,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( userName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1579,10 +1602,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1638,10 +1664,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		);
 
 		step(
-			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( userName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( userName, passwordForTestAccounts );
 			}
 		);
 
