@@ -17,7 +17,6 @@ import AboutPage from '../lib/pages/signup/about-page.js';
 import ReaderLandingPage from '../lib/pages/signup/reader-landing-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page.js';
 import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.js';
-import SignupProcessingPage from '../lib/pages/signup/signup-processing-page.js';
 import CheckOutPage from '../lib/pages/signup/checkout-page';
 import CheckOutThankyouPage from '../lib/pages/signup/checkout-thankyou-page.js';
 import ImportFromURLPage from '../lib/pages/signup/import-from-url-page';
@@ -53,6 +52,7 @@ import NewUserRegistrationUnavailableComponent from '../lib/components/new-user-
 import DeleteAccountFlow from '../lib/flows/delete-account-flow';
 import DeletePlanFlow from '../lib/flows/delete-plan-flow';
 import ThemeDialogComponent from '../lib/components/theme-dialog-component';
+import SignUpFlow from '../lib/flows/sign-up-flow';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -132,11 +132,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
+				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -242,11 +238,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
+				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -336,11 +328,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
+				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -477,11 +465,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
+				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -616,11 +600,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
+				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -751,11 +731,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
+				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -877,11 +853,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear( siteName, passwordForTestAccounts );
+				return await new SignUpFlow( driver ).continueAlong( siteName, passwordForTestAccounts );
 			}
 		);
 
@@ -1102,11 +1074,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear( siteName, passwordForTestAccounts );
+				return await new SignUpFlow( driver ).continueAlong( siteName, passwordForTestAccounts );
 			}
 		);
 
@@ -1274,11 +1242,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
+				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1361,11 +1325,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
+				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1494,11 +1454,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
+				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1553,11 +1509,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
+				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1604,11 +1556,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
+				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1666,11 +1614,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear( userName, passwordForTestAccounts );
+				return await new SignUpFlow( driver ).continueAlong( userName, passwordForTestAccounts );
 			}
 		);
 
