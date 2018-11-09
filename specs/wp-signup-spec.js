@@ -52,7 +52,7 @@ import NewUserRegistrationUnavailableComponent from '../lib/components/new-user-
 import DeleteAccountFlow from '../lib/flows/delete-account-flow';
 import DeletePlanFlow from '../lib/flows/delete-plan-flow';
 import ThemeDialogComponent from '../lib/components/theme-dialog-component';
-import SignUpFlow from '../lib/flows/sign-up-flow';
+import SignUpStep from '../lib/flows/sign-up-step';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -132,7 +132,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -238,7 +238,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -302,7 +302,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can search for a blog name, can see and select a free WordPress.com blog address in results',
 			async function() {
-				return await new SignUpFlow( driver ).selectFreeWordPressDotComAddresss(
+				return await new SignUpStep( driver ).selectFreeWordPressDotComAddresss(
 					blogName,
 					expectedBlogAddresses
 				);
@@ -319,7 +319,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will automatically move along',
 			async function() {
-				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -430,7 +430,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can search for a blog name, can see and select a free WordPress.com blog address in results',
 			async function() {
-				return await new SignUpFlow( driver ).selectFreeWordPressDotComAddresss(
+				return await new SignUpStep( driver ).selectFreeWordPressDotComAddresss(
 					blogName,
 					expectedBlogAddresses
 				);
@@ -447,7 +447,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will automatically move along',
 			async function() {
-				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -555,7 +555,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
 			async function() {
-				return await new SignUpFlow( driver ).selectFreeWordPressDotComAddresss(
+				return await new SignUpStep( driver ).selectFreeWordPressDotComAddresss(
 					blogName,
 					expectedBlogAddresses
 				);
@@ -574,7 +574,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -678,7 +678,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
 			async function() {
-				return await new SignUpFlow( driver ).selectFreeWordPressDotComAddresss(
+				return await new SignUpStep( driver ).selectFreeWordPressDotComAddresss(
 					blogName,
 					expectedBlogAddresses
 				);
@@ -697,7 +697,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -819,7 +819,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				return await new SignUpFlow( driver ).continueAlong( siteName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( siteName, passwordForTestAccounts );
 			}
 		);
 
@@ -1040,7 +1040,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				return await new SignUpFlow( driver ).continueAlong( siteName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( siteName, passwordForTestAccounts );
 			}
 		);
 
@@ -1208,7 +1208,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1259,7 +1259,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
 			async function() {
-				return await new SignUpFlow( driver ).selectFreeWordPressDotComAddresss(
+				return await new SignUpStep( driver ).selectFreeWordPressDotComAddresss(
 					blogName,
 					expectedBlogAddresses
 				);
@@ -1283,7 +1283,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1412,7 +1412,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1467,7 +1467,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1514,7 +1514,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				return await new SignUpFlow( driver ).continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1572,7 +1572,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				return await new SignUpFlow( driver ).continueAlong( userName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( userName, passwordForTestAccounts );
 			}
 		);
 
