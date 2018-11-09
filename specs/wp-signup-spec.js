@@ -14,6 +14,7 @@ import StartPage from '../lib/pages/signup/start-page.js';
 import JetpackAddNewSitePage from '../lib/pages/signup/jetpack-add-new-site-page';
 
 import AboutPage from '../lib/pages/signup/about-page.js';
+import DomainFirstPage from '../lib/pages/signup/domain-first-page';
 import ReaderLandingPage from '../lib/pages/signup/reader-landing-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page.js';
 import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.js';
@@ -34,8 +35,6 @@ import CancelDomainPage from '../lib/pages/cancel-domain-page';
 import GSuiteUpsellPage from '../lib/pages/gsuite-upsell-page';
 import ThemesPage from '../lib/pages/themes-page';
 import ThemeDetailPage from '../lib/pages/theme-detail-page';
-import AccountSettingsPage from '../lib/pages/account/account-settings-page';
-import CloseAccountPage from '../lib/pages/account/close-account-page';
 import DesignTypePage from '../lib/pages/signup/design-type-page';
 import ChecklistPage from '../lib/pages/checklist-page';
 import SettingsPage from '../lib/pages/settings-page';
@@ -45,7 +44,6 @@ import FindADomainComponent from '../lib/components/find-a-domain-component.js';
 import SecurePaymentComponent from '../lib/components/secure-payment-component.js';
 import NavBarComponent from '../lib/components/nav-bar-component';
 import SideBarComponent from '../lib/components/sidebar-component';
-import LoggedOutMasterbarComponent from '../lib/components/logged-out-masterbar-component';
 import NoSitesComponent from '../lib/components/no-sites-component';
 import SidebarComponent from '../lib/components/sidebar-component';
 
@@ -53,6 +51,9 @@ import * as SlackNotifier from '../lib/slack-notifier';
 
 import EmailClient from '../lib/email-client.js';
 import NewUserRegistrationUnavailableComponent from '../lib/components/new-user-domain-registration-unavailable-component';
+import DeleteAccountFlow from '../lib/flows/delete-account-flow';
+import DeletePlanFlow from '../lib/flows/delete-plan-flow';
+import ThemeDialogComponent from '../lib/components/theme-dialog-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -130,10 +131,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -181,23 +185,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -253,10 +241,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -271,23 +262,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -366,7 +341,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					return;
 				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear();
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -565,46 +540,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete the plan', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseManagePurchases();
-				const purchasesPage = await PurchasesPage.Expect( driver );
-				await purchasesPage.dismissGuidedTour();
-				await purchasesPage.selectPremiumPlan();
-				const managePurchasePage = await ManagePurchasePage.Expect( driver );
-				await managePurchasePage.chooseCancelAndRefund();
-				const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
-				await cancelPurchasePage.clickCancelPurchase();
-				await cancelPurchasePage.completeCancellationSurvey();
-				return await cancelPurchasePage.waitAndDismissSuccessNotice();
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeletePlanFlow( driver ).deletePlan( 'premium' );
 		} );
 
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -675,10 +615,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can then see the sign up processing page and it will finish and show a 'Continue' button, which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -736,46 +679,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete the plan', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseManagePurchases();
-				const purchasesPage = await PurchasesPage.Expect( driver );
-				await purchasesPage.dismissGuidedTour();
-				await purchasesPage.selectPremiumPlan();
-				const managePurchasePage = await ManagePurchasePage.Expect( driver );
-				await managePurchasePage.chooseCancelAndRefund();
-				const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
-				await cancelPurchasePage.clickCancelPurchase();
-				await cancelPurchasePage.completeCancellationSurvey();
-				return await cancelPurchasePage.waitAndDismissSuccessNotice();
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeletePlanFlow( driver ).deletePlan( 'premium' );
 		} );
 
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -842,10 +750,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can then see the sign up processing page and it will finish and show a 'Continue' button, which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -907,46 +818,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete the plan', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseManagePurchases();
-				const purchasesPage = await PurchasesPage.Expect( driver );
-				await purchasesPage.dismissGuidedTour();
-				await purchasesPage.selectPersonalPlan();
-				const managePurchasePage = await ManagePurchasePage.Expect( driver );
-				await managePurchasePage.chooseCancelAndRefund();
-				const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
-				await cancelPurchasePage.clickCancelPurchase();
-				await cancelPurchasePage.completeCancellationSurvey();
-				return await cancelPurchasePage.waitAndDismissSuccessNotice();
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeletePlanFlow( driver ).deletePlan( 'personal' );
 		} );
 
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -988,6 +864,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					query: `new=${ expectedDomainName }`,
 				} )
 			);
+		} );
+
+		step( 'Can select domain only from the domain first choice page', async function() {
+			const domainFirstPage = await DomainFirstPage.Expect( driver );
+			return await domainFirstPage.chooseJustBuyTheDomain();
 		} );
 
 		step( 'Can then enter account details', async function() {
@@ -1310,8 +1191,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await gSuiteUpsellPage.declineEmail();
 		} );
 
-		step( 'Can see the secure check out thank you page', async function() {
-			return await CheckOutThankyouPage.Expect( driver );
+		step( 'Can then see the onboarding checklist', async function() {
+			const checklistPage = await ChecklistPage.Expect( driver );
+			const header = await checklistPage.headerExists();
+			const subheader = await checklistPage.subheaderExists();
+
+			assert( header, 'The checklist header does not exist.' );
+
+			return assert( subheader, 'The checklist subheader does not exist.' );
 		} );
 
 		step( 'Can cancel the domain', async function() {
@@ -1391,11 +1278,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				await SignupProcessingPage.hideFloatiesinIE11( driver );
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1476,10 +1365,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1521,25 +1413,25 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
+		step( 'Can submit test payment details', async function() {
+			const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
+			const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
+			await securePaymentComponent.enterTestCreditCardDetails( testCreditCardDetails );
+			await securePaymentComponent.submitPaymentDetails();
+			return await securePaymentComponent.waitForPageToDisappear();
+		} );
+
+		step( 'Can see the theme thanks dialog', async function() {
+			const themeDialogComponent = await ThemeDialogComponent.Expect( driver );
+			await themeDialogComponent.goToThemeDetail();
+		} );
+
+		step( 'Can delete the plan', async function() {
+			return await new DeletePlanFlow( driver ).deletePlan( 'theme' );
+		} );
+
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickMySites();
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( blogName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -1606,10 +1498,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1662,10 +1557,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( userName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1710,10 +1608,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1728,23 +1629,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( userName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
 	} );
 
@@ -1785,10 +1670,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		);
 
 		step(
-			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				if ( global.browserName === 'Internet Explorer' ) {
+					return;
+				}
 				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( userName, passwordForTestAccounts );
+				return await signupProcessingPage.waitToDisappear( userName, passwordForTestAccounts );
 			}
 		);
 
@@ -1797,23 +1685,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( userName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
 	} );
 
@@ -1929,24 +1801,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickMySites();
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseAccountSettings();
-				const accountSettingsPage = await AccountSettingsPage.Expect( driver );
-				await accountSettingsPage.chooseCloseYourAccount();
-				const closeAccountPage = await CloseAccountPage.Expect( driver );
-				await closeAccountPage.chooseCloseAccount();
-				await closeAccountPage.enterAccountNameAndClose( userName );
-				await LoggedOutMasterbarComponent.Expect( driver );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
 	} );
 } );

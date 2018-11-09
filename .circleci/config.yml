@@ -29,7 +29,8 @@ jobs:
       - run: npm run lint
       - run:
           name: Install screen recording dependencies
-          command: sudo apt install -y ffmpeg
+          command: |
+            sudo apt install -y ffmpeg || echo 'export TEST_VIDEO=false' >> $BASH_ENV
       - run: ./scripts/randomize.sh specs
       - run: ./scripts/run-wrapper.sh
       - store_test_results:
