@@ -1699,8 +1699,20 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		step( 'Can visit import in signup page', async function() {
-			await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale, flow: 'import' } ) );
+		step( 'Can visit import in signup page and prefill url', async function() {
+			await StartPage.Visit(
+				driver,
+				StartPage.getStartURL( { culture: locale, flow: 'import', query: `url=${ siteURL }` } )
+			);
+
+			const importFromURLPage = await ImportFromURLPage.Expect( driver );
+			const urlValue = await importFromURLPage.getURLInputValue();
+
+			assert.strictEqual(
+				urlValue,
+				siteURL,
+				"The url input value doesn't match the url query argument"
+			);
 		} );
 
 		step( 'Can then enter a valid url of a site to import', async function() {
@@ -1720,7 +1732,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 			// Retry checking site importability if there's an error.
 			// Cancel test if endpoint still isn't working--can't continue testing this flow.
-			let retries = 1;
+			let attempts = 2;
 			while ( true ) {
 				try {
 					await importFromURLPage.submitURL( siteURL );
@@ -1729,16 +1741,29 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 						By.css( importFromURLPage.containerSelector )
 					);
 				} catch ( e ) {
-					if ( retries-- < 1 ) {
-						await SlackNotifier.warn(
-							`Skipping test because checking site importability was retried and is still unsuccessful: '${ e }'`,
-							{ suppressDuplicateMessages: true }
-						);
+					attempts--;
 
-						return this.skip();
+					const importabilityErrorMessage =
+						'There was an error with the importer, please try again.';
+					const urlInputMessage = await importFromURLPage.getURLInputMessage();
+
+					// `is-site-importable` was unresponsive or returned an error.
+					if ( urlInputMessage === importabilityErrorMessage ) {
+						// Last attempt, skip the test.
+						if ( attempts < 1 ) {
+							await SlackNotifier.warn(
+								`Skipping test because checking site importability was retried and was still unsuccessful: ${ e }`,
+								{ suppressDuplicateMessages: true }
+							);
+							return this.skip();
+						}
+
+						// More attempts are left, retry site importability check.
+						console.log( `Checking site importability didn't work as expected - retrying: ${ e }` );
+					} else {
+						// Some other error, test failed.
+						throw e;
 					}
-
-					console.log( `Checking site importability didn't work as expected - retrying: '${ e }'` );
 				}
 			}
 		} );
