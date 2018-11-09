@@ -1,8 +1,10 @@
 #!/bin/bash
 
+currentVersion=$(node -v)
+expectedVersion=$(<.nvmrc)
+
 update-wrapper-node-version () {
-    version=$(<.nvmrc)
-    version=${version:1}
+    version=${expectedVersion:1}
     config=( $(jq -r '.circleCIToken' ./config/local-${NODE_ENV}.json) )
     token=${config[0]}
 
@@ -25,20 +27,23 @@ head-changed-file () {
 }
 
 update-node () {
-    version=$(<.nvmrc)
     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
     export NVM_DIR="$HOME/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-    nvm install $version &&
-    nvm alias default $version
+    nvm install $expectedVersion &&
+    nvm alias default $expectedVersion
 }
 
-if head-changed-file ".nvmrc" && [ "$CIRCLE_BRANCH" = "master" ]; then
-    update-node &&
-    update-wrapper-node-version
-elif head-changed-file ".nvmrc"; then
-    update-node
+if head-changed-file ".nvmrc" && [ $expectedVersion != $currentVersion ]; then
+    #update-node
+    echo "update node"
+fi
+
+
+if head-changed-file ".nvmrc" && [ "$CIRCLE_BRANCH" = "master" ] && [ $expectedVersion != $currentVersion ]; then
+    #update-wrapper-node-version
+    echo "update wrapper"
 else
     echo ".nvmrc file not updated or is not on master"
 fi
