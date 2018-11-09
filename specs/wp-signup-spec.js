@@ -14,6 +14,7 @@ import StartPage from '../lib/pages/signup/start-page.js';
 import JetpackAddNewSitePage from '../lib/pages/signup/jetpack-add-new-site-page';
 
 import AboutPage from '../lib/pages/signup/about-page.js';
+import DomainFirstPage from '../lib/pages/signup/domain-first-page';
 import ReaderLandingPage from '../lib/pages/signup/reader-landing-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page.js';
 import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.js';
@@ -863,6 +864,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					query: `new=${ expectedDomainName }`,
 				} )
 			);
+		} );
+
+		step( 'Can select domain only from the domain first choice page', async function() {
+			const domainFirstPage = await DomainFirstPage.Expect( driver );
+			return await domainFirstPage.chooseJustBuyTheDomain();
 		} );
 
 		step( 'Can then enter account details', async function() {
