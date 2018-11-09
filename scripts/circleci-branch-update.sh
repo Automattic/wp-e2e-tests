@@ -36,14 +36,12 @@ update-node () {
 }
 
 if head-changed-file ".nvmrc" && [ $expectedVersion != $currentVersion ]; then
-    #update-node
-    echo "update node"
+    update-node
 fi
 
 
 if head-changed-file ".nvmrc" && [ "$CIRCLE_BRANCH" = "master" ] && [ $expectedVersion != $currentVersion ]; then
-    #update-wrapper-node-version
-    echo "update wrapper"
+    update-wrapper-node-version
 else
     echo ".nvmrc file not updated or is not on master"
 fi
