@@ -64,7 +64,6 @@
 		"cartNudgeUpdateToPremium",
 		"signupAtomicStoreVsPressable",
 		"krackenRebootM33",
-		"calypsoifyGutenberg",
 		"improvedOnboarding"
 	],
 	"overrideABTests": [
@@ -75,7 +74,6 @@
 		[ "improvedOnboarding_20181023", "main" ],
 		[ "cartNudgeUpdateToPremium_20180903", "control" ],
 		[ "signupAtomicStoreVsPressable_20171101", "atomic" ],
-		[ "krackenRebootM33_20181108", "domainsbot_front" ],
-		[ "calypsoifyGutenberg_20181112", "no" ]
+		[ "krackenRebootM33_20181108", "domainsbot_front" ]
 	]
 }
