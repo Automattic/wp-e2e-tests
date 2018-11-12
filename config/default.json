@@ -54,8 +54,8 @@
 			"platform": "Windows 10",
 			"screenResolution": "2560x1600",
 			"version": "11.103",
-		  	"iedriverVersion": "3.12.0",
-		  	"seleniumVersion": "3.12.0"
+		  	"iedriverVersion": "3.11.0",
+		  	"seleniumVersion": "3.11.0"
 		}
 	},
 	"knownABTestKeys": [
