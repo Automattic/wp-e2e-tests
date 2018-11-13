@@ -49,10 +49,10 @@ describe( `[${ host }] Auth Screen Canary: (${ screenSize }) @parallel @safarica
 	} );
 } );
 
-describe( `[${ host }] Authentication: (${ screenSize }) @parallel @jetpack`, function() {
+describe( `[${ host }] Authentication: (${ screenSize }) @parallel`, function() {
 	this.timeout( mochaTimeOut );
 
-	describe( 'Logging In and Out:', function() {
+	describe( 'Logging In and Out: @jetpack', function() {
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
