@@ -6,7 +6,7 @@ import config from 'config';
 import LoginFlow from '../lib/flows/login-flow.js';
 
 import EditorPage from '../lib/pages/editor-page.js';
-import TwitterFeedPage from '../lib/pages/twitter-feed-page.js';
+// import TwitterFeedPage from '../lib/pages/twitter-feed-page.js';
 import ViewPostPage from '../lib/pages/view-post-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
 import PostsPage from '../lib/pages/posts-page.js';
@@ -42,14 +42,14 @@ before( async function() {
 describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
-	xdescribe( 'Public Posts: Preview and Publish a Public Post @parallel', function() {
+	describe.only( 'Public Posts: Preview and Publish a Public Post @parallel', function() {
 		let fileDetails;
 		const blogPostTitle = dataHelper.randomPhrase();
 		const blogPostQuote =
 			'The foolish man seeks happiness in the distance. The wise grows it under his feet.\n— James Oppenheim';
-		const newCategoryName = 'Category ' + new Date().getTime().toString();
-		const newTagName = 'Tag ' + new Date().getTime().toString();
-		const publicizeMessage = dataHelper.randomPhrase();
+		// const newCategoryName = 'Category ' + new Date().getTime().toString();
+		// const newTagName = 'Tag ' + new Date().getTime().toString();
+		// const publicizeMessage = dataHelper.randomPhrase();
 
 		// Create image file for upload
 		before( async function() {
@@ -63,12 +63,14 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can enter post title and text content', async function() {
-			const gHeaderComponent = await GutenbergEditorComponent.Expect( driver );
-			await gHeaderComponent.removeNUXNotice();
-			await gHeaderComponent.enterTitle( blogPostTitle );
-			await gHeaderComponent.enterText( blogPostQuote );
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.removeNUXNotice();
+			await gEditorComponent.enterTitle( blogPostTitle );
+			await gEditorComponent.enterText( blogPostQuote );
 
-			let errorShown = await gHeaderComponent.errorDisplayed();
+			await gEditorComponent.enterImage( fileDetails );
+
+			let errorShown = await gEditorComponent.errorDisplayed();
 			return assert.strictEqual(
 				errorShown,
 				false,
