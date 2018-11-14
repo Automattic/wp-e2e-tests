@@ -7,7 +7,7 @@ import WPAdminSidebar from '../lib/pages/wp-admin/wp-admin-sidebar.js';
 import JetpackConnectFlow from '../lib/flows/jetpack-connect-flow.js';
 import MarkdownBlockComponent from '../lib/gutenberg/blocks/markdown-block-component.js';
 import PostAreaComponent from '../lib/pages/frontend/post-area-component.js';
-import GutenbergEditorHeaderComponent from '../lib/gutenberg/gutenberg-editor-header-component.js';
+import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component.js';
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper.js';
 import WPAdminJetpackModulesPage from '../lib/pages/wp-admin/wp-admin-jetpack-modules-page.js';
@@ -71,7 +71,7 @@ if ( screenSize !== 'mobile' ) {
 			} );
 
 			step( 'Can insert a markdown block', async function() {
-				const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+				const gHeaderComponent = await GutenbergEditorComponent.Expect( driver );
 				await gHeaderComponent.removeNUXNotice();
 				this.markdownBlockID = await gHeaderComponent.addBlock( 'Markdown' );
 			} );
@@ -91,7 +91,7 @@ if ( screenSize !== 'mobile' ) {
 			} );
 
 			step( 'Can publish the post and see its content', async function() {
-				const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+				const gHeaderComponent = await GutenbergEditorComponent.Expect( driver );
 				await gHeaderComponent.publish( { visit: true } );
 				const postFrontend = await PostAreaComponent.Expect( driver );
 				const html = await postFrontend.getPostHTML();
