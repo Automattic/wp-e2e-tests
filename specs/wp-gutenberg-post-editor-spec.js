@@ -123,7 +123,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can see correct post content in preview', async function() {
-			const gPreviewComponent = GutenbergPreviewComponent.Expect( driver );
+			const gPreviewComponent = await GutenbergPreviewComponent.Expect( driver );
 			let content = await gPreviewComponent.postContent();
 			assert.strictEqual(
 				content.indexOf( blogPostQuote ) > -1,
@@ -137,7 +137,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can see the post category in preview', async function() {
-			const gPreviewComponent = GutenbergPreviewComponent.Expect( driver );
+			const gPreviewComponent = await GutenbergPreviewComponent.Expect( driver );
 			let categoryDisplayed = await gPreviewComponent.categoryDisplayed();
 			assert.strictEqual(
 				categoryDisplayed.toUpperCase(),
