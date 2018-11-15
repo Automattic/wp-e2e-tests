@@ -44,14 +44,13 @@ before( async function() {
 describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
-	describe.only( 'Public Posts: Preview and Publish a Public Post @parallel', function() {
+	describe( 'Public Posts: Preview and Publish a Public Post @parallel', function() {
 		let fileDetails;
 		const blogPostTitle = dataHelper.randomPhrase();
 		const blogPostQuote =
 			'The foolish man seeks happiness in the distance. The wise grows it under his feet.\n— James Oppenheim';
 		const newCategoryName = 'Category ' + new Date().getTime().toString();
 		const newTagName = 'Tag ' + new Date().getTime().toString();
-		// const publicizeMessage = dataHelper.randomPhrase();
 
 		// Create image file for upload
 		before( async function() {
@@ -152,6 +151,61 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			assert.strictEqual( imageDisplayed, true, 'Could not see the image in the web preview' );
 		} );
 
+		step( 'Can publish and view content', async function() {
+			await GutenbergEditorComponent.switchToEditor( driver );
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.publish( { visit: true } );
+		} );
+
+		step( 'Can see correct post title', async function() {
+			const viewPostPage = await ViewPostPage.Expect( driver );
+			let postTitle = await viewPostPage.postTitle();
+			assert.strictEqual(
+				postTitle.toLowerCase(),
+				blogPostTitle.toLowerCase(),
+				'The published blog post title is not correct'
+			);
+		} );
+
+		step( 'Can see correct post content', async function() {
+			const viewPostPage = await ViewPostPage.Expect( driver );
+			let content = await viewPostPage.postContent();
+			assert.strictEqual(
+				content.indexOf( blogPostQuote ) > -1,
+				true,
+				'The post content (' +
+					content +
+					') does not include the expected content (' +
+					blogPostQuote +
+					')'
+			);
+		} );
+
+		step( 'Can see correct post category', async function() {
+			const viewPostPage = await ViewPostPage.Expect( driver );
+			let categoryDisplayed = await viewPostPage.categoryDisplayed();
+			assert.strictEqual(
+				categoryDisplayed.toUpperCase(),
+				newCategoryName.toUpperCase(),
+				'The category: ' + newCategoryName + ' is not being displayed on the post'
+			);
+		} );
+
+		step( 'Can see correct post tag', async function() {
+			const viewPostPage = await ViewPostPage.Expect( driver );
+			let tagDisplayed = await viewPostPage.tagDisplayed();
+			assert.strictEqual(
+				tagDisplayed.toUpperCase(),
+				newTagName.toUpperCase(),
+				'The tag: ' + newTagName + ' is not being displayed on the post'
+			);
+		} );
+
+		step( 'Can see the image published', async function() {
+			const viewPostPage = await ViewPostPage.Expect( driver );
+			let imageDisplayed = await viewPostPage.imageDisplayed( fileDetails );
+			assert.strictEqual( imageDisplayed, true, 'Could not see the image in the published post' );
+		} );
 		after( async function() {
 			if ( fileDetails ) {
 				await mediaHelper.deleteFile( fileDetails );
