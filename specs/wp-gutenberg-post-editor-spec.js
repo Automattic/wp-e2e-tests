@@ -26,6 +26,7 @@ import * as driverManager from '../lib/driver-manager';
 import * as driverHelper from '../lib/driver-helper';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
+import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -47,7 +48,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		const blogPostTitle = dataHelper.randomPhrase();
 		const blogPostQuote =
 			'The foolish man seeks happiness in the distance. The wise grows it under his feet.\n— James Oppenheim';
-		// const newCategoryName = 'Category ' + new Date().getTime().toString();
+		const newCategoryName = 'Category ' + new Date().getTime().toString();
 		// const newTagName = 'Tag ' + new Date().getTime().toString();
 		// const publicizeMessage = dataHelper.randomPhrase();
 
@@ -62,11 +63,12 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			return await this.loginFlow.loginAndStartNewPost( null, true );
 		} );
 
-		step( 'Can enter post title and text content', async function() {
+		step( 'Can enter post title, content and image', async function() {
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 			await gEditorComponent.removeNUXNotice();
 			await gEditorComponent.enterTitle( blogPostTitle );
 			await gEditorComponent.enterText( blogPostQuote );
+			await gEditorComponent.addBlock( 'Image' );
 
 			await gEditorComponent.enterImage( fileDetails );
 
@@ -76,6 +78,21 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 				false,
 				'There is an error shown on the Gutenberg editor page!'
 			);
+		} );
+
+		step( 'Expand Categories and Tags', async function() {
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.removeNUXNotice();
+			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
+			await gEditorSidebarComponent.selectDocumentTab();
+			await gEditorSidebarComponent.collapseStatusAndVisibility(); // Status and visibility starts opened
+			await gEditorSidebarComponent.expandCategories();
+			await gEditorSidebarComponent.expandTags();
+		} );
+
+		step( 'Can add a new category', async function() {
+			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
+			await gEditorSidebarComponent.addNewCategory( newCategoryName );
 		} );
 
 		after( async function() {
