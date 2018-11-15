@@ -43,13 +43,13 @@ before( async function() {
 describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
-	describe.only( 'Public Posts: Preview and Publish a Public Post @parallel', function() {
+	describe( 'Public Posts: Preview and Publish a Public Post @parallel', function() {
 		let fileDetails;
 		const blogPostTitle = dataHelper.randomPhrase();
 		const blogPostQuote =
 			'The foolish man seeks happiness in the distance. The wise grows it under his feet.\n— James Oppenheim';
 		const newCategoryName = 'Category ' + new Date().getTime().toString();
-		// const newTagName = 'Tag ' + new Date().getTime().toString();
+		const newTagName = 'Tag ' + new Date().getTime().toString();
 		// const publicizeMessage = dataHelper.randomPhrase();
 
 		// Create image file for upload
@@ -81,8 +81,6 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Expand Categories and Tags', async function() {
-			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
-			await gEditorComponent.removeNUXNotice();
 			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 			await gEditorSidebarComponent.selectDocumentTab();
 			await gEditorSidebarComponent.collapseStatusAndVisibility(); // Status and visibility starts opened
@@ -94,6 +92,29 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 			await gEditorSidebarComponent.addNewCategory( newCategoryName );
 		} );
+
+		step( 'Can add a new tag', async function() {
+			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
+			await gEditorSidebarComponent.addNewTag( newTagName );
+		} );
+
+		step( 'Close categories and tags', async function() {
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.removeNUXNotice();
+			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
+			await gEditorSidebarComponent.selectDocumentTab();
+			await gEditorSidebarComponent.collapseCategories();
+			await gEditorSidebarComponent.collapseTags();
+		} );
+
+		step( 'Can launch post preview', async function() {
+			let gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.ensureSaved();
+			await gEditorComponent.launchPreview();
+		} );
+
+		// step( 'Can see correct post title in preview', async function() {
+		// } );
 
 		after( async function() {
 			if ( fileDetails ) {
