@@ -146,6 +146,12 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			);
 		} );
 
+		step( 'Can see the image in preview', async function() {
+			const gPreviewComponent = await GutenbergPreviewComponent.Expect( driver );
+			let imageDisplayed = await gPreviewComponent.imageDisplayed( fileDetails );
+			assert.strictEqual( imageDisplayed, true, 'Could not see the image in the web preview' );
+		} );
+
 		after( async function() {
 			if ( fileDetails ) {
 				await mediaHelper.deleteFile( fileDetails );
