@@ -18,6 +18,8 @@ import * as mediaHelper from '../lib/media-helper.js';
 import * as dataHelper from '../lib/data-helper.js';
 import * as driverHelper from '../lib/driver-helper';
 import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
+import GutenbergEditorHeaderComponent from '../lib/gutenberg/gutenberg-editor-header-component';
+import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -298,7 +300,7 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 		}
 	} );
 
-	xdescribe( 'Password Protected Pages: @parallel', function() {
+	describe( 'Password Protected Pages: @parallel', function() {
 		const pageTitle = dataHelper.randomPhrase();
 		const pageQuote =
 			'If you don’t like something, change it. If you can’t change it, change the way you think about it.\n— Mary Engelbreit\n';
@@ -311,19 +313,29 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 			} );
 
 			step( 'Can enter page title and content and set to password protected', async function() {
-				let editorPage = await EditorPage.Expect( driver );
-				await editorPage.enterTitle( pageTitle );
-				const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-				await postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
-				editorPage = await EditorPage.Expect( driver );
-				await editorPage.enterContent( pageQuote );
-				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-				await postEditorToolbarComponent.ensureSaved();
+				let gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+				await gHeaderComponent.removeNUXNotice();
+				await gHeaderComponent.enterTitle( pageTitle );
+
+				const errorShown = await gHeaderComponent.errorDisplayed();
+				assert.strictEqual(
+					errorShown,
+					false,
+					'There is an error shown on the Gutenberg editor page!'
+				);
+
+				const gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
+				await gSidebarComponent.chooseDocumentSetttings();
+				await gSidebarComponent.setVisibilityToPasswordProtected( postPassword );
+				await gSidebarComponent.hideComponentIfNecessary();
+
+				gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+				return await gHeaderComponent.enterText( pageQuote );
 			} );
 
 			step( 'Can publish and view content', async function() {
-				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-				await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
+				const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+				await gHeaderComponent.publish( { visit: true } );
 			} );
 
 			step( 'As a logged in user, With no password entered, Can view page title', async function() {
