@@ -306,8 +306,8 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 
 		describe( 'Publish a Password Protected Page', function() {
 			step( 'Can log in', async function() {
-				const loginFlow = new LoginFlow( driver );
-				await loginFlow.loginAndStartNewPage();
+				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
+				await loginFlow.loginAndStartNewPage( null, true );
 			} );
 
 			step( 'Can enter page title and content and set to password protected', async function() {
@@ -325,244 +325,228 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 				await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
 			} );
-		} );
 
-		describe( 'As a logged in user', function() {
-			describe( 'With no password entered', function() {
-				step( 'Can view page title', async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const actualPageTitle = await viewPagePage.pageTitle();
-					assert.strictEqual(
-						actualPageTitle.toUpperCase(),
-						( 'Protected: ' + pageTitle ).toUpperCase()
-					);
-				} );
-
-				step( 'Can see password field', async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const isPasswordProtected = await viewPagePage.isPasswordProtected();
-					assert.strictEqual(
-						isPasswordProtected,
-						true,
-						'The page does not appear to be password protected'
-					);
-				} );
-
-				step( "Can't see content when no password is entered", async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const content = await viewPagePage.pageContent();
-					assert.strictEqual(
-						content.indexOf( pageQuote ) === -1,
-						true,
-						'The page content (' +
-							content +
-							') displays the expected content (' +
-							pageQuote +
-							') when it should be password protected.'
-					);
-				} );
+			step( 'As a logged in user, With no password entered, Can view page title', async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const actualPageTitle = await viewPagePage.pageTitle();
+				assert.strictEqual(
+					actualPageTitle.toUpperCase(),
+					( 'Protected: ' + pageTitle ).toUpperCase()
+				);
 			} );
 
-			describe( 'With incorrect password entered', function() {
-				step( 'Enter incorrect password', async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					await viewPagePage.enterPassword( 'password' );
-				} );
-
-				step( 'Can view page title', async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const actualPageTitle = await viewPagePage.pageTitle();
-					assert.strictEqual(
-						actualPageTitle.toUpperCase(),
-						( 'Protected: ' + pageTitle ).toUpperCase()
-					);
-				} );
-
-				step( 'Can see password field', async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const isPasswordProtected = await viewPagePage.isPasswordProtected();
-					assert.strictEqual(
-						isPasswordProtected,
-						true,
-						'The page does not appear to be password protected'
-					);
-				} );
-
-				step( "Can't see content when incorrect password is entered", async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const content = await viewPagePage.pageContent();
-					assert.strictEqual(
-						content.indexOf( pageQuote ) === -1,
-						true,
-						'The page content (' +
-							content +
-							') displays the expected content (' +
-							pageQuote +
-							') when it should be password protected.'
-					);
-				} );
+			step( 'Can see password field', async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const isPasswordProtected = await viewPagePage.isPasswordProtected();
+				assert.strictEqual(
+					isPasswordProtected,
+					true,
+					'The page does not appear to be password protected'
+				);
 			} );
 
-			describe( 'With correct password entered', function() {
-				step( 'Enter correct password', async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					await viewPagePage.enterPassword( postPassword );
-				} );
-
-				step( 'Can view page title', async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const actualPageTitle = await viewPagePage.pageTitle();
-					assert.strictEqual(
-						actualPageTitle.toUpperCase(),
-						( 'Protected: ' + pageTitle ).toUpperCase()
-					);
-				} );
-
-				step( "Can't see password field", async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const isPasswordProtected = await viewPagePage.isPasswordProtected();
-					assert.strictEqual(
-						isPasswordProtected,
-						false,
-						'The page still seems to be password protected'
-					);
-				} );
-
-				step( 'Can see page content', async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const content = await viewPagePage.pageContent();
-					assert.strictEqual(
-						content.indexOf( pageQuote ) > -1,
-						true,
-						'The page content (' +
-							content +
-							') does not include the expected content (' +
-							pageQuote +
-							')'
-					);
-				} );
+			step( "Can't see content when no password is entered", async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const content = await viewPagePage.pageContent();
+				assert.strictEqual(
+					content.indexOf( pageQuote ) === -1,
+					true,
+					'The page content (' +
+						content +
+						') displays the expected content (' +
+						pageQuote +
+						') when it should be password protected.'
+				);
 			} );
-		} );
 
-		describe( 'As a non-logged in user', function() {
-			step( 'Clear cookies (log out)', async function() {
+			step( 'With incorrect password entered, Enter incorrect password', async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				await viewPagePage.enterPassword( 'password' );
+			} );
+
+			step( 'Can view page title', async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const actualPageTitle = await viewPagePage.pageTitle();
+				assert.strictEqual(
+					actualPageTitle.toUpperCase(),
+					( 'Protected: ' + pageTitle ).toUpperCase()
+				);
+			} );
+
+			step( 'Can see password field', async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const isPasswordProtected = await viewPagePage.isPasswordProtected();
+				assert.strictEqual(
+					isPasswordProtected,
+					true,
+					'The page does not appear to be password protected'
+				);
+			} );
+
+			step( "Can't see content when incorrect password is entered", async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const content = await viewPagePage.pageContent();
+				assert.strictEqual(
+					content.indexOf( pageQuote ) === -1,
+					true,
+					'The page content (' +
+						content +
+						') displays the expected content (' +
+						pageQuote +
+						') when it should be password protected.'
+				);
+			} );
+
+			step( 'With correct password entered, Enter correct password', async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				await viewPagePage.enterPassword( postPassword );
+			} );
+
+			step( 'Can view page title', async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const actualPageTitle = await viewPagePage.pageTitle();
+				assert.strictEqual(
+					actualPageTitle.toUpperCase(),
+					( 'Protected: ' + pageTitle ).toUpperCase()
+				);
+			} );
+
+			step( "Can't see password field", async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const isPasswordProtected = await viewPagePage.isPasswordProtected();
+				assert.strictEqual(
+					isPasswordProtected,
+					false,
+					'The page still seems to be password protected'
+				);
+			} );
+
+			step( 'Can see page content', async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const content = await viewPagePage.pageContent();
+				assert.strictEqual(
+					content.indexOf( pageQuote ) > -1,
+					true,
+					'The page content (' +
+						content +
+						') does not include the expected content (' +
+						pageQuote +
+						')'
+				);
+			} );
+
+			step( 'As a non-logged in user, Clear cookies (log out)', async function() {
 				await driver.manage().deleteAllCookies();
 				await driver.navigate().refresh();
 			} );
 
-			describe( 'With no password entered', function() {
-				step( 'Can view page title', async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const actualPageTitle = await viewPagePage.pageTitle();
-					assert.strictEqual(
-						actualPageTitle.toUpperCase(),
-						( 'Protected: ' + pageTitle ).toUpperCase()
-					);
-				} );
-
-				step( 'Can see password field', async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const isPasswordProtected = await viewPagePage.isPasswordProtected();
-					assert.strictEqual(
-						isPasswordProtected,
-						true,
-						'The page does not appear to be password protected'
-					);
-				} );
-
-				step( "Can't see content when no password is entered", async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const content = await viewPagePage.pageContent();
-					assert.strictEqual(
-						content.indexOf( pageQuote ) === -1,
-						true,
-						'The page content (' +
-							content +
-							') displays the expected content (' +
-							pageQuote +
-							') when it should be password protected.'
-					);
-				} );
+			step( 'With no password entered, Can view page title', async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const actualPageTitle = await viewPagePage.pageTitle();
+				assert.strictEqual(
+					actualPageTitle.toUpperCase(),
+					( 'Protected: ' + pageTitle ).toUpperCase()
+				);
 			} );
 
-			describe( 'With incorrect password entered', function() {
-				step( 'Enter incorrect password', async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					await viewPagePage.enterPassword( 'password' );
-				} );
-
-				step( 'Can view page title', async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const actualPageTitle = await viewPagePage.pageTitle();
-					assert.strictEqual(
-						actualPageTitle.toUpperCase(),
-						( 'Protected: ' + pageTitle ).toUpperCase()
-					);
-				} );
-
-				step( 'Can see password field', async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const isPasswordProtected = await viewPagePage.isPasswordProtected();
-					assert.strictEqual(
-						isPasswordProtected,
-						true,
-						'The page does not appear to be password protected'
-					);
-				} );
-
-				step( "Can't see content when incorrect password is entered", async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const content = await viewPagePage.pageContent();
-					assert.strictEqual(
-						content.indexOf( pageQuote ) === -1,
-						true,
-						'The page content (' +
-							content +
-							') displays the expected content (' +
-							pageQuote +
-							') when it should be password protected.'
-					);
-				} );
+			step( 'Can see password field', async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const isPasswordProtected = await viewPagePage.isPasswordProtected();
+				assert.strictEqual(
+					isPasswordProtected,
+					true,
+					'The page does not appear to be password protected'
+				);
 			} );
 
-			describe( 'With correct password entered', function() {
-				step( 'Enter correct password', async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					await viewPagePage.enterPassword( postPassword );
-				} );
+			step( "Can't see content when no password is entered", async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const content = await viewPagePage.pageContent();
+				assert.strictEqual(
+					content.indexOf( pageQuote ) === -1,
+					true,
+					'The page content (' +
+						content +
+						') displays the expected content (' +
+						pageQuote +
+						') when it should be password protected.'
+				);
+			} );
 
-				step( 'Can view page title', async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const actualPageTitle = await viewPagePage.pageTitle();
-					assert.strictEqual(
-						actualPageTitle.toUpperCase(),
-						( 'Protected: ' + pageTitle ).toUpperCase()
-					);
-				} );
+			step( 'With incorrect password entered, Enter incorrect password', async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				await viewPagePage.enterPassword( 'password' );
+			} );
 
-				step( "Can't see password field", async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const isPasswordProtected = await viewPagePage.isPasswordProtected();
-					assert.strictEqual(
-						isPasswordProtected,
-						false,
-						'The page still seems to be password protected'
-					);
-				} );
+			step( 'Can view page title', async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const actualPageTitle = await viewPagePage.pageTitle();
+				assert.strictEqual(
+					actualPageTitle.toUpperCase(),
+					( 'Protected: ' + pageTitle ).toUpperCase()
+				);
+			} );
 
-				step( 'Can see page content', async function() {
-					const viewPagePage = await ViewPagePage.Expect( driver );
-					const content = await viewPagePage.pageContent();
-					assert.strictEqual(
-						content.indexOf( pageQuote ) > -1,
-						true,
-						'The page content (' +
-							content +
-							') does not include the expected content (' +
-							pageQuote +
-							')'
-					);
-				} );
+			step( 'Can see password field', async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const isPasswordProtected = await viewPagePage.isPasswordProtected();
+				assert.strictEqual(
+					isPasswordProtected,
+					true,
+					'The page does not appear to be password protected'
+				);
+			} );
+
+			step( "Can't see content when incorrect password is entered", async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const content = await viewPagePage.pageContent();
+				assert.strictEqual(
+					content.indexOf( pageQuote ) === -1,
+					true,
+					'The page content (' +
+						content +
+						') displays the expected content (' +
+						pageQuote +
+						') when it should be password protected.'
+				);
+			} );
+
+			step( 'With correct password entered, Enter correct password', async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				await viewPagePage.enterPassword( postPassword );
+			} );
+
+			step( 'Can view page title', async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const actualPageTitle = await viewPagePage.pageTitle();
+				assert.strictEqual(
+					actualPageTitle.toUpperCase(),
+					( 'Protected: ' + pageTitle ).toUpperCase()
+				);
+			} );
+
+			step( "Can't see password field", async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const isPasswordProtected = await viewPagePage.isPasswordProtected();
+				assert.strictEqual(
+					isPasswordProtected,
+					false,
+					'The page still seems to be password protected'
+				);
+			} );
+
+			step( 'Can see page content', async function() {
+				const viewPagePage = await ViewPagePage.Expect( driver );
+				const content = await viewPagePage.pageContent();
+				assert.strictEqual(
+					content.indexOf( pageQuote ) > -1,
+					true,
+					'The page content (' +
+						content +
+						') does not include the expected content (' +
+						pageQuote +
+						')'
+				);
 			} );
 		} );
 	} );
