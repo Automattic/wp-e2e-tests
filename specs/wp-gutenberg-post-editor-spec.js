@@ -27,6 +27,7 @@ import * as driverHelper from '../lib/driver-helper';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
 import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
+import GutenbergPreviewComponent from '../lib/gutenberg/gutenberg-preview-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -43,7 +44,7 @@ before( async function() {
 describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
-	describe( 'Public Posts: Preview and Publish a Public Post @parallel', function() {
+	describe.only( 'Public Posts: Preview and Publish a Public Post @parallel', function() {
 		let fileDetails;
 		const blogPostTitle = dataHelper.randomPhrase();
 		const blogPostQuote =
@@ -106,13 +107,44 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can launch post preview', async function() {
-			let gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 			await gEditorComponent.ensureSaved();
 			await gEditorComponent.launchPreview();
 		} );
 
-		// step( 'Can see correct post title in preview', async function() {
-		// } );
+		step( 'Can see correct post title in preview', async function() {
+			const gPreviewComponent = await GutenbergPreviewComponent.Expect( driver );
+			let postTitle = await gPreviewComponent.postTitle();
+			assert.strictEqual(
+				postTitle.toLowerCase(),
+				blogPostTitle.toLowerCase(),
+				'The blog post preview title is not correct'
+			);
+		} );
+
+		step( 'Can see correct post content in preview', async function() {
+			const gPreviewComponent = GutenbergPreviewComponent.Expect( driver );
+			let content = await gPreviewComponent.postContent();
+			assert.strictEqual(
+				content.indexOf( blogPostQuote ) > -1,
+				true,
+				'The post preview content (' +
+					content +
+					') does not include the expected content (' +
+					blogPostQuote +
+					')'
+			);
+		} );
+
+		step( 'Can see the post category in preview', async function() {
+			const gPreviewComponent = GutenbergPreviewComponent.Expect( driver );
+			let categoryDisplayed = await gPreviewComponent.categoryDisplayed();
+			assert.strictEqual(
+				categoryDisplayed.toUpperCase(),
+				newCategoryName.toUpperCase(),
+				'The category: ' + newCategoryName + ' is not being displayed on the post'
+			);
+		} );
 
 		after( async function() {
 			if ( fileDetails ) {
