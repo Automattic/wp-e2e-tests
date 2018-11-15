@@ -99,8 +99,6 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Close categories and tags', async function() {
-			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
-			await gEditorComponent.removeNUXNotice();
 			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 			await gEditorSidebarComponent.selectDocumentTab();
 			await gEditorSidebarComponent.collapseCategories();
