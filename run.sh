@@ -160,7 +160,7 @@ while getopts ":a:RpS:B:s:gjWCJH:wzyl:cm:fiIUvxu:h" opt; do
       export JETPACKHOST=$OPTARG
       ;;
     x)
-      NODE_CONFIG_ARGS+=("\"headless\":\"true\"")
+      NODE_CONFIG_ARGS+=("\"headless\":\"true\",\"useTestVideo\":\"false\"")
 #       MAGELLAN="xvfb-run $MAGELLAN"
       ;;
     u)
