@@ -32,6 +32,8 @@ const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
 
+const isCalypsoIntegration = config.get( 'forceGutenbergCalypsoIntegration' );
+
 let driver;
 
 before( async function() {
@@ -343,7 +345,9 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 
 			step( 'Can enter post title and text content', async function() {
 				const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
-				await gHeaderComponent.removeNUXNotice();
+				if ( ! isCalypsoIntegration ) {
+					await gHeaderComponent.removeNUXNotice();
+				}
 				await gHeaderComponent.enterTitle( blogPostTitle );
 				await gHeaderComponent.enterText( blogPostQuote );
 
