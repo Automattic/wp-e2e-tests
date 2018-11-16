@@ -1065,7 +1065,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe.only( 'Edit a Post: @parallel', function() {
+	describe( 'Edit a Post: @parallel', function() {
 		describe( 'Publish a New Post', function() {
 			const originalBlogPostTitle = dataHelper.randomPhrase();
 			const updatedBlogPostTitle = dataHelper.randomPhrase();
