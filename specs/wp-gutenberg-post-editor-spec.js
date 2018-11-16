@@ -19,13 +19,13 @@ import NavBarComponent from '../lib/components/nav-bar-component.js';
 import PostPreviewComponent from '../lib/components/post-preview-component.js';
 import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component';
-import EditorConfirmationSidebarComponent from '../lib/components/editor-confirmation-sidebar-component';
 import GutenbergEditorHeaderComponent from '../lib/gutenberg/gutenberg-editor-header-component';
 
 import * as driverManager from '../lib/driver-manager';
 import * as driverHelper from '../lib/driver-helper';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
+import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -419,24 +419,23 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	xdescribe( 'Schedule Basic Public Post @parallel', function() {
-		let publishDate;
-
+	describe( 'Schedule Basic Public Post @parallel', function() {
 		describe( 'Schedule (and remove) a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = '“Worries shared are worries halved.”\n- Unknown';
 
 			step( 'Can log in', async function() {
 				this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await this.loginFlow.loginAndStartNewPost();
+				return await this.loginFlow.loginAndStartNewPost( null, true );
 			} );
 
 			step( 'Can enter post title and content', async function() {
-				this.editorPage = await EditorPage.Expect( driver );
-				await this.editorPage.enterTitle( blogPostTitle );
-				await this.editorPage.enterContent( blogPostQuote + '\n' );
+				const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+				await gHeaderComponent.removeNUXNotice();
+				await gHeaderComponent.enterTitle( blogPostTitle );
+				await gHeaderComponent.enterText( blogPostQuote );
 
-				let errorShown = await this.editorPage.errorDisplayed();
+				let errorShown = await gHeaderComponent.errorDisplayed();
 				return assert.strictEqual(
 					errorShown,
 					false,
@@ -445,46 +444,23 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			step(
-				'Can schedule content for a future date (first day of second week next month)',
+				'Can schedule content for a future date and see correct publish date',
 				async function() {
-					let postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-					await postEditorToolbarComponent.ensureSaved( { clickSave: true } );
-					let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-					await postEditorSidebarComponent.expandStatusSection();
-					await postEditorSidebarComponent.chooseFutureDate();
-					publishDate = await postEditorSidebarComponent.getSelectedPublishDate();
-					await postEditorSidebarComponent.closeStatusSection();
-					let editorPage = await EditorPage.Expect( driver );
-					await editorPage.waitForPage();
-					postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-					await postEditorToolbarComponent.ensureSaved( { clickSave: true } );
-					return await postEditorToolbarComponent.clickPublishPost();
+					let gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
+					await gSidebarComponent.chooseDocumentSetttings();
+					await gSidebarComponent.scheduleFuturePost();
+					let publishDate = await gSidebarComponent.getSelectedPublishDate();
+
+					let gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+					return await gHeaderComponent.schedulePost( publishDate );
 				}
 			);
 
-			step( 'Can confirm scheduling post and see correct publish date', async function() {
-				const editorConfirmationSidebarComponent = await EditorConfirmationSidebarComponent.Expect(
-					driver
-				);
-				const publishDateShown = await editorConfirmationSidebarComponent.publishDateShown();
-				assert.strictEqual(
-					publishDateShown,
-					publishDate,
-					'The publish date shown is not the expected publish date'
-				);
-				await editorConfirmationSidebarComponent.confirmAndPublish();
-				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-				await postEditorToolbarComponent.waitForPostSucessNotice();
-				const postEditorPage = await EditorPage.Expect( driver );
-				return assert(
-					await postEditorPage.postIsScheduled(),
-					'The newly scheduled post is not showing in the editor as scheduled'
-				);
-			} );
-
 			step( 'Remove scheduled post', async function() {
-				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-				return await postEditorSidebarComponent.trashPost();
+				let gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+				await gHeaderComponent.closeScheduledPanel();
+				let gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
+				return await gSidebarComponent.trashPost();
 			} );
 		} );
 	} );
