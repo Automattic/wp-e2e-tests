@@ -1598,6 +1598,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const emailAddress = dataHelper.getEmailAddress( userName, signupInboxId );
 
 		before( async function() {
+			await SlackNotifier.warn(
+				'The sign up import e2e test was broken by https://github.com/Automattic/wp-calypso/pull/28556',
+				{ suppressDuplicateMessages: true }
+			);
+			return this.skip();
+		} );
+
+		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
