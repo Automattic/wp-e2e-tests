@@ -1688,7 +1688,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			await importPage.previewSiteToBeImported();
 		} );
 
-		step( 'Can then see the enabled import start button', async function() {
+		step( 'Can then start an import', async function() {
 			const importPage = await ImportPage.Expect( driver );
 			await importPage.siteImporterCanStartImport();
 		} );
