@@ -21,11 +21,13 @@ import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-co
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component';
 import EditorConfirmationSidebarComponent from '../lib/components/editor-confirmation-sidebar-component';
 import GutenbergEditorHeaderComponent from '../lib/gutenberg/gutenberg-editor-header-component';
+import WPAdminPostsPage from '../lib/pages/wp-admin/wp-admin-posts-page';
 
 import * as driverManager from '../lib/driver-manager';
 import * as driverHelper from '../lib/driver-helper';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
+import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -1027,7 +1029,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	xdescribe( 'Trash Post: @parallel', function() {
+	describe( 'Trash Post: @parallel', function() {
 		describe( 'Trash a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
@@ -1035,23 +1037,25 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 
 			step( 'Can log in', async function() {
 				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await loginFlow.loginAndStartNewPost();
+				return await loginFlow.loginAndStartNewPost( null, true );
 			} );
 
 			step( 'Can enter post title and content', async function() {
-				const editorPage = await EditorPage.Expect( driver );
-				await editorPage.enterTitle( blogPostTitle );
-				return await editorPage.enterContent( blogPostQuote );
+				const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+				await gHeaderComponent.removeNUXNotice();
+				await gHeaderComponent.enterTitle( blogPostTitle );
+				return await gHeaderComponent.enterText( blogPostQuote );
 			} );
 
 			step( 'Can trash the new post', async function() {
-				const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-				return await postEditorSidebarComponent.trashPost();
+				const gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
+				await gSidebarComponent.chooseDocumentSetttings();
+				return await gSidebarComponent.trashPost();
 			} );
 
 			step( 'Can then see the Posts page with a confirmation message', async function() {
-				const postsPage = await PostsPage.Expect( driver );
-				const displayed = await postsPage.successNoticeDisplayed();
+				const wpAdminPostsPage = await WPAdminPostsPage.Expect( driver );
+				const displayed = await wpAdminPostsPage.trashedSuccessNoticeDisplayed();
 				return assert.strictEqual(
 					displayed,
 					true,
@@ -1061,7 +1065,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	xdescribe( 'Edit a Post: @parallel', function() {
+	describe.only( 'Edit a Post: @parallel', function() {
 		describe( 'Publish a New Post', function() {
 			const originalBlogPostTitle = dataHelper.randomPhrase();
 			const updatedBlogPostTitle = dataHelper.randomPhrase();
@@ -1069,15 +1073,16 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 				'Science is organised knowledge. Wisdom is organised life..\n~ Immanuel Kant\n';
 
 			step( 'Can log in', async function() {
-				this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await this.loginFlow.loginAndStartNewPost();
+				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
+				return await loginFlow.loginAndStartNewPost( null, true );
 			} );
 
 			step( 'Can enter post title and content', async function() {
-				this.editorPage = await EditorPage.Expect( driver );
-				await this.editorPage.enterTitle( originalBlogPostTitle );
-				await this.editorPage.enterContent( blogPostQuote );
-				let errorShown = await this.editorPage.errorDisplayed();
+				const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+				await gHeaderComponent.removeNUXNotice();
+				await gHeaderComponent.enterTitle( originalBlogPostTitle );
+				await gHeaderComponent.enterText( blogPostQuote );
+				let errorShown = await gHeaderComponent.errorDisplayed();
 				return assert.strictEqual(
 					errorShown,
 					false,
@@ -1086,41 +1091,40 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			step( 'Can publish the post', async function() {
-				this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-				await this.postEditorToolbarComponent.ensureSaved();
-				await this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
-				return await this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
+				const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+				await gHeaderComponent.publish( { visit: true } );
 			} );
 
 			describe( 'Edit the post via posts', function() {
 				step( 'Can view the posts list', async function() {
-					this.readerPage = await ReaderPage.Visit( driver );
-					this.navbarComponent = await NavBarComponent.Expect( driver );
-					await this.navbarComponent.clickMySites();
+					await ReaderPage.Visit( driver );
+					const navbarComponent = await NavBarComponent.Expect( driver );
+					await navbarComponent.clickMySites();
 					const jetpackSiteName = dataHelper.getJetpackSiteName();
-					this.sidebarComponent = await SidebarComponent.Expect( driver );
+					const sidebarComponent = await SidebarComponent.Expect( driver );
 					if ( host !== 'WPCOM' ) {
-						await this.sidebarComponent.selectSite( jetpackSiteName );
+						await sidebarComponent.selectSite( jetpackSiteName );
 					}
-					await this.sidebarComponent.selectPosts();
-					return ( this.postsPage = await PostsPage.Expect( driver ) );
+					await sidebarComponent.selectPosts();
+					return await PostsPage.Expect( driver );
 				} );
 
 				step( 'Can see and edit our new post', async function() {
-					await this.postsPage.waitForPostTitled( originalBlogPostTitle );
-					let displayed = await this.postsPage.isPostDisplayed( originalBlogPostTitle );
+					const postsPage = await PostsPage.Expect( driver );
+					await postsPage.waitForPostTitled( originalBlogPostTitle );
+					let displayed = await postsPage.isPostDisplayed( originalBlogPostTitle );
 					assert.strictEqual(
 						displayed,
 						true,
 						`The blog post titled '${ originalBlogPostTitle }' is not displayed in the list of posts`
 					);
-					await this.postsPage.editPostWithTitle( originalBlogPostTitle );
-					return ( this.editorPage = await EditorPage.Expect( driver ) );
+					await postsPage.editPostWithTitle( originalBlogPostTitle );
+					return await GutenbergEditorHeaderComponent.Expect( driver );
 				} );
 
 				step( 'Can see the post title', async function() {
-					await this.editorPage.waitForTitle();
-					let titleShown = await this.editorPage.titleShown();
+					const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+					let titleShown = await gHeaderComponent.titleShown();
 					assert.strictEqual(
 						titleShown,
 						originalBlogPostTitle,
@@ -1131,22 +1135,23 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 				step(
 					'Can set the new title and update it, and link to the updated post',
 					async function() {
-						await this.editorPage.enterTitle( updatedBlogPostTitle );
-						let errorShown = await this.editorPage.errorDisplayed();
+						const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+
+						await gHeaderComponent.enterTitle( updatedBlogPostTitle );
+						let errorShown = await gHeaderComponent.errorDisplayed();
 						assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
-						this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-						await this.postEditorToolbarComponent.publishThePost();
-						return await this.postEditorToolbarComponent.waitForSuccessAndViewPost();
+						return await gHeaderComponent.update( { visit: true } );
 					}
 				);
 
 				describe( 'Can view the post with the new title', function() {
 					step( 'Can view the post', async function() {
-						return ( this.viewPostPage = await ViewPostPage.Expect( driver ) );
+						return await ViewPostPage.Expect( driver );
 					} );
 
 					step( 'Can see correct post title', async function() {
-						let postTitle = await this.viewPostPage.postTitle();
+						const viewPostPage = await ViewPostPage.Expect( driver );
+						let postTitle = await viewPostPage.postTitle();
 						return assert.strictEqual(
 							postTitle.toLowerCase(),
 							updatedBlogPostTitle.toLowerCase(),
