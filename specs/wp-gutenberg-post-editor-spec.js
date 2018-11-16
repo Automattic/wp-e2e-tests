@@ -6,7 +6,6 @@ import config from 'config';
 import LoginFlow from '../lib/flows/login-flow.js';
 
 import EditorPage from '../lib/pages/editor-page.js';
-// import TwitterFeedPage from '../lib/pages/twitter-feed-page.js';
 import ViewPostPage from '../lib/pages/view-post-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
 import PostsPage from '../lib/pages/posts-page.js';
@@ -210,6 +209,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			let imageDisplayed = await viewPostPage.imageDisplayed( fileDetails );
 			assert.strictEqual( imageDisplayed, true, 'Could not see the image in the published post' );
 		} );
+
 		after( async function() {
 			if ( fileDetails ) {
 				await mediaHelper.deleteFile( fileDetails );
@@ -217,7 +217,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe( 'Basic Public Post @parallel', function() {
+	describe( 'Basic Public Post @canary @parallel', function() {
 		describe( 'Publish a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
@@ -234,7 +234,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 				await gEditorComponent.enterTitle( blogPostTitle );
 				await gEditorComponent.enterText( blogPostQuote );
 
-				let errorShown = await gEditorComponent.errorDisplayed();
+				const errorShown = await gEditorComponent.errorDisplayed();
 				return assert.strictEqual(
 					errorShown,
 					false,
@@ -259,30 +259,29 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	xdescribe( 'Check Activity Log for Public Post @parallel', function() {
+	describe( 'Check Activity Log for Public Post @parallel', function() {
 		const blogPostTitle = dataHelper.randomPhrase();
 		const blogPostQuote =
 			'“We are what we pretend to be, so we must be careful about what we pretend to be.”\n- Kurt Vonnegut';
 
 		step( 'Can log in', async function() {
 			let loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-			return await loginFlow.loginAndStartNewPost();
+			return await loginFlow.loginAndStartNewPost( null, true );
 		} );
 
 		step( 'Can enter post title and content', async function() {
-			let editorPage = await EditorPage.Expect( driver );
-			await editorPage.enterTitle( blogPostTitle );
-			await editorPage.enterContent( blogPostQuote + '\n' );
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.removeNUXNotice();
+			await gEditorComponent.enterTitle( blogPostTitle );
+			await gEditorComponent.enterText( blogPostQuote );
 
-			let errorShown = await editorPage.errorDisplayed();
+			let errorShown = await gEditorComponent.errorDisplayed();
 			return assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
 		} );
 
 		step( 'Can publish and view content', async function() {
-			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-			await postEditorToolbarComponent.ensureSaved();
-			await postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
-			return await postEditorToolbarComponent.waitForSuccessViewPostNotice();
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.publish( { visit: true } );
 		} );
 
 		step( 'Can see the post in the Activity log', async function() {
