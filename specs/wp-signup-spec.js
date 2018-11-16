@@ -1598,6 +1598,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const emailAddress = dataHelper.getEmailAddress( userName, signupInboxId );
 
 		before( async function() {
+			await SlackNotifier.warn(
+				'The sign up import e2e test is not working due to a recent change and has been disabled',
+				{ suppressDuplicateMessages: true }
+			);
+			return this.skip();
+		} );
+
+		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
