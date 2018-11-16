@@ -20,6 +20,7 @@ import * as driverHelper from '../lib/driver-helper';
 import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
 import GutenbergEditorHeaderComponent from '../lib/gutenberg/gutenberg-editor-header-component';
 import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
+import * as SlackNotifier from '../lib/slack-notifier';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -307,6 +308,16 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 		const postPassword = 'e2e' + new Date().getTime().toString();
 
 		describe( 'Publish a Password Protected Page', function() {
+			before( async function() {
+				if ( driverManager.currentScreenSize() === 'mobile' ) {
+					await SlackNotifier.warn(
+						'Gutenberg password protected page spec currently not supported on mobile due to Gutenberg bug',
+						{ suppressDuplicateMessages: true }
+					);
+					return this.skip();
+				}
+			} );
+
 			step( 'Can log in', async function() {
 				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
 				await loginFlow.loginAndStartNewPage( null, true );
