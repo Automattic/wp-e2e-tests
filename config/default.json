@@ -67,7 +67,8 @@
 		"signupAtomicStoreVsPressable",
 		"krackenRebootM33",
 		"improvedOnboarding",
-		"privateByDefault"
+		"privateByDefault",
+		"crowdsignalNameBasedSignup"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
