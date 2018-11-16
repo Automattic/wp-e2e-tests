@@ -347,7 +347,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 				await gHeaderComponent.enterTitle( blogPostTitle );
 				await gHeaderComponent.enterText( blogPostQuote );
 
-				let errorShown = await gHeaderComponent.errorDisplayed();
+				const errorShown = await gHeaderComponent.errorDisplayed();
 				return assert.strictEqual(
 					errorShown,
 					false,
@@ -372,30 +372,29 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	xdescribe( 'Check Activity Log for Public Post @parallel', function() {
+	describe( 'Check Activity Log for Public Post @parallel', function() {
 		const blogPostTitle = dataHelper.randomPhrase();
 		const blogPostQuote =
 			'“We are what we pretend to be, so we must be careful about what we pretend to be.”\n- Kurt Vonnegut';
 
 		step( 'Can log in', async function() {
 			let loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-			return await loginFlow.loginAndStartNewPost();
+			return await loginFlow.loginAndStartNewPost( null, true );
 		} );
 
 		step( 'Can enter post title and content', async function() {
-			let editorPage = await EditorPage.Expect( driver );
-			await editorPage.enterTitle( blogPostTitle );
-			await editorPage.enterContent( blogPostQuote + '\n' );
+			const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+			await gHeaderComponent.removeNUXNotice();
+			await gHeaderComponent.enterTitle( blogPostTitle );
+			await gHeaderComponent.enterText( blogPostQuote );
 
-			let errorShown = await editorPage.errorDisplayed();
+			let errorShown = await gHeaderComponent.errorDisplayed();
 			return assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
 		} );
 
 		step( 'Can publish and view content', async function() {
-			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-			await postEditorToolbarComponent.ensureSaved();
-			await postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
-			return await postEditorToolbarComponent.waitForSuccessViewPostNotice();
+			const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+			await gHeaderComponent.publish( { visit: true } );
 		} );
 
 		step( 'Can see the post in the Activity log', async function() {
