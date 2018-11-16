@@ -81,6 +81,8 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Expand Categories and Tags', async function() {
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.openSidebar();
 			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 			await gEditorSidebarComponent.selectDocumentTab();
 			await gEditorSidebarComponent.collapseStatusAndVisibility(); // Status and visibility starts opened
@@ -99,10 +101,12 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Close categories and tags', async function() {
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 			await gEditorSidebarComponent.selectDocumentTab();
 			await gEditorSidebarComponent.collapseCategories();
 			await gEditorSidebarComponent.collapseTags();
+			await gEditorComponent.closeSidebar();
 		} );
 
 		step( 'Can launch post preview', async function() {
