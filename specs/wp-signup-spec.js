@@ -1599,7 +1599,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		before( async function() {
 			await SlackNotifier.warn(
-				'The sign up import e2e test was broken by https://github.com/Automattic/wp-calypso/pull/28556',
+				'The sign up import e2e test is not working due to a recent change and has been disabled',
 				{ suppressDuplicateMessages: true }
 			);
 			return this.skip();
