@@ -347,7 +347,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 				await gHeaderComponent.enterTitle( blogPostTitle );
 				await gHeaderComponent.enterText( blogPostQuote );
 
-				let errorShown = await gHeaderComponent.errorDisplayed();
+				const errorShown = await gHeaderComponent.errorDisplayed();
 				return assert.strictEqual(
 					errorShown,
 					false,
