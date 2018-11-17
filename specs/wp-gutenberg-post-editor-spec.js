@@ -48,7 +48,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		let fileDetails;
 		const blogPostTitle = dataHelper.randomPhrase();
 		const blogPostQuote =
-			'The foolish man seeks happiness in the distance. The wise grows it under his feet.\n— James Oppenheim';
+			'The foolish man seeketh happiness in the distance. The wise grows it under his feet.\n— James Oppenheim';
 		const newCategoryName = 'Category ' + new Date().getTime().toString();
 		const newTagName = 'Tag ' + new Date().getTime().toString();
 		const publicizeMessage = dataHelper.randomPhrase();
