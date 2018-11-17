@@ -20,7 +20,7 @@ import PostPreviewComponent from '../lib/components/post-preview-component.js';
 import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component';
 import EditorConfirmationSidebarComponent from '../lib/components/editor-confirmation-sidebar-component';
-import GutenbergEditorHeaderComponent from '../lib/gutenberg/gutenberg-editor-header-component';
+import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
 import WPAdminPostsPage from '../lib/pages/wp-admin/wp-admin-posts-page';
 
 import * as driverManager from '../lib/driver-manager';
@@ -344,12 +344,12 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			step( 'Can enter post title and text content', async function() {
-				const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
-				await gHeaderComponent.removeNUXNotice();
-				await gHeaderComponent.enterTitle( blogPostTitle );
-				await gHeaderComponent.enterText( blogPostQuote );
+				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+				await gEditorComponent.removeNUXNotice();
+				await gEditorComponent.enterTitle( blogPostTitle );
+				await gEditorComponent.enterText( blogPostQuote );
 
-				const errorShown = await gHeaderComponent.errorDisplayed();
+				const errorShown = await gEditorComponent.errorDisplayed();
 				return assert.strictEqual(
 					errorShown,
 					false,
@@ -358,8 +358,8 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			step( 'Can publish and view content', async function() {
-				const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
-				await gHeaderComponent.publish( { visit: true } );
+				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+				await gEditorComponent.publish( { visit: true } );
 			} );
 
 			step( 'Can see correct post title', async function() {
@@ -385,18 +385,18 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can enter post title and content', async function() {
-			const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
-			await gHeaderComponent.removeNUXNotice();
-			await gHeaderComponent.enterTitle( blogPostTitle );
-			await gHeaderComponent.enterText( blogPostQuote );
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.removeNUXNotice();
+			await gEditorComponent.enterTitle( blogPostTitle );
+			await gEditorComponent.enterText( blogPostQuote );
 
-			let errorShown = await gHeaderComponent.errorDisplayed();
+			let errorShown = await gEditorComponent.errorDisplayed();
 			return assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
 		} );
 
 		step( 'Can publish and view content', async function() {
-			const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
-			await gHeaderComponent.publish( { visit: true } );
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.publish( { visit: true } );
 		} );
 
 		step( 'Can see the post in the Activity log', async function() {
@@ -1041,10 +1041,10 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			step( 'Can enter post title and content', async function() {
-				const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
-				await gHeaderComponent.removeNUXNotice();
-				await gHeaderComponent.enterTitle( blogPostTitle );
-				return await gHeaderComponent.enterText( blogPostQuote );
+				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+				await gEditorComponent.removeNUXNotice();
+				await gEditorComponent.enterTitle( blogPostTitle );
+				return await gEditorComponent.enterText( blogPostQuote );
 			} );
 
 			step( 'Can trash the new post', async function() {
@@ -1078,11 +1078,11 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			step( 'Can enter post title and content', async function() {
-				const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
-				await gHeaderComponent.removeNUXNotice();
-				await gHeaderComponent.enterTitle( originalBlogPostTitle );
-				await gHeaderComponent.enterText( blogPostQuote );
-				let errorShown = await gHeaderComponent.errorDisplayed();
+				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+				await gEditorComponent.removeNUXNotice();
+				await gEditorComponent.enterTitle( originalBlogPostTitle );
+				await gEditorComponent.enterText( blogPostQuote );
+				let errorShown = await gEditorComponent.errorDisplayed();
 				return assert.strictEqual(
 					errorShown,
 					false,
@@ -1091,8 +1091,8 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			step( 'Can publish the post', async function() {
-				const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
-				await gHeaderComponent.publish( { visit: true } );
+				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+				await gEditorComponent.publish( { visit: true } );
 			} );
 
 			describe( 'Edit the post via posts', function() {
@@ -1119,12 +1119,12 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 						`The blog post titled '${ originalBlogPostTitle }' is not displayed in the list of posts`
 					);
 					await postsPage.editPostWithTitle( originalBlogPostTitle );
-					return await GutenbergEditorHeaderComponent.Expect( driver );
+					return await GutenbergEditorComponent.Expect( driver );
 				} );
 
 				step( 'Can see the post title', async function() {
-					const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
-					let titleShown = await gHeaderComponent.titleShown();
+					const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+					let titleShown = await gEditorComponent.titleShown();
 					assert.strictEqual(
 						titleShown,
 						originalBlogPostTitle,
@@ -1135,12 +1135,12 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 				step(
 					'Can set the new title and update it, and link to the updated post',
 					async function() {
-						const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+						const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 
-						await gHeaderComponent.enterTitle( updatedBlogPostTitle );
-						let errorShown = await gHeaderComponent.errorDisplayed();
+						await gEditorComponent.enterTitle( updatedBlogPostTitle );
+						let errorShown = await gEditorComponent.errorDisplayed();
 						assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
-						return await gHeaderComponent.update( { visit: true } );
+						return await gEditorComponent.update( { visit: true } );
 					}
 				);
 

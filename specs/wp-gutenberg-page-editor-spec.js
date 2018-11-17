@@ -18,7 +18,7 @@ import * as mediaHelper from '../lib/media-helper.js';
 import * as dataHelper from '../lib/data-helper.js';
 import * as driverHelper from '../lib/driver-helper';
 import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
-import GutenbergEditorHeaderComponent from '../lib/gutenberg/gutenberg-editor-header-component';
+import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
 import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
 import * as SlackNotifier from '../lib/slack-notifier';
 
@@ -324,7 +324,7 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 			} );
 
 			step( 'Can enter page title and content and set to password protected', async function() {
-				let gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+				let gHeaderComponent = await GutenbergEditorComponent.Expect( driver );
 				await gHeaderComponent.removeNUXNotice();
 				await gHeaderComponent.enterTitle( pageTitle );
 
@@ -340,12 +340,12 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 				await gSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				await gSidebarComponent.hideComponentIfNecessary();
 
-				gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+				gHeaderComponent = await GutenbergEditorComponent.Expect( driver );
 				return await gHeaderComponent.enterText( pageQuote );
 			} );
 
 			step( 'Can publish and view content', async function() {
-				const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
+				const gHeaderComponent = await GutenbergEditorComponent.Expect( driver );
 				await gHeaderComponent.publish( { visit: true } );
 			} );
 
