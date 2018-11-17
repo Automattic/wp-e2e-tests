@@ -215,6 +215,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			if ( fileDetails ) {
 				await mediaHelper.deleteFile( fileDetails );
 			}
+			await driverHelper.dismissAlertIfPresent();
 		} );
 	} );
 
@@ -256,6 +257,10 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 					blogPostTitle.toLowerCase(),
 					'The published blog post title is not correct'
 				);
+			} );
+
+			after( async function() {
+				await driverHelper.dismissAlertIfPresent();
 			} );
 		} );
 	} );
@@ -303,6 +308,10 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 				displayed,
 				`The published post title '${ blogPostTitle }' was not displayed in activity log after publishing`
 			);
+		} );
+
+		after( async function() {
+			await driverHelper.dismissAlertIfPresent();
 		} );
 	} );
 
@@ -948,6 +957,10 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 					'The Posts page success notice for deleting the post is not displayed'
 				);
 			} );
+
+			after( async function() {
+				await driverHelper.dismissAlertIfPresent();
+			} );
 		} );
 	} );
 
@@ -1044,6 +1057,10 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 							'The published blog post title is not correct'
 						);
 					} );
+				} );
+
+				after( async function() {
+					await driverHelper.dismissAlertIfPresent();
 				} );
 			} );
 		} );
