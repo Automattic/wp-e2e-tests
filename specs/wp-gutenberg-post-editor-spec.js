@@ -6,7 +6,6 @@ import config from 'config';
 import LoginFlow from '../lib/flows/login-flow.js';
 
 import EditorPage from '../lib/pages/editor-page.js';
-import TwitterFeedPage from '../lib/pages/twitter-feed-page.js';
 import ViewPostPage from '../lib/pages/view-post-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
 import PostsPage from '../lib/pages/posts-page.js';
@@ -28,6 +27,7 @@ import * as driverHelper from '../lib/driver-helper';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
 import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
+import GutenbergPreviewComponent from '../lib/gutenberg/gutenberg-preview-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -48,10 +48,9 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		let fileDetails;
 		const blogPostTitle = dataHelper.randomPhrase();
 		const blogPostQuote =
-			'The foolish man seeketh happiness in the distance. The wise grows it under his feet.\n— James Oppenheim';
+			'The foolish man seeks happiness in the distance. The wise grows it under his feet.\n— James Oppenheim';
 		const newCategoryName = 'Category ' + new Date().getTime().toString();
 		const newTagName = 'Tag ' + new Date().getTime().toString();
-		const publicizeMessage = dataHelper.randomPhrase();
 
 		// Create image file for upload
 		before( async function() {
@@ -60,109 +59,65 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can log in', async function() {
-			let loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-			return await loginFlow.loginAndStartNewPost();
+			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
+			return await this.loginFlow.loginAndStartNewPost( null, true );
 		} );
 
 		step( 'Can enter post title, content and image', async function() {
-			let editorPage = await EditorPage.Expect( driver );
-			await editorPage.enterTitle( blogPostTitle );
-			await editorPage.enterContent( blogPostQuote + '\n' );
-			await editorPage.enterPostImage( fileDetails );
-			await editorPage.waitUntilImageInserted( fileDetails );
-			let errorShown = await editorPage.errorDisplayed();
-			assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.removeNUXNotice();
+			await gEditorComponent.enterTitle( blogPostTitle );
+			await gEditorComponent.enterText( blogPostQuote );
+			await gEditorComponent.addBlock( 'Image' );
+
+			await gEditorComponent.enterImage( fileDetails );
+
+			let errorShown = await gEditorComponent.errorDisplayed();
+			return assert.strictEqual(
+				errorShown,
+				false,
+				'There is an error shown on the Gutenberg editor page!'
+			);
 		} );
 
 		step( 'Expand Categories and Tags', async function() {
-			const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-			await postEditorSidebarComponent.expandCategoriesAndTags();
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.openSidebar();
+			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
+			await gEditorSidebarComponent.selectDocumentTab();
+			await gEditorSidebarComponent.collapseStatusAndVisibility(); // Status and visibility starts opened
+			await gEditorSidebarComponent.expandCategories();
+			await gEditorSidebarComponent.expandTags();
 		} );
 
 		step( 'Can add a new category', async function() {
-			const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-			await postEditorSidebarComponent.addNewCategory( newCategoryName );
+			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
+			await gEditorSidebarComponent.addNewCategory( newCategoryName );
 		} );
 
 		step( 'Can add a new tag', async function() {
-			const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-			await postEditorSidebarComponent.addNewTag( newTagName );
+			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
+			await gEditorSidebarComponent.addNewTag( newTagName );
 		} );
 
 		step( 'Close categories and tags', async function() {
-			const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-			await postEditorSidebarComponent.closeCategoriesAndTags();
-		} );
-
-		step( 'Verify categories and tags present after save', async function() {
-			const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-			await postEditorSidebarComponent.hideComponentIfNecessary();
-			await postEditorToolbarComponent.ensureSaved();
-			await postEditorSidebarComponent.displayComponentIfNecessary();
-			let subtitle = await postEditorSidebarComponent.getCategoriesAndTags();
-			assert(
-				! subtitle.match( /Uncategorized/ ),
-				'Post still marked Uncategorized after adding new category AFTER SAVE'
-			);
-			assert( subtitle.match( `#${ newTagName }` ), `New tag #${ newTagName } not applied` );
-		} );
-
-		step( 'Expand sharing section', async function() {
-			let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-			await postEditorSidebarComponent.expandSharingSection();
-		} );
-
-		if ( host !== 'CI' && host !== 'JN' ) {
-			step( 'Can see the publicise to twitter account', async function() {
-				const publicizeTwitterAccount = config.has( 'publicizeTwitterAccount' )
-					? config.get( 'publicizeTwitterAccount' )
-					: '';
-				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-				let accountDisplayed = await postEditorSidebarComponent.publicizeToTwitterAccountDisplayed();
-				assert.strictEqual(
-					accountDisplayed,
-					publicizeTwitterAccount,
-					'Could not see see the publicize to twitter account ' +
-						publicizeTwitterAccount +
-						' in the editor'
-				);
-			} );
-
-			step( 'Can see the default publicise message', async function() {
-				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-				let messageDisplayed = await postEditorSidebarComponent.publicizeMessageDisplayed();
-				assert.strictEqual(
-					messageDisplayed,
-					blogPostTitle,
-					"The publicize message is not defaulting to the post's title"
-				);
-			} );
-
-			step( 'Can set a custom publicise message', async function() {
-				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-				await postEditorSidebarComponent.setPublicizeMessage( publicizeMessage );
-			} );
-		}
-
-		step( 'Close sharing section', async function() {
-			let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-			await postEditorSidebarComponent.closeSharingSection();
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
+			await gEditorSidebarComponent.selectDocumentTab();
+			await gEditorSidebarComponent.collapseCategories();
+			await gEditorSidebarComponent.collapseTags();
+			await gEditorComponent.closeSidebar();
 		} );
 
 		step( 'Can launch post preview', async function() {
-			let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-			await postEditorSidebarComponent.hideComponentIfNecessary();
-
-			this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-			await this.postEditorToolbarComponent.ensureSaved();
-			await this.postEditorToolbarComponent.launchPreview();
-			this.postPreviewComponent = await PostPreviewComponent.Expect( driver );
-			return await this.postPreviewComponent.displayed();
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.ensureSaved();
+			await gEditorComponent.launchPreview();
 		} );
 
 		step( 'Can see correct post title in preview', async function() {
-			let postTitle = await this.postPreviewComponent.postTitle();
+			const gPreviewComponent = await GutenbergPreviewComponent.Expect( driver );
+			let postTitle = await gPreviewComponent.postTitle();
 			assert.strictEqual(
 				postTitle.toLowerCase(),
 				blogPostTitle.toLowerCase(),
@@ -171,7 +126,8 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can see correct post content in preview', async function() {
-			let content = await this.postPreviewComponent.postContent();
+			const gPreviewComponent = await GutenbergPreviewComponent.Expect( driver );
+			let content = await gPreviewComponent.postContent();
 			assert.strictEqual(
 				content.indexOf( blogPostQuote ) > -1,
 				true,
@@ -184,7 +140,8 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can see the post category in preview', async function() {
-			let categoryDisplayed = await this.postPreviewComponent.categoryDisplayed();
+			const gPreviewComponent = await GutenbergPreviewComponent.Expect( driver );
+			let categoryDisplayed = await gPreviewComponent.categoryDisplayed();
 			assert.strictEqual(
 				categoryDisplayed.toUpperCase(),
 				newCategoryName.toUpperCase(),
@@ -192,87 +149,21 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			);
 		} );
 
-		step( 'Can see the post tag in preview', async function() {
-			let tagDisplayed = await this.postPreviewComponent.tagDisplayed();
-			assert.strictEqual(
-				tagDisplayed.toUpperCase(),
-				newTagName.toUpperCase(),
-				'The tag: ' + newTagName + ' is not being displayed on the post'
-			);
-		} );
-
 		step( 'Can see the image in preview', async function() {
-			let imageDisplayed = await this.postPreviewComponent.imageDisplayed( fileDetails );
+			const gPreviewComponent = await GutenbergPreviewComponent.Expect( driver );
+			let imageDisplayed = await gPreviewComponent.imageDisplayed( fileDetails );
 			assert.strictEqual( imageDisplayed, true, 'Could not see the image in the web preview' );
 		} );
 
-		step( 'Can close post preview', async function() {
-			await this.postPreviewComponent.close();
-		} );
-
 		step( 'Can publish and view content', async function() {
-			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-			await postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
-		} );
-
-		step( 'Can see correct post title in preview', async function() {
-			this.postPreviewComponent = await PostPreviewComponent.Expect( driver );
-			let postTitle = await this.postPreviewComponent.postTitle();
-			assert.strictEqual(
-				postTitle.toLowerCase(),
-				blogPostTitle.toLowerCase(),
-				'The blog post preview title is not correct'
-			);
-		} );
-
-		step( 'Can see correct post content in preview', async function() {
-			let content = await this.postPreviewComponent.postContent();
-			assert.strictEqual(
-				content.indexOf( blogPostQuote ) > -1,
-				true,
-				'The post preview content (' +
-					content +
-					') does not include the expected content (' +
-					blogPostQuote +
-					')'
-			);
-		} );
-
-		step( 'Can see the post category in preview', async function() {
-			let categoryDisplayed = await this.postPreviewComponent.categoryDisplayed();
-			assert.strictEqual(
-				categoryDisplayed.toUpperCase(),
-				newCategoryName.toUpperCase(),
-				'The category: ' + newCategoryName + ' is not being displayed on the post'
-			);
-		} );
-
-		step( 'Can see the post tag in preview', async function() {
-			let tagDisplayed = await this.postPreviewComponent.tagDisplayed();
-			assert.strictEqual(
-				tagDisplayed.toUpperCase(),
-				newTagName.toUpperCase(),
-				'The tag: ' + newTagName + ' is not being displayed on the post'
-			);
-		} );
-
-		step( 'Can see the image in preview', async function() {
-			let imageDisplayed = await this.postPreviewComponent.imageDisplayed( fileDetails );
-			assert.strictEqual( imageDisplayed, true, 'Could not see the image in the web preview' );
-		} );
-
-		step( 'Can close post preview', async function() {
-			return await this.postPreviewComponent.edit();
-		} );
-
-		step( 'Can publish and view content', async function() {
-			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-			await postEditorToolbarComponent.viewPublishedPostOrPage();
+			await GutenbergEditorComponent.switchToEditor( driver );
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.publish( { visit: true } );
 		} );
 
 		step( 'Can see correct post title', async function() {
-			this.viewPostPage = await ViewPostPage.Expect( driver );
-			let postTitle = await this.viewPostPage.postTitle();
+			const viewPostPage = await ViewPostPage.Expect( driver );
+			let postTitle = await viewPostPage.postTitle();
 			assert.strictEqual(
 				postTitle.toLowerCase(),
 				blogPostTitle.toLowerCase(),
@@ -281,7 +172,8 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can see correct post content', async function() {
-			let content = await this.viewPostPage.postContent();
+			const viewPostPage = await ViewPostPage.Expect( driver );
+			let content = await viewPostPage.postContent();
 			assert.strictEqual(
 				content.indexOf( blogPostQuote ) > -1,
 				true,
@@ -294,7 +186,8 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can see correct post category', async function() {
-			let categoryDisplayed = await this.viewPostPage.categoryDisplayed();
+			const viewPostPage = await ViewPostPage.Expect( driver );
+			let categoryDisplayed = await viewPostPage.categoryDisplayed();
 			assert.strictEqual(
 				categoryDisplayed.toUpperCase(),
 				newCategoryName.toUpperCase(),
@@ -303,7 +196,8 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can see correct post tag', async function() {
-			let tagDisplayed = await this.viewPostPage.tagDisplayed();
+			const viewPostPage = await ViewPostPage.Expect( driver );
+			let tagDisplayed = await viewPostPage.tagDisplayed();
 			assert.strictEqual(
 				tagDisplayed.toUpperCase(),
 				newTagName.toUpperCase(),
@@ -312,23 +206,16 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can see the image published', async function() {
-			let imageDisplayed = await this.viewPostPage.imageDisplayed( fileDetails );
+			const viewPostPage = await ViewPostPage.Expect( driver );
+			let imageDisplayed = await viewPostPage.imageDisplayed( fileDetails );
 			assert.strictEqual( imageDisplayed, true, 'Could not see the image in the published post' );
 		} );
-
-		if ( host !== 'CI' && host !== 'JN' ) {
-			describe( 'Can see post publicized on twitter', function() {
-				step( 'Can see post message', async function() {
-					let twitterFeedPage = await TwitterFeedPage.Visit( driver );
-					return await twitterFeedPage.checkLatestTweetsContain( publicizeMessage );
-				} );
-			} );
-		}
 
 		after( async function() {
 			if ( fileDetails ) {
 				await mediaHelper.deleteFile( fileDetails );
 			}
+			await driverHelper.dismissAlertIfPresent();
 		} );
 	} );
 
