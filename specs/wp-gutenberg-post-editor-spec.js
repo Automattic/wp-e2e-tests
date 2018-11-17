@@ -41,7 +41,7 @@ before( async function() {
 	driver = await driverManager.startBrowser();
 } );
 
-describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
+xdescribe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
 	xdescribe( 'Public Posts: Preview and Publish a Public Post @parallel', function() {
