@@ -418,7 +418,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe( 'Schedule Basic Public Post @parallel', function() {
+	describe.only( 'Schedule Basic Public Post @parallel', function() {
 		describe( 'Schedule (and remove) a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = '“Worries shared are worries halved.”\n- Unknown';
@@ -458,7 +458,15 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 				let gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
 				await gHeaderComponent.closeScheduledPanel();
 				let gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
-				return await gSidebarComponent.trashPost();
+				await gSidebarComponent.trashPost();
+
+				const postsPage = await PostsPage.Expect( driver );
+				const displayed = await postsPage.successNoticeDisplayed();
+				return assert.strictEqual(
+					displayed,
+					true,
+					'The Posts page success notice for deleting the post is not displayed'
+				);
 			} );
 		} );
 	} );
