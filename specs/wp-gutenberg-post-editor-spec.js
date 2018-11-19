@@ -318,7 +318,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe( 'Schedule Basic Public Post @parallel', function() {
+	describe.only( 'Schedule Basic Public Post @parallel', function() {
 		describe( 'Schedule (and remove) a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = '“Worries shared are worries halved.”\n- Unknown';
@@ -345,6 +345,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			step(
 				'Can schedule content for a future date and see correct publish date',
 				async function() {
+					await driver.sleep( 2000 );
 					let gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 					await gSidebarComponent.chooseDocumentSetttings();
 					let publishDate = await gSidebarComponent.scheduleFuturePost();
