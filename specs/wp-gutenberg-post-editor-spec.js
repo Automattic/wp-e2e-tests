@@ -27,6 +27,7 @@ import * as driverManager from '../lib/driver-manager';
 import * as driverHelper from '../lib/driver-helper';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
+import * as SlackNotifier from '../lib/slack-notifier';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -200,20 +201,25 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			);
 		} );
 
-		step( 'Can see correct post tag', async function() {
-			const viewPostPage = await ViewPostPage.Expect( driver );
-			let tagDisplayed = await viewPostPage.tagDisplayed();
-			assert.strictEqual(
-				tagDisplayed.toUpperCase(),
-				newTagName.toUpperCase(),
-				'The tag: ' + newTagName + ' is not being displayed on the post'
-			);
-		} );
-
 		step( 'Can see the image published', async function() {
 			const viewPostPage = await ViewPostPage.Expect( driver );
 			let imageDisplayed = await viewPostPage.imageDisplayed( fileDetails );
 			assert.strictEqual( imageDisplayed, true, 'Could not see the image in the published post' );
+		} );
+
+		step( 'Can see correct post tag', async function() {
+			await SlackNotifier.warn(
+				'The Gutenberg assertion of tagged content is disabled due to inconsistencies which need investigating',
+				{ suppressDuplicateMessages: true }
+			);
+			return this.skip();
+			// const viewPostPage = await ViewPostPage.Expect( driver );
+			// let tagDisplayed = await viewPostPage.tagDisplayed();
+			// assert.strictEqual(
+			// 	tagDisplayed.toUpperCase(),
+			// 	newTagName.toUpperCase(),
+			// 	'The tag: ' + newTagName + ' is not being displayed on the post'
+			// );
 		} );
 
 		after( async function() {
