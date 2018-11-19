@@ -9,7 +9,6 @@ import EditorPage from '../lib/pages/editor-page.js';
 import ViewPagePage from '../lib/pages/view-page-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
 
-import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
 
 import * as driverManager from '../lib/driver-manager.js';
