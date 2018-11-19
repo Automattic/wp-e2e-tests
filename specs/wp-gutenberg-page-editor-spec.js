@@ -211,61 +211,47 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 			return await gEditorComponent.waitForSuccessViewPostNotice();
 		} );
 
-		if ( host === 'WPCOM' ) {
-			step( 'Can view content', async function() {
-				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
-				await gEditorComponent.viewPublishedPostOrPage();
-			} );
+		step( 'Can view content', async function () {
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.viewPublishedPostOrPage();
+		} );
 
-			step( 'Can view page title as logged in user', async function() {
-				const viewPagePage = await ViewPagePage.Expect( driver );
-				const actualPageTitle = await viewPagePage.pageTitle();
-				assert.strictEqual(
-					actualPageTitle.toUpperCase(),
-					( 'Private: ' + pageTitle ).toUpperCase(),
-					'The published blog page title is not correct'
-				);
-			} );
+		step( 'Can view page title as logged in user', async function () {
+			const viewPagePage = await ViewPagePage.Expect( driver );
+			const actualPageTitle = await viewPagePage.pageTitle();
+			assert.strictEqual(
+				actualPageTitle.toUpperCase(),
+				( 'Private: ' + pageTitle ).toUpperCase(),
+				'The published blog page title is not correct'
+			);
+		} );
 
-			step( 'Can view page content as logged in user', async function() {
-				const viewPagePage = await ViewPagePage.Expect( driver );
-				const content = await viewPagePage.pageContent();
-				assert.strictEqual(
-					content.indexOf( pageQuote ) > -1,
-					true,
-					'The page content (' +
-						content +
-						') does not include the expected content (' +
-						pageQuote +
-						')'
-				);
-			} );
+		step( 'Can view page content as logged in user', async function () {
+			const viewPagePage = await ViewPagePage.Expect( driver );
+			const content = await viewPagePage.pageContent();
+			assert.strictEqual(
+				content.indexOf( pageQuote ) > -1,
+				true,
+				'The page content (' +
+				content +
+				') does not include the expected content (' +
+				pageQuote +
+				')'
+			);
+		} );
 
-			step( "Can't view page title or content as non-logged in user", async function() {
-				await driver.manage().deleteAllCookies();
-				await driver.navigate().refresh();
+		step( "Can't view page title or content as non-logged in user", async function () {
+			await driver.manage().deleteAllCookies();
+			await driver.navigate().refresh();
 
-				const notFoundPage = await NotFoundPage.Expect( driver );
-				const displayed = await notFoundPage.displayed();
-				assert.strictEqual(
-					displayed,
-					true,
-					'Could not see the not found (404) page. Check that it is displayed'
-				);
-			} );
-		} else {
-			// Jetpack tests
-			step( "Can't view page title or content as non-logged in user", async function() {
-				const notFoundPage = await NotFoundPage.Expect( driver );
-				const displayed = await notFoundPage.displayed();
-				assert.strictEqual(
-					displayed,
-					true,
-					'Could not see the not found (404) page. Check that it is displayed'
-				);
-			} );
-			//TODO: Add Jetpack SSO and verify content actually published
-		}
+			const notFoundPage = await NotFoundPage.Expect( driver );
+			const displayed = await notFoundPage.displayed();
+			assert.strictEqual(
+				displayed,
+				true,
+				'Could not see the not found (404) page. Check that it is displayed'
+			);
+		} );
 	} );
 
 	describe( 'Password Protected Pages: @parallel', function() {
