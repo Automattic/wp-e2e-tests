@@ -345,8 +345,8 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			step(
 				'Can schedule content for a future date and see correct publish date',
 				async function() {
-					await driver.sleep( 2000 );
 					let gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
+					await gSidebarComponent.displayComponentIfNecessary();
 					await gSidebarComponent.chooseDocumentSetttings();
 					let publishDate = await gSidebarComponent.scheduleFuturePost();
 
