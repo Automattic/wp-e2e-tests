@@ -113,6 +113,8 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 			await gEditorComponent.ensureSaved();
 			await gEditorComponent.launchPreview();
+			await driverHelper.waitForNumberOfWindows( driver, 2 );
+			await driverHelper.switchToWindowByIndex( driver, 1 );
 		} );
 
 		step( 'Can see correct post title in preview', async function() {
@@ -155,8 +157,12 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			assert.strictEqual( imageDisplayed, true, 'Could not see the image in the web preview' );
 		} );
 
+		step( 'Can close preview', async function() {
+			await driverHelper.closeCurrentWindow( driver );
+			return await driverHelper.switchToWindowByIndex( driver, 0 );
+		} );
+
 		step( 'Can publish and view content', async function() {
-			await GutenbergEditorComponent.switchToEditor( driver );
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 			await gEditorComponent.publish( { visit: true } );
 		} );
@@ -195,15 +201,15 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			);
 		} );
 
-		// step( 'Can see correct post tag', async function() {
-		// 	const viewPostPage = await ViewPostPage.Expect( driver );
-		// 	let tagDisplayed = await viewPostPage.tagDisplayed();
-		// 	assert.strictEqual(
-		// 		tagDisplayed.toUpperCase(),
-		// 		newTagName.toUpperCase(),
-		// 		'The tag: ' + newTagName + ' is not being displayed on the post'
-		// 	);
-		// } );
+		step( 'Can see correct post tag', async function() {
+			const viewPostPage = await ViewPostPage.Expect( driver );
+			let tagDisplayed = await viewPostPage.tagDisplayed();
+			assert.strictEqual(
+				tagDisplayed.toUpperCase(),
+				newTagName.toUpperCase(),
+				'The tag: ' + newTagName + ' is not being displayed on the post'
+			);
+		} );
 
 		step( 'Can see the image published', async function() {
 			const viewPostPage = await ViewPostPage.Expect( driver );
