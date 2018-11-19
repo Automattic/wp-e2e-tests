@@ -447,8 +447,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 				async function() {
 					let gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 					await gSidebarComponent.chooseDocumentSetttings();
-					await gSidebarComponent.scheduleFuturePost();
-					let publishDate = await gSidebarComponent.getSelectedPublishDate();
+					let publishDate = await gSidebarComponent.scheduleFuturePost();
 
 					let gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
 					return await gHeaderComponent.schedulePost( publishDate );
