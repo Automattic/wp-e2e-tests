@@ -15,19 +15,18 @@ import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavBarComponent from '../lib/components/nav-bar-component.js';
-import PostPreviewComponent from '../lib/components/post-preview-component.js';
+import GutenbergPreviewComponent from '../lib/gutenberg/gutenberg-preview-component';
 import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component';
 import EditorConfirmationSidebarComponent from '../lib/components/editor-confirmation-sidebar-component';
 import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
 import WPAdminPostsPage from '../lib/pages/wp-admin/wp-admin-posts-page';
+import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
 
 import * as driverManager from '../lib/driver-manager';
 import * as driverHelper from '../lib/driver-helper';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
-import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
-import GutenbergPreviewComponent from '../lib/gutenberg/gutenberg-preview-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -1186,49 +1185,43 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	xdescribe( 'Revert a post to draft: @parallel', function() {
+	describe( 'Revert a post to draft: @parallel', function() {
 		describe( 'Publish a new post', function() {
 			const originalBlogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
 				'To really be of help to others we need to be guided by compassion.\n— Dalai Lama\n';
 
 			step( 'Can log in', async function() {
-				this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await this.loginFlow.loginAndStartNewPost();
+				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
+				return await loginFlow.loginAndStartNewPost( null, true );
 			} );
 
 			step( 'Can enter post title and content', async function() {
-				this.editorPage = await EditorPage.Expect( driver );
-				await this.editorPage.enterTitle( originalBlogPostTitle );
-				await this.editorPage.enterContent( blogPostQuote );
+				const gHeaderComponent = await GutenbergEditorComponent.Expect( driver );
+				await gHeaderComponent.removeNUXNotice();
+				await gHeaderComponent.enterTitle( originalBlogPostTitle );
+				await gHeaderComponent.enterText( blogPostQuote );
 
-				let errorShown = await this.editorPage.errorDisplayed();
+				const errorShown = await gHeaderComponent.errorDisplayed();
 				return assert.strictEqual(
 					errorShown,
 					false,
-					'There is an error shown on the editor page!'
+					'There is an error shown on the Gutenberg editor page!'
 				);
 			} );
 
 			step( 'Can publish the post', async function() {
-				this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-				await this.postEditorToolbarComponent.ensureSaved();
-				await this.postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
-
-				await this.postEditorToolbarComponent.waitForSuccessViewPostNotice();
-				const postPreviewComponent = await PostPreviewComponent.Expect( driver );
-
-				return await postPreviewComponent.edit();
+				const gHeaderComponent = await GutenbergEditorComponent.Expect( driver );
+				await gHeaderComponent.publish();
+				return await gHeaderComponent.closePublishedPanel();
 			} );
 		} );
 
 		describe( 'Revert the post to draft', function() {
 			step( 'Can revert the post to draft', async function() {
-				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-				await postEditorSidebarComponent.revertToDraft();
-				await postEditorToolbarComponent.waitForIsDraftStatus();
-				let isDraft = await postEditorToolbarComponent.statusIsDraft();
+				const gHeaderComponent = await GutenbergEditorComponent.Expect( driver );
+				await gHeaderComponent.revertToDraft();
+				let isDraft = await gHeaderComponent.isDraft();
 				assert.strictEqual( isDraft, true, 'The post is not set as draft' );
 			} );
 		} );
