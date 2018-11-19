@@ -19,7 +19,6 @@ import GutenbergPreviewComponent from '../lib/gutenberg/gutenberg-preview-compon
 import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component';
 import GutenbergEditorHeaderComponent from '../lib/gutenberg/gutenberg-editor-header-component';
-import EditorConfirmationSidebarComponent from '../lib/components/editor-confirmation-sidebar-component';
 import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
 import WPAdminPostsPage from '../lib/pages/wp-admin/wp-admin-posts-page';
 import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
@@ -28,7 +27,6 @@ import * as driverManager from '../lib/driver-manager';
 import * as driverHelper from '../lib/driver-helper';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
-import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
 import * as SlackNotifier from '../lib/slack-notifier';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
@@ -320,7 +318,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe.only( 'Schedule Basic Public Post @parallel', function() {
+	describe( 'Schedule Basic Public Post @parallel', function() {
 		describe( 'Schedule (and remove) a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = '“Worries shared are worries halved.”\n- Unknown';
@@ -362,8 +360,8 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 				let gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 				await gSidebarComponent.trashPost();
 
-				const postsPage = await PostsPage.Expect( driver );
-				const displayed = await postsPage.successNoticeDisplayed();
+				const wpAdminPostsPage = await WPAdminPostsPage.Expect( driver );
+				const displayed = await wpAdminPostsPage.trashedSuccessNoticeDisplayed();
 				return assert.strictEqual(
 					displayed,
 					true,
