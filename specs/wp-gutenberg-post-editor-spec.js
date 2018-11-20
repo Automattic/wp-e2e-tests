@@ -85,6 +85,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			await gEditorComponent.openSidebar();
 			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 			await gEditorSidebarComponent.selectDocumentTab();
+			await driver.sleep( 3000 );
 			await gEditorSidebarComponent.collapseStatusAndVisibility(); // Status and visibility starts opened
 			await gEditorSidebarComponent.expandCategories();
 			await gEditorSidebarComponent.expandTags();
