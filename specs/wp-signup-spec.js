@@ -1598,14 +1598,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const emailAddress = dataHelper.getEmailAddress( userName, signupInboxId );
 
 		before( async function() {
-			await SlackNotifier.warn(
-				'The sign up import e2e test is not working due to a recent change and has been disabled',
-				{ suppressDuplicateMessages: true }
-			);
-			return this.skip();
-		} );
-
-		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -1688,7 +1680,20 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			);
 		} );
 
-		step( 'Can activate my account from an email and go to the importers page', async function() {
+		step( 'Can then see the site importer pane and preview site to be imported', async function() {
+			const importPage = await ImportPage.Expect( driver );
+
+			// Test that we have opened the correct importer and can see the preview.
+			await importPage.siteImporterInputPane();
+			await importPage.previewSiteToBeImported();
+		} );
+
+		step( 'Can then start an import', async function() {
+			const importPage = await ImportPage.Expect( driver );
+			await importPage.siteImporterCanStartImport();
+		} );
+
+		step( 'Can activate my account from an email', async function() {
 			const emailClient = new EmailClient( signupInboxId );
 			const validator = emails => emails.find( email => email.subject.includes( 'Activate' ) );
 			let emails = await emailClient.pollEmailsByRecipient( emailAddress, validator );
@@ -1700,14 +1705,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			const activationLink = emails[ 0 ].html.links[ 0 ].href;
 			assert( activationLink !== undefined, 'Could not locate the activation link email link' );
 			await driver.get( activationLink );
-		} );
-
-		step( 'Can then see the site importer pane and preview site to be imported', async function() {
-			const importPage = await ImportPage.Expect( driver );
-
-			// Test that we have opened the correct importer and can see the preview.
-			await importPage.siteImporterInputPane();
-			return await importPage.previewSiteToBeImported();
 		} );
 
 		step( 'Can delete our newly created account', async function() {
