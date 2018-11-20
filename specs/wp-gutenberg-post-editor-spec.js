@@ -18,7 +18,6 @@ import NavBarComponent from '../lib/components/nav-bar-component.js';
 import GutenbergPreviewComponent from '../lib/gutenberg/gutenberg-preview-component';
 import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component';
-import GutenbergEditorHeaderComponent from '../lib/gutenberg/gutenberg-editor-header-component';
 import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
 import WPAdminPostsPage from '../lib/pages/wp-admin/wp-admin-posts-page';
 import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
@@ -329,12 +328,12 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			} );
 
 			step( 'Can enter post title and content', async function() {
-				const gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
-				await gHeaderComponent.removeNUXNotice();
-				await gHeaderComponent.enterTitle( blogPostTitle );
-				await gHeaderComponent.enterText( blogPostQuote );
+				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+				await gEditorComponent.removeNUXNotice();
+				await gEditorComponent.enterTitle( blogPostTitle );
+				await gEditorComponent.enterText( blogPostQuote );
 
-				let errorShown = await gHeaderComponent.errorDisplayed();
+				let errorShown = await gEditorComponent.errorDisplayed();
 				return assert.strictEqual(
 					errorShown,
 					false,
@@ -350,14 +349,14 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 					await gSidebarComponent.chooseDocumentSetttings();
 					let publishDate = await gSidebarComponent.scheduleFuturePost();
 
-					let gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
-					return await gHeaderComponent.schedulePost( publishDate );
+					let gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+					return await gEditorComponent.schedulePost( publishDate );
 				}
 			);
 
 			step( 'Remove scheduled post', async function() {
-				let gHeaderComponent = await GutenbergEditorHeaderComponent.Expect( driver );
-				await gHeaderComponent.closeScheduledPanel();
+				let gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+				await gEditorComponent.closeScheduledPanel();
 				let gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 				await gSidebarComponent.trashPost();
 
