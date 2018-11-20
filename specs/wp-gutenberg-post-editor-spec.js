@@ -528,7 +528,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 						'Gutenberg password protected post spec currently not supported on mobile due to Gutenberg bug',
 						{ suppressDuplicateMessages: true }
 					);
-					//return this.skip();
+					return this.skip();
 				}
 			} );
 
