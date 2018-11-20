@@ -1061,37 +1061,32 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	xdescribe( 'Insert a contact form: @parallel', function() {
+	describe( 'Insert a contact form: @parallel', function() {
 		describe( 'Publish a New Post with a Contact Form', function() {
 			const originalBlogPostTitle = 'Contact Us: ' + dataHelper.randomPhrase();
 
 			step( 'Can log in', async function() {
-				this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await this.loginFlow.loginAndStartNewPost();
+				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
+				return await loginFlow.loginAndStartNewPost( null, true );
 			} );
 
 			step( 'Can insert the contact form', async function() {
-				this.editorPage = await EditorPage.Expect( driver );
-				await this.editorPage.enterTitle( originalBlogPostTitle );
-				await this.editorPage.insertContactForm();
+				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+				await gEditorComponent.removeNUXNotice();
+				await gEditorComponent.enterTitle( originalBlogPostTitle );
+				await gEditorComponent.insertContactForm();
 
-				let errorShown = await this.editorPage.errorDisplayed();
+				let errorShown = await gEditorComponent.errorDisplayed();
 				return assert.strictEqual(
 					errorShown,
 					false,
-					'There is an error shown on the editor page!'
+					'There is an error shown on the Gutenberg editor page!'
 				);
 			} );
 
-			step( 'Can see the contact form inserted into the visual editor', async function() {
-				this.editorPage = await EditorPage.Expect( driver );
-				return await this.editorPage.ensureContactFormDisplayedInPost();
-			} );
-
 			step( 'Can publish and view content', async function() {
-				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-				await postEditorToolbarComponent.ensureSaved();
-				await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
+				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+				await gEditorComponent.publish( { visit: true } );
 			} );
 
 			step( 'Can see the contact form in our published post', async function() {
