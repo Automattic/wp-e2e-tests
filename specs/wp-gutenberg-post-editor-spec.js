@@ -64,7 +64,6 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 
 		step( 'Can enter post title, content and image', async function() {
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
-			await gEditorComponent.removeNUXNotice();
 			await gEditorComponent.enterTitle( blogPostTitle );
 			await gEditorComponent.enterText( blogPostQuote );
 			await gEditorComponent.addBlock( 'Image' );
@@ -243,7 +242,6 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 
 			step( 'Can enter post title and text content', async function() {
 				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
-				await gEditorComponent.removeNUXNotice();
 				await gEditorComponent.enterTitle( blogPostTitle );
 				await gEditorComponent.enterText( blogPostQuote );
 
@@ -284,7 +282,6 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 
 		step( 'Can enter post title and content', async function() {
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
-			await gEditorComponent.removeNUXNotice();
 			await gEditorComponent.enterTitle( blogPostTitle );
 			await gEditorComponent.enterText( blogPostQuote );
 
@@ -330,7 +327,6 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 
 			step( 'Can enter post title and content', async function() {
 				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
-				await gEditorComponent.removeNUXNotice();
 				await gEditorComponent.enterTitle( blogPostTitle );
 				await gEditorComponent.enterText( blogPostQuote );
 
@@ -523,7 +519,6 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 
 			step( 'Can enter post title and content and set to password protected', async function() {
 				let gEditorComponent = await GutenbergEditorComponent.Expect( driver );
-				await gEditorComponent.removeNUXNotice();
 				await gEditorComponent.enterTitle( blogPostTitle );
 
 				const errorShown = await gEditorComponent.errorDisplayed();
@@ -784,7 +779,6 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 
 			step( 'Can enter post title and content', async function() {
 				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
-				await gEditorComponent.removeNUXNotice();
 				await gEditorComponent.enterTitle( blogPostTitle );
 				return await gEditorComponent.enterText( blogPostQuote );
 			} );
@@ -821,7 +815,6 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 
 			step( 'Can enter post title and content', async function() {
 				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
-				await gEditorComponent.removeNUXNotice();
 				await gEditorComponent.enterTitle( originalBlogPostTitle );
 				await gEditorComponent.enterText( blogPostQuote );
 				let errorShown = await gEditorComponent.errorDisplayed();
@@ -916,7 +909,6 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 
 			step( 'Can insert the contact form', async function() {
 				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
-				await gEditorComponent.removeNUXNotice();
 				await gEditorComponent.enterTitle( originalBlogPostTitle );
 				await gEditorComponent.insertContactForm();
 
@@ -1043,7 +1035,6 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 
 			step( 'Can enter post title and content', async function() {
 				const gHeaderComponent = await GutenbergEditorComponent.Expect( driver );
-				await gHeaderComponent.removeNUXNotice();
 				await gHeaderComponent.enterTitle( originalBlogPostTitle );
 				await gHeaderComponent.enterText( blogPostQuote );
 
