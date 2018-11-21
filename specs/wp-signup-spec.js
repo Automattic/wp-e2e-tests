@@ -1358,6 +1358,16 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const expectedDomainName = `${ blogName }.art.blog`;
 
 		before( async function() {
+			if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
+				await SlackNotifier.warn(
+					'Domains tests are currently disabled as SKIP_DOMAIN_TESTS is set to true',
+					{ suppressDuplicateMessages: true }
+				);
+				return this.skip();
+			}
+		} );
+
+		before( async function() {
 			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
