@@ -499,414 +499,274 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	xdescribe( 'Password Protected Posts: @parallel', function() {
+	describe( 'Password Protected Posts: @parallel', function() {
 		describe( 'Publish a Password Protected Post', function() {
 			let blogPostTitle = dataHelper.randomPhrase();
 			let blogPostQuote =
 				'The best thing about the future is that it comes only one day at a time.\n— Abraham Lincoln\n';
 			let postPassword = 'e2e' + new Date().getTime().toString();
 
+			before( async function() {
+				if ( driverManager.currentScreenSize() === 'mobile' ) {
+					await SlackNotifier.warn(
+						'Gutenberg password protected post spec currently not supported on mobile due to Gutenberg bug',
+						{ suppressDuplicateMessages: true }
+					);
+					return this.skip();
+				}
+			} );
+
 			step( 'Can log in', async function() {
 				let loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				await loginFlow.loginAndStartNewPost();
+				await loginFlow.loginAndStartNewPost( null, true );
 			} );
 
 			step( 'Can enter post title and content and set to password protected', async function() {
-				this.editorPage = await EditorPage.Expect( driver );
-				await this.editorPage.enterTitle( blogPostTitle );
-				this.postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-				await this.postEditorSidebarComponent.setVisibilityToPasswordProtected( postPassword );
-				this.editorPage = await EditorPage.Expect( driver );
-				await this.editorPage.enterContent( blogPostQuote );
-				this.postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-				await this.postEditorToolbarComponent.ensureSaved();
+				let gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+				await gEditorComponent.removeNUXNotice();
+				await gEditorComponent.enterTitle( blogPostTitle );
+
+				const errorShown = await gEditorComponent.errorDisplayed();
+				assert.strictEqual(
+					errorShown,
+					false,
+					'There is an error shown on the Gutenberg editor page!'
+				);
+
+				const gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
+				await gSidebarComponent.chooseDocumentSetttings();
+				await gSidebarComponent.setVisibilityToPasswordProtected( postPassword );
+				await gSidebarComponent.hideComponentIfNecessary();
+
+				gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+				return await gEditorComponent.enterText( blogPostQuote );
 			} );
 
-			step( 'Can enable sharing buttons', async function() {
-				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-				await postEditorSidebarComponent.expandSharingSection();
-				await postEditorSidebarComponent.setSharingButtons( true );
-				await postEditorSidebarComponent.closeSharingSection();
+			step( 'Can publish and view content', async function() {
+				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+				await gEditorComponent.publish( { visit: true } );
+			} );
+			step( 'As a logged in user, With no password entered, Can view page title', async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const actualPostTitle = await viewPostPage.postTitle();
+				assert.strictEqual(
+					actualPostTitle.toUpperCase(),
+					( 'Protected: ' + blogPostTitle ).toUpperCase()
+				);
 			} );
 
-			step( 'Can disallow comments', async function() {
-				let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-				await postEditorSidebarComponent.expandMoreOptions();
-				await postEditorSidebarComponent.setCommentsForPost( false );
-				await postEditorSidebarComponent.closeMoreOptions();
+			step( 'Can see password field', async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const isPasswordProtected = await viewPostPage.isPasswordProtected();
+				assert.strictEqual(
+					isPasswordProtected,
+					true,
+					'The post does not appear to be password protected'
+				);
 			} );
 
-			describe( 'Publish and View', function() {
-				// Can publish and view content
-				before( async function() {
-					const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-					await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
-				} );
+			step( "Can't see content when no password is entered", async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const content = await viewPostPage.postContent();
+				assert.strictEqual(
+					content.indexOf( blogPostQuote ) === -1,
+					true,
+					'The post content (' +
+					content +
+					') displays the expected content (' +
+					blogPostQuote +
+					') when it should be password protected.'
+				);
+			} );
 
-				describe( 'As a logged in user', function() {
-					describe( 'With no password entered', function() {
-						step( 'Can view post title', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let postTitle = await viewPostPage.postTitle();
-							assert.strictEqual(
-								postTitle.toLowerCase(),
-								( 'Protected: ' + blogPostTitle ).toLowerCase()
-							);
-						} );
+			step( 'With incorrect password entered, Enter incorrect password', async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				await viewPostPage.enterPassword( 'password' );
+			} );
 
-						step( 'Can see password field', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let isPasswordProtected = await viewPostPage.isPasswordProtected();
-							assert.strictEqual(
-								isPasswordProtected,
-								true,
-								'The blog post does not appear to be password protected'
-							);
-						} );
+			step( 'Can view post title', async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const actualPostTitle = await viewPostPage.postTitle();
+				assert.strictEqual(
+					actualPostTitle.toUpperCase(),
+					( 'Protected: ' + blogPostTitle ).toUpperCase()
+				);
+			} );
 
-						step( "Can't see content when no password is entered", async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let content = await viewPostPage.postContent();
-							assert.strictEqual(
-								content.indexOf( blogPostQuote ) === -1,
-								true,
-								'The post content (' +
-									content +
-									') displays the expected content (' +
-									blogPostQuote +
-									') when it should be password protected.'
-							);
-						} );
+			step( 'Can see password field', async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const isPasswordProtected = await viewPostPage.isPasswordProtected();
+				assert.strictEqual(
+					isPasswordProtected,
+					true,
+					'The post does not appear to be password protected'
+				);
+			} );
 
-						step( "Can't see comments", async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let visible = await viewPostPage.commentsVisible();
-							assert.strictEqual(
-								visible,
-								false,
-								'Comments are shown even though they were disabled when creating the post.'
-							);
-						} );
+			step( "Can't see content when incorrect password is entered", async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const content = await viewPostPage.postContent();
+				assert.strictEqual(
+					content.indexOf( blogPostQuote ) === -1,
+					true,
+					'The post content (' +
+					content +
+					') displays the expected content (' +
+					blogPostQuote +
+					') when it should be password protected.'
+				);
+			} );
 
-						step( 'Can see sharing buttons', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let visible = await viewPostPage.sharingButtonsVisible();
-							return assert.strictEqual(
-								visible,
-								true,
-								'Sharing buttons are not shown even though they were enabled when creating the post.'
-							);
-						} );
-					} );
+			step( 'With correct password entered, Enter correct password', async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				await viewPostPage.enterPassword( postPassword );
+			} );
 
-					describe( 'With incorrect password entered', function() {
-						// Enter incorrect password
-						before( async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							await viewPostPage.displayed();
-							await viewPostPage.enterPassword( 'password' );
-						} );
+			step( 'Can view post title', async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const actualPostTitle = await viewPostPage.postTitle();
+				assert.strictEqual(
+					actualPostTitle.toUpperCase(),
+					( 'Protected: ' + blogPostTitle ).toUpperCase()
+				);
+			} );
 
-						step( 'Can view post title', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let postTitle = await viewPostPage.postTitle();
-							assert.strictEqual(
-								postTitle.toLowerCase(),
-								( 'Protected: ' + blogPostTitle ).toLowerCase()
-							);
-						} );
+			step( "Can't see password field", async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const isPasswordProtected = await viewPostPage.isPasswordProtected();
+				assert.strictEqual(
+					isPasswordProtected,
+					false,
+					'The post still seems to be password protected'
+				);
+			} );
 
-						step( 'Can see password field', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let isPasswordProtected = await viewPostPage.isPasswordProtected();
-							assert.strictEqual(
-								isPasswordProtected,
-								true,
-								'The blog post does not appear to be password protected'
-							);
-						} );
+			step( 'Can see post content', async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const content = await viewPostPage.postContent();
+				assert.strictEqual(
+					content.indexOf( blogPostQuote ) > -1,
+					true,
+					'The post content (' +
+					content +
+					') does not include the expected content (' +
+					blogPostQuote +
+					')'
+				);
+			} );
 
-						step( "Can't see content when incorrect password is entered", async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let content = await viewPostPage.postContent();
-							assert.strictEqual(
-								content.indexOf( blogPostQuote ) === -1,
-								true,
-								'The post content (' +
-									content +
-									') displays the expected content (' +
-									blogPostQuote +
-									') when it should be password protected.'
-							);
-						} );
+			step( 'As a non-logged in user, Clear cookies (log out)', async function() {
+				await driver.manage().deleteAllCookies();
+				await driver.navigate().refresh();
+			} );
 
-						step( "Can't see comments", async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let visible = await viewPostPage.commentsVisible();
-							assert.strictEqual(
-								visible,
-								false,
-								'Comments are shown even though they were disabled when creating the post.'
-							);
-						} );
+			step( 'With no password entered, Can view page title', async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const actualPostTitle = await viewPostPage.postTitle();
+				assert.strictEqual(
+					actualPostTitle.toUpperCase(),
+					( 'Protected: ' + blogPostTitle ).toUpperCase()
+				);
+			} );
 
-						step( 'Can see sharing buttons', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let visible = await viewPostPage.sharingButtonsVisible();
-							assert.strictEqual(
-								visible,
-								true,
-								'Sharing buttons are not shown even though they were enabled when creating the post.'
-							);
-						} );
-					} );
+			step( 'Can see password field', async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const isPasswordProtected = await viewPostPage.isPasswordProtected();
+				assert.strictEqual(
+					isPasswordProtected,
+					true,
+					'The post does not appear to be password protected'
+				);
+			} );
 
-					describe( 'With correct password entered', function() {
-						// Enter correct password
-						before( async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							await viewPostPage.displayed();
-							await viewPostPage.enterPassword( postPassword );
-						} );
+			step( "Can't see content when no password is entered", async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const content = await viewPostPage.postContent();
+				assert.strictEqual(
+					content.indexOf( blogPostQuote ) === -1,
+					true,
+					'The post content (' +
+					content +
+					') displays the expected content (' +
+					blogPostQuote +
+					') when it should be password protected.'
+				);
+			} );
 
-						step( 'Can view post title', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let postTitle = await viewPostPage.postTitle();
-							assert.strictEqual(
-								postTitle.toLowerCase(),
-								( 'Protected: ' + blogPostTitle ).toLowerCase()
-							);
-						} );
+			step( 'With incorrect password entered, Enter incorrect password', async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				await viewPostPage.enterPassword( 'password' );
+			} );
 
-						step( "Can't see password field", async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let isPasswordProtected = await viewPostPage.isPasswordProtected();
-							assert.strictEqual(
-								isPasswordProtected,
-								false,
-								'The blog post still appears to be password protected'
-							);
-						} );
+			step( 'Can view post title', async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const actualPostTitle = await viewPostPage.postTitle();
+				assert.strictEqual(
+					actualPostTitle.toUpperCase(),
+					( 'Protected: ' + blogPostTitle ).toUpperCase()
+				);
+			} );
 
-						step( 'Can see page content', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let content = await viewPostPage.postContent();
-							assert.strictEqual(
-								content.indexOf( blogPostQuote ) > -1,
-								true,
-								'The post content (' +
-									content +
-									') does not include the expected content (' +
-									blogPostQuote +
-									')'
-							);
-						} );
+			step( 'Can see password field', async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const isPasswordProtected = await viewPostPage.isPasswordProtected();
+				assert.strictEqual(
+					isPasswordProtected,
+					true,
+					'The post does not appear to be password protected'
+				);
+			} );
 
-						step( "Can't see comments", async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let visible = await viewPostPage.commentsVisible();
-							assert.strictEqual(
-								visible,
-								false,
-								'Comments are shown even though they were disabled when creating the post.'
-							);
-						} );
+			step( "Can't see content when incorrect password is entered", async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const content = await viewPostPage.postContent();
+				assert.strictEqual(
+					content.indexOf( blogPostQuote ) === -1,
+					true,
+					'The post content (' +
+					content +
+					') displays the expected content (' +
+					blogPostQuote +
+					') when it should be password protected.'
+				);
+			} );
 
-						step( 'Can see sharing buttons', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let visible = await viewPostPage.sharingButtonsVisible();
-							assert.strictEqual(
-								visible,
-								true,
-								'Sharing buttons are not shown even though they were enabled when creating the post.'
-							);
-						} );
-					} );
-				} );
-				describe( 'As a non-logged in user', function() {
-					before( async function() {
-						await driverManager.clearCookiesAndDeleteLocalStorage( driver );
-						await driver.navigate().refresh();
-					} );
-					describe( 'With no password entered', function() {
-						step( 'Can view post title', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let postTitle = await viewPostPage.postTitle();
-							assert.strictEqual(
-								postTitle.toLowerCase(),
-								( 'Protected: ' + blogPostTitle ).toLowerCase()
-							);
-						} );
+			step( 'With correct password entered, Enter correct password', async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				await viewPostPage.enterPassword( postPassword );
+			} );
 
-						step( 'Can see password field', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let isPasswordProtected = await viewPostPage.isPasswordProtected();
-							assert.strictEqual(
-								isPasswordProtected,
-								true,
-								'The blog post does not appear to be password protected'
-							);
-						} );
+			step( 'Can view post title', async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const actualPostTitle = await viewPostPage.postTitle();
+				assert.strictEqual(
+					actualPostTitle.toUpperCase(),
+					( 'Protected: ' + blogPostTitle ).toUpperCase()
+				);
+			} );
 
-						step( "Can't see content when no password is entered", async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let content = await viewPostPage.postContent();
-							assert.strictEqual(
-								content.indexOf( blogPostQuote ) === -1,
-								true,
-								'The post content (' +
-									content +
-									') displays the expected content (' +
-									blogPostQuote +
-									') when it should be password protected.'
-							);
-						} );
+			step( "Can't see password field", async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const isPasswordProtected = await viewPostPage.isPasswordProtected();
+				assert.strictEqual(
+					isPasswordProtected,
+					false,
+					'The page still seems to be password protected'
+				);
+			} );
 
-						step( "Can't see comments", async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let visible = await viewPostPage.commentsVisible();
-							assert.strictEqual(
-								visible,
-								false,
-								'Comments are shown even though they were disabled when creating the post.'
-							);
-						} );
-
-						step( 'Can see sharing buttons', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let visible = await viewPostPage.sharingButtonsVisible();
-							return assert.strictEqual(
-								visible,
-								true,
-								'Sharing buttons are not shown even though they were enabled when creating the post.'
-							);
-						} );
-					} );
-
-					describe( 'With incorrect password entered', function() {
-						// Enter incorrect password
-						before( async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							await viewPostPage.displayed();
-							await viewPostPage.enterPassword( 'password' );
-						} );
-
-						step( 'Can view post title', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let postTitle = await viewPostPage.postTitle();
-							assert.strictEqual(
-								postTitle.toLowerCase(),
-								( 'Protected: ' + blogPostTitle ).toLowerCase()
-							);
-						} );
-
-						step( 'Can see password field', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let isPasswordProtected = await viewPostPage.isPasswordProtected();
-							assert.strictEqual(
-								isPasswordProtected,
-								true,
-								'The blog post does not appear to be password protected'
-							);
-						} );
-
-						step( "Can't see content when incorrect password is entered", async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let content = await viewPostPage.postContent();
-							assert.strictEqual(
-								content.indexOf( blogPostQuote ) === -1,
-								true,
-								'The post content (' +
-									content +
-									') displays the expected content (' +
-									blogPostQuote +
-									') when it should be password protected.'
-							);
-						} );
-
-						step( "Can't see comments", async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let visible = await viewPostPage.commentsVisible();
-							assert.strictEqual(
-								visible,
-								false,
-								'Comments are shown even though they were disabled when creating the post.'
-							);
-						} );
-
-						step( 'Can see sharing buttons', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let visible = await viewPostPage.sharingButtonsVisible();
-							assert.strictEqual(
-								visible,
-								true,
-								'Sharing buttons are not shown even though they were enabled when creating the post.'
-							);
-						} );
-					} );
-
-					describe( 'With correct password entered', function() {
-						// Enter correct password
-						before( async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							await viewPostPage.displayed();
-							await viewPostPage.enterPassword( postPassword );
-						} );
-
-						step( 'Can view post title', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let postTitle = await viewPostPage.postTitle();
-							assert.strictEqual(
-								postTitle.toLowerCase(),
-								( 'Protected: ' + blogPostTitle ).toLowerCase()
-							);
-						} );
-
-						step( "Can't see password field", async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let isPasswordProtected = await viewPostPage.isPasswordProtected();
-							assert.strictEqual(
-								isPasswordProtected,
-								false,
-								'The blog post still appears to be password protected'
-							);
-						} );
-
-						step( 'Can see page content', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let content = await viewPostPage.postContent();
-							assert.strictEqual(
-								content.indexOf( blogPostQuote ) > -1,
-								true,
-								'The post content (' +
-									content +
-									') does not include the expected content (' +
-									blogPostQuote +
-									')'
-							);
-						} );
-
-						step( "Can't see comments", async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let visible = await viewPostPage.commentsVisible();
-							assert.strictEqual(
-								visible,
-								false,
-								'Comments are shown even though they were disabled when creating the post.'
-							);
-						} );
-
-						step( 'Can see sharing buttons', async function() {
-							let viewPostPage = await ViewPostPage.Expect( driver );
-							let visible = await viewPostPage.sharingButtonsVisible();
-							assert.strictEqual(
-								visible,
-								true,
-								'Sharing buttons are not shown even though they were enabled when creating the post.'
-							);
-						} );
-					} );
-				} );
+			step( 'Can see page content', async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				const content = await viewPostPage.postContent();
+				assert.strictEqual(
+					content.indexOf( blogPostQuote ) > -1,
+					true,
+					'The post content (' +
+					content +
+					') does not include the expected content (' +
+					blogPostQuote +
+					')'
+				);
 			} );
 		} );
 	} );
