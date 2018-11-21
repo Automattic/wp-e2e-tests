@@ -15,7 +15,7 @@ import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavBarComponent from '../lib/components/nav-bar-component.js';
-import GutenbergPreviewComponent from '../lib/gutenberg/gutenberg-preview-component';
+import GutenbergPostPreviewComponent from '../lib/gutenberg/gutenberg-post-preview-component';
 import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component';
 import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
@@ -118,7 +118,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can see correct post title in preview', async function() {
-			const gPreviewComponent = await GutenbergPreviewComponent.Expect( driver );
+			const gPreviewComponent = await GutenbergPostPreviewComponent.Expect( driver );
 			let postTitle = await gPreviewComponent.postTitle();
 			assert.strictEqual(
 				postTitle.toLowerCase(),
@@ -128,7 +128,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can see correct post content in preview', async function() {
-			const gPreviewComponent = await GutenbergPreviewComponent.Expect( driver );
+			const gPreviewComponent = await GutenbergPostPreviewComponent.Expect( driver );
 			let content = await gPreviewComponent.postContent();
 			assert.strictEqual(
 				content.indexOf( blogPostQuote ) > -1,
@@ -142,7 +142,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can see the post category in preview', async function() {
-			const gPreviewComponent = await GutenbergPreviewComponent.Expect( driver );
+			const gPreviewComponent = await GutenbergPostPreviewComponent.Expect( driver );
 			let categoryDisplayed = await gPreviewComponent.categoryDisplayed();
 			assert.strictEqual(
 				categoryDisplayed.toUpperCase(),
@@ -152,7 +152,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can see the image in preview', async function() {
-			const gPreviewComponent = await GutenbergPreviewComponent.Expect( driver );
+			const gPreviewComponent = await GutenbergPostPreviewComponent.Expect( driver );
 			let imageDisplayed = await gPreviewComponent.imageDisplayed( fileDetails );
 			assert.strictEqual( imageDisplayed, true, 'Could not see the image in the web preview' );
 		} );
@@ -572,10 +572,10 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 					content.indexOf( blogPostQuote ) === -1,
 					true,
 					'The post content (' +
-					content +
-					') displays the expected content (' +
-					blogPostQuote +
-					') when it should be password protected.'
+						content +
+						') displays the expected content (' +
+						blogPostQuote +
+						') when it should be password protected.'
 				);
 			} );
 
@@ -610,10 +610,10 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 					content.indexOf( blogPostQuote ) === -1,
 					true,
 					'The post content (' +
-					content +
-					') displays the expected content (' +
-					blogPostQuote +
-					') when it should be password protected.'
+						content +
+						') displays the expected content (' +
+						blogPostQuote +
+						') when it should be password protected.'
 				);
 			} );
 
@@ -648,10 +648,10 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 					content.indexOf( blogPostQuote ) > -1,
 					true,
 					'The post content (' +
-					content +
-					') does not include the expected content (' +
-					blogPostQuote +
-					')'
+						content +
+						') does not include the expected content (' +
+						blogPostQuote +
+						')'
 				);
 			} );
 
@@ -686,10 +686,10 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 					content.indexOf( blogPostQuote ) === -1,
 					true,
 					'The post content (' +
-					content +
-					') displays the expected content (' +
-					blogPostQuote +
-					') when it should be password protected.'
+						content +
+						') displays the expected content (' +
+						blogPostQuote +
+						') when it should be password protected.'
 				);
 			} );
 
@@ -724,10 +724,10 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 					content.indexOf( blogPostQuote ) === -1,
 					true,
 					'The post content (' +
-					content +
-					') displays the expected content (' +
-					blogPostQuote +
-					') when it should be password protected.'
+						content +
+						') displays the expected content (' +
+						blogPostQuote +
+						') when it should be password protected.'
 				);
 			} );
 
@@ -762,10 +762,10 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 					content.indexOf( blogPostQuote ) > -1,
 					true,
 					'The post content (' +
-					content +
-					') does not include the expected content (' +
-					blogPostQuote +
-					')'
+						content +
+						') does not include the expected content (' +
+						blogPostQuote +
+						')'
 				);
 			} );
 		} );
