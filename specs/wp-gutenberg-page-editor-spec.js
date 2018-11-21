@@ -325,7 +325,6 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 
 			step( 'Can enter page title and content and set to password protected', async function() {
 				let gHeaderComponent = await GutenbergEditorComponent.Expect( driver );
-				await gHeaderComponent.removeNUXNotice();
 				await gHeaderComponent.enterTitle( pageTitle );
 
 				const errorShown = await gHeaderComponent.errorDisplayed();
