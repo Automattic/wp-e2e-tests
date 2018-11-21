@@ -9,8 +9,6 @@ import EditorPage from '../lib/pages/editor-page.js';
 import ViewPagePage from '../lib/pages/view-page-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
 
-import PagePreviewComponent from '../lib/components/page-preview-component.js';
-import PostEditorSidebarComponent from '../lib/components/post-editor-sidebar-component.js';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
 
 import * as driverManager from '../lib/driver-manager.js';
@@ -21,6 +19,7 @@ import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
 import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
 import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
 import * as SlackNotifier from '../lib/slack-notifier';
+import GutenbergPagePreviewComponent from '../lib/gutenberg/gutenberg-page-preview-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -37,7 +36,7 @@ before( async function() {
 describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
-	xdescribe( 'Public Pages: @parallel', function() {
+	describe( 'Public Pages: @parallel', function() {
 		let fileDetails;
 		const pageTitle = dataHelper.randomPhrase();
 		const pageQuote =
@@ -50,121 +49,82 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 		} );
 
 		step( 'Can log in', async function() {
-			const loginFlow = new LoginFlow( driver );
-			await loginFlow.loginAndStartNewPage();
+			const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
+			await loginFlow.loginAndStartNewPage( null, true );
 		} );
 
 		step( 'Can enter page title, content and image', async function() {
-			const editorPage = await EditorPage.Expect( driver );
-			await editorPage.enterTitle( pageTitle );
-			await editorPage.enterContent( pageQuote + '\n' );
-			await editorPage.enterPostImage( fileDetails );
-			await editorPage.waitUntilImageInserted( fileDetails );
-			let errorShown = await editorPage.errorDisplayed();
-			assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.removeNUXNotice();
+			await gEditorComponent.enterTitle( pageTitle );
+			await gEditorComponent.enterText( pageQuote );
+			await gEditorComponent.addBlock( 'Image' );
+
+			await gEditorComponent.enterImage( fileDetails );
+
+			let errorShown = await gEditorComponent.errorDisplayed();
+			return assert.strictEqual(
+				errorShown,
+				false,
+				'There is an error shown on the Gutenberg editor page!'
+			);
 		} );
 
+		/* Skip until sharing is added in Gutenberg editor
 		step( 'Can disable sharing buttons', async function() {
-			const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-			await postEditorSidebarComponent.expandSharingSection();
-			await postEditorSidebarComponent.setSharingButtons( false );
-			await postEditorSidebarComponent.closeSharingSection();
-		} );
+			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
+			await gEditorSidebarComponent.selectDocumentTab();
+			await gEditorSidebarComponent.expandSharingSection();
+			await gEditorSidebarComponent.setSharingButtons( false );
+			await gEditorSidebarComponent.closeSharingSection();
+		} );*/
 
 		step( 'Can launch page preview', async function() {
-			const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-			await postEditorSidebarComponent.hideComponentIfNecessary();
-
-			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-			await postEditorToolbarComponent.ensureSaved();
-			await postEditorToolbarComponent.launchPreview();
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.ensureSaved();
+			await gEditorComponent.launchPreview();
+			await driverHelper.waitForNumberOfWindows( driver, 2 );
+			await driverHelper.switchToWindowByIndex( driver, 1 );
 		} );
 
 		step( 'Can see correct page title in preview', async function() {
-			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
-			await pagePreviewComponent.displayed();
-			let actualPageTitle = await pagePreviewComponent.pageTitle();
+			const gPagePreviewComponent = await GutenbergPagePreviewComponent.Expect( driver );
+			let previewPageTitle = await gPagePreviewComponent.pageTitle();
 			assert.strictEqual(
-				actualPageTitle.toUpperCase(),
-				pageTitle.toUpperCase(),
+				previewPageTitle.toLowerCase(),
+				pageTitle.toLowerCase(),
 				'The page preview title is not correct'
 			);
 		} );
 
 		step( 'Can see correct page content in preview', async function() {
-			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
-			let content = await pagePreviewComponent.pageContent();
+			const gPagePreviewComponent = await GutenbergPagePreviewComponent.Expect( driver );
+			let content = await gPagePreviewComponent.pageContent();
 			assert.strictEqual(
 				content.indexOf( pageQuote ) > -1,
 				true,
 				'The page preview content (' +
-					content +
-					') does not include the expected content (' +
-					pageQuote +
-					')'
+				content +
+				') does not include the expected content (' +
+				pageQuote +
+				')'
 			);
 		} );
 
 		step( 'Can see the image uploaded in the preview', async function() {
-			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
-			const imageDisplayed = await pagePreviewComponent.imageDisplayed( fileDetails );
-			return assert.strictEqual(
-				imageDisplayed,
-				true,
-				'Could not see the image in the web preview'
-			);
-		} );
-
-		step( 'Can close page preview', async function() {
-			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
-			await pagePreviewComponent.close();
-		} );
-
-		step( 'Can publish and preview published content', async function() {
-			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-			await postEditorToolbarComponent.publishThePost( { useConfirmStep: true } );
-		} );
-
-		step( 'Can see correct page title in preview', async function() {
-			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
-			await pagePreviewComponent.displayed();
-			let actualPageTitle = await pagePreviewComponent.pageTitle();
-			assert.strictEqual(
-				actualPageTitle.toUpperCase(),
-				pageTitle.toUpperCase(),
-				'The page preview title is not correct'
-			);
-		} );
-
-		step( 'Can see correct page content in preview', async function() {
-			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
-			const content = await pagePreviewComponent.pageContent();
-			assert.strictEqual(
-				content.indexOf( pageQuote ) > -1,
-				true,
-				'The page preview content (' +
-					content +
-					') does not include the expected content (' +
-					pageQuote +
-					')'
-			);
-		} );
-
-		step( 'Can see the image uploaded in the preview', async function() {
-			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
-			const imageDisplayed = await pagePreviewComponent.imageDisplayed( fileDetails );
+			const gPagePreviewComponent = await GutenbergPagePreviewComponent.Expect( driver );
+			let imageDisplayed = await gPagePreviewComponent.imageDisplayed( fileDetails );
 			assert.strictEqual( imageDisplayed, true, 'Could not see the image in the web preview' );
 		} );
 
 		step( 'Can close page preview', async function() {
-			const pagePreviewComponent = await PagePreviewComponent.Expect( driver );
-			return await pagePreviewComponent.edit();
+			await driverHelper.closeCurrentWindow( driver );
+			return await driverHelper.switchToWindowByIndex( driver, 0 );
 		} );
 
-		step( 'Can view content', async function() {
-			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-			await postEditorToolbarComponent.displayed();
-			await postEditorToolbarComponent.viewPublishedPostOrPage();
+		step( 'Can publish and view published content', async function() {
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.publish( { visit: true } );
 		} );
 
 		step( 'Can see correct page title', async function() {
@@ -191,6 +151,7 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 			);
 		} );
 
+		/* Skip until sharing is added in Gutenberg editor
 		step( "Can't see sharing buttons", async function() {
 			const viewPagePage = await ViewPagePage.Expect( driver );
 			let visible = await viewPagePage.sharingButtonsVisible();
@@ -199,7 +160,7 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 				false,
 				'Sharing buttons are shown even though they were disabled when creating the page.'
 			);
-		} );
+		} ); */
 
 		step( 'Can see the image uploaded displayed', async function() {
 			const viewPagePage = await ViewPagePage.Expect( driver );
@@ -214,91 +175,83 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 		} );
 	} );
 
-	xdescribe( 'Private Pages: @parallel', function() {
+	describe( 'Private Pages: @parallel', function() {
 		let pageTitle = dataHelper.randomPhrase();
 		let pageQuote =
-			'Few people know how to take a walk. The qualifications are endurance, plain clothes, old shoes, an eye for nature, good humor, vast curiosity, good speech, good silence and nothing too much.\n— Ralph Waldo Emerson\n';
+			'Few people know how to take a walk. The qualifications are endurance, plain clothes, old shoes, an eye for nature, good humor, vast curiosity, good speech, good silence and nothing too much.\n— Ralph Waldo Emerson';
+
+		before( async function() {
+			if ( driverManager.currentScreenSize() === 'mobile' ) {
+				await SlackNotifier.warn(
+					'Gutenberg private page spec currently not supported on mobile due to Gutenberg bug',
+					{ suppressDuplicateMessages: true }
+				);
+				return this.skip();
+			}
+		} );
 
 		step( 'Can log in', async function() {
-			const loginFlow = new LoginFlow( driver );
-			await loginFlow.loginAndStartNewPage();
+			const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
+			await loginFlow.loginAndStartNewPage( null, true );
 		} );
 
 		step( 'Can enter page title and content', async function() {
-			const editorPage = await EditorPage.Expect( driver );
-			await editorPage.enterTitle( pageTitle );
-			await editorPage.enterContent( pageQuote );
-			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-			return await postEditorToolbarComponent.ensureSaved();
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.removeNUXNotice();
+			await gEditorComponent.enterTitle( pageTitle );
+			await gEditorComponent.enterText( pageQuote );
+			return await gEditorComponent.ensureSaved();
 		} );
 
 		step( 'Can set visibility to private which immediately publishes it', async function() {
-			const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-			await postEditorSidebarComponent.setVisibilityToPrivate();
-			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-			return await postEditorToolbarComponent.waitForSuccessViewPostNotice();
+			const gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
+			await gSidebarComponent.chooseDocumentSetttings();
+			await gSidebarComponent.setVisibilityToPrivate();
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			return await gEditorComponent.waitForSuccessViewPostNotice();
 		} );
 
-		if ( host === 'WPCOM' ) {
-			step( 'Can view content', async function() {
-				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-				await postEditorToolbarComponent.viewPublishedPostOrPage();
-			} );
+		step( 'Can view content', async function () {
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.viewPublishedPostOrPage();
+		} );
 
-			step( 'Can view page title as logged in user', async function() {
-				const viewPagePage = await ViewPagePage.Expect( driver );
-				const actualPageTitle = await viewPagePage.pageTitle();
-				assert.strictEqual(
-					actualPageTitle.toUpperCase(),
-					( 'Private: ' + pageTitle ).toUpperCase(),
-					'The published blog page title is not correct'
-				);
-			} );
+		step( 'Can view page title as logged in user', async function () {
+			const viewPagePage = await ViewPagePage.Expect( driver );
+			const actualPageTitle = await viewPagePage.pageTitle();
+			assert.strictEqual(
+				actualPageTitle.toUpperCase(),
+				( 'Private: ' + pageTitle ).toUpperCase(),
+				'The published blog page title is not correct'
+			);
+		} );
 
-			step( 'Can view page content as logged in user', async function() {
-				const viewPagePage = await ViewPagePage.Expect( driver );
-				const content = await viewPagePage.pageContent();
-				assert.strictEqual(
-					content.indexOf( pageQuote ) > -1,
-					true,
-					'The page content (' +
-						content +
-						') does not include the expected content (' +
-						pageQuote +
-						')'
-				);
-			} );
+		step( 'Can view page content as logged in user', async function () {
+			const viewPagePage = await ViewPagePage.Expect( driver );
+			const content = await viewPagePage.pageContent();
+			assert.strictEqual(
+				content.indexOf( pageQuote ) > -1,
+				true,
+				'The page content (' +
+				content +
+				') does not include the expected content (' +
+				pageQuote +
+				')'
+			);
+		} );
 
-			step( "Can't view page title or content as non-logged in user", async function() {
-				await driver.manage().deleteAllCookies();
-				await driver.navigate().refresh();
+		step( "Can't view page title or content as non-logged in user", async function () {
+			await driver.manage().deleteAllCookies();
+			await driver.navigate().refresh();
 
-				const notFoundPage = await NotFoundPage.Expect( driver );
-				const displayed = await notFoundPage.displayed();
-				assert.strictEqual(
-					displayed,
-					true,
-					'Could not see the not found (404) page. Check that it is displayed'
-				);
-			} );
-		} else {
-			// Jetpack tests
-			step( 'Open published page', async function() {
-				const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-				await postEditorToolbarComponent.viewPublishedPostOrPage();
-			} );
-
-			step( "Can't view page title or content as non-logged in user", async function() {
-				const notFoundPage = await NotFoundPage.Expect( driver );
-				const displayed = await notFoundPage.displayed();
-				assert.strictEqual(
-					displayed,
-					true,
-					'Could not see the not found (404) page. Check that it is displayed'
-				);
-			} );
-			//TODO: Add Jetpack SSO and verify content actually published
-		}
+			const notFoundPage = await NotFoundPage.Expect( driver );
+			const displayed = await notFoundPage.displayed();
+			assert.strictEqual(
+				displayed,
+				true,
+				'Could not see the not found (404) page. Check that it is displayed'
+			);
+		} );
 	} );
 
 	describe( 'Password Protected Pages: @parallel', function() {
@@ -325,7 +278,6 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 
 			step( 'Can enter page title and content and set to password protected', async function() {
 				let gHeaderComponent = await GutenbergEditorComponent.Expect( driver );
-				await gHeaderComponent.removeNUXNotice();
 				await gHeaderComponent.enterTitle( pageTitle );
 
 				const errorShown = await gHeaderComponent.errorDisplayed();

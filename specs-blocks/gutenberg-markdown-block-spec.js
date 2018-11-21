@@ -72,7 +72,6 @@ if ( screenSize !== 'mobile' ) {
 
 			step( 'Can insert a markdown block', async function() {
 				const gHeaderComponent = await GutenbergEditorComponent.Expect( driver );
-				await gHeaderComponent.removeNUXNotice();
 				this.markdownBlockID = await gHeaderComponent.addBlock( 'Markdown' );
 			} );
 
