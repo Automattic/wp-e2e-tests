@@ -60,7 +60,11 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 			await gEditorComponent.enterText( pageQuote );
 			await gEditorComponent.addBlock( 'Image' );
 
-			await gEditorComponent.enterImage( fileDetails );
+			await gEditorComponent.uploadImage( fileDetails );
+			await gEditorComponent.openSidebar();
+			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
+			await gEditorSidebarComponent.enterImageAltText( fileDetails );
+			await gEditorComponent.closeSidebar();
 
 			let errorShown = await gEditorComponent.errorDisplayed();
 			return assert.strictEqual(
@@ -104,10 +108,10 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 				content.indexOf( pageQuote ) > -1,
 				true,
 				'The page preview content (' +
-				content +
-				') does not include the expected content (' +
-				pageQuote +
-				')'
+					content +
+					') does not include the expected content (' +
+					pageQuote +
+					')'
 			);
 		} );
 
@@ -211,12 +215,12 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 			return await gEditorComponent.waitForSuccessViewPostNotice();
 		} );
 
-		step( 'Can view content', async function () {
+		step( 'Can view content', async function() {
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 			await gEditorComponent.viewPublishedPostOrPage();
 		} );
 
-		step( 'Can view page title as logged in user', async function () {
+		step( 'Can view page title as logged in user', async function() {
 			const viewPagePage = await ViewPagePage.Expect( driver );
 			const actualPageTitle = await viewPagePage.pageTitle();
 			assert.strictEqual(
@@ -226,21 +230,21 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 			);
 		} );
 
-		step( 'Can view page content as logged in user', async function () {
+		step( 'Can view page content as logged in user', async function() {
 			const viewPagePage = await ViewPagePage.Expect( driver );
 			const content = await viewPagePage.pageContent();
 			assert.strictEqual(
 				content.indexOf( pageQuote ) > -1,
 				true,
 				'The page content (' +
-				content +
-				') does not include the expected content (' +
-				pageQuote +
-				')'
+					content +
+					') does not include the expected content (' +
+					pageQuote +
+					')'
 			);
 		} );
 
-		step( "Can't view page title or content as non-logged in user", async function () {
+		step( "Can't view page title or content as non-logged in user", async function() {
 			await driver.manage().deleteAllCookies();
 			await driver.navigate().refresh();
 
