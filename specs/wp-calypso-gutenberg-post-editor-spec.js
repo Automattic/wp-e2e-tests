@@ -1037,7 +1037,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	xdescribe( 'Revert a post to draft: @parallel', function() {
+	describe( 'Revert a post to draft: @parallel', function() {
 		describe( 'Publish a new post', function() {
 			const originalBlogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
