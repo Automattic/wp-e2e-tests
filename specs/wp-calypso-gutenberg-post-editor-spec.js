@@ -375,7 +375,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	xdescribe( 'Private Posts: @parallel', function() {
+	describe( 'Private Posts: @parallel', function() {
 		describe( 'Publish a Private Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
@@ -393,7 +393,9 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 			step( 'Can log in', async function() {
 				this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await this.loginFlow.loginAndStartNewPost( null, true );
+				return await this.loginFlow.loginAndStartNewPost( null, true, {
+					forceCalypsoGutenberg: true,
+				} );
 			} );
 
 			step( 'Can enter post title and content', async function() {
@@ -406,7 +408,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 			step( 'Can disable sharing buttons', async function() {
 				return await SlackNotifier.warn(
-					'Sharing buttons not currently available for Gutenberg in wp-admin'
+					'Sharing buttons not currently available for Gutenberg in Calypso'
 				);
 				//let postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 				//await postEditorSidebarComponent.expandSharingSection();
@@ -522,7 +524,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 			step( 'Can log in', async function() {
 				let loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				await loginFlow.loginAndStartNewPost( null, true );
+				await loginFlow.loginAndStartNewPost( null, true, { forceCalypsoGutenberg: true } );
 			} );
 
 			step( 'Can enter post title and content and set to password protected', async function() {
@@ -782,7 +784,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 			step( 'Can log in', async function() {
 				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await loginFlow.loginAndStartNewPost( null, true );
+				return await loginFlow.loginAndStartNewPost( null, true, { forceCalypsoGutenberg: true } );
 			} );
 
 			step( 'Can enter post title and content', async function() {
@@ -818,7 +820,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 			step( 'Can log in', async function() {
 				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await loginFlow.loginAndStartNewPost( null, true );
+				return await loginFlow.loginAndStartNewPost( null, true, { forceCalypsoGutenberg: true } );
 			} );
 
 			step( 'Can enter post title and content', async function() {
@@ -912,7 +914,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 			step( 'Can log in', async function() {
 				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await loginFlow.loginAndStartNewPost( null, true );
+				return await loginFlow.loginAndStartNewPost( null, true, { forceCalypsoGutenberg: true } );
 			} );
 
 			step( 'Can insert the contact form', async function() {
@@ -1038,7 +1040,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 			step( 'Can log in', async function() {
 				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await loginFlow.loginAndStartNewPost( null, true );
+				return await loginFlow.loginAndStartNewPost( null, true, { forceCalypsoGutenberg: true } );
 			} );
 
 			step( 'Can enter post title and content', async function() {
