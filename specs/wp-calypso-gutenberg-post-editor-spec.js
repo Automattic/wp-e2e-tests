@@ -18,7 +18,6 @@ import NavBarComponent from '../lib/components/nav-bar-component.js';
 import GutenbergPostPreviewComponent from '../lib/gutenberg/gutenberg-post-preview-component';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component';
 import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
-import WPAdminPostsPage from '../lib/pages/wp-admin/wp-admin-posts-page';
 import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
 
 import * as driverManager from '../lib/driver-manager';
@@ -322,14 +321,16 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	xdescribe( 'Schedule Basic Public Post @parallel', function() {
+	describe( 'Schedule Basic Public Post @parallel', function() {
 		describe( 'Schedule (and remove) a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = '“Worries shared are worries halved.”\n- Unknown';
 
 			step( 'Can log in', async function() {
 				this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await this.loginFlow.loginAndStartNewPost( null, true );
+				return await this.loginFlow.loginAndStartNewPost( null, true, {
+					forceCalypsoGutenberg: true,
+				} );
 			} );
 
 			step( 'Can enter post title and content', async function() {
@@ -363,15 +364,18 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 				await gEditorComponent.closeScheduledPanel();
 				let gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 				await gSidebarComponent.trashPost();
-
-				const wpAdminPostsPage = await WPAdminPostsPage.Expect( driver );
-				const displayed = await wpAdminPostsPage.trashedSuccessNoticeDisplayed();
-				return assert.strictEqual(
-					displayed,
-					true,
-					'The Posts page success notice for deleting the post is not displayed'
-				);
 			} );
+
+			// Not working https://github.com/Automattic/wp-calypso/issues/28813
+			// step( 'Can then see the Posts page with a confirmation message', async function() {
+			// 	const postsPage = await PostsPage.Expect( driver );
+			// 	const displayed = await postsPage.successNoticeDisplayed();
+			// 	return assert.strictEqual(
+			// 		displayed,
+			// 		true,
+			// 		'The Posts page success notice for deleting the post is not displayed'
+			// 	);
+			// } );
 		} );
 	} );
 
@@ -776,7 +780,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	xdescribe( 'Trash Post: @parallel', function() {
+	describe( 'Trash Post: @parallel', function() {
 		describe( 'Trash a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
@@ -799,15 +803,16 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 				return await gSidebarComponent.trashPost();
 			} );
 
-			step( 'Can then see the Posts page with a confirmation message', async function() {
-				const wpAdminPostsPage = await WPAdminPostsPage.Expect( driver );
-				const displayed = await wpAdminPostsPage.trashedSuccessNoticeDisplayed();
-				return assert.strictEqual(
-					displayed,
-					true,
-					'The Posts page success notice for deleting the post is not displayed'
-				);
-			} );
+			// Not working https://github.com/Automattic/wp-calypso/issues/28813
+			// step( 'Can then see the Posts page with a confirmation message', async function() {
+			// 	const postsPage = await PostsPage.Expect( driver );
+			// 	const displayed = await postsPage.successNoticeDisplayed();
+			// 	return assert.strictEqual(
+			// 		displayed,
+			// 		true,
+			// 		'The Posts page success notice for deleting the post is not displayed'
+			// 	);
+			// } );
 		} );
 	} );
 
