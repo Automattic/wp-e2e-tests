@@ -65,7 +65,6 @@
 		"jetpackSignupGoogleTop",
 		"cartNudgeUpdateToPremium",
 		"signupAtomicStoreVsPressable",
-		"krackenRebootM33",
 		"improvedOnboarding",
 		"privateByDefault",
 		"crowdsignalNameBasedSignup"
@@ -75,11 +74,10 @@
 		[ "skipThemesSelectionModal_20170904", "show" ],
 		[ "springSale30PercentOff_20180413", "control" ],
 		[ "jetpackSignupGoogleTop_20180427", "original" ],
-		[ "improvedOnboarding_20181023", "main" ],
 		[ "cartNudgeUpdateToPremium_20180903", "control" ],
 		[ "signupAtomicStoreVsPressable_20171101", "atomic" ],
-		[ "krackenRebootM33_20181108", "domainsbot_front" ],
-		[ "privateByDefault_20181113", "public" ]
-
+		[ "improvedOnboarding_20181023", "main" ],
+		[ "privateByDefault_20181113", "public" ],
+		[ "crowdsignalNameBasedSignup_20181120", "usernameSignup" ]
 	]
 }
