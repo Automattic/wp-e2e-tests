@@ -50,7 +50,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 		step( 'Can log in', async function() {
 			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-			return await this.loginFlow.loginAndStartNewPost( null, true, {
+			return await this.loginFlow.loginAndStartNewPage( null, true, {
 				forceCalypsoGutenberg: true,
 			} );
 		} );
@@ -198,7 +198,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 		step( 'Can log in', async function() {
 			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-			return await this.loginFlow.loginAndStartNewPost( null, true, {
+			return await this.loginFlow.loginAndStartNewPage( null, true, {
 				forceCalypsoGutenberg: true,
 			} );
 		} );
@@ -281,7 +281,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 			step( 'Can log in', async function() {
 				this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await this.loginFlow.loginAndStartNewPost( null, true, {
+				return await this.loginFlow.loginAndStartNewPage( null, true, {
 					forceCalypsoGutenberg: true,
 				} );
 			} );
