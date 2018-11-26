@@ -5,20 +5,19 @@ import config from 'config';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
-import EditorPage from '../lib/pages/editor-page.js';
 import ViewPagePage from '../lib/pages/view-page-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
 
-import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
+import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
+import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
+import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
+import GutenbergPagePreviewComponent from '../lib/gutenberg/gutenberg-page-preview-component';
+import SimplePaymentsBlockComponent from '../lib/gutenberg/blocks/payment-block-component';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as mediaHelper from '../lib/media-helper.js';
 import * as dataHelper from '../lib/data-helper.js';
 import * as driverHelper from '../lib/driver-helper';
-import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
-import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
-import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
-import GutenbergPagePreviewComponent from '../lib/gutenberg/gutenberg-page-preview-component';
 import * as SlackNotifier from '../lib/slack-notifier';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
@@ -536,7 +535,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 	} );
 
-	xdescribe( 'Insert a payment button into a page: @parallel', function() {
+	describe( 'Insert a payment button into a page: @parallel', function() {
 		const paymentButtonDetails = {
 			title: 'Button',
 			description: 'Description',
@@ -548,39 +547,36 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		};
 
 		step( 'Can log in', async function() {
-			if ( host === 'WPCOM' ) {
-				return await new LoginFlow( driver ).loginAndStartNewPage();
-			}
-			const jetpackUrl = `jetpackpro${ host.toLowerCase() }.mystagingwebsite.com`;
-			await new LoginFlow( driver, 'jetpackUserPREMIUM' ).loginAndStartNewPage( jetpackUrl );
+			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
+			return await this.loginFlow.loginAndStartNewPage( null, true, {
+				forceCalypsoGutenberg: true,
+			} );
 		} );
 
 		step( 'Can insert the payment button', async function() {
 			const pageTitle = 'Payment Button Page: ' + dataHelper.randomPhrase();
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			const blockId = await gEditorComponent.addBlock( 'Simple Payments button' );
 
-			const editorPage = await EditorPage.Expect( driver );
-			await editorPage.enterTitle( pageTitle );
-			await editorPage.insertPaymentButton( paymentButtonDetails );
+			const gPaymentComponent = await SimplePaymentsBlockComponent.Expect( driver, blockId );
+			await gPaymentComponent.insertPaymentButtonDetails( paymentButtonDetails );
 
-			let errorShown = await editorPage.errorDisplayed();
-			return assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
-		} );
+			let errorShown = await gEditorComponent.errorDisplayed();
+			assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
 
-		step( 'Can see the payment button inserted into the visual editor', async function() {
-			const editorPage = await EditorPage.Expect( driver );
-			return await editorPage.ensurePaymentButtonDisplayedInPost();
+			await gEditorComponent.enterTitle( pageTitle );
+			return await gPaymentComponent.ensurePaymentButtonDisplayedInEditor();
 		} );
 
 		step( 'Can publish and view content', async function() {
-			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-			await postEditorToolbarComponent.ensureSaved();
-			await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			return await gEditorComponent.publish( { visit: true } );
 		} );
 
 		step( 'Can see the payment button in our published page', async function() {
 			const viewPagePage = await ViewPagePage.Expect( driver );
 			let displayed = await viewPagePage.paymentButtonDisplayed();
-			assert.strictEqual(
+			return assert.strictEqual(
 				displayed,
 				true,
 				'The published page does not contain the payment button'
