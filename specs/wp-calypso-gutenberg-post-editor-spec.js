@@ -17,6 +17,7 @@ import NavBarComponent from '../lib/components/nav-bar-component.js';
 import GutenbergPostPreviewComponent from '../lib/gutenberg/gutenberg-post-preview-component';
 import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
 import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
+import SimplePaymentsBlockComponent from '../lib/gutenberg/blocks/payment-block-component';
 
 import * as driverManager from '../lib/driver-manager';
 import * as driverHelper from '../lib/driver-helper';
@@ -971,15 +972,16 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		step( 'Can insert the payment button', async function() {
 			const blogPostTitle = 'Payment Button: ' + dataHelper.randomPhrase();
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			const blockId = await gEditorComponent.addBlock( 'Simple Payments button' );
 
-			await gEditorComponent.addBlock( 'Simple Payments button' );
-			await gEditorComponent.insertPaymentButtonDetails( paymentButtonDetails );
+			const gPaymentComponent = await SimplePaymentsBlockComponent.Expect( driver, blockId );
+			await gPaymentComponent.insertPaymentButtonDetails( paymentButtonDetails );
 
 			let errorShown = await gEditorComponent.errorDisplayed();
 			assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
 
 			await gEditorComponent.enterTitle( blogPostTitle );
-			return await gEditorComponent.ensurePaymentButtonDisplayedInEditor();
+			return await gPaymentComponent.ensurePaymentButtonDisplayedInEditor();
 		} );
 
 		step( 'Can publish and view content', async function() {
