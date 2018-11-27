@@ -71,8 +71,8 @@ if ( screenSize !== 'mobile' ) {
 			} );
 
 			step( 'Can insert a markdown block', async function() {
-				const gHeaderComponent = await GutenbergEditorComponent.Expect( driver );
-				this.markdownBlockID = await gHeaderComponent.addBlock( 'Markdown' );
+				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+				this.markdownBlockID = await gEditorComponent.addBlock( 'Markdown' );
 			} );
 
 			step( 'Can fill markdown block with content', async function() {
@@ -90,8 +90,8 @@ if ( screenSize !== 'mobile' ) {
 			} );
 
 			step( 'Can publish the post and see its content', async function() {
-				const gHeaderComponent = await GutenbergEditorComponent.Expect( driver );
-				await gHeaderComponent.publish( { visit: true } );
+				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+				await gEditorComponent.publish( { visit: true } );
 				const postFrontend = await PostAreaComponent.Expect( driver );
 				const html = await postFrontend.getPostHTML();
 				assert( html.includes( expectedHTML ) );
