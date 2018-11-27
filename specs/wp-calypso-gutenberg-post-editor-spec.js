@@ -382,7 +382,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		describe( 'Publish a Private Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
-				'If you’re not prepared to be wrong; you’ll never come up with anything original.\n— Sir Ken Robinson\n';
+				'If you’re not prepared to be wrong; you’ll never come up with anything original.\n— Sir Ken Robinson';
 
 			before( async function() {
 				if ( driverManager.currentScreenSize() === 'mobile' ) {
@@ -512,7 +512,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		describe( 'Publish a Password Protected Post', function() {
 			let blogPostTitle = dataHelper.randomPhrase();
 			let blogPostQuote =
-				'The best thing about the future is that it comes only one day at a time.\n— Abraham Lincoln\n';
+				'The best thing about the future is that it comes only one day at a time.\n— Abraham Lincoln';
 			let postPassword = 'e2e' + new Date().getTime().toString();
 
 			before( async function() {
@@ -820,7 +820,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 			const originalBlogPostTitle = dataHelper.randomPhrase();
 			const updatedBlogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
-				'Science is organised knowledge. Wisdom is organised life..\n~ Immanuel Kant\n';
+				'Science is organised knowledge. Wisdom is organised life..\n~ Immanuel Kant';
 
 			step( 'Can log in', async function() {
 				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
@@ -1037,7 +1037,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		describe( 'Publish a new post', function() {
 			const originalBlogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
-				'To really be of help to others we need to be guided by compassion.\n— Dalai Lama\n';
+				'To really be of help to others we need to be guided by compassion.\n— Dalai Lama';
 
 			step( 'Can log in', async function() {
 				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
