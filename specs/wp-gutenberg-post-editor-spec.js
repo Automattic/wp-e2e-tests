@@ -914,7 +914,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			step( 'Can insert the contact form', async function() {
 				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 				await gEditorComponent.enterTitle( originalBlogPostTitle );
-				await gEditorComponent.insertContactForm();
+				await gEditorComponent.insertShortcode( '[contact-form][/contact-form]' );
 
 				let errorShown = await gEditorComponent.errorDisplayed();
 				return assert.strictEqual(
