@@ -18,6 +18,7 @@ import GutenbergPostPreviewComponent from '../lib/gutenberg/gutenberg-post-previ
 import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
 import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
 import SimplePaymentsBlockComponent from '../lib/gutenberg/blocks/payment-block-component';
+import RelatedPostsBlockComponent from '../lib/gutenberg/blocks/related-posts-block-component';
 
 import * as driverManager from '../lib/driver-manager';
 import * as driverHelper from '../lib/driver-helper';
@@ -1071,6 +1072,54 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 				let isDraft = await gHeaderComponent.isDraft();
 				assert.strictEqual( isDraft, true, 'The post is not set as draft' );
 			} );
+		} );
+	} );
+
+	xdescribe( 'Add related posts block @parallel', function() {
+		const blogPostTitle = dataHelper.randomPhrase();
+		const blogPostQuote =
+			'“The traveler sees what he sees. The tourist sees what he has come to see.”\n- G.K. Chesterton';
+
+		step( 'Can log in', async function() {
+			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
+			return await this.loginFlow.loginAndStartNewPost( null, true, {
+				forceCalypsoGutenberg: true,
+			} );
+		} );
+
+		step( 'Can enter post title and text content, and a related posts block', async function() {
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.enterTitle( blogPostTitle );
+			await gEditorComponent.enterText( blogPostQuote );
+
+			const blockId = await gEditorComponent.addBlock( 'Related Posts' );
+
+			const relatedPostsBlockComponent = await RelatedPostsBlockComponent.Expect( driver, blockId );
+
+			let errorShown = await gEditorComponent.errorDisplayed();
+			assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
+
+			return await relatedPostsBlockComponent.ensureRelatedPostsPreviewDisplayed();
+		} );
+
+		step( 'Can publish and view content', async function() {
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.publish( { visit: true } );
+		} );
+
+		step( 'Can see correct post title and related posts in the post', async function() {
+			const viewPostPage = await ViewPostPage.Expect( driver );
+			const title = await viewPostPage.postTitle();
+			assert.strictEqual(
+				title.toLowerCase(),
+				blogPostTitle.toLowerCase(),
+				'The published blog post title is not correct'
+			);
+			assert.strictEqual(
+				await viewPostPage.relatedPostsDisplayed(),
+				true,
+				'The related posts section is not displayed on the published post'
+			);
 		} );
 	} );
 } );
