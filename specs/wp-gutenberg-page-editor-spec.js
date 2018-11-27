@@ -58,9 +58,8 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 			await gEditorComponent.removeNUXNotice();
 			await gEditorComponent.enterTitle( pageTitle );
 			await gEditorComponent.enterText( pageQuote );
-			await gEditorComponent.addBlock( 'Image' );
+			await gEditorComponent.addImage( fileDetails );
 
-			await gEditorComponent.uploadImage( fileDetails );
 			await gEditorComponent.openSidebar();
 			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 			await gEditorSidebarComponent.enterImageAltText( fileDetails );

@@ -65,9 +65,8 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 			await gEditorComponent.enterTitle( blogPostTitle );
 			await gEditorComponent.enterText( blogPostQuote );
-			await gEditorComponent.addBlock( 'Image' );
+			await gEditorComponent.addImage( fileDetails );
 
-			await gEditorComponent.uploadImage( fileDetails );
 			await gEditorComponent.openSidebar();
 			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 			await gEditorSidebarComponent.enterImageAltText( fileDetails );
@@ -912,7 +911,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	describe.only( 'Insert a contact form: @parallel', function() {
+	describe( 'Insert a contact form: @parallel', function() {
 		describe( 'Publish a New Post with a Contact Form', function() {
 			const originalBlogPostTitle = 'Contact Us: ' + dataHelper.randomPhrase();
 			const contactEmail = 'testing@automattic.com';

@@ -65,9 +65,8 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 			await gEditorComponent.enterTitle( blogPostTitle );
 			await gEditorComponent.enterText( blogPostQuote );
-			await gEditorComponent.addBlock( 'Image' );
+			await gEditorComponent.addImage( fileDetails );
 
-			await gEditorComponent.uploadImage( fileDetails );
 			await gEditorComponent.openSidebar();
 			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 			await gEditorSidebarComponent.enterImageAltText( fileDetails );
