@@ -264,7 +264,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 	describe( 'Password Protected Pages: @parallel', function() {
 		const pageTitle = dataHelper.randomPhrase();
 		const pageQuote =
-			'If you don’t like something, change it. If you can’t change it, change the way you think about it.\n— Mary Engelbreit\n';
+			'If you don’t like something, change it. If you can’t change it, change the way you think about it.\n— Mary Engelbreit';
 		const postPassword = 'e2e' + new Date().getTime().toString();
 
 		describe( 'Publish a Password Protected Page', function() {
