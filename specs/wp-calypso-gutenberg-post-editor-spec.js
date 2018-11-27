@@ -783,7 +783,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		describe( 'Trash a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
-				'The only victory that counts is the victory over yourself.\n— Jesse Owens';
+				'The only victory that counts is the victory over yourself.\n— Jesse Owens\n';
 
 			step( 'Can log in', async function() {
 				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
