@@ -67,7 +67,8 @@
 		"signupAtomicStoreVsPressable",
 		"improvedOnboarding",
 		"privateByDefault",
-		"crowdsignalNameBasedSignup"
+		"crowdsignalNameBasedSignup",
+		"krackenM5DomainSuggestions"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -78,6 +79,7 @@
 		[ "signupAtomicStoreVsPressable_20171101", "atomic" ],
 		[ "improvedOnboarding_20181023", "main" ],
 		[ "privateByDefault_20181113", "public" ],
-		[ "crowdsignalNameBasedSignup_20181120", "usernameSignup" ]
+		[ "crowdsignalNameBasedSignup_20181120", "usernameSignup" ],
+		[ "krackenM5DomainSuggestions_20181129", "domainsbot_front" ]
 	]
 }
