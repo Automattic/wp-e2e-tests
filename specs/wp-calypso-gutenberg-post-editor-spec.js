@@ -911,7 +911,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	describe( 'Insert a contact form: @parallel', function() {
+	xdescribe( 'Insert a contact form: @parallel', function() {
 		describe( 'Publish a New Post with a Contact Form', function() {
 			const originalBlogPostTitle = 'Contact Us: ' + dataHelper.randomPhrase();
 			const contactEmail = 'testing@automattic.com';
