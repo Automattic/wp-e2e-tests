@@ -49,9 +49,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 		step( 'Can log in', async function() {
 			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-			return await this.loginFlow.loginAndStartNewPage( null, true, {
-				forceCalypsoGutenberg: true,
-			} );
+			return await this.loginFlow.loginAndStartNewPage( null, true );
 		} );
 
 		step( 'Can enter page title, content and image', async function() {
@@ -197,9 +195,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 		step( 'Can log in', async function() {
 			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-			return await this.loginFlow.loginAndStartNewPage( null, true, {
-				forceCalypsoGutenberg: true,
-			} );
+			return await this.loginFlow.loginAndStartNewPage( null, true );
 		} );
 
 		step( 'Can enter page title and content', async function() {
@@ -280,9 +276,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 			step( 'Can log in', async function() {
 				this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await this.loginFlow.loginAndStartNewPage( null, true, {
-					forceCalypsoGutenberg: true,
-				} );
+				return await this.loginFlow.loginAndStartNewPage( null, true );
 			} );
 
 			step( 'Can enter page title and content and set to password protected', async function() {
@@ -548,9 +542,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 		step( 'Can log in', async function() {
 			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-			return await this.loginFlow.loginAndStartNewPage( null, true, {
-				forceCalypsoGutenberg: true,
-			} );
+			return await this.loginFlow.loginAndStartNewPage( null, true );
 		} );
 
 		step( 'Can insert the payment button', async function() {
