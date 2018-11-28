@@ -24,6 +24,7 @@ import * as driverHelper from '../lib/driver-helper';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
 import * as SlackNotifier from '../lib/slack-notifier';
+import EmbedsBlockComponent from '../lib/gutenberg/blocks/embeds-block-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -1071,6 +1072,56 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 				let isDraft = await gHeaderComponent.isDraft();
 				assert.strictEqual( isDraft, true, 'The post is not set as draft' );
 			} );
+		} );
+	} );
+
+	describe( 'Insert embeds: @parallel', function() {
+		step( 'Can log in', async function() {
+			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
+			return await this.loginFlow.loginAndStartNewPost( null, true, {
+				forceCalypsoGutenberg: true,
+			} );
+		} );
+
+		step( 'Can insert Embeds block', async function() {
+			const blogPostTitle = dataHelper.randomPhrase();
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.enterTitle( 'Embeds: ' + blogPostTitle );
+
+			const blockIdYouTube = await gEditorComponent.addBlock( 'YouTube' );
+			const gEmbedsComponentYouTube = await EmbedsBlockComponent.Expect( driver, blockIdYouTube );
+			await gEmbedsComponentYouTube.embedUrl( 'https://www.youtube.com/watch?v=xifhQyopjZM' );
+			// TODO: check is it shown in the Editor
+
+			const blockIdInstagram = await gEditorComponent.addBlock( 'Instagram' );
+			const gEmbedsComponentInstagram = await EmbedsBlockComponent.Expect(
+				driver,
+				blockIdInstagram
+			);
+			await gEmbedsComponentInstagram.embedUrl( 'https://www.instagram.com/p/BlDOZMil933/' );
+			// TODO: check is it shown in the Editor
+
+			const blockIdTwitter = await gEditorComponent.addBlock( 'Twitter' );
+			const gEmbedsComponentTwitter = await EmbedsBlockComponent.Expect( driver, blockIdTwitter );
+			await gEmbedsComponentTwitter.embedUrl(
+				'https://twitter.com/automattic/status/1067120832676327424'
+			);
+			// TODO: check is it shown in the Editor
+
+			let errorShown = await gEditorComponent.errorDisplayed();
+			return assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
+		} );
+
+		step( 'Can publish and view content', async function() {
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			return await gEditorComponent.publish( { visit: true } );
+		} );
+
+		step( 'Can see embedded content in our published post', async function() {
+			const viewPostPage = await ViewPostPage.Expect( driver );
+			await viewPostPage.embedContentDisplayed( '.wp-block-embed-youtube' ); // check YouTube content
+			await viewPostPage.embedContentDisplayed( '.wp-block-embed-instagram' ); // check Instagram content
+			return await viewPostPage.embedContentDisplayed( '.wp-block-embed-twitter' ); // check Twitter content
 		} );
 	} );
 } );
