@@ -209,18 +209,13 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can see correct post tag', async function() {
-			await SlackNotifier.warn(
-				'The Gutenberg assertion of tagged content is disabled due to inconsistencies which need investigating',
-				{ suppressDuplicateMessages: true }
+			const viewPostPage = await ViewPostPage.Expect( driver );
+			let tagDisplayed = await viewPostPage.tagDisplayed();
+			assert.strictEqual(
+				tagDisplayed.toUpperCase(),
+				newTagName.toUpperCase(),
+				'The tag: ' + newTagName + ' is not being displayed on the post'
 			);
-			return this.skip();
-			// const viewPostPage = await ViewPostPage.Expect( driver );
-			// let tagDisplayed = await viewPostPage.tagDisplayed();
-			// assert.strictEqual(
-			// 	tagDisplayed.toUpperCase(),
-			// 	newTagName.toUpperCase(),
-			// 	'The tag: ' + newTagName + ' is not being displayed on the post'
-			// );
 		} );
 
 		after( async function() {
