@@ -6,11 +6,12 @@ curl -X POST "https://a8c-gh-e2e-bridge.go-vip.co/circleciwebhook" \
     -d '{
             "payload": {
                 "outcome": "'"$1"'",
+                "status": "'"$1"'",
                 "build_url": "'"$CIRCLE_BUILD_URL"'",
                 "build_parameters": {
-                    "branch": "'"$CIRCLE_BRANCH"'",
+                    "branch": "'"$BRANCHNAME"'",
                     "build_num": '"$CIRCLE_BUILD_NUM"',
-                    "sha": "'"$CIRCLE_SHA1"'",
+                    "sha": "'"$sha"'",
                     "prContext": "'"$prContext"'",
                     "calypsoProject": "'"$calypsoProject"'",
                     "jetpackProject": "'"$jetpackProject"'"
