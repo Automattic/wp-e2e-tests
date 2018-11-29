@@ -1088,25 +1088,28 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 			await gEditorComponent.enterTitle( 'Embeds: ' + blogPostTitle );
 
+			this.youtubeSelector = '.wp-block-embed-youtube';
 			const blockIdYouTube = await gEditorComponent.addBlock( 'YouTube' );
 			const gEmbedsComponentYouTube = await EmbedsBlockComponent.Expect( driver, blockIdYouTube );
 			await gEmbedsComponentYouTube.embedUrl( 'https://www.youtube.com/watch?v=xifhQyopjZM' );
-			// TODO: check is it shown in the Editor
+			// await gEmbedsComponentYouTube.isEmbeddedInEditor( this.youtubeSelector ); TODO: check is it shown in the Editor
 
+			this.instagramSelector = '.wp-block-embed-instagram';
 			const blockIdInstagram = await gEditorComponent.addBlock( 'Instagram' );
 			const gEmbedsComponentInstagram = await EmbedsBlockComponent.Expect(
 				driver,
 				blockIdInstagram
 			);
 			await gEmbedsComponentInstagram.embedUrl( 'https://www.instagram.com/p/BlDOZMil933/' );
-			// TODO: check is it shown in the Editor
+			// await gEmbedsComponentInstagram.isEmbeddedInEditor( this.instagramSelector ); TODO: check is it shown in the Editor
 
+			this.twitterSelector = '.wp-block-embed-twitter';
 			const blockIdTwitter = await gEditorComponent.addBlock( 'Twitter' );
 			const gEmbedsComponentTwitter = await EmbedsBlockComponent.Expect( driver, blockIdTwitter );
 			await gEmbedsComponentTwitter.embedUrl(
 				'https://twitter.com/automattic/status/1067120832676327424'
 			);
-			// TODO: check is it shown in the Editor
+			await gEmbedsComponentTwitter.isEmbeddedInEditor( this.twitterSelector );
 
 			let errorShown = await gEditorComponent.errorDisplayed();
 			return assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
@@ -1119,9 +1122,9 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 		step( 'Can see embedded content in our published post', async function() {
 			const viewPostPage = await ViewPostPage.Expect( driver );
-			await viewPostPage.embedContentDisplayed( '.wp-block-embed-youtube' ); // check YouTube content
-			await viewPostPage.embedContentDisplayed( '.wp-block-embed-instagram' ); // check Instagram content
-			return await viewPostPage.embedContentDisplayed( '.wp-block-embed-twitter' ); // check Twitter content
+			await viewPostPage.embedContentDisplayed( this.youtubeSelector ); // check YouTube content
+			await viewPostPage.embedContentDisplayed( this.instagramSelector ); // check Instagram content
+			return await viewPostPage.embedContentDisplayed( this.twitterSelector ); // check Twitter content
 		} );
 	} );
 } );
