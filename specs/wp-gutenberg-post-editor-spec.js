@@ -65,9 +65,8 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 			await gEditorComponent.enterTitle( blogPostTitle );
 			await gEditorComponent.enterText( blogPostQuote );
-			await gEditorComponent.addBlock( 'Image' );
+			await gEditorComponent.addImage( fileDetails );
 
-			await gEditorComponent.uploadImage( fileDetails );
 			await gEditorComponent.openSidebar();
 			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 			await gEditorSidebarComponent.enterImageAltText( fileDetails );
@@ -914,7 +913,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			step( 'Can insert the contact form', async function() {
 				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 				await gEditorComponent.enterTitle( originalBlogPostTitle );
-				await gEditorComponent.insertContactForm();
+				await gEditorComponent.insertShortcode( '[contact-form][/contact-form]' );
 
 				let errorShown = await gEditorComponent.errorDisplayed();
 				return assert.strictEqual(
