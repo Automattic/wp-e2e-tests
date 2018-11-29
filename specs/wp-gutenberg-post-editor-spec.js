@@ -65,9 +65,8 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 			await gEditorComponent.enterTitle( blogPostTitle );
 			await gEditorComponent.enterText( blogPostQuote );
-			await gEditorComponent.addBlock( 'Image' );
+			await gEditorComponent.addImage( fileDetails );
 
-			await gEditorComponent.uploadImage( fileDetails );
 			await gEditorComponent.openSidebar();
 			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 			await gEditorSidebarComponent.enterImageAltText( fileDetails );
@@ -210,18 +209,13 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 
 		step( 'Can see correct post tag', async function() {
-			await SlackNotifier.warn(
-				'The Gutenberg assertion of tagged content is disabled due to inconsistencies which need investigating',
-				{ suppressDuplicateMessages: true }
+			const viewPostPage = await ViewPostPage.Expect( driver );
+			let tagDisplayed = await viewPostPage.tagDisplayed();
+			assert.strictEqual(
+				tagDisplayed.toUpperCase(),
+				newTagName.toUpperCase(),
+				'The tag: ' + newTagName + ' is not being displayed on the post'
 			);
-			return this.skip();
-			// const viewPostPage = await ViewPostPage.Expect( driver );
-			// let tagDisplayed = await viewPostPage.tagDisplayed();
-			// assert.strictEqual(
-			// 	tagDisplayed.toUpperCase(),
-			// 	newTagName.toUpperCase(),
-			// 	'The tag: ' + newTagName + ' is not being displayed on the post'
-			// );
 		} );
 
 		after( async function() {
@@ -505,16 +499,6 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			let blogPostQuote =
 				'The best thing about the future is that it comes only one day at a time.\n— Abraham Lincoln';
 			let postPassword = 'e2e' + new Date().getTime().toString();
-
-			before( async function() {
-				if ( driverManager.currentScreenSize() === 'mobile' ) {
-					await SlackNotifier.warn(
-						'Gutenberg password protected post spec currently not supported on mobile due to Gutenberg bug',
-						{ suppressDuplicateMessages: true }
-					);
-					return this.skip();
-				}
-			} );
 
 			step( 'Can log in', async function() {
 				let loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
@@ -914,7 +898,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 			step( 'Can insert the contact form', async function() {
 				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 				await gEditorComponent.enterTitle( originalBlogPostTitle );
-				await gEditorComponent.insertContactForm();
+				await gEditorComponent.insertShortcode( '[contact-form][/contact-form]' );
 
 				let errorShown = await gEditorComponent.errorDisplayed();
 				return assert.strictEqual(
