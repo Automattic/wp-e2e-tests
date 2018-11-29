@@ -509,16 +509,6 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 				'The best thing about the future is that it comes only one day at a time.\n— Abraham Lincoln';
 			let postPassword = 'e2e' + new Date().getTime().toString();
 
-			before( async function() {
-				if ( driverManager.currentScreenSize() === 'mobile' ) {
-					await SlackNotifier.warn(
-						'Gutenberg password protected post spec currently not supported on mobile due to Gutenberg bug',
-						{ suppressDuplicateMessages: true }
-					);
-					return this.skip();
-				}
-			} );
-
 			step( 'Can log in', async function() {
 				let loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
 				await loginFlow.loginAndStartNewPost( null, true, { forceCalypsoGutenberg: true } );
