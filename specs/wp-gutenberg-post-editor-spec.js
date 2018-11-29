@@ -30,6 +30,7 @@ import * as SlackNotifier from '../lib/slack-notifier';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
+const gutenbergEnvironment = driverManager.currentGutenbergEnvironment();
 const host = dataHelper.getJetpackHost();
 
 let driver;
@@ -39,7 +40,7 @@ before( async function() {
 	driver = await driverManager.startBrowser();
 } );
 
-describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
+describe( `[${ host }] (${ gutenbergEnvironment }) Gutenberg Editor: Posts (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
 	describe( 'Public Posts: Preview and Publish a Public Post @parallel', function() {
