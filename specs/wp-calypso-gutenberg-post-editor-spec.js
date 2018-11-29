@@ -209,18 +209,13 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 
 		step( 'Can see correct post tag', async function() {
-			await SlackNotifier.warn(
-				'The Gutenberg assertion of tagged content is disabled due to inconsistencies which need investigating',
-				{ suppressDuplicateMessages: true }
+			const viewPostPage = await ViewPostPage.Expect( driver );
+			let tagDisplayed = await viewPostPage.tagDisplayed();
+			assert.strictEqual(
+				tagDisplayed.toUpperCase(),
+				newTagName.toUpperCase(),
+				'The tag: ' + newTagName + ' is not being displayed on the post'
 			);
-			return this.skip();
-			// const viewPostPage = await ViewPostPage.Expect( driver );
-			// let tagDisplayed = await viewPostPage.tagDisplayed();
-			// assert.strictEqual(
-			// 	tagDisplayed.toUpperCase(),
-			// 	newTagName.toUpperCase(),
-			// 	'The tag: ' + newTagName + ' is not being displayed on the post'
-			// );
 		} );
 
 		after( async function() {
@@ -513,16 +508,6 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 			let blogPostQuote =
 				'The best thing about the future is that it comes only one day at a time.\n— Abraham Lincoln';
 			let postPassword = 'e2e' + new Date().getTime().toString();
-
-			before( async function() {
-				if ( driverManager.currentScreenSize() === 'mobile' ) {
-					await SlackNotifier.warn(
-						'Gutenberg password protected post spec currently not supported on mobile due to Gutenberg bug',
-						{ suppressDuplicateMessages: true }
-					);
-					return this.skip();
-				}
-			} );
 
 			step( 'Can log in', async function() {
 				let loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
