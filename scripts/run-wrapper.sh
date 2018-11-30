@@ -20,6 +20,15 @@ fi
 export SELENIUM_PROMISE_MANAGER=0
 export TEST_VIDEO="true"
 
+#Check if matching branch exists in wp-calypso
+sudo apt-get install jq
+MATCH_SHA=$(curl -s -X GET https://api.github.com/repos/Automattic/wp-calypso/branches/${CIRCLE_BRANCH} | jq '.commit.sha')
+
+if [ "$MATCH_SHA" != null ]; then
+    export LIVEBRANCHES="true"
+    NODE_CONFIG_ARGS+=("\"liveBranch\":\"true\",\"calypsoBaseURL\":\"https://hash-$MATCH_SHA.calypso.live\",\"branchName\":\"$CIRCLE_BRANCH\"")
+fi
+
 export TESTARGS="-R -p"
 
 if [ "$RUN_SPECIFIED" == "true" ]; then
