@@ -46,6 +46,8 @@ elif [ "$CIRCLE_BRANCH" == "master" ]; then
   TESTARGS+="-R -p" # Parallel execution, implies -g -s mobile,desktop
 fi
 
+echo $TESTARGS
+
 # If on CI and the -x flag is not yet set, set it
 #if [ "$CI" == "true" ] && [[ "$TESTARGS" != *"-x"* ]]; then
 #  TESTARGS+=" -x"
