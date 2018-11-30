@@ -38,12 +38,14 @@ elif [ "$CIRCLE_BRANCH" == "master" ]; then
 fi
 
 #Check if matching branch exists in wp-calypso
-sudo apt-get install jq > /dev/null &&
-MATCH_SHA=$(curl -s -X GET https://api.github.com/repos/Automattic/wp-calypso/branches/${CIRCLE_BRANCH} | jq -r '.commit.sha')
+if [ "$CIRCLE_BRANCH" != "master" ]; then
+    sudo apt-get install jq > /dev/null &&
+    MATCH_SHA=$(curl -s -X GET https://api.github.com/repos/Automattic/wp-calypso/branches/${CIRCLE_BRANCH} | jq -r '.commit.sha')
 
-if [ "$MATCH_SHA" != null ]; then
-    TESTARGS+=" -S $MATCH_SHA"
-    echo "Found matching branch in wp-calypso. Running against calypso.live"
+    if [ "$MATCH_SHA" != null ]; then
+        TESTARGS+=" -S $MATCH_SHA"
+        echo "Found matching branch in wp-calypso. Running against calypso.live"
+    fi
 fi
 
 # If on CI and the -x flag is not yet set, set it
