@@ -27,6 +27,7 @@ MATCH_SHA=$(curl -s -X GET https://api.github.com/repos/Automattic/wp-calypso/br
 if [ "$MATCH_SHA" != null ]; then
     export LIVEBRANCHES="true"
     NODE_CONFIG_ARGS+=("\"liveBranch\":\"true\",\"calypsoBaseURL\":\"https://hash-$MATCH_SHA.calypso.live\",\"branchName\":\"$CIRCLE_BRANCH\"")
+    echo "Running tests against https://hash-$MATCH_SHA.calypso.live"
 fi
 
 export TESTARGS="-R -p"
