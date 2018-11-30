@@ -24,6 +24,7 @@ import GutenbergPagePreviewComponent from '../lib/gutenberg/gutenberg-page-previ
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
+const calpsoEnvironment = driverManager.isWPCalypso() ? 'wpcalypso' : 'dotcom';
 const host = dataHelper.getJetpackHost();
 
 let driver;
@@ -33,7 +34,7 @@ before( async function() {
 	driver = await driverManager.startBrowser();
 } );
 
-describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
+describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Pages (${ screenSize }) @wpcalypso`, function() {
 	this.timeout( mochaTimeOut );
 
 	describe( 'Public Pages: @parallel', function() {

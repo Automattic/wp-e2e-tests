@@ -28,6 +28,7 @@ import * as SlackNotifier from '../lib/slack-notifier';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
+const calpsoEnvironment = driverManager.isWPCalypso() ? 'wpcalypso' : 'dotcom';
 const host = dataHelper.getJetpackHost();
 
 let driver;
@@ -37,7 +38,7 @@ before( async function() {
 	driver = await driverManager.startBrowser();
 } );
 
-describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, function() {
+xdescribe( `[${ host }] Calypso Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
 	describe( 'Public Posts: Preview and Publish a Public Post @parallel', function() {

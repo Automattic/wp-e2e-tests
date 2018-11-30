@@ -30,7 +30,7 @@ import * as SlackNotifier from '../lib/slack-notifier';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
-const gutenbergEnvironment = driverManager.currentGutenbergEnvironment();
+const calpsoEnvironment = driverManager.isWPCalypso() ? 'wpcalypso' : 'dotcom';
 const host = dataHelper.getJetpackHost();
 
 let driver;
@@ -40,7 +40,7 @@ before( async function() {
 	driver = await driverManager.startBrowser();
 } );
 
-describe( `[${ host }] (${ gutenbergEnvironment }) Gutenberg Editor: Posts (${ screenSize })`, function() {
+describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ screenSize }) @wpcalypso`, function() {
 	this.timeout( mochaTimeOut );
 
 	describe( 'Public Posts: Preview and Publish a Public Post @parallel', function() {
@@ -890,6 +890,8 @@ describe( `[${ host }] (${ gutenbergEnvironment }) Gutenberg Editor: Posts (${ s
 	describe( 'Insert a contact form: @parallel', function() {
 		describe( 'Publish a New Post with a Contact Form', function() {
 			const originalBlogPostTitle = 'Contact Us: ' + dataHelper.randomPhrase();
+			const contactEmail = 'testing@automattic.com';
+			const subject = "Let's work together";
 
 			step( 'Can log in', async function() {
 				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
@@ -899,7 +901,12 @@ describe( `[${ host }] (${ gutenbergEnvironment }) Gutenberg Editor: Posts (${ s
 			step( 'Can insert the contact form', async function() {
 				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 				await gEditorComponent.enterTitle( originalBlogPostTitle );
-				await gEditorComponent.insertShortcode( '[contact-form][/contact-form]' );
+
+				if ( driverManager.isWPCalypso() ) {
+					await gEditorComponent.insertContactForm( contactEmail, subject );
+				} else {
+					await gEditorComponent.insertShortcode( '[contact-form][/contact-form]' );
+				}
 
 				let errorShown = await gEditorComponent.errorDisplayed();
 				return assert.strictEqual(
@@ -914,15 +921,17 @@ describe( `[${ host }] (${ gutenbergEnvironment }) Gutenberg Editor: Posts (${ s
 				await gEditorComponent.publish( { visit: true } );
 			} );
 
-			step( 'Can see the contact form in our published post', async function() {
-				this.viewPostPage = await ViewPostPage.Expect( driver );
-				let displayed = await this.viewPostPage.contactFormDisplayed();
-				assert.strictEqual(
-					displayed,
-					true,
-					'The published post does not contain the contact form'
-				);
-			} );
+			if ( driverManager.isWPCalypso() ) {
+				step( 'Can see the contact form in our published post', async function() {
+					this.viewPostPage = await ViewPostPage.Expect( driver );
+					let displayed = await this.viewPostPage.contactFormDisplayed();
+					assert.strictEqual(
+						displayed,
+						true,
+						'The published post does not contain the contact form'
+					);
+				} );
+			}
 		} );
 	} );
 

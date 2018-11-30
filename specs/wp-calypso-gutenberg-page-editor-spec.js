@@ -23,6 +23,7 @@ import * as SlackNotifier from '../lib/slack-notifier';
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
+const calpsoEnvironment = driverManager.isWPCalypso() ? 'wpcalypso' : 'dotcom';
 const host = dataHelper.getJetpackHost();
 
 let driver;
@@ -32,7 +33,7 @@ before( async function() {
 	driver = await driverManager.startBrowser();
 } );
 
-describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
+xdescribe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Pages (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
 	describe( 'Public Pages: @parallel @jetpack', function() {

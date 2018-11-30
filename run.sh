@@ -20,10 +20,6 @@ if [ "$NODE_ENV" = "" ]; then
 	exit 1
 fi
 
-if [ "$GUTENBERG_ENV" = "" ]; then
-    GUTENBERG_ENV="wpcom"
-fi
-
 #disable selenium promise manager
 export SELENIUM_PROMISE_MANAGER=0
 
