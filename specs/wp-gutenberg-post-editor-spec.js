@@ -5,7 +5,6 @@ import config from 'config';
 
 import LoginFlow from '../lib/flows/login-flow.js';
 
-import EditorPage from '../lib/pages/editor-page.js';
 import ViewPostPage from '../lib/pages/view-post-page.js';
 import NotFoundPage from '../lib/pages/not-found-page.js';
 import PostsPage from '../lib/pages/posts-page.js';
@@ -16,7 +15,6 @@ import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavBarComponent from '../lib/components/nav-bar-component.js';
 import GutenbergPostPreviewComponent from '../lib/gutenberg/gutenberg-post-preview-component';
-import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component';
 import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
 import WPAdminPostsPage from '../lib/pages/wp-admin/wp-admin-posts-page';
 import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
@@ -26,6 +24,7 @@ import * as driverHelper from '../lib/driver-helper';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
 import * as SlackNotifier from '../lib/slack-notifier';
+import SimplePaymentsBlockComponent from '../lib/gutenberg/blocks/payment-block-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -363,6 +362,17 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ scre
 					'The Posts page success notice for deleting the post is not displayed'
 				);
 			} );
+
+			// Not working https://github.com/Automattic/wp-calypso/issues/28813
+			// step( 'Can then see the Posts page with a confirmation message', async function() {
+			// 	const postsPage = await PostsPage.Expect( driver );
+			// 	const displayed = await postsPage.successNoticeDisplayed();
+			// 	return assert.strictEqual(
+			// 		displayed,
+			// 		true,
+			// 		'The Posts page success notice for deleting the post is not displayed'
+			// 	);
+			// } );
 		} );
 	} );
 
@@ -778,6 +788,7 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ scre
 				return await gSidebarComponent.trashPost();
 			} );
 
+			// Not working https://github.com/Automattic/wp-calypso/issues/28813
 			step( 'Can then see the Posts page with a confirmation message', async function() {
 				const wpAdminPostsPage = await WPAdminPostsPage.Expect( driver );
 				const displayed = await wpAdminPostsPage.trashedSuccessNoticeDisplayed();
@@ -935,90 +946,87 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ scre
 		} );
 	} );
 
-	xdescribe( 'Insert a payment button: @parallel', function() {
-		const paymentButtonDetails = {
-			title: 'Button',
-			description: 'Description',
-			symbol: '$',
-			price: '1.99',
-			currency: 'USD',
-			allowQuantity: true,
-			email: 'test@wordpress.com',
-		};
+	if ( driverManager.isWPCalypso() ) {
+		describe( 'Insert a payment button: @parallel', function() {
+			const paymentButtonDetails = {
+				title: 'Button',
+				description: 'Description',
+				symbol: '$',
+				price: '1.99',
+				currency: 'USD',
+				allowQuantity: true,
+				email: 'test@wordpress.com',
+			};
 
-		step( 'Can log in', async function() {
-			if ( host === 'WPCOM' ) {
-				return await new LoginFlow( driver, 'gutenbergSimpleSiteUser' ).loginAndStartNewPost();
-			}
-			const jetpackUrl = `jetpackpro${ host.toLowerCase() }.mystagingwebsite.com`;
-			await new LoginFlow( driver, 'jetpackUserPREMIUM' ).loginAndStartNewPost( jetpackUrl );
-		} );
+			step( 'Can log in', async function() {
+				this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
+				return await this.loginFlow.loginAndStartNewPost( null, true );
+			} );
 
-		step( 'Can insert the payment button', async function() {
-			const blogPostTitle = 'Payment Button: ' + dataHelper.randomPhrase();
+			step( 'Can insert the payment button', async function() {
+				const blogPostTitle = 'Payment Button: ' + dataHelper.randomPhrase();
+				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+				const blockId = await gEditorComponent.addBlock( 'Simple Payments button' );
 
-			const editorPage = await EditorPage.Expect( driver );
-			await editorPage.enterTitle( blogPostTitle );
-			await editorPage.insertPaymentButton( paymentButtonDetails );
+				const gPaymentComponent = await SimplePaymentsBlockComponent.Expect( driver, blockId );
+				await gPaymentComponent.insertPaymentButtonDetails( paymentButtonDetails );
 
-			let errorShown = await editorPage.errorDisplayed();
-			return assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
-		} );
+				let errorShown = await gEditorComponent.errorDisplayed();
+				assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
 
-		step( 'Can see the payment button inserted into the visual editor', async function() {
-			const editorPage = await EditorPage.Expect( driver );
-			return await editorPage.ensurePaymentButtonDisplayedInPost();
-		} );
+				await gEditorComponent.enterTitle( blogPostTitle );
+				return await gPaymentComponent.ensurePaymentButtonDisplayedInEditor();
+			} );
 
-		step( 'Can publish and view content', async function() {
-			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
-			await postEditorToolbarComponent.ensureSaved();
-			await postEditorToolbarComponent.publishAndViewContent( { useConfirmStep: true } );
-		} );
+			step( 'Can publish and view content', async function() {
+				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+				return await gEditorComponent.publish( { visit: true } );
+			} );
 
-		step( 'Can see the payment button in our published post', async function() {
-			const viewPostPage = await ViewPostPage.Expect( driver );
-			let displayed = await viewPostPage.paymentButtonDisplayed();
-			assert.strictEqual(
-				displayed,
-				true,
-				'The published post does not contain the payment button'
+			step( 'Can see the payment button in our published post', async function() {
+				const viewPostPage = await ViewPostPage.Expect( driver );
+				let displayed = await viewPostPage.paymentButtonDisplayed();
+				return assert.strictEqual(
+					displayed,
+					true,
+					'The published post does not contain the payment button'
+				);
+			} );
+
+			step(
+				'The payment button in our published post opens a new Paypal window for payment',
+				async function() {
+					let numberOfOpenBrowserWindows = await driverHelper.numberOfOpenWindows( driver );
+					assert.strictEqual(
+						numberOfOpenBrowserWindows,
+						1,
+						'There is more than one open browser window before clicking payment button'
+					);
+					let viewPostPage = await ViewPostPage.Expect( driver );
+					await viewPostPage.clickPaymentButton();
+					await driverHelper.waitForNumberOfWindows( driver, 2 );
+					await driverHelper.switchToWindowByIndex( driver, 1 );
+					const paypalCheckoutPage = await PaypalCheckoutPage.Expect( driver );
+					const amountDisplayed = await paypalCheckoutPage.priceDisplayed();
+					assert.strictEqual(
+						amountDisplayed,
+						`${ paymentButtonDetails.symbol }${ paymentButtonDetails.price } ${
+							paymentButtonDetails.currency
+						}`,
+						"The amount displayed on Paypal isn't correct"
+					);
+					await driverHelper.closeCurrentWindow( driver );
+					await driverHelper.switchToWindowByIndex( driver, 0 );
+					viewPostPage = await ViewPostPage.Expect( driver );
+					assert( await viewPostPage.displayed(), 'view post page is not displayed' );
+				}
 			);
-		} );
 
-		step(
-			'The payment button in our published post opens a new Paypal window for payment',
-			async function() {
-				let numberOfOpenBrowserWindows = await driverHelper.numberOfOpenWindows( driver );
-				assert.strictEqual(
-					numberOfOpenBrowserWindows,
-					1,
-					'There is more than one open browser window before clicking payment button'
-				);
-				let viewPostPage = await ViewPostPage.Expect( driver );
-				await viewPostPage.clickPaymentButton();
-				await driverHelper.waitForNumberOfWindows( driver, 2 );
-				await driverHelper.switchToWindowByIndex( driver, 1 );
-				const paypalCheckoutPage = await PaypalCheckoutPage.Expect( driver );
-				const amountDisplayed = await paypalCheckoutPage.priceDisplayed();
-				assert.strictEqual(
-					amountDisplayed,
-					`${ paymentButtonDetails.symbol }${ paymentButtonDetails.price } ${
-						paymentButtonDetails.currency
-					}`,
-					"The amount displayed on Paypal isn't correct"
-				);
-				await driverHelper.closeCurrentWindow( driver );
-				await driverHelper.switchToWindowByIndex( driver, 0 );
-				viewPostPage = await ViewPostPage.Expect( driver );
-				assert( await viewPostPage.displayed(), 'view post page is not displayed' );
-			}
-		);
-
-		after( async function() {
-			await driverHelper.ensurePopupsClosed( driver );
+			after( async function() {
+				await driverHelper.ensurePopupsClosed( driver );
+			} );
 		} );
-	} );
+	}
 
 	describe( 'Revert a post to draft: @parallel', function() {
 		describe( 'Publish a new post', function() {
