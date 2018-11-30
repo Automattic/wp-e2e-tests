@@ -99,6 +99,12 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		step( 'Can add a new tag', async function() {
 			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 			await gEditorSidebarComponent.addNewTag( newTagName );
+			const tagDisplayed = await gEditorSidebarComponent.tagEventuallyDisplayed( newTagName );
+			assert.strictEqual(
+				tagDisplayed,
+				true,
+				`The newly added tag '${ newTagName }' was not added to the Gutenberg post`
+			);
 		} );
 
 		step( 'Close categories and tags', async function() {
@@ -149,6 +155,16 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 				categoryDisplayed.toUpperCase(),
 				newCategoryName.toUpperCase(),
 				'The category: ' + newCategoryName + ' is not being displayed on the post'
+			);
+		} );
+
+		step( 'Can see the post tag in preview', async function() {
+			const gPreviewComponent = await GutenbergPostPreviewComponent.Expect( driver );
+			let tagDisplayed = await gPreviewComponent.tagDisplayed();
+			assert.strictEqual(
+				tagDisplayed.toUpperCase(),
+				newTagName.toUpperCase(),
+				'The tag: ' + newTagName + ' is not being displayed on the post'
 			);
 		} );
 
