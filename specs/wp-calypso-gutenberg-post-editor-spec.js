@@ -159,15 +159,16 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 			);
 		} );
 
-		step( 'Can see the post tag in preview', async function() {
-			const gPreviewComponent = await GutenbergPostPreviewComponent.Expect( driver );
-			let tagDisplayed = await gPreviewComponent.tagDisplayed();
-			assert.strictEqual(
-				tagDisplayed.toUpperCase(),
-				newTagName.toUpperCase(),
-				'The tag: ' + newTagName + ' is not being displayed on the post'
-			);
-		} );
+		// Disable this step until https://github.com/Automattic/wp-calypso/issues/28974 is solved
+		// step( 'Can see the post tag in preview', async function() {
+		// 	const gPreviewComponent = await GutenbergPostPreviewComponent.Expect( driver );
+		// 	let tagDisplayed = await gPreviewComponent.tagDisplayed();
+		// 	assert.strictEqual(
+		// 		tagDisplayed.toUpperCase(),
+		// 		newTagName.toUpperCase(),
+		// 		'The tag: ' + newTagName + ' is not being displayed on the post'
+		// 	);
+		// } );
 
 		step( 'Can see the image in preview', async function() {
 			const gPreviewComponent = await GutenbergPostPreviewComponent.Expect( driver );
@@ -225,15 +226,16 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 			assert.strictEqual( imageDisplayed, true, 'Could not see the image in the published post' );
 		} );
 
-		step( 'Can see correct post tag', async function() {
-			const viewPostPage = await ViewPostPage.Expect( driver );
-			let tagDisplayed = await viewPostPage.tagDisplayed();
-			assert.strictEqual(
-				tagDisplayed.toUpperCase(),
-				newTagName.toUpperCase(),
-				'The tag: ' + newTagName + ' is not being displayed on the post'
-			);
-		} );
+		// Disable this step until https://github.com/Automattic/wp-calypso/issues/28974 is solved
+		// step( 'Can see correct post tag', async function() {
+		// 	const viewPostPage = await ViewPostPage.Expect( driver );
+		// 	let tagDisplayed = await viewPostPage.tagDisplayed();
+		// 	assert.strictEqual(
+		// 		tagDisplayed.toUpperCase(),
+		// 		newTagName.toUpperCase(),
+		// 		'The tag: ' + newTagName + ' is not being displayed on the post'
+		// 	);
+		// } );
 
 		after( async function() {
 			if ( fileDetails ) {
