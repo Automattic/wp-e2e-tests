@@ -39,7 +39,7 @@ if ( screenSize !== 'mobile' ) {
 		driver = await driverManager.startBrowser();
 	} );
 
-	describe( `[${ host }] Gutenberg Markdown block: (${ screenSize }) @jetpack`, function() {
+	describe( `[${ host }] Gutenberg Markdown block: (${ screenSize })`, function() {
 		this.timeout( mochaTimeOut );
 
 		before( 'Prepare Site for testing', async function() {
@@ -65,7 +65,7 @@ if ( screenSize !== 'mobile' ) {
 			}
 		} );
 
-		describe( '[WP-Admin] Publish a simple post with Markdown block', function() {
+		describe( '[WP-Admin] Publish a simple post with Markdown block  @parallel @jetpack', function() {
 			step( 'Can login to WPORG site', async function() {
 				const loginPage = await WPAdminLogonPage.Visit( driver, jnFlow.url );
 				await loginPage.login( jnFlow.username, jnFlow.password );
@@ -80,7 +80,7 @@ if ( screenSize !== 'mobile' ) {
 			markdownTestSteps();
 		} );
 
-		describe( '[Calypso] Publish a simple post with Markdown block', function() {
+		describe( '[Calypso] Publish a simple post with Markdown block  @parallel @jetpack', function() {
 			step( 'Can login to WPCOM and start new post', async function() {
 				const loginFlow = new LoginFlow( driver, 'jetpackConnectUser' );
 				await loginFlow.login();
