@@ -29,7 +29,7 @@ before( async function() {
 describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 
-	describe( 'Comparing Plans:', function() {
+	describe( 'TESTComparing Plans:', function() {
 		step( 'Login and Select My Site', async function() {
 			const loginFlow = new LoginFlow( driver );
 			return await loginFlow.loginAndSelectMySite();
