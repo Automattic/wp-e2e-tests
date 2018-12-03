@@ -117,6 +117,7 @@ function markdownTestSteps() {
 
 	step( 'Can publish the post and see its content', async function() {
 		const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+		await gEditorComponent.ensureSaved();
 		await gEditorComponent.publish( { visit: true } );
 		const postFrontend = await PostAreaComponent.Expect( driver );
 		const html = await postFrontend.getPostHTML();
