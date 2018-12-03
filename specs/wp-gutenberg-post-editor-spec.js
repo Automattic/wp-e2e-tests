@@ -772,7 +772,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe( 'Trash Post: @parallel', function() {
+	describe.only( 'Trash Post: @parallel', function() {
 		describe( 'Trash a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
