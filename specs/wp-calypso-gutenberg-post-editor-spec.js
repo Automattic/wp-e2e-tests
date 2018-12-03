@@ -24,6 +24,7 @@ import * as driverHelper from '../lib/driver-helper';
 import * as mediaHelper from '../lib/media-helper';
 import * as dataHelper from '../lib/data-helper';
 import * as SlackNotifier from '../lib/slack-notifier';
+import EmbedsBlockComponent from '../lib/gutenberg/blocks/embeds-block-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -1073,6 +1074,59 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 				let isDraft = await gHeaderComponent.isDraft();
 				assert.strictEqual( isDraft, true, 'The post is not set as draft' );
 			} );
+		} );
+	} );
+
+	describe( 'Insert embeds: @parallel', function() {
+		step( 'Can log in', async function() {
+			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
+			return await this.loginFlow.loginAndStartNewPost( null, true, {
+				forceCalypsoGutenberg: true,
+			} );
+		} );
+
+		step( 'Can insert Embeds block', async function() {
+			const blogPostTitle = dataHelper.randomPhrase();
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.enterTitle( 'Embeds: ' + blogPostTitle );
+
+			this.youtubeSelector = '.wp-block-embed-youtube';
+			const blockIdYouTube = await gEditorComponent.addBlock( 'YouTube' );
+			const gEmbedsComponentYouTube = await EmbedsBlockComponent.Expect( driver, blockIdYouTube );
+			await gEmbedsComponentYouTube.embedUrl( 'https://www.youtube.com/watch?v=xifhQyopjZM' );
+			// await gEmbedsComponentYouTube.isEmbeddedInEditor( this.youtubeSelector ); TODO: check is it shown in the Editor
+
+			this.instagramSelector = '.wp-block-embed-instagram';
+			const blockIdInstagram = await gEditorComponent.addBlock( 'Instagram' );
+			const gEmbedsComponentInstagram = await EmbedsBlockComponent.Expect(
+				driver,
+				blockIdInstagram
+			);
+			await gEmbedsComponentInstagram.embedUrl( 'https://www.instagram.com/p/BlDOZMil933/' );
+			// await gEmbedsComponentInstagram.isEmbeddedInEditor( this.instagramSelector ); TODO: check is it shown in the Editor
+
+			this.twitterSelector = '.wp-block-embed-twitter';
+			const blockIdTwitter = await gEditorComponent.addBlock( 'Twitter' );
+			const gEmbedsComponentTwitter = await EmbedsBlockComponent.Expect( driver, blockIdTwitter );
+			await gEmbedsComponentTwitter.embedUrl(
+				'https://twitter.com/automattic/status/1067120832676327424'
+			);
+			await gEmbedsComponentTwitter.isEmbeddedInEditor( this.twitterSelector );
+
+			let errorShown = await gEditorComponent.errorDisplayed();
+			return assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
+		} );
+
+		step( 'Can publish and view content', async function() {
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			return await gEditorComponent.publish( { visit: true } );
+		} );
+
+		step( 'Can see embedded content in our published post', async function() {
+			const viewPostPage = await ViewPostPage.Expect( driver );
+			await viewPostPage.embedContentDisplayed( this.youtubeSelector ); // check YouTube content
+			await viewPostPage.embedContentDisplayed( this.instagramSelector ); // check Instagram content
+			return await viewPostPage.embedContentDisplayed( this.twitterSelector ); // check Twitter content
 		} );
 	} );
 } );
