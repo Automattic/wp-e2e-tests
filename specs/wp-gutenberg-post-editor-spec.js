@@ -40,10 +40,10 @@ before( async function() {
 	driver = await driverManager.startBrowser();
 } );
 
-describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ screenSize }) @wpcalypso`, function() {
+describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
-	xdescribe( 'Public Posts: Preview and Publish a Public Post @parallel', function() {
+	describe( 'Public Posts: Preview and Publish a Public Post @parallel @wpcalypso', function() {
 		let fileDetails;
 		const blogPostTitle = dataHelper.randomPhrase();
 		const blogPostQuote =
@@ -227,7 +227,7 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ scre
 		} );
 	} );
 
-	describe( 'Basic Public Post @canary @parallel', function() {
+	describe( 'Basic Public Post @canary @parallel @wpcalypso', function() {
 		describe( 'Publish a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
@@ -268,7 +268,7 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ scre
 		} );
 	} );
 
-	describe( 'Check Activity Log for Public Post @parallel', function() {
+	describe( 'Check Activity Log for Public Post @parallel @wpcalypso', function() {
 		const blogPostTitle = dataHelper.randomPhrase();
 		const blogPostQuote =
 			'“We are what we pretend to be, so we must be careful about what we pretend to be.”\n- Kurt Vonnegut';
@@ -313,7 +313,7 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ scre
 		} );
 	} );
 
-	describe( 'Schedule Basic Public Post @parallel', function() {
+	describe( 'Schedule Basic Public Post @parallel @wpcalypso', function() {
 		describe( 'Schedule (and remove) a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = '“Worries shared are worries halved.”\n- Unknown';
@@ -377,7 +377,7 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ scre
 		} );
 	} );
 
-	describe( 'Private Posts: @parallel', function() {
+	describe( 'Private Posts: @parallel @wpcalypso', function() {
 		describe( 'Publish a Private Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
@@ -505,7 +505,7 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ scre
 		} );
 	} );
 
-	describe( 'Password Protected Posts: @parallel', function() {
+	describe( 'Password Protected Posts: @parallel @wpcalypso', function() {
 		describe( 'Publish a Password Protected Post', function() {
 			let blogPostTitle = dataHelper.randomPhrase();
 			let blogPostQuote =
@@ -766,7 +766,7 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ scre
 		} );
 	} );
 
-	describe( 'Trash Post: @parallel', function() {
+	describe( 'Trash Post: @parallel @wpcalypso', function() {
 		describe( 'Trash a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
@@ -802,7 +802,7 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ scre
 		} );
 	} );
 
-	describe( 'Edit a Post: @parallel', function() {
+	describe( 'Edit a Post: @parallel @wpcalypso', function() {
 		describe( 'Publish a New Post', function() {
 			const originalBlogPostTitle = dataHelper.randomPhrase();
 			const updatedBlogPostTitle = dataHelper.randomPhrase();
@@ -899,7 +899,7 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ scre
 		} );
 	} );
 
-	describe( 'Insert a contact form: @parallel', function() {
+	describe( 'Insert a contact form: @parallel @wpcalypso', function() {
 		describe( 'Publish a New Post with a Contact Form', function() {
 			const originalBlogPostTitle = 'Contact Us: ' + dataHelper.randomPhrase();
 			const contactEmail = 'testing@automattic.com';
@@ -948,7 +948,7 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ scre
 	} );
 
 	if ( driverManager.isWPCalypso() ) {
-		describe( 'Insert a payment button: @parallel', function() {
+		describe( 'Insert a payment button: @parallel @wpcalypso', function() {
 			const paymentButtonDetails = {
 				title: 'Button',
 				description: 'Description',
@@ -1029,7 +1029,7 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ scre
 		} );
 	}
 
-	describe( 'Revert a post to draft: @parallel', function() {
+	describe( 'Revert a post to draft: @parallel @wpcalypso', function() {
 		describe( 'Publish a new post', function() {
 			const originalBlogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
@@ -1070,7 +1070,7 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ scre
 		} );
 	} );
 
-	describe( 'Insert embeds: @parallel', function() {
+	describe( 'Insert embeds: @parallel @wpcalypso', function() {
 		step( 'Can log in', async function() {
 			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
 			return await this.loginFlow.loginAndStartNewPost( null, true );
