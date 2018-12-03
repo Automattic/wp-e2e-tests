@@ -195,7 +195,7 @@ fi
 function execute_wpcalypso() {
     # Execute wpcalypso specs in wpcalypso environment
     MAGELLAN_WPCALYPSO_CONFIGS=${MAGELLAN_CONFIGS}+"$MAGELLAN_CONFIG"
-    CMD="env BROWSERSIZE=$1 WPCCALYPSO=true BROWSERLOCALE=$locale $MAGELLAN --mocha_args='$MOCHA_ARGS' --config='$MAGELLAN_WPCALYPSO_CONFIG' --max_workers=$WORKERS"
+    CMD="env BROWSERSIZE=$1 WPCALYPSO=true BROWSERLOCALE=$locale $MAGELLAN --mocha_args='$MOCHA_ARGS' --config='$MAGELLAN_WPCALYPSO_CONFIG' --max_workers=$WORKERS"
 
     eval $CMD
     RETURN+=$?
