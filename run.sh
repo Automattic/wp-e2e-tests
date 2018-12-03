@@ -192,6 +192,15 @@ if [ "$SKIP_TEST_REGEX" != "" ]; then
   GREP="-i -g '$SKIP_TEST_REGEX'"
 fi
 
+function execute_wpcalypso() {
+    # Execute wpcalypso specs in wpcalypso environment
+    MAGELLAN_WPCALYPSO_CONFIGS=${MAGELLAN_CONFIGS}+"$MAGELLAN_CONFIG"
+    CMD="env BROWSERSIZE=$1 WPCCALYPSO=true BROWSERLOCALE=$locale $MAGELLAN --mocha_args='$MOCHA_ARGS' --config='$MAGELLAN_WPCALYPSO_CONFIG' --max_workers=$WORKERS"
+
+    eval $CMD
+    RETURN+=$?
+}
+
 # Combine any NODE_CONFIG entries into a single object
 NODE_CONFIG_ARG="$(joinStr , ${NODE_CONFIG_ARGS[*]})"
 MOCHA_ARGS+="--NODE_CONFIG={$NODE_CONFIG_ARG}"
@@ -209,6 +218,8 @@ if [ $PARALLEL == 1 ]; then
 
       eval $CMD
       RETURN+=$?
+
+      execute_wpcalypso 'mobile'
   fi
   if [ $CIRCLE_NODE_INDEX == $DESKTOP ]; then
       echo "Executing tests at desktop screen width"
@@ -216,6 +227,8 @@ if [ $PARALLEL == 1 ]; then
 
       eval $CMD
       RETURN+=$?
+
+      execute_wpcalypso 'desktop'
   fi
 else # Not using multiple CircleCI containers, just queue up the tests in sequence
   if [ "$CI" != "true" ] || [ $CIRCLE_NODE_INDEX == 0 ]; then
@@ -232,11 +245,7 @@ else # Not using multiple CircleCI containers, just queue up the tests in sequen
           fi
         done
 
-        # Execute wpcalypso specs in wpcalypso environment
-        CMD="env BROWSERSIZE=$size WPCCALYPSO=true BROWSERLOCALE=$locale $MAGELLAN --mocha_args='$MOCHA_ARGS' --config='$MAGELLAN_WPCALYPSO_CONFIG' --max_workers=$WORKERS"
-
-        eval $CMD
-        RETURN+=$?
+        execute_wpcalypso ${size}
       done
     done
   fi
