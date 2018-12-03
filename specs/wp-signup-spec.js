@@ -14,10 +14,10 @@ import StartPage from '../lib/pages/signup/start-page.js';
 import JetpackAddNewSitePage from '../lib/pages/signup/jetpack-add-new-site-page';
 
 import AboutPage from '../lib/pages/signup/about-page.js';
+import DomainFirstPage from '../lib/pages/signup/domain-first-page';
 import ReaderLandingPage from '../lib/pages/signup/reader-landing-page';
 import PickAPlanPage from '../lib/pages/signup/pick-a-plan-page.js';
 import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.js';
-import SignupProcessingPage from '../lib/pages/signup/signup-processing-page.js';
 import CheckOutPage from '../lib/pages/signup/checkout-page';
 import CheckOutThankyouPage from '../lib/pages/signup/checkout-thankyou-page.js';
 import ImportFromURLPage from '../lib/pages/signup/import-from-url-page';
@@ -53,6 +53,7 @@ import NewUserRegistrationUnavailableComponent from '../lib/components/new-user-
 import DeleteAccountFlow from '../lib/flows/delete-account-flow';
 import DeletePlanFlow from '../lib/flows/delete-plan-flow';
 import ThemeDialogComponent from '../lib/components/theme-dialog-component';
+import SignUpStep from '../lib/flows/sign-up-step';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -130,10 +131,9 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -237,10 +237,9 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -304,19 +303,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can search for a blog name, can see and select a free WordPress.com blog address in results',
 			async function() {
-				const findADomainComponent = await FindADomainComponent.Expect( driver );
-				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
-					expectedBlogAddresses,
-					blogName
+				return await new SignUpStep( driver ).selectFreeWordPressDotComAddresss(
+					blogName,
+					expectedBlogAddresses
 				);
-				let actualAddress = await findADomainComponent.freeBlogAddress();
-				assert(
-					expectedBlogAddresses.indexOf( actualAddress ) > -1,
-					`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
-				);
-
-				return await findADomainComponent.selectFreeAddress();
 			}
 		);
 
@@ -330,11 +320,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear();
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -445,19 +431,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can search for a blog name, can see and select a free WordPress.com blog address in results',
 			async function() {
-				const findADomainComponent = await FindADomainComponent.Expect( driver );
-				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
-					expectedBlogAddresses,
-					blogName
+				return await new SignUpStep( driver ).selectFreeWordPressDotComAddresss(
+					blogName,
+					expectedBlogAddresses
 				);
-				let actualAddress = await findADomainComponent.freeBlogAddress();
-				assert(
-					expectedBlogAddresses.indexOf( actualAddress ) > -1,
-					`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
-				);
-
-				return await findADomainComponent.selectFreeAddress();
 			}
 		);
 
@@ -471,11 +448,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -567,6 +540,15 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			);
 		} );
 
+		step( 'Can see the account details page and enter account details', async function() {
+			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+			return await createYourAccountPage.enterAccountDetailsAndSubmit(
+				emailAddress,
+				blogName,
+				passwordForTestAccounts
+			);
+		} );
+
 		step( 'Can see the about page and accept defaults', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
 			return await aboutPage.submitForm();
@@ -583,35 +565,17 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
 			async function() {
-				const findADomainComponent = await FindADomainComponent.Expect( driver );
-				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
-					expectedBlogAddresses,
-					blogName
+				return await new SignUpStep( driver ).selectFreeWordPressDotComAddresss(
+					blogName,
+					expectedBlogAddresses
 				);
-				let actualAddress = await findADomainComponent.freeBlogAddress();
-				assert(
-					expectedBlogAddresses.indexOf( actualAddress ) > -1,
-					`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
-				);
-				return await findADomainComponent.selectFreeAddress();
 			}
 		);
 
-		step( 'Can see the account details page and enter account details', async function() {
-			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
-			return await createYourAccountPage.enterAccountDetailsAndSubmit(
-				emailAddress,
-				blogName,
-				passwordForTestAccounts
-			);
-		} );
-
 		step(
-			"Can then see the sign up processing page and it will finish and show a 'Continue' button, which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -702,6 +666,15 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			);
 		} );
 
+		step( 'Can see the account details page and enter account details', async function() {
+			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+			return await createYourAccountPage.enterAccountDetailsAndSubmit(
+				emailAddress,
+				blogName,
+				passwordForTestAccounts
+			);
+		} );
+
 		step( 'Can see the about page and accept defaults', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
 			return await aboutPage.submitForm();
@@ -715,35 +688,17 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
 			async function() {
-				const findADomainComponent = await FindADomainComponent.Expect( driver );
-				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
-					expectedBlogAddresses,
-					blogName
+				return await new SignUpStep( driver ).selectFreeWordPressDotComAddresss(
+					blogName,
+					expectedBlogAddresses
 				);
-				let actualAddress = await findADomainComponent.freeBlogAddress();
-				assert(
-					expectedBlogAddresses.indexOf( actualAddress ) > -1,
-					`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
-				);
-				return await findADomainComponent.selectFreeAddress();
 			}
 		);
 
-		step( 'Can see the account details page and enter account details', async function() {
-			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
-			return await createYourAccountPage.enterAccountDetailsAndSubmit(
-				emailAddress,
-				blogName,
-				passwordForTestAccounts
-			);
-		} );
-
 		step(
-			"Can then see the sign up processing page and it will finish and show a 'Continue' button, which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -853,6 +808,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			);
 		} );
 
+		step( 'Can select domain only from the domain first choice page', async function() {
+			const domainFirstPage = await DomainFirstPage.Expect( driver );
+			return await domainFirstPage.chooseJustBuyTheDomain();
+		} );
+
 		step( 'Can then enter account details', async function() {
 			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
 			return await createYourAccountPage.enterAccountDetailsAndSubmit(
@@ -865,11 +825,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear( siteName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( siteName, passwordForTestAccounts );
 			}
 		);
 
@@ -1049,6 +1005,15 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			);
 		} );
 
+		step( 'Can then enter account details and continue', async function() {
+			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+			return await createYourAccountPage.enterAccountDetailsAndSubmit(
+				emailAddress,
+				siteName,
+				passwordForTestAccounts
+			);
+		} );
+
 		step( 'Can see the about page and accept defaults', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
 			return await aboutPage.submitForm();
@@ -1078,23 +1043,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		step( 'Can then enter account details and continue', async function() {
-			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
-			return await createYourAccountPage.enterAccountDetailsAndSubmit(
-				emailAddress,
-				siteName,
-				passwordForTestAccounts
-			);
-		} );
-
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				if ( global.browserName === 'Internet Explorer' ) {
-					return;
-				}
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.waitToDisappear( siteName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( siteName, passwordForTestAccounts );
 			}
 		);
 
@@ -1260,11 +1212,9 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				await SignupProcessingPage.hideFloatiesinIE11( driver );
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1315,18 +1265,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the domains page and can search for a blog name, can see and select a free WordPress.com blog address in results',
 			async function() {
-				const findADomainComponent = await FindADomainComponent.Expect( driver );
-				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
-				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
-					expectedBlogAddresses,
-					blogName
+				return await new SignUpStep( driver ).selectFreeWordPressDotComAddresss(
+					blogName,
+					expectedBlogAddresses
 				);
-				let actualAddress = await findADomainComponent.freeBlogAddress();
-				assert(
-					expectedBlogAddresses.indexOf( actualAddress ) > -1,
-					`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
-				);
-				return await findADomainComponent.selectFreeAddress();
 			}
 		);
 
@@ -1345,10 +1287,9 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1417,6 +1358,16 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const expectedDomainName = `${ blogName }.art.blog`;
 
 		before( async function() {
+			if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
+				await SlackNotifier.warn(
+					'Domains tests are currently disabled as SKIP_DOMAIN_TESTS is set to true',
+					{ suppressDuplicateMessages: true }
+				);
+				return this.skip();
+			}
+		} );
+
+		before( async function() {
 			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -1475,10 +1426,9 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1531,10 +1481,9 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( userName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1579,10 +1528,9 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step(
-			"Can see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return signupProcessingPage.continueAlong( blogName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1638,10 +1586,9 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		);
 
 		step(
-			"Can then see the sign up processing page -  will finish and show a 'Continue' button which is clicked",
+			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				const signupProcessingPage = await SignupProcessingPage.Expect( driver );
-				return await signupProcessingPage.continueAlong( userName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( userName, passwordForTestAccounts );
 			}
 		);
 
@@ -1664,8 +1611,20 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		step( 'Can visit import in signup page', async function() {
-			await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale, flow: 'import' } ) );
+		step( 'Can visit import in signup page and prefill url', async function() {
+			await StartPage.Visit(
+				driver,
+				StartPage.getStartURL( { culture: locale, flow: 'import', query: `url=${ siteURL }` } )
+			);
+
+			const importFromURLPage = await ImportFromURLPage.Expect( driver );
+			const urlValue = await importFromURLPage.getURLInputValue();
+
+			assert.strictEqual(
+				urlValue,
+				siteURL,
+				"The url input value doesn't match the url query argument"
+			);
 		} );
 
 		step( 'Can then enter a valid url of a site to import', async function() {
@@ -1685,7 +1644,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 			// Retry checking site importability if there's an error.
 			// Cancel test if endpoint still isn't working--can't continue testing this flow.
-			let retries = 1;
+			let attempts = 2;
 			while ( true ) {
 				try {
 					await importFromURLPage.submitURL( siteURL );
@@ -1694,16 +1653,29 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 						By.css( importFromURLPage.containerSelector )
 					);
 				} catch ( e ) {
-					if ( retries-- < 1 ) {
-						await SlackNotifier.warn(
-							`Skipping test because checking site importability was retried and is still unsuccessful: '${ e }'`,
-							{ suppressDuplicateMessages: true }
-						);
+					attempts--;
 
-						return this.skip();
+					const importabilityErrorMessage =
+						'There was an error with the importer, please try again.';
+					const urlInputMessage = await importFromURLPage.getURLInputMessage();
+
+					// `is-site-importable` was unresponsive or returned an error.
+					if ( urlInputMessage === importabilityErrorMessage ) {
+						// Last attempt, skip the test.
+						if ( attempts < 1 ) {
+							await SlackNotifier.warn(
+								`Skipping test because checking site importability was retried and was still unsuccessful: ${ e }`,
+								{ suppressDuplicateMessages: true }
+							);
+							return this.skip();
+						}
+
+						// More attempts are left, retry site importability check.
+						console.log( `Checking site importability didn't work as expected - retrying: ${ e }` );
+					} else {
+						// Some other error, test failed.
+						throw e;
 					}
-
-					console.log( `Checking site importability didn't work as expected - retrying: '${ e }'` );
 				}
 			}
 		} );
@@ -1718,7 +1690,20 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			);
 		} );
 
-		step( 'Can activate my account from an email and go to the importers page', async function() {
+		step( 'Can then see the site importer pane and preview site to be imported', async function() {
+			const importPage = await ImportPage.Expect( driver );
+
+			// Test that we have opened the correct importer and can see the preview.
+			await importPage.siteImporterInputPane();
+			await importPage.previewSiteToBeImported();
+		} );
+
+		step( 'Can then start an import', async function() {
+			const importPage = await ImportPage.Expect( driver );
+			await importPage.siteImporterCanStartImport();
+		} );
+
+		step( 'Can activate my account from an email', async function() {
 			const emailClient = new EmailClient( signupInboxId );
 			const validator = emails => emails.find( email => email.subject.includes( 'Activate' ) );
 			let emails = await emailClient.pollEmailsByRecipient( emailAddress, validator );
@@ -1730,14 +1715,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			const activationLink = emails[ 0 ].html.links[ 0 ].href;
 			assert( activationLink !== undefined, 'Could not locate the activation link email link' );
 			await driver.get( activationLink );
-		} );
-
-		step( 'Can then see the site importer pane and preview site to be imported', async function() {
-			const importPage = await ImportPage.Expect( driver );
-
-			// Test that we have opened the correct importer and can see the preview.
-			await importPage.siteImporterInputPane();
-			return await importPage.previewSiteToBeImported();
 		} );
 
 		step( 'Can delete our newly created account', async function() {

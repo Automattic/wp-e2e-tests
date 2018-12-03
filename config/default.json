@@ -53,7 +53,9 @@
 			"browserName": "Internet Explorer",
 			"platform": "Windows 10",
 			"screenResolution": "2560x1600",
-			"version": "11.103"
+			"version": "11.285",
+		  	"iedriverVersion": "3.141.0",
+		  	"seleniumVersion": "3.141.0"
 		}
 	},
 	"knownABTestKeys": [
@@ -61,35 +63,23 @@
 		"skipThemesSelectionModal",
 		"springSale30PercentOff",
 		"jetpackSignupGoogleTop",
-		"domainSearchTLDFilterPlacement",
-		"aboutSuggestionMatches",
-		"includeDotBlogSubdomainV2",
-		"nudgeAPalooza",
-		"showPlanCreditsApplied",
 		"cartNudgeUpdateToPremium",
-		"userFirstSignup",
 		"signupAtomicStoreVsPressable",
-		"dotBlogSuggestionsv2",
-		"krackenRebootM33",
 		"improvedOnboarding",
-		"skipDomainOrSiteStep"
+		"privateByDefault",
+		"crowdsignalNameBasedSignup",
+		"krackenM5DomainSuggestions"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
 		[ "skipThemesSelectionModal_20170904", "show" ],
 		[ "springSale30PercentOff_20180413", "control" ],
 		[ "jetpackSignupGoogleTop_20180427", "original" ],
-		[ "domainSearchTLDFilterPlacement_20180531", "belowFeatured" ],
-		[ "aboutSuggestionMatches_20180704", "control" ],
-		[ "nudgeAPalooza_20180806", "control" ],
-		[ "includeDotBlogSubdomainV2_20180813", "no" ],
-		[ "improvedOnboarding_20181023", "main" ],
-		[ "showPlanCreditsApplied_20180903", "control" ],
 		[ "cartNudgeUpdateToPremium_20180903", "control" ],
-		[ "userFirstSignup_20180913", "userFirst" ],
 		[ "signupAtomicStoreVsPressable_20171101", "atomic" ],
-		[ "dotBlogSuggestionsv2_20181012", "simple" ],
-		[ "krackenRebootM33_20181108", "domainsbot_front" ],
-		[ "skipDomainOrSiteStep_20181025", "yes" ]
+		[ "improvedOnboarding_20181023", "main" ],
+		[ "privateByDefault_20181113", "public" ],
+		[ "crowdsignalNameBasedSignup_20181120", "usernameSignup" ],
+		[ "krackenM5DomainSuggestions_20181129", "domainsbot_front" ]
 	]
 }
