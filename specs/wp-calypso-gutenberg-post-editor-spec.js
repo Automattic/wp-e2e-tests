@@ -41,7 +41,7 @@ before( async function() {
 describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
-	describe( 'Public Posts: Preview and Publish a Public Post @parallel', function() {
+	describe.only( 'Public Posts: Preview and Publish a Public Post @parallel', function() {
 		let fileDetails;
 		const blogPostTitle = dataHelper.randomPhrase();
 		const blogPostQuote =
@@ -200,7 +200,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 			const viewPostPage = await ViewPostPage.Expect( driver );
 			let content = await viewPostPage.postContent();
 			assert.strictEqual(
-				content.indexOf( blogPostQuote ) > -1,
+				content.indexOf( blogPostQuote ) === -1,
 				true,
 				'The post content (' +
 					content +
