@@ -29,6 +29,7 @@ function joinStr { local IFS="$1"; shift; echo "$*"; }
 I18N_CONFIG="\"browser\":\"chrome\",\"proxy\":\"system\",\"saveAllScreenshots\":true"
 IE11_CONFIG="\"sauce\":\"true\",\"sauceConfig\":\"win-ie11\""
 SAFARI_CONFIG="\"sauce\":\"true\",\"sauceConfig\":\"osx-safari\""
+MAGELLAN_WPCALYPSO_CONFIG="magellan-wpcalypso.json"
 
 declare -a MAGELLAN_CONFIGS
 
@@ -230,6 +231,12 @@ else # Not using multiple CircleCI containers, just queue up the tests in sequen
             RETURN+=$?
           fi
         done
+
+        # Execute wpcalypso specs in wpcalypso environment
+        CMD="env BROWSERSIZE=$size WPCCALYPSO=true BROWSERLOCALE=$locale $MAGELLAN --mocha_args='$MOCHA_ARGS' --config='$MAGELLAN_WPCALYPSO_CONFIG' --max_workers=$WORKERS"
+
+        eval $CMD
+        RETURN+=$?
       done
     done
   fi
