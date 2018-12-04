@@ -19,7 +19,6 @@ fi
 #disable selenium promise manager
 export SELENIUM_PROMISE_MANAGER=0
 export TEST_VIDEO="true"
-
 export TESTARGS="-R -p"
 
 if [ "$RUN_SPECIFIED" == "true" ]; then
@@ -36,6 +35,17 @@ elif [[ "$CIRCLE_BRANCH" =~ .*[Ii][Ee][1][1].* ]]; then
   TESTARGS="-R -w" # Execute IE11 tests
 elif [ "$CIRCLE_BRANCH" == "master" ]; then
   TESTARGS="-R -p" # Parallel execution, implies -g -s mobile,desktop
+fi
+
+#Check if matching branch exists in wp-calypso
+if [ "$CIRCLE_BRANCH" != "master" ]; then
+    sudo apt-get install jq > /dev/null &&
+    MATCH_SHA=$(curl -s -X GET https://api.github.com/repos/Automattic/wp-calypso/branches/${CIRCLE_BRANCH} | jq -r '.commit.sha')
+
+    if [ "$MATCH_SHA" != null ]; then
+        TESTARGS+=" -S $MATCH_SHA"
+        echo "Found matching branch in wp-calypso. Running against calypso.live"
+    fi
 fi
 
 # If on CI and the -x flag is not yet set, set it
