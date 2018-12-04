@@ -249,8 +249,6 @@ else # Not using multiple CircleCI containers, just queue up the tests in sequen
             RETURN+=$?
           fi
         done
-
-        execute_wpcalypso ${size}
       done
     done
   fi
