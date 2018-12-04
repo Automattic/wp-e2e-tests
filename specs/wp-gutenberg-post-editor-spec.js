@@ -390,13 +390,13 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 				'If you’re not prepared to be wrong; you’ll never come up with anything original.\n— Sir Ken Robinson';
 
 			before( async function() {
-/*				if ( driverManager.currentScreenSize() === 'mobile' ) {
+				if ( driverManager.currentScreenSize() === 'mobile' ) {
 					await SlackNotifier.warn(
 						'Gutenberg private post spec currently not supported on mobile due to Gutenberg bug',
 						{ suppressDuplicateMessages: true }
 					);
 					return this.skip();
-				}*/
+				}
 			} );
 
 			step( 'Can log in', async function() {
@@ -511,7 +511,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe.only( 'Password Protected Posts: @parallel', function() {
+	describe( 'Password Protected Posts: @parallel', function() {
 		describe( 'Publish a Password Protected Post', function() {
 			let blogPostTitle = dataHelper.randomPhrase();
 			let blogPostQuote =
