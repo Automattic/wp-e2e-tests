@@ -179,7 +179,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe( 'Private Pages: @parallel', function() {
+	describe.only( 'Private Pages: @parallel', function() {
 		let pageTitle = dataHelper.randomPhrase();
 		let pageQuote =
 			'Few people know how to take a walk. The qualifications are endurance, plain clothes, old shoes, an eye for nature, good humor, vast curiosity, good speech, good silence and nothing too much.\n— Ralph Waldo Emerson';
@@ -211,7 +211,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 		step( 'Can set visibility to private which immediately publishes it', async function() {
 			const gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
-			await gSidebarComponent.chooseDocumentSetttings();
+			await gSidebarComponent.chooseDocumentSettings();
 			await gSidebarComponent.setVisibilityToPrivate();
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 			return await gEditorComponent.waitForSuccessViewPostNotice();
@@ -296,7 +296,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				);
 
 				const gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
-				await gSidebarComponent.chooseDocumentSetttings();
+				await gSidebarComponent.chooseDocumentSettings();
 				await gSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				await gSidebarComponent.hideComponentIfNecessary();
 

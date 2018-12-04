@@ -358,7 +358,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 				async function() {
 					let gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 					await gSidebarComponent.displayComponentIfNecessary();
-					await gSidebarComponent.chooseDocumentSetttings();
+					await gSidebarComponent.chooseDocumentSettings();
 					let publishDate = await gSidebarComponent.scheduleFuturePost();
 
 					let gEditorComponent = await GutenbergEditorComponent.Expect( driver );
@@ -383,20 +383,20 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe( 'Private Posts: @parallel', function() {
+	describe.only( 'Private Posts: @parallel', function() {
 		describe( 'Publish a Private Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
 				'If you’re not prepared to be wrong; you’ll never come up with anything original.\n— Sir Ken Robinson';
 
 			before( async function() {
-				if ( driverManager.currentScreenSize() === 'mobile' ) {
+/*				if ( driverManager.currentScreenSize() === 'mobile' ) {
 					await SlackNotifier.warn(
 						'Gutenberg private post spec currently not supported on mobile due to Gutenberg bug',
 						{ suppressDuplicateMessages: true }
 					);
 					return this.skip();
-				}
+				}*/
 			} );
 
 			step( 'Can log in', async function() {
@@ -437,7 +437,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 				'Set to private which publishes it - Can set visibility to private which immediately publishes it',
 				async function() {
 					const gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
-					await gSidebarComponent.chooseDocumentSetttings();
+					await gSidebarComponent.chooseDocumentSettings();
 					await gSidebarComponent.expandStatusAndVisibility();
 					await gSidebarComponent.setVisibilityToPrivate();
 					const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
@@ -511,7 +511,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe( 'Password Protected Posts: @parallel', function() {
+	describe.only( 'Password Protected Posts: @parallel', function() {
 		describe( 'Publish a Password Protected Post', function() {
 			let blogPostTitle = dataHelper.randomPhrase();
 			let blogPostQuote =
@@ -535,7 +535,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 				);
 
 				const gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
-				await gSidebarComponent.chooseDocumentSetttings();
+				await gSidebarComponent.chooseDocumentSettings();
 				await gSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				await gSidebarComponent.hideComponentIfNecessary();
 
@@ -791,7 +791,7 @@ describe( `[${ host }] Gutenberg Editor: Posts (${ screenSize })`, function() {
 
 			step( 'Can trash the new post', async function() {
 				const gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
-				await gSidebarComponent.chooseDocumentSetttings();
+				await gSidebarComponent.chooseDocumentSettings();
 				return await gSidebarComponent.trashPost();
 			} );
 
