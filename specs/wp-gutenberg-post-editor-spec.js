@@ -355,13 +355,15 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ scre
 				let gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 				await gSidebarComponent.trashPost();
 
-				const wpAdminPostsPage = await WPAdminPostsPage.Expect( driver );
-				const displayed = await wpAdminPostsPage.trashedSuccessNoticeDisplayed();
-				return assert.strictEqual(
-					displayed,
-					true,
-					'The Posts page success notice for deleting the post is not displayed'
-				);
+				if ( ! driverManager.isWPCalypso() ) {
+					const wpAdminPostsPage = await WPAdminPostsPage.Expect( driver );
+					const displayed = await wpAdminPostsPage.trashedSuccessNoticeDisplayed();
+					return assert.strictEqual(
+						displayed,
+						true,
+						'The Posts page success notice for deleting the post is not displayed'
+					);
+				}
 			} );
 
 			// Not working https://github.com/Automattic/wp-calypso/issues/28813
@@ -790,15 +792,17 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ scre
 			} );
 
 			// Not working https://github.com/Automattic/wp-calypso/issues/28813
-			step( 'Can then see the Posts page with a confirmation message', async function() {
-				const wpAdminPostsPage = await WPAdminPostsPage.Expect( driver );
-				const displayed = await wpAdminPostsPage.trashedSuccessNoticeDisplayed();
-				return assert.strictEqual(
-					displayed,
-					true,
-					'The Posts page success notice for deleting the post is not displayed'
-				);
-			} );
+			if ( ! driverManager.isWPCalypso() ) {
+				step( 'Can then see the Posts page with a confirmation message', async function() {
+					const wpAdminPostsPage = await WPAdminPostsPage.Expect( driver );
+					const displayed = await wpAdminPostsPage.trashedSuccessNoticeDisplayed();
+					return assert.strictEqual(
+						displayed,
+						true,
+						'The Posts page success notice for deleting the post is not displayed'
+					);
+				} );
+			}
 		} );
 	} );
 
@@ -899,56 +903,59 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Posts (${ scre
 		} );
 	} );
 
-	describe( 'Insert a contact form: @parallel @wpcalypso', function() {
-		describe( 'Publish a New Post with a Contact Form', function() {
-			const originalBlogPostTitle = 'Contact Us: ' + dataHelper.randomPhrase();
-			const contactEmail = 'testing@automattic.com';
-			const subject = "Let's work together";
+	if ( ! driverManager.isWPCalypso() ) {
+		// Only run this in dotcom since contact form block not ready
+		describe( 'Insert a contact form: @parallel @wpcalypso', function() {
+			describe( 'Publish a New Post with a Contact Form', function() {
+				const originalBlogPostTitle = 'Contact Us: ' + dataHelper.randomPhrase();
+				const contactEmail = 'testing@automattic.com';
+				const subject = "Let's work together";
 
-			step( 'Can log in', async function() {
-				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await loginFlow.loginAndStartNewPost( null, true );
-			} );
+				step( 'Can log in', async function() {
+					const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
+					return await loginFlow.loginAndStartNewPost( null, true );
+				} );
 
-			step( 'Can insert the contact form', async function() {
-				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
-				await gEditorComponent.enterTitle( originalBlogPostTitle );
+				step( 'Can insert the contact form', async function() {
+					const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+					await gEditorComponent.enterTitle( originalBlogPostTitle );
 
-				if ( driverManager.isWPCalypso() ) {
-					await gEditorComponent.insertContactForm( contactEmail, subject );
-				} else {
-					await gEditorComponent.insertShortcode( '[contact-form][/contact-form]' );
-				}
+					if ( driverManager.isWPCalypso() ) {
+						await gEditorComponent.insertContactForm( contactEmail, subject );
+					} else {
+						await gEditorComponent.insertShortcode( '[contact-form][/contact-form]' );
+					}
 
-				let errorShown = await gEditorComponent.errorDisplayed();
-				return assert.strictEqual(
-					errorShown,
-					false,
-					'There is an error shown on the Gutenberg editor page!'
-				);
-			} );
-
-			step( 'Can publish and view content', async function() {
-				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
-				await gEditorComponent.publish( { visit: true } );
-			} );
-
-			if ( driverManager.isWPCalypso() ) {
-				step( 'Can see the contact form in our published post', async function() {
-					this.viewPostPage = await ViewPostPage.Expect( driver );
-					let displayed = await this.viewPostPage.contactFormDisplayed();
-					assert.strictEqual(
-						displayed,
-						true,
-						'The published post does not contain the contact form'
+					let errorShown = await gEditorComponent.errorDisplayed();
+					return assert.strictEqual(
+						errorShown,
+						false,
+						'There is an error shown on the Gutenberg editor page!'
 					);
 				} );
-			}
+
+				step( 'Can publish and view content', async function() {
+					const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+					await gEditorComponent.publish( { visit: true } );
+				} );
+
+				if ( driverManager.isWPCalypso() ) {
+					step( 'Can see the contact form in our published post', async function() {
+						this.viewPostPage = await ViewPostPage.Expect( driver );
+						let displayed = await this.viewPostPage.contactFormDisplayed();
+						assert.strictEqual(
+							displayed,
+							true,
+							'The published post does not contain the contact form'
+						);
+					} );
+				}
+			} );
 		} );
-	} );
+	}
 
 	if ( driverManager.isWPCalypso() ) {
-		describe( 'Insert a payment button: @parallel @wpcalypso', function() {
+		xdescribe( 'Insert a payment button: @parallel @wpcalypso', function() {
 			const paymentButtonDetails = {
 				title: 'Button',
 				description: 'Description',
