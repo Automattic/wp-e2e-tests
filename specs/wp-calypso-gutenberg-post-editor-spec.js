@@ -782,7 +782,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	describe( 'Trash Post: @parallel', function() {
+	xdescribe( 'Trash Post: @parallel', function() {
 		describe( 'Trash a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
