@@ -34,10 +34,10 @@ before( async function() {
 	driver = await driverManager.startBrowser();
 } );
 
-describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Pages (${ screenSize }) @wpcalypso`, function() {
+describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Pages (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
-	describe( 'Public Pages: @parallel', function() {
+	describe( 'Public Pages: @parallel @wpcalypso', function() {
 		let fileDetails;
 		const pageTitle = dataHelper.randomPhrase();
 		const pageQuote =
@@ -179,7 +179,7 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Pages (${ scre
 		} );
 	} );
 
-	describe( 'Private Pages: @parallel', function() {
+	describe( 'Private Pages: @parallel @wpcalypso', function() {
 		let pageTitle = dataHelper.randomPhrase();
 		let pageQuote =
 			'Few people know how to take a walk. The qualifications are endurance, plain clothes, old shoes, an eye for nature, good humor, vast curiosity, good speech, good silence and nothing too much.\n— Ralph Waldo Emerson';
@@ -258,7 +258,7 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Pages (${ scre
 		} );
 	} );
 
-	describe( 'Password Protected Pages: @parallel', function() {
+	describe( 'Password Protected Pages: @parallel @wpcalypso', function() {
 		const pageTitle = dataHelper.randomPhrase();
 		const pageQuote =
 			'If you don’t like something, change it. If you can’t change it, change the way you think about it.\n— Mary Engelbreit';
@@ -530,7 +530,7 @@ describe( `[${ host }] Gutenberg:(${ calpsoEnvironment }) Editor: Pages (${ scre
 		} );
 	} );
 
-	xdescribe( 'Insert a payment button into a page: @parallel', function() {
+	xdescribe( 'Insert a payment button into a page: @parallel @wpcalypso', function() {
 		const paymentButtonDetails = {
 			title: 'Button',
 			description: 'Description',
