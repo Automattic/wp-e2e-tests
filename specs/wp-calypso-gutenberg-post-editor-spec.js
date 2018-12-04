@@ -363,7 +363,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 				async function() {
 					let gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 					await gSidebarComponent.displayComponentIfNecessary();
-					await gSidebarComponent.chooseDocumentSetttings();
+					await gSidebarComponent.chooseDocumentSettings();
 					let publishDate = await gSidebarComponent.scheduleFuturePost();
 
 					let gEditorComponent = await GutenbergEditorComponent.Expect( driver );
@@ -447,7 +447,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 				'Set to private which publishes it - Can set visibility to private which immediately publishes it',
 				async function() {
 					const gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
-					await gSidebarComponent.chooseDocumentSetttings();
+					await gSidebarComponent.chooseDocumentSettings();
 					await gSidebarComponent.expandStatusAndVisibility();
 					await gSidebarComponent.setVisibilityToPrivate();
 					const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
@@ -545,7 +545,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 				);
 
 				const gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
-				await gSidebarComponent.chooseDocumentSetttings();
+				await gSidebarComponent.chooseDocumentSettings();
 				await gSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				await gSidebarComponent.hideComponentIfNecessary();
 
@@ -801,7 +801,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 			step( 'Can trash the new post', async function() {
 				const gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
-				await gSidebarComponent.chooseDocumentSetttings();
+				await gSidebarComponent.chooseDocumentSettings();
 				return await gSidebarComponent.trashPost();
 			} );
 

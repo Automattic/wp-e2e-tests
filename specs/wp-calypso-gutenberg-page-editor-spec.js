@@ -211,7 +211,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 
 		step( 'Can set visibility to private which immediately publishes it', async function() {
 			const gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
-			await gSidebarComponent.chooseDocumentSetttings();
+			await gSidebarComponent.chooseDocumentSettings();
 			await gSidebarComponent.setVisibilityToPrivate();
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 			return await gEditorComponent.waitForSuccessViewPostNotice();
@@ -296,7 +296,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 				);
 
 				const gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
-				await gSidebarComponent.chooseDocumentSetttings();
+				await gSidebarComponent.chooseDocumentSettings();
 				await gSidebarComponent.setVisibilityToPasswordProtected( postPassword );
 				await gSidebarComponent.hideComponentIfNecessary();
 
