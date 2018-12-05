@@ -32,7 +32,7 @@ before( async function() {
 	driver = await driverManager.startBrowser();
 } );
 
-describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
+describe( `[${ host }] Calypso Gutenberg Editor: Pages (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
 	describe( 'Public Pages: @parallel @jetpack', function() {
@@ -184,16 +184,6 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 		let pageQuote =
 			'Few people know how to take a walk. The qualifications are endurance, plain clothes, old shoes, an eye for nature, good humor, vast curiosity, good speech, good silence and nothing too much.\n— Ralph Waldo Emerson';
 
-		before( async function() {
-			if ( driverManager.currentScreenSize() === 'mobile' ) {
-				await SlackNotifier.warn(
-					'Gutenberg private page spec currently not supported on mobile due to Gutenberg bug',
-					{ suppressDuplicateMessages: true }
-				);
-				return this.skip();
-			}
-		} );
-
 		step( 'Can log in', async function() {
 			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
 			return await this.loginFlow.loginAndStartNewPage( null, true, {
@@ -213,6 +203,7 @@ describe( `[${ host }] Editor: Pages (${ screenSize })`, function() {
 			const gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 			await gSidebarComponent.chooseDocumentSettings();
 			await gSidebarComponent.setVisibilityToPrivate();
+			await gSidebarComponent.hideComponentIfNecessary();
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 			return await gEditorComponent.waitForSuccessViewPostNotice();
 		} );
