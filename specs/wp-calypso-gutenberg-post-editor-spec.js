@@ -397,16 +397,6 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 			const blogPostQuote =
 				'If you’re not prepared to be wrong; you’ll never come up with anything original.\n— Sir Ken Robinson';
 
-			before( async function() {
-				if ( driverManager.currentScreenSize() === 'mobile' ) {
-					await SlackNotifier.warn(
-						'Gutenberg private post spec currently not supported on mobile due to Gutenberg bug',
-						{ suppressDuplicateMessages: true }
-					);
-					return this.skip();
-				}
-			} );
-
 			step( 'Can log in', async function() {
 				this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
 				return await this.loginFlow.loginAndStartNewPost( null, true, {
@@ -450,6 +440,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 					await gSidebarComponent.chooseDocumentSettings();
 					await gSidebarComponent.expandStatusAndVisibility();
 					await gSidebarComponent.setVisibilityToPrivate();
+					await gSidebarComponent.hideComponentIfNecessary();
 					const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 					return await gEditorComponent.waitForSuccessViewPostNotice();
 				}

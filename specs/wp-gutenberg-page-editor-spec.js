@@ -18,7 +18,6 @@ import * as driverHelper from '../lib/driver-helper';
 import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
 import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
 import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
-import * as SlackNotifier from '../lib/slack-notifier';
 import GutenbergPagePreviewComponent from '../lib/gutenberg/gutenberg-page-preview-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
@@ -183,16 +182,6 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 		let pageQuote =
 			'Few people know how to take a walk. The qualifications are endurance, plain clothes, old shoes, an eye for nature, good humor, vast curiosity, good speech, good silence and nothing too much.\n— Ralph Waldo Emerson';
 
-		before( async function() {
-			if ( driverManager.currentScreenSize() === 'mobile' ) {
-				await SlackNotifier.warn(
-					'Gutenberg private page spec currently not supported on mobile due to Gutenberg bug',
-					{ suppressDuplicateMessages: true }
-				);
-				return this.skip();
-			}
-		} );
-
 		step( 'Can log in', async function() {
 			const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
 			await loginFlow.loginAndStartNewPage( null, true );
@@ -210,6 +199,7 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 			const gSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 			await gSidebarComponent.chooseDocumentSettings();
 			await gSidebarComponent.setVisibilityToPrivate();
+			await gSidebarComponent.hideComponentIfNecessary();
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 			return await gEditorComponent.waitForSuccessViewPostNotice();
 		} );
@@ -264,16 +254,6 @@ describe( `[${ host }] Gutenberg Editor: Pages (${ screenSize })`, function() {
 		const postPassword = 'e2e' + new Date().getTime().toString();
 
 		describe( 'Publish a Password Protected Page', function() {
-			before( async function() {
-				if ( driverManager.currentScreenSize() === 'mobile' ) {
-					await SlackNotifier.warn(
-						'Gutenberg password protected page spec currently not supported on mobile due to Gutenberg bug',
-						{ suppressDuplicateMessages: true }
-					);
-					return this.skip();
-				}
-			} );
-
 			step( 'Can log in', async function() {
 				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
 				await loginFlow.loginAndStartNewPage( null, true );
