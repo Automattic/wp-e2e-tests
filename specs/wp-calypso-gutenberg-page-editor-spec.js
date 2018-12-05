@@ -18,7 +18,6 @@ import * as driverManager from '../lib/driver-manager.js';
 import * as mediaHelper from '../lib/media-helper.js';
 import * as dataHelper from '../lib/data-helper.js';
 import * as driverHelper from '../lib/driver-helper';
-import * as SlackNotifier from '../lib/slack-notifier';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -258,16 +257,6 @@ describe( `[${ host }] Calypso Gutenberg Editor: Pages (${ screenSize })`, funct
 		const postPassword = 'e2e' + new Date().getTime().toString();
 
 		describe( 'Publish a Password Protected Page', function() {
-			before( async function() {
-				if ( driverManager.currentScreenSize() === 'mobile' ) {
-					await SlackNotifier.warn(
-						'Gutenberg password protected page spec currently not supported on mobile due to Gutenberg bug',
-						{ suppressDuplicateMessages: true }
-					);
-					return this.skip();
-				}
-			} );
-
 			step( 'Can log in', async function() {
 				this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
 				return await this.loginFlow.loginAndStartNewPage( null, true, {
