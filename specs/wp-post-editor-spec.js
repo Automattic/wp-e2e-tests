@@ -46,7 +46,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		const blogPostTitle = dataHelper.randomPhrase();
 		const blogPostQuote =
 			'The foolish man seeks happiness in the distance. The wise grows it under his feet.\n— James Oppenheim';
-		const newCategoryName = 'Category ' + new Date().getTime().toString();
 		const newTagName = 'Tag ' + new Date().getTime().toString();
 		const publicizeMessage = dataHelper.randomPhrase();
 
@@ -76,11 +75,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			await postEditorSidebarComponent.expandCategoriesAndTags();
 		} );
 
-		step( 'Can add a new category', async function() {
-			const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
-			await postEditorSidebarComponent.addNewCategory( newCategoryName );
-		} );
-
 		step( 'Can add a new tag', async function() {
 			const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 			await postEditorSidebarComponent.addNewTag( newTagName );
@@ -91,17 +85,13 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			await postEditorSidebarComponent.closeCategoriesAndTags();
 		} );
 
-		step( 'Verify categories and tags present after save', async function() {
+		step( 'Verify tags present after save', async function() {
 			const postEditorSidebarComponent = await PostEditorSidebarComponent.Expect( driver );
 			const postEditorToolbarComponent = await PostEditorToolbarComponent.Expect( driver );
 			await postEditorSidebarComponent.hideComponentIfNecessary();
 			await postEditorToolbarComponent.ensureSaved();
 			await postEditorSidebarComponent.displayComponentIfNecessary();
 			let subtitle = await postEditorSidebarComponent.getCategoriesAndTags();
-			assert(
-				! subtitle.match( /Uncategorized/ ),
-				'Post still marked Uncategorized after adding new category AFTER SAVE'
-			);
 			assert( subtitle.match( `#${ newTagName }` ), `New tag #${ newTagName } not applied` );
 		} );
 
@@ -180,15 +170,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			);
 		} );
 
-		step( 'Can see the post category in preview', async function() {
-			let categoryDisplayed = await this.postPreviewComponent.categoryDisplayed();
-			assert.strictEqual(
-				categoryDisplayed.toUpperCase(),
-				newCategoryName.toUpperCase(),
-				'The category: ' + newCategoryName + ' is not being displayed on the post'
-			);
-		} );
-
 		step( 'Can see the post tag in preview', async function() {
 			let tagDisplayed = await this.postPreviewComponent.tagDisplayed();
 			assert.strictEqual(
@@ -235,15 +216,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 			);
 		} );
 
-		step( 'Can see the post category in preview', async function() {
-			let categoryDisplayed = await this.postPreviewComponent.categoryDisplayed();
-			assert.strictEqual(
-				categoryDisplayed.toUpperCase(),
-				newCategoryName.toUpperCase(),
-				'The category: ' + newCategoryName + ' is not being displayed on the post'
-			);
-		} );
-
 		step( 'Can see the post tag in preview', async function() {
 			let tagDisplayed = await this.postPreviewComponent.tagDisplayed();
 			assert.strictEqual(
@@ -287,15 +259,6 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 					') does not include the expected content (' +
 					blogPostQuote +
 					')'
-			);
-		} );
-
-		step( 'Can see correct post category', async function() {
-			let categoryDisplayed = await this.viewPostPage.categoryDisplayed();
-			assert.strictEqual(
-				categoryDisplayed.toUpperCase(),
-				newCategoryName.toUpperCase(),
-				'The category: ' + newCategoryName + ' is not being displayed on the post'
 			);
 		} );
 
