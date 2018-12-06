@@ -544,6 +544,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Pages (${ screenSize })`, funct
 			assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
 
 			await gEditorComponent.enterTitle( pageTitle );
+			await gEditorComponent.ensureSaved();
 			return await gPaymentComponent.ensurePaymentButtonDisplayedInEditor();
 		} );
 

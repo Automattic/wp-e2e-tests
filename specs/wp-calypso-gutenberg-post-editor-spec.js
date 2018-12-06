@@ -977,6 +977,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 			assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
 
 			await gEditorComponent.enterTitle( blogPostTitle );
+			await gEditorComponent.ensureSaved();
 			return await gPaymentComponent.ensurePaymentButtonDisplayedInEditor();
 		} );
 
