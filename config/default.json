@@ -66,10 +66,7 @@
 		"cartNudgeUpdateToPremium",
 		"signupAtomicStoreVsPressable",
 		"improvedOnboarding",
-		"privateByDefault",
-		"crowdsignalNameBasedSignup",
-		"krackenM5DomainSuggestions",
-		"simplifiedChecklistView"
+		"privateByDefault"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -79,8 +76,6 @@
 		[ "cartNudgeUpdateToPremium_20180903", "control" ],
 		[ "signupAtomicStoreVsPressable_20171101", "atomic" ],
 		[ "improvedOnboarding_20181023", "main" ],
-		[ "privateByDefault_20181113", "public" ],
-		[ "crowdsignalNameBasedSignup_20181120", "usernameSignup" ],
-		[ "krackenM5DomainSuggestions_20181129", "domainsbot_front" ]
+		[ "privateByDefault_20181113", "public" ]
 	]
 }
