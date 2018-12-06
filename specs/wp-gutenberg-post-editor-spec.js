@@ -897,22 +897,28 @@ describe( `[${ host }] Gutenberg Editor (wp-admin): Posts (${ screenSize })`, fu
 	describe( 'Insert a contact form: @parallel', function() {
 		describe( 'Publish a New Post with a Contact Form', function() {
 			const originalBlogPostTitle = 'Contact Us: ' + dataHelper.randomPhrase();
+			const contactEmail = 'testing@automattic.com';
+			const subject = "Let's work together";
 
 			step( 'Can log in', async function() {
 				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await loginFlow.loginAndStartNewPost( null, true );
+				return await loginFlow.loginAndStartNewPost( null, true, { forceCalypsoGutenberg: false } );
 			} );
 
 			step( 'Can insert the contact form', async function() {
 				const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 				await gEditorComponent.enterTitle( originalBlogPostTitle );
-				await gEditorComponent.insertShortcode( '[contact-form][/contact-form]' );
+				await gEditorComponent.insertContactForm( contactEmail, subject );
+				await gEditorComponent.ensureSaved();
 
-				let errorShown = await gEditorComponent.errorDisplayed();
-				return assert.strictEqual(
-					errorShown,
-					false,
-					'There is an error shown on the Gutenberg editor page!'
+				const errorShown = await gEditorComponent.errorDisplayed();
+				assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
+
+				const contactFormDisplayedInEditor = await gEditorComponent.contactFormDisplayedInEditor();
+				assert.strictEqual(
+					contactFormDisplayedInEditor,
+					true,
+					'The contact form is not displayed in the editor'
 				);
 			} );
 
