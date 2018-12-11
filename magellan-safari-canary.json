@@ -8,7 +8,6 @@
   "max_workers": 1,
   "suiteTag": "safaricanary",
   "sauce": false,
-  "browser": "safari",
   "framework": "testarmada-magellan-mocha-plugin",
   "reporters": [
 	  "./lib/reporter/magellan-reporter.js"

@@ -8,7 +8,6 @@
   "max_workers": 8,
   "suiteTag": "parallel",
   "sauce": false,
-  "local_browser": "chrome",
   "framework": "testarmada-magellan-mocha-plugin",
   "reporters": [
 	  "./lib/reporter/magellan-reporter.js"
@@ -16,5 +15,6 @@
   "executors": [
 	"testarmada-magellan-local-executor"
   ],
+  "local_browser": "chrome",
   "bail_time": 300000
 }
