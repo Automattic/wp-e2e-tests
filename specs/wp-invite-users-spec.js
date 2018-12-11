@@ -16,12 +16,10 @@ import LoginPage from '../lib/pages/login-page.js';
 import ReaderPage from '../lib/pages/reader-page.js';
 import ViewBlogPage from '../lib/pages/signup/view-blog-page.js';
 import PrivateSiteLoginPage from '../lib/pages/private-site-login-page.js';
-import EditorPage from '../lib/pages/editor-page.js';
 
 import NoticesComponent from '../lib/components/notices-component.js';
 import NavBarComponent from '../lib/components/nav-bar-component.js';
 import NoSitesComponent from '../lib/components/no-sites-component.js';
-import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
 
 import * as dataHelper from '../lib/data-helper.js';
 import * as driverManager from '../lib/driver-manager.js';
@@ -454,7 +452,7 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			await navBarComponent.clickCreateNewPost();
 
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
-			await gEditorComponent.enterTitle( reviewPostTitle );
+			await gEditorComponent.enterTitle( publishPostTitle );
 			await gEditorComponent.enterText( postQuote );
 			await gEditorComponent.ensureSaved();
 			return await gEditorComponent.publish( { visit: true } );
