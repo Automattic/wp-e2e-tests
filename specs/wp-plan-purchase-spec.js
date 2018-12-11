@@ -10,9 +10,9 @@ import LoginFlow from '../lib/flows/login-flow.js';
 
 import PlansPage from '../lib/pages/plans-page.js';
 import StatsPage from '../lib/pages/stats-page.js';
-import PlanCheckoutPage from '../lib/pages/plan-checkout-page';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
+import SecurePaymentComponent from '../lib/components/secure-payment-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -105,40 +105,40 @@ describe( `[${ host }] Plans: (${ screenSize }) @parallel @jetpack`, function() 
 		} );
 
 		step( 'Remove any existing coupon', async function() {
-			const planCheckoutPage = await PlanCheckoutPage.Expect( driver );
+			const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 
-			if ( await planCheckoutPage.hasCouponApplied() ) {
-				await planCheckoutPage.removeCoupon();
+			if ( await securePaymentComponent.hasCouponApplied() ) {
+				await securePaymentComponent.removeCoupon();
 			}
 		} );
 
 		step( 'Can Correctly Apply Coupon', async function() {
-			const planCheckoutPage = await PlanCheckoutPage.Expect( driver );
+			const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 
-			await planCheckoutPage.toggleCartSummary();
-			originalCartAmount = await planCheckoutPage.cartTotalAmount();
+			await securePaymentComponent.toggleCartSummary();
+			originalCartAmount = await securePaymentComponent.cartTotalAmount();
 
-			await planCheckoutPage.enterCouponCode( dataHelper.getTestCouponCode() );
+			await securePaymentComponent.enterCouponCode( dataHelper.getTestCouponCode() );
 
-			let newCartAmount = await planCheckoutPage.cartTotalAmount();
+			let newCartAmount = await securePaymentComponent.cartTotalAmount();
 			let expectedCartAmount = parseFloat( ( originalCartAmount * 0.99 ).toFixed( 2 ) );
 
 			assert.strictEqual( newCartAmount, expectedCartAmount, 'Coupon not applied properly' );
 		} );
 
 		step( 'Can Remove Coupon', async function() {
-			const planCheckoutPage = await PlanCheckoutPage.Expect( driver );
+			const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 
-			await planCheckoutPage.removeCoupon();
+			await securePaymentComponent.removeCoupon();
 
-			let removedCouponAmount = await planCheckoutPage.cartTotalAmount();
+			let removedCouponAmount = await securePaymentComponent.cartTotalAmount();
 			assert.strictEqual( removedCouponAmount, originalCartAmount, 'Coupon not removed properly' );
 		} );
 
 		step( 'Remove from cart', async function() {
-			const planCheckoutPage = await PlanCheckoutPage.Expect( driver );
+			const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 
-			return await planCheckoutPage.removeFromCart();
+			return await securePaymentComponent.removeFromCart();
 		} );
 	} );
 } );

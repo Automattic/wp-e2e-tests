@@ -320,7 +320,7 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe( 'Inviting New User as an Contributor, then change them to Author: @parallel @jetpack', function() {
+	xdescribe( 'Inviting New User as an Contributor, then change them to Author: @parallel @jetpack', function() {
 		const newUserName = 'e2eflowtestingcontributor' + new Date().getTime().toString();
 		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		const reviewPostTitle = dataHelper.randomPhrase();
