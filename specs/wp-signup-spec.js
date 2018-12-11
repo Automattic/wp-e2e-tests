@@ -26,8 +26,6 @@ import MagicLoginPage from '../lib/pages/magic-login-page';
 import ReaderPage from '../lib/pages/reader-page';
 import DomainOnlySettingsPage from '../lib/pages/domain-only-settings-page';
 import DomainDetailsPage from '../lib/pages/domain-details-page';
-import ProfilePage from '../lib/pages/profile-page';
-import PurchasesPage from '../lib/pages/purchases-page';
 import ManagePurchasePage from '../lib/pages/manage-purchase-page';
 import CancelPurchasePage from '../lib/pages/cancel-purchase-page';
 import CancelDomainPage from '../lib/pages/cancel-domain-page';
@@ -1136,29 +1134,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return assert( subheader, 'The checklist subheader does not exist.' );
 		} );
 
-		step( 'Can cancel the domain', async function() {
-			return ( async () => {
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickProfileLink();
-				const profilePage = await ProfilePage.Expect( driver );
-				await profilePage.chooseManagePurchases();
-
-				let purchasesPage = await PurchasesPage.Expect( driver );
-				await purchasesPage.dismissGuidedTour();
-				await purchasesPage.selectBusinessPlan();
-
-				const managePurchasePage = await ManagePurchasePage.Expect( driver );
-				await managePurchasePage.chooseCancelAndRefund();
-
-				const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
-				await cancelPurchasePage.chooseCancelPlanAndDomain();
-				await cancelPurchasePage.clickCancelPurchase();
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
+		step( 'Can delete the plan', async function() {
+			return await new DeletePlanFlow( driver ).deletePlan( 'business', {
+				deleteDomainAlso: true,
 			} );
+		} );
+
+		step( 'Can delete our newly created account', async function() {
+			return await new DeleteAccountFlow( driver ).deleteAccount( siteName );
 		} );
 	} );
 
