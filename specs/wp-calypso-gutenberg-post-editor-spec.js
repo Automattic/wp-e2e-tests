@@ -14,7 +14,7 @@ import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavBarComponent from '../lib/components/nav-bar-component.js';
-import GutenbergPostPreviewComponent from '../lib/gutenberg/gutenberg-post-preview-component';
+import PostPreviewComponent from '../lib/components/post-preview-component';
 import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
 import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
 import SimplePaymentsBlockComponent from '../lib/gutenberg/blocks/payment-block-component';
@@ -121,13 +121,11 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 			await gEditorComponent.ensureSaved();
 			await gEditorComponent.launchPreview();
-			await driverHelper.waitForNumberOfWindows( driver, 2 );
-			await driverHelper.switchToWindowByIndex( driver, 1 );
 		} );
 
 		step( 'Can see correct post title in preview', async function() {
-			const gPreviewComponent = await GutenbergPostPreviewComponent.Expect( driver );
-			let postTitle = await gPreviewComponent.postTitle();
+			this.postPreviewComponent = await PostPreviewComponent.Expect( driver );
+			let postTitle = await this.postPreviewComponent.postTitle();
 			assert.strictEqual(
 				postTitle.toLowerCase(),
 				blogPostTitle.toLowerCase(),
@@ -136,8 +134,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 
 		step( 'Can see correct post content in preview', async function() {
-			const gPreviewComponent = await GutenbergPostPreviewComponent.Expect( driver );
-			let content = await gPreviewComponent.postContent();
+			let content = await this.postPreviewComponent.postContent();
 			assert.strictEqual(
 				content.indexOf( blogPostQuote ) > -1,
 				true,
@@ -149,36 +146,22 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 			);
 		} );
 
-		step( 'Can see the post category in preview', async function() {
-			const gPreviewComponent = await GutenbergPostPreviewComponent.Expect( driver );
-			let categoryDisplayed = await gPreviewComponent.categoryDisplayed();
+		step( 'Can see the post tag in preview', async function() {
+			let tagDisplayed = await this.postPreviewComponent.tagDisplayed();
 			assert.strictEqual(
-				categoryDisplayed.toUpperCase(),
-				newCategoryName.toUpperCase(),
-				'The category: ' + newCategoryName + ' is not being displayed on the post'
+				tagDisplayed.toUpperCase(),
+				newTagName.toUpperCase(),
+				'The tag: ' + newTagName + ' is not being displayed on the post'
 			);
 		} );
 
-		// Disable this step until https://github.com/Automattic/wp-calypso/issues/28974 is solved
-		// step( 'Can see the post tag in preview', async function() {
-		// 	const gPreviewComponent = await GutenbergPostPreviewComponent.Expect( driver );
-		// 	let tagDisplayed = await gPreviewComponent.tagDisplayed();
-		// 	assert.strictEqual(
-		// 		tagDisplayed.toUpperCase(),
-		// 		newTagName.toUpperCase(),
-		// 		'The tag: ' + newTagName + ' is not being displayed on the post'
-		// 	);
-		// } );
-
 		step( 'Can see the image in preview', async function() {
-			const gPreviewComponent = await GutenbergPostPreviewComponent.Expect( driver );
-			let imageDisplayed = await gPreviewComponent.imageDisplayed( fileDetails );
+			let imageDisplayed = await this.postPreviewComponent.imageDisplayed( fileDetails );
 			assert.strictEqual( imageDisplayed, true, 'Could not see the image in the web preview' );
 		} );
 
-		step( 'Can close preview', async function() {
-			await driverHelper.closeCurrentWindow( driver );
-			return await driverHelper.switchToWindowByIndex( driver, 0 );
+		step( 'Can close post preview', async function() {
+			await this.postPreviewComponent.close();
 		} );
 
 		step( 'Can publish and view content', async function() {
