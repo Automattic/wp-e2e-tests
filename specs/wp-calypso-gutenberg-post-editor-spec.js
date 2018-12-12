@@ -146,14 +146,15 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 			);
 		} );
 
-		step( 'Can see the post tag in preview', async function() {
-			let tagDisplayed = await this.postPreviewComponent.tagDisplayed();
-			assert.strictEqual(
-				tagDisplayed.toUpperCase(),
-				newTagName.toUpperCase(),
-				'The tag: ' + newTagName + ' is not being displayed on the post'
-			);
-		} );
+		// Disable this step until https://github.com/Automattic/wp-calypso/issues/28974 is solved
+		// step( 'Can see the post tag in preview', async function() {
+		// 	let tagDisplayed = await this.postPreviewComponent.tagDisplayed();
+		// 	assert.strictEqual(
+		// 		tagDisplayed.toUpperCase(),
+		// 		newTagName.toUpperCase(),
+		// 		'The tag: ' + newTagName + ' is not being displayed on the post'
+		// 	);
+		// } );
 
 		step( 'Can see the image in preview', async function() {
 			let imageDisplayed = await this.postPreviewComponent.imageDisplayed( fileDetails );
