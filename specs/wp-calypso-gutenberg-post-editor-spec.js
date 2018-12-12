@@ -951,7 +951,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	describe( 'Insert a payment button: @parallel', function() {
+	describe.only( 'Insert a payment button: @parallel', function() {
 		const paymentButtonDetails = {
 			title: 'Button',
 			description: 'Description',
@@ -987,7 +987,8 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 		step( 'Can publish and view content', async function() {
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
-			return await gEditorComponent.publish( { visit: true } );
+			await gEditorComponent.publish( { visit: true } );
+			this.skip();
 		} );
 
 		step( 'Can see the payment button in our published post', async function() {
