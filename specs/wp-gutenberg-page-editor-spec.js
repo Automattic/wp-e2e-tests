@@ -22,6 +22,7 @@ const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
 const host = dataHelper.getJetpackHost();
+const baseURL = dataHelper.configGet( 'calypsoBaseURL' );
 
 let driver;
 
@@ -32,6 +33,13 @@ before( async function() {
 
 describe( `[${ host }] Gutenberg Editor (wp-admin): Pages (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
+
+	beforeEach( async function() {
+		if ( baseURL !== 'https://wordpress.com' ) {
+			// these wp-admin tests only work on Production
+			return this.skip();
+		}
+	} );
 
 	describe( 'Public Pages: @parallel', function() {
 		let fileDetails;
