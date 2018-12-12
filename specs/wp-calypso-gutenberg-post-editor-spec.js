@@ -987,8 +987,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 		step( 'Can publish and view content', async function() {
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
-			await gEditorComponent.publish( { visit: true } );
-			this.skip();
+			return await gEditorComponent.publish( { visit: true } );
 		} );
 
 		step( 'Can see the payment button in our published post', async function() {
