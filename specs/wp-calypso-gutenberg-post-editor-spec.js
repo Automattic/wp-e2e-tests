@@ -951,7 +951,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	describe.only( 'Insert a payment button: @parallel', function() {
+	describe( 'Insert a payment button: @parallel', function() {
 		const paymentButtonDetails = {
 			title: 'Button',
 			description: 'Description',
