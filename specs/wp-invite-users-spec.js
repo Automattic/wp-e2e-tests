@@ -16,16 +16,15 @@ import LoginPage from '../lib/pages/login-page.js';
 import ReaderPage from '../lib/pages/reader-page.js';
 import ViewBlogPage from '../lib/pages/signup/view-blog-page.js';
 import PrivateSiteLoginPage from '../lib/pages/private-site-login-page.js';
-import EditorPage from '../lib/pages/editor-page.js';
 
 import NoticesComponent from '../lib/components/notices-component.js';
 import NavBarComponent from '../lib/components/nav-bar-component.js';
 import NoSitesComponent from '../lib/components/no-sites-component.js';
-import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component.js';
 
 import * as dataHelper from '../lib/data-helper.js';
 import * as driverManager from '../lib/driver-manager.js';
 import EmailClient from '../lib/email-client.js';
+import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -320,7 +319,7 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 	} );
 
-	xdescribe( 'Inviting New User as an Contributor, then change them to Author: @parallel @jetpack', function() {
+	describe( 'Inviting New User as an Contributor, then change them to Author: @parallel @jetpack', function() {
 		const newUserName = 'e2eflowtestingcontributor' + new Date().getTime().toString();
 		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		const reviewPostTitle = dataHelper.randomPhrase();
@@ -392,19 +391,28 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			await navbarComponent.dismissGuidedTours();
 			await navbarComponent.clickCreateNewPost();
 
-			const editorPage = await EditorPage.Expect( driver );
-			await editorPage.setABTestControlGroupsInLocalStorage();
-			await editorPage.enterTitle( reviewPostTitle );
-			return await editorPage.enterContent( postQuote );
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.enterTitle( reviewPostTitle );
+			return await gEditorComponent.enterText( postQuote );
 		} );
 
 		step( 'New user can submit the new post for review as pending status', async function() {
-			const postEditorToolbar = await PostEditorToolbarComponent.Expect( driver );
-			await postEditorToolbar.ensureSaved();
-			await postEditorToolbar.submitForReview();
-			await postEditorToolbar.waitForIsPendingStatus();
-			let isPending = await postEditorToolbar.statusIsPending();
-			return assert( isPending, 'The post is not showing as pending' );
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.submitForReview();
+			await gEditorComponent.ensureSaved();
+			return await gEditorComponent.closeEditor();
+		} );
+
+		step( 'New user can see post on posts page in pending status', async function() {
+			const postsPage = await PostsPage.Expect( driver );
+			await postsPage.viewMyPosts();
+			await postsPage.viewDrafts();
+			await postsPage.waitForPostTitled( reviewPostTitle );
+			let pending = await postsPage.isPostPending();
+			return assert(
+				pending,
+				'The pending post was not displayed on the posts page'
+			);
 		} );
 
 		step( 'As the original user, can see new user added to site', async function() {
@@ -443,14 +451,11 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			const navBarComponent = await NavBarComponent.Expect( driver );
 			await navBarComponent.clickCreateNewPost();
 
-			const editorPage = await EditorPage.Expect( driver );
-			await editorPage.setABTestControlGroupsInLocalStorage();
-			await editorPage.enterTitle( publishPostTitle );
-			await editorPage.enterContent( postQuote );
-
-			const postEditorToolbar = await PostEditorToolbarComponent.Expect( driver );
-			await postEditorToolbar.ensureSaved();
-			return await postEditorToolbar.publishAndViewContent( { useConfirmStep: true } );
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.enterTitle( publishPostTitle );
+			await gEditorComponent.enterText( postQuote );
+			await gEditorComponent.ensureSaved();
+			return await gEditorComponent.publish( { visit: true } );
 		} );
 	} );
 
