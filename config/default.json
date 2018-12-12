@@ -67,7 +67,8 @@
 		"signupAtomicStoreVsPressable",
 		"improvedOnboarding",
 		"privateByDefault",
-		"simplifiedChecklistView"
+		"simplifiedChecklistView",
+		"jetpackFreePlanButtonPosition"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -78,6 +79,7 @@
 		[ "signupAtomicStoreVsPressable_20171101", "atomic" ],
 		[ "improvedOnboarding_20181023", "main" ],
 		[ "privateByDefault_20181113", "public" ],
-		[ "simplifiedChecklistView_20181204", "showAll" ]
+		[ "simplifiedChecklistView_20181204", "showAll" ],
+		[ "jetpackFreePlanButtonPosition_20181212", "locationBottom" ]
 	]
 }
