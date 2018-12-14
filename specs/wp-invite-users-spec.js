@@ -319,7 +319,7 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe( 'Inviting New User as an Contributor, then change them to Author: @parallel @jetpack', function() {
+	xdescribe( 'Inviting New User as an Contributor, then change them to Author: @parallel @jetpack', function() {
 		const newUserName = 'e2eflowtestingcontributor' + new Date().getTime().toString();
 		const newInviteEmailAddress = dataHelper.getEmailAddress( newUserName, inviteInboxId );
 		const reviewPostTitle = dataHelper.randomPhrase();
@@ -409,10 +409,7 @@ describe( `[${ host }] Invites:  (${ screenSize })`, function() {
 			await postsPage.viewDrafts();
 			await postsPage.waitForPostTitled( reviewPostTitle );
 			let pending = await postsPage.isPostPending();
-			return assert(
-				pending,
-				'The pending post was not displayed on the posts page'
-			);
+			return assert( pending, 'The pending post was not displayed on the posts page' );
 		} );
 
 		step( 'As the original user, can see new user added to site', async function() {
