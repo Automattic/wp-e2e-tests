@@ -29,7 +29,7 @@ before( async function() {
 	driver = await driverManager.startBrowser();
 } );
 
-describe.only( `[${ host }] Previewing Themes: (${ screenSize })`, function() {
+describe( `[${ host }] Previewing Themes: (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
 	describe( 'Previewing Themes @parallel @jetpack', function() {
@@ -61,7 +61,7 @@ describe.only( `[${ host }] Previewing Themes: (${ screenSize })`, function() {
 	} );
 } );
 
-describe.only( `[${ host }] Activating Themes: (${ screenSize }) @parallel @jetpack`, function() {
+describe( `[${ host }] Activating Themes: (${ screenSize }) @parallel @jetpack`, function() {
 	this.timeout( mochaTimeOut );
 	describe( 'Activating Themes:', function() {
 		step( 'Login', async function() {
