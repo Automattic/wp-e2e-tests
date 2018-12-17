@@ -146,6 +146,7 @@ while getopts ":a:RpS:B:s:gjWCJH:wzyl:cm:fiIUvxu:h:F" opt; do
       exit $?
       ;;
     j)
+      WORKERS=3
       SCREENSIZES="desktop,mobile"
       MAGELLAN_CONFIG="magellan-jetpack.json"
       ;;
