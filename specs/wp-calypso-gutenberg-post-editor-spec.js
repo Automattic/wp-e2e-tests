@@ -146,6 +146,15 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 			);
 		} );
 
+		step( 'Can see the post category in preview', async function() {
+			let categoryDisplayed = await this.postPreviewComponent.categoryDisplayed();
+			assert.strictEqual(
+				categoryDisplayed.toUpperCase(),
+				newCategoryName.toUpperCase(),
+				'The tag: ' + newCategoryName + ' is not being displayed on the post'
+			);
+		} );
+
 		// Disable this step until https://github.com/Automattic/wp-calypso/issues/28974 is solved
 		// step( 'Can see the post tag in preview', async function() {
 		// 	let tagDisplayed = await this.postPreviewComponent.tagDisplayed();
