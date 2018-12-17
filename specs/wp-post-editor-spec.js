@@ -300,7 +300,7 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 
 			step( 'Can log in', async function() {
 				this.loginFlow = new LoginFlow( driver );
-				return await this.loginFlow.loginAndStartNewPost();
+				return await this.loginFlow.loginAndStartNewPost( { useFreshLogin: true } );
 			} );
 
 			step( 'Can enter post title and content', async function() {
