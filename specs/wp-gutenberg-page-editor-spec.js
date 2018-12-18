@@ -31,7 +31,7 @@ before( async function() {
 	driver = await driverManager.startBrowser();
 } );
 
-describe( `[${ host }] Gutenberg Editor (wp-admin): Pages (${ screenSize })`, function() {
+xdescribe( `[${ host }] Gutenberg Editor (wp-admin): Pages (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
 	beforeEach( async function() {
