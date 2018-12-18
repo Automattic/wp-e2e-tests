@@ -69,7 +69,8 @@
 		"privateByDefault",
 		"simplifiedChecklistView",
 		"jetpackFreePlanButtonPosition",
-		"removeUsername"
+		"removeUsername",
+		"showConciergeSessionUpsell"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -82,6 +83,7 @@
 		[ "privateByDefault_20181113", "public" ],
 		[ "simplifiedChecklistView_20181204", "showAll" ],
 		[ "jetpackFreePlanButtonPosition_20181212", "locationBottom" ],
-		[ "removeUsername_20181213", "showUsername" ]
+		[ "removeUsername_20181213", "showUsername" ],
+		[ "showConciergeSessionUpsell_20181214", "skip" ]
 	]
 }
