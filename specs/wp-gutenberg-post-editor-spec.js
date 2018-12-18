@@ -1085,28 +1085,28 @@ describe( `[${ host }] Gutenberg Editor (wp-admin): Posts (${ screenSize })`, fu
 			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
 			await gEditorComponent.enterTitle( 'Embeds: ' + blogPostTitle );
 
-			this.youtubeSelector = '.wp-block-embed-youtube';
+			this.youtubeEditorSelector = '.wp-block-embed-youtube';
 			const blockIdYouTube = await gEditorComponent.addBlock( 'YouTube' );
 			const gEmbedsComponentYouTube = await EmbedsBlockComponent.Expect( driver, blockIdYouTube );
 			await gEmbedsComponentYouTube.embedUrl( 'https://www.youtube.com/watch?v=xifhQyopjZM' );
-			await gEmbedsComponentYouTube.isEmbeddedInEditor( this.youtubeSelector ); // TODO: check is it shown in the Editor
+			await gEmbedsComponentYouTube.isEmbeddedInEditor( this.youtubeEditorSelector ); // TODO: check is it shown in the Editor
 
-			this.instagramSelector = '.wp-block-embed-instagram';
+			this.instagramEditorSelector = '.wp-block-embed-instagram';
 			const blockIdInstagram = await gEditorComponent.addBlock( 'Instagram' );
 			const gEmbedsComponentInstagram = await EmbedsBlockComponent.Expect(
 				driver,
 				blockIdInstagram
 			);
 			await gEmbedsComponentInstagram.embedUrl( 'https://www.instagram.com/p/BlDOZMil933/' );
-			// await gEmbedsComponentInstagram.isEmbeddedInEditor( this.instagramSelector ); TODO: check is it shown in the Editor
+			// await gEmbedsComponentInstagram.isEmbeddedInEditor( this.instagramEditorSelector ); TODO: check is it shown in the Editor
 
-			this.twitterSelector = '.wp-block-embed-twitter';
+			this.twitterEditorSelector = '.wp-block-embed-twitter';
 			const blockIdTwitter = await gEditorComponent.addBlock( 'Twitter' );
 			const gEmbedsComponentTwitter = await EmbedsBlockComponent.Expect( driver, blockIdTwitter );
 			await gEmbedsComponentTwitter.embedUrl(
 				'https://twitter.com/automattic/status/1067120832676327424'
 			);
-			await gEmbedsComponentTwitter.isEmbeddedInEditor( this.twitterSelector );
+			await gEmbedsComponentTwitter.isEmbeddedInEditor( this.twitterEditorSelector );
 
 			let errorShown = await gEditorComponent.errorDisplayed();
 			return assert.strictEqual( errorShown, false, 'There is an error shown on the editor page!' );
@@ -1119,9 +1119,12 @@ describe( `[${ host }] Gutenberg Editor (wp-admin): Posts (${ screenSize })`, fu
 
 		step( 'Can see embedded content in our published post', async function() {
 			const viewPostPage = await ViewPostPage.Expect( driver );
-			await viewPostPage.embedContentDisplayed( this.youtubeSelector ); // check YouTube content
-			await viewPostPage.embedContentDisplayed( this.instagramSelector ); // check Instagram content
-			return await viewPostPage.embedContentDisplayed( this.twitterSelector ); // check Twitter content
+			this.youtubePostSelector = '.youtube-player';
+			await viewPostPage.embedContentDisplayed( this.youtubePostSelector ); // check YouTube content
+			this.instagramPostSelector = '.instagram-media-rendered';
+			await viewPostPage.embedContentDisplayed( this.instagramPostSelector ); // check Instagram content
+			this.instagramPostSelector = '.twitter-tweet-rendered';
+			return await viewPostPage.embedContentDisplayed( this.instagramPostSelector ); // check Twitter content
 		} );
 	} );
 } );
