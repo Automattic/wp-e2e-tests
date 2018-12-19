@@ -9,6 +9,7 @@ import LoginFlow from '../lib/flows/login-flow';
 import EditorPage from '../lib/pages/editor-page';
 import PostEditorToolbarComponent from '../lib/components/post-editor-toolbar-component';
 import CommentsAreaComponent from '../lib/pages/frontend/comments-area-component';
+import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
 
 const host = dataHelper.getJetpackHost();
 const screenSize = driverManager.currentScreenSize();
@@ -47,6 +48,43 @@ describe( `[${ host }] Comments: (${ screenSize })`, function() {
 			const postEditorToolbar = await PostEditorToolbarComponent.Expect( driver );
 			await postEditorToolbar.ensureSaved();
 			await postEditorToolbar.publishAndViewContent( { useConfirmStep: true } );
+		} );
+
+		step( 'Can post a comment', async function() {
+			const commentArea = await CommentsAreaComponent.Expect( driver );
+			return await commentArea._postComment( {
+				comment: dataHelper.randomPhrase(),
+				name: 'e2eTestName',
+				email: 'e2eTestName@test.com',
+			} );
+		} );
+
+		step( 'Can post a reply', async function() {
+			await driver.sleep( 10000 ); // Wait to not to post too quickly
+			const commentArea = await CommentsAreaComponent.Expect( driver );
+			await commentArea.reply(
+				{
+					comment: dataHelper.randomPhrase(),
+					name: 'e2eTestName',
+					email: 'e2eTestName@test.com',
+				},
+				2
+			);
+		} );
+	} );
+
+	describe( 'Commenting and replying to newly created post in Gutenberg Editor: @parallel @jetpack', function() {
+		step( 'Can login and create a new post', async function() {
+			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
+			await this.loginFlow.loginAndStartNewPost( null, true );
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.enterTitle( blogPostTitle );
+			return await gEditorComponent.enterText( blogPostQuote );
+		} );
+
+		step( 'Can publish and visit site', async function() {
+			const gEditorComponent = await GutenbergEditorComponent.Expect( driver );
+			await gEditorComponent.publish( { visit: true } );
 		} );
 
 		step( 'Can post a comment', async function() {
