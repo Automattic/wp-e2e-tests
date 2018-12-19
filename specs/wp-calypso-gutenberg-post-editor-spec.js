@@ -57,9 +57,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 		step( 'Can log in', async function() {
 			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-			return await this.loginFlow.loginAndStartNewPost( null, true, {
-				forceCalypsoGutenberg: true,
-			} );
+			return await this.loginFlow.loginAndStartNewPost( null, true );
 		} );
 
 		step( 'Can enter post title, content and image', async function() {
@@ -143,6 +141,15 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 					') does not include the expected content (' +
 					blogPostQuote +
 					')'
+			);
+		} );
+
+		step( 'Can see the post category in preview', async function() {
+			let categoryDisplayed = await this.postPreviewComponent.categoryDisplayed();
+			assert.strictEqual(
+				categoryDisplayed.toUpperCase(),
+				newCategoryName.toUpperCase(),
+				'The tag: ' + newCategoryName + ' is not being displayed on the post'
 			);
 		} );
 
@@ -237,9 +244,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 			step( 'Can log in', async function() {
 				this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await this.loginFlow.loginAndStartNewPost( null, true, {
-					forceCalypsoGutenberg: true,
-				} );
+				return await this.loginFlow.loginAndStartNewPost( null, true );
 			} );
 
 			step( 'Can enter post title and text content', async function() {
@@ -279,7 +284,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 		step( 'Can log in', async function() {
 			let loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-			return await loginFlow.loginAndStartNewPost( null, true, { forceCalypsoGutenberg: true } );
+			return await loginFlow.loginAndStartNewPost( null, true );
 		} );
 
 		step( 'Can enter post title and content', async function() {
@@ -324,9 +329,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 			step( 'Can log in', async function() {
 				this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await this.loginFlow.loginAndStartNewPost( null, true, {
-					forceCalypsoGutenberg: true,
-				} );
+				return await this.loginFlow.loginAndStartNewPost( null, true );
 			} );
 
 			step( 'Can enter post title and content', async function() {
@@ -383,9 +386,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 			step( 'Can log in', async function() {
 				this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await this.loginFlow.loginAndStartNewPost( null, true, {
-					forceCalypsoGutenberg: true,
-				} );
+				return await this.loginFlow.loginAndStartNewPost( null, true );
 			} );
 
 			step( 'Can enter post title and content', async function() {
@@ -505,7 +506,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 			step( 'Can log in', async function() {
 				let loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				await loginFlow.loginAndStartNewPost( null, true, { forceCalypsoGutenberg: true } );
+				await loginFlow.loginAndStartNewPost( null, true );
 			} );
 
 			step( 'Can enter post title and content and set to password protected', async function() {
@@ -765,7 +766,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 			step( 'Can log in', async function() {
 				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await loginFlow.loginAndStartNewPost( null, true, { forceCalypsoGutenberg: true } );
+				return await loginFlow.loginAndStartNewPost( null, true );
 			} );
 
 			step( 'Can enter post title and content', async function() {
@@ -802,7 +803,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 			step( 'Can log in', async function() {
 				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await loginFlow.loginAndStartNewPost( null, true, { forceCalypsoGutenberg: true } );
+				return await loginFlow.loginAndStartNewPost( null, true );
 			} );
 
 			step( 'Can enter post title and content', async function() {
@@ -898,7 +899,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 			step( 'Can log in', async function() {
 				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await loginFlow.loginAndStartNewPost( null, true, { forceCalypsoGutenberg: true } );
+				return await loginFlow.loginAndStartNewPost( null, true );
 			} );
 
 			step( 'Can insert the contact form', async function() {
@@ -948,9 +949,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 		step( 'Can log in', async function() {
 			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-			return await this.loginFlow.loginAndStartNewPost( null, true, {
-				forceCalypsoGutenberg: true,
-			} );
+			return await this.loginFlow.loginAndStartNewPost( null, true );
 		} );
 
 		step( 'Can insert the payment button', async function() {
@@ -1026,7 +1025,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 
 			step( 'Can log in', async function() {
 				const loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-				return await loginFlow.loginAndStartNewPost( null, true, { forceCalypsoGutenberg: true } );
+				return await loginFlow.loginAndStartNewPost( null, true );
 			} );
 
 			step( 'Can enter post title and content', async function() {
@@ -1062,9 +1061,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 	describe( 'Insert embeds: @parallel', function() {
 		step( 'Can log in', async function() {
 			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
-			return await this.loginFlow.loginAndStartNewPost( null, true, {
-				forceCalypsoGutenberg: true,
-			} );
+			return await this.loginFlow.loginAndStartNewPost( null, true );
 		} );
 
 		step( 'Can insert Embeds block', async function() {
