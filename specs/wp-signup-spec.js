@@ -21,6 +21,9 @@ import CreateYourAccountPage from '../lib/pages/signup/create-your-account-page.
 import CheckOutPage from '../lib/pages/signup/checkout-page';
 import CheckOutThankyouPage from '../lib/pages/signup/checkout-thankyou-page.js';
 import ImportFromURLPage from '../lib/pages/signup/import-from-url-page';
+import SiteTypePage from '../lib/pages/signup/site-type-page';
+import SiteTopicPage from '../lib/pages/signup/site-topic-page';
+import SiteInfoPage from '../lib/pages/signup/site-info-page';
 import LoginPage from '../lib/pages/login-page';
 import MagicLoginPage from '../lib/pages/magic-login-page';
 import ReaderPage from '../lib/pages/reader-page';
@@ -52,6 +55,7 @@ import DeleteAccountFlow from '../lib/flows/delete-account-flow';
 import DeletePlanFlow from '../lib/flows/delete-plan-flow';
 import ThemeDialogComponent from '../lib/components/theme-dialog-component';
 import SignUpStep from '../lib/flows/sign-up-step';
+import overrideABTest from '../lib/override-abtest';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -1703,6 +1707,205 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
+		} );
+	} );
+
+	describe( 'Sign up for a free WordPress.com site via the new onboarding flow', () => {
+		const userName = dataHelper.getNewBlogName();
+		const blogName = dataHelper.getNewBlogName();
+		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
+		let undo = null;
+
+		before( async function() {
+			undo = overrideABTest( 'improvedOnboarding_20181023', 'onboarding' );
+			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		step( 'Can visit the start page', async function() {
+			return await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale } ) );
+		} );
+
+		step( 'Can see the account page and enter account details', async function() {
+			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+			return await createYourAccountPage.enterAccountDetailsAndSubmit(
+				emailAddress,
+				userName,
+				passwordForTestAccounts
+			);
+		} );
+
+		step( 'Can see the "Site Type" page, and enter some site information', async function() {
+			const siteTypePage = await SiteTypePage.Expect( driver );
+			await siteTypePage.selectBlogType();
+			return await siteTypePage.submitForm();
+		} );
+
+		step( 'Can see the "Site Topic" page, and enter the site topic', async function() {
+			const siteTopicPage = await SiteTopicPage.Expect( driver );
+			await siteTopicPage.enterSiteTopic( 'Tech Blog' );
+			return await siteTopicPage.submitForm();
+		} );
+
+		step( 'Can see the "Site Information" page, and enter the site title', async function() {
+			const siteInfoPage = await SiteInfoPage.Expect( driver );
+			await siteInfoPage.enterSiteTitle( blogName );
+			return await siteInfoPage.submitForm();
+		} );
+
+		step(
+			'Can then see the domains page, and Can search for a blog name, can see and select a free .wordpress address in the results',
+			async function() {
+				const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
+				const findADomainComponent = await FindADomainComponent.Expect( driver );
+				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
+					expectedBlogAddresses,
+					blogName
+				);
+				let actualAddress = await findADomainComponent.freeBlogAddress();
+				assert(
+					expectedBlogAddresses.indexOf( actualAddress ) > -1,
+					`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+				);
+				return await findADomainComponent.selectFreeAddress();
+			}
+		);
+
+		step( 'Can see the plans page and pick the free plan', async function() {
+			const pickAPlanPage = await PickAPlanPage.Expect( driver );
+			return await pickAPlanPage.selectFreePlan();
+		} );
+
+		step( 'Can then see the onboarding checklist', async function() {
+			const checklistPage = await ChecklistPage.Expect( driver );
+			const header = await checklistPage.headerExists();
+			const subheader = await checklistPage.subheaderExists();
+
+			assert( header, 'The checklist header does not exist.' );
+
+			return assert( subheader, 'The checklist subheader does not exist.' );
+		} );
+
+		step( 'Can delete our newly created account', async function() {
+			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
+		} );
+
+		after( async function() {
+			if ( typeof undo === 'function' ) {
+				undo();
+			}
+		} );
+	} );
+
+	describe( 'Sign up for an account only (no site) then add a site via new onboarding flow @parallel', () => {
+		const userName = dataHelper.getNewBlogName();
+		const blogName = dataHelper.getNewBlogName();
+		let undo = null;
+
+		before( async function() {
+			undo = overrideABTest( 'improvedOnboarding_20181023', 'onboarding' );
+			await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		step( 'Can enter the account flow and see the account details page', async function() {
+			await StartPage.Visit(
+				driver,
+				StartPage.getStartURL( {
+					culture: locale,
+					flow: 'account',
+				} )
+			);
+			await CreateYourAccountPage.Expect( driver );
+		} );
+
+		step( 'Can then enter account details and continue', async function() {
+			const emailAddress = dataHelper.getEmailAddress( userName, signupInboxId );
+			const createYourAccountPage = await CreateYourAccountPage.Expect( driver );
+			return await createYourAccountPage.enterAccountDetailsAndSubmit(
+				emailAddress,
+				userName,
+				passwordForTestAccounts
+			);
+		} );
+
+		step(
+			'Can then see the sign up processing page which will finish automatically move along',
+			async function() {
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
+			}
+		);
+
+		step(
+			'We are then on the Reader page and have no sites - we click Create Site',
+			async function() {
+				await ReaderPage.Expect( driver );
+				const navBarComponent = await NavBarComponent.Expect( driver );
+				await navBarComponent.clickMySites();
+				const noSitesComponent = await NoSitesComponent.Expect( driver );
+				return await noSitesComponent.createSite();
+			}
+		);
+
+		step( 'Can see the "Site Type" page, and enter some site information', async function() {
+			const siteTypePage = await SiteTypePage.Expect( driver );
+			await siteTypePage.selectBlogType();
+			return await siteTypePage.submitForm();
+		} );
+
+		step( 'Can see the "Site Topic" page, and enter the site topic', async function() {
+			const siteTopicPage = await SiteTopicPage.Expect( driver );
+			await siteTopicPage.enterSiteTopic( 'Tech Blog' );
+			return await siteTopicPage.submitForm();
+		} );
+
+		step( 'Can see the "Site Information" page, and enter the site title', async function() {
+			const siteInfoPage = await SiteInfoPage.Expect( driver );
+			await siteInfoPage.enterSiteTitle( blogName );
+			return await siteInfoPage.submitForm();
+		} );
+
+		step(
+			'Can then see the domains page, and Can search for a blog name, can see and select a free .wordpress address in the results',
+			async function() {
+				const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
+				const findADomainComponent = await FindADomainComponent.Expect( driver );
+				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
+				await findADomainComponent.checkAndRetryForFreeBlogAddresses(
+					expectedBlogAddresses,
+					blogName
+				);
+				let actualAddress = await findADomainComponent.freeBlogAddress();
+				assert(
+					expectedBlogAddresses.indexOf( actualAddress ) > -1,
+					`The displayed free blog address: '${ actualAddress }' was not the expected addresses: '${ expectedBlogAddresses }'`
+				);
+				return await findADomainComponent.selectFreeAddress();
+			}
+		);
+
+		step( 'Can see the plans page and pick the free plan', async function() {
+			const pickAPlanPage = await PickAPlanPage.Expect( driver );
+			return await pickAPlanPage.selectFreePlan();
+		} );
+
+		step( 'Can then see the onboarding checklist', async function() {
+			const checklistPage = await ChecklistPage.Expect( driver );
+			const header = await checklistPage.headerExists();
+			const subheader = await checklistPage.subheaderExists();
+
+			assert( header, 'The checklist header does not exist.' );
+
+			return assert( subheader, 'The checklist subheader does not exist.' );
+		} );
+
+		step( 'Can delete our newly created account', async function() {
+			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
+		} );
+
+		after( async function() {
+			if ( typeof undo === 'function' ) {
+				undo();
+			}
 		} );
 	} );
 } );
