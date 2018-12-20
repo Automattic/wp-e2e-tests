@@ -214,14 +214,14 @@ if [ $PARALLEL == 1 ]; then
 
   if [ $CIRCLE_NODE_INDEX == $MOBILE ]; then
       echo "Executing tests at mobile screen width"
-      CMD="env BROWSERSIZE=mobile $MAGELLAN --config=$MAGELLAN_CONFIGS --mocha_args='$MOCHA_ARGS' --max_workers=$WORKERS --local_browser=$LOCAL_BROWSER"
+      CMD="env BROWSERSIZE=mobile MAGELLANDEBUG=true $MAGELLAN --config=$MAGELLAN_CONFIGS --mocha_args='$MOCHA_ARGS' --max_workers=$WORKERS --local_browser=$LOCAL_BROWSER"
 
       eval $CMD
       RETURN+=$?
   fi
   if [ $CIRCLE_NODE_INDEX == $DESKTOP ]; then
       echo "Executing tests at desktop screen width"
-      CMD="env BROWSERSIZE=desktop $MAGELLAN --config=$MAGELLAN_CONFIGS --mocha_args='$MOCHA_ARGS' --max_workers=$WORKERS --local_browser=$LOCAL_BROWSER"
+      CMD="env BROWSERSIZE=desktop MAGELLANDEBUG=true $MAGELLAN --config=$MAGELLAN_CONFIGS --mocha_args='$MOCHA_ARGS' --max_workers=$WORKERS --local_browser=$LOCAL_BROWSER"
 
       eval $CMD
       RETURN+=$?

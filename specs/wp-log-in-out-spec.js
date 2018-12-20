@@ -60,7 +60,7 @@ describe( `[${ host }] Authentication: (${ screenSize })`, function() {
 		describe( 'Can Log In', function() {
 			step( 'Can log in', async function() {
 				let loginFlow = new LoginFlow( driver );
-				await loginFlow.login();
+				await loginFlow.login( { useFreshLogin: true } );
 			} );
 
 			step( 'Can see Reader Page after logging in', async function() {
@@ -117,7 +117,7 @@ describe( `[${ host }] Authentication: (${ screenSize })`, function() {
 				return await new Promise( ( resolve, reject ) => {
 					xmppClient.once( 'e2e:ready', async () => {
 						// send sms now!
-						await loginFlow.login();
+						await loginFlow.login( { useFreshLogin: true } );
 						twoFALoginPage = new LoginPage( driver );
 						twoFALoginPage.use2FAMethod( 'sms' );
 					} );
@@ -159,7 +159,7 @@ describe( `[${ host }] Authentication: (${ screenSize })`, function() {
 			before( async function() {
 				await driverManager.ensureNotLoggedIn( driver );
 				loginFlow = new LoginFlow( driver, [ '+2fa-push', '-passwordless' ] );
-				await loginFlow.login();
+				await loginFlow.login( { useFreshLogin: true } );
 				twoFALoginPage = new LoginPage( driver );
 			} );
 
@@ -193,7 +193,7 @@ describe( `[${ host }] Authentication: (${ screenSize })`, function() {
 			before( async function() {
 				await driverManager.ensureNotLoggedIn( driver );
 				loginFlow = new LoginFlow( driver, [ '+2fa-otp', '-passwordless' ] );
-				await loginFlow.login();
+				await loginFlow.login( { useFreshLogin: true } );
 				twoFALoginPage = new LoginPage( driver );
 				return twoFALoginPage.use2FAMethod( 'otp' );
 			} );
@@ -231,7 +231,7 @@ describe( `[${ host }] Authentication: (${ screenSize })`, function() {
 				before( async function() {
 					loginFlow = new LoginFlow( driver, [ '+passwordless', '-2fa' ] );
 					emailClient = new EmailClient( get( loginFlow.account, 'mailosaur.inboxId' ) );
-					return await loginFlow.login( { emailSSO: true } );
+					return await loginFlow.login( { emailSSO: true, useFreshLogin: true } );
 				} );
 
 				step( 'Can find the magic link in the email received', async function() {
