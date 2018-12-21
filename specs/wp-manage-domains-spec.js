@@ -39,10 +39,10 @@ before( async function() {
 	driver = await driverManager.startBrowser();
 } );
 
-describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function() {
+describe( `[${ host }] Managing Domains: (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
-	describe( 'Adding a domain to an existing site ', function() {
+	describe( 'Adding a domain to an existing site @parallel', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const domainEmailAddress = dataHelper.getEmailAddress( blogName, domainsInboxId );
 		const expectedDomainName = blogName + '.com';
@@ -132,7 +132,7 @@ describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function(
 		} );
 
 		step( 'Log In and Select Domains', async function() {
-			return await new LoginFlow( driver, 'gutenbergSimpleSiteUser' ).loginAndSelectDomains();
+			return await new LoginFlow( driver ).loginAndSelectDomains();
 		} );
 
 		step( 'Can see the Domains page and choose add a domain', async function() {
