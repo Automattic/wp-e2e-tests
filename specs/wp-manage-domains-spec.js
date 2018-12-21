@@ -39,7 +39,7 @@ before( async function() {
 	driver = await driverManager.startBrowser();
 } );
 
-describe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function() {
+xdescribe( `[${ host }] Managing Domains: (${ screenSize }) @parallel`, function() {
 	this.timeout( mochaTimeOut );
 
 	describe( 'Adding a domain to an existing site ', function() {
