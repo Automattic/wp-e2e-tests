@@ -68,7 +68,8 @@
 		"improvedOnboarding",
 		"privateByDefault",
 		"jetpackFreePlanButtonPosition",
-		"removeUsername"
+		"removeUsername",
+		"showConciergeSessionUpsell"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -80,6 +81,7 @@
 		[ "improvedOnboarding_20181023", "main" ],
 		[ "privateByDefault_20181113", "public" ],
 		[ "jetpackFreePlanButtonPosition_20181212", "locationBottom" ],
-		[ "removeUsername_20181213", "showUsername" ]
+		[ "removeUsername_20181213", "showUsername" ],
+		[ "showConciergeSessionUpsell_20181214", "skip" ]
 	]
 }
