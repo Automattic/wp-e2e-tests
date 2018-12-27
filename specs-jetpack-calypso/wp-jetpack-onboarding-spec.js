@@ -39,7 +39,8 @@ before( async function() {
 describe( `Jetpack Onboarding: (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
-	describe( 'Onboard personal site with static homepage: @parallel @jetpack', function() {
+	// Disable this test since it is not really stable (and might not needed anymore)
+	xdescribe( 'Onboard personal site with static homepage: @parallel @jetpack', function() {
 		const blogTitle = dataHelper.randomPhrase();
 		const blogTagline = dataHelper.randomPhrase();
 
