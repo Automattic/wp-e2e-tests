@@ -72,7 +72,7 @@ describe( `[${ host }] Comments: (${ screenSize })`, function() {
 			);
 		} );
 	} );
-  
+
 	describe( 'Commenting and replying to newly created post in Gutenberg Editor: @parallel', function() {
 		step( 'Can login and create a new post', async function() {
 			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
