@@ -45,6 +45,8 @@ const testCreditCardDetails = dataHelper.getTestCreditCardDetails();
 const sandboxCookieValue = config.get( 'storeSandboxCookieValue' );
 const locale = driverManager.currentLocale();
 const siteName = dataHelper.getJetpackSiteName();
+const host = dataHelper.getJetpackHost();
+const defaultSiteTemplate = host === 'PRESSABLE' ? 'default' : 'jetpackMaster';
 
 let driver;
 
@@ -78,7 +80,7 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 		step( 'Can create wporg site', async function() {
 			this.timeout( mochaTimeOut * 12 );
 
-			const template = dataHelper.isRunningOnJetpackBranch() ? 'branch' : 'default';
+			const template = dataHelper.isRunningOnJetpackBranch() ? 'branch' : defaultSiteTemplate;
 			this.jnFlow = new JetpackConnectFlow( driver, null, template );
 			return await this.jnFlow.createJNSite();
 		} );
@@ -118,7 +120,7 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 		step( 'Can create wporg site', async function() {
 			this.timeout( mochaTimeOut * 12 );
 
-			const template = dataHelper.isRunningOnJetpackBranch() ? 'branch' : 'default';
+			const template = dataHelper.isRunningOnJetpackBranch() ? 'branch' : defaultSiteTemplate;
 			this.jnFlow = new JetpackConnectFlow( driver, null, template );
 			return await this.jnFlow.createJNSite();
 		} );

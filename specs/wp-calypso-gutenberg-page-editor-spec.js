@@ -34,7 +34,7 @@ before( async function() {
 describe( `[${ host }] Calypso Gutenberg Editor: Pages (${ screenSize })`, function() {
 	this.timeout( mochaTimeOut );
 
-	describe( 'Public Pages: @parallel @jetpack', function() {
+	describe( 'Public Pages: @parallel', function() {
 		let fileDetails;
 		const pageTitle = dataHelper.randomPhrase();
 		const pageQuote =
@@ -48,6 +48,9 @@ describe( `[${ host }] Calypso Gutenberg Editor: Pages (${ screenSize })`, funct
 
 		step( 'Can log in', async function() {
 			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
+			if ( host !== 'WPCOM' ) {
+				this.loginFlow = new LoginFlow( driver );
+			}
 			return await this.loginFlow.loginAndStartNewPage( null, true );
 		} );
 

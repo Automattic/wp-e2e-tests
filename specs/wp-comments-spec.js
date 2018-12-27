@@ -34,7 +34,7 @@ describe( `[${ host }] Comments: (${ screenSize })`, function() {
 		return fileDetails;
 	} );
 
-	describe( 'Commenting and replying to newly created post in Gutenberg Editor: @parallel @jetpack', function() {
+	describe( 'Commenting and replying to newly created post in Gutenberg Editor: @parallel', function() {
 		step( 'Can login and create a new post', async function() {
 			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
 			await this.loginFlow.loginAndStartNewPost( null, true );
