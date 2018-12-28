@@ -65,13 +65,11 @@ describe( `[${ host }] Jetpack Plans: (${ screenSize }) @jetpack`, function() {
 		step( 'Can find and click Upgrade nudge button', async function() {
 			await driverHelper.refreshIfJNError( driver );
 			const jetpackDashboard = await WPAdminJetpackPage.Expect( driver );
-			await driver.sleep( 3000 ); // The nudge buttons are loaded after the page, and there's no good loaded status indicator to key off of
 			return await jetpackDashboard.clickUpgradeNudge();
 		} );
 
 		step( 'Can click the Proceed button', async function() {
 			const jetpackPlanSalesPage = await JetpackPlanSalesPage.Expect( driver );
-			await driver.sleep( 3000 ); // The upgrade buttons are loaded after the page, and there's no good loaded status indicator to key off of
 			return await jetpackPlanSalesPage.clickPurchaseButton();
 		} );
 
