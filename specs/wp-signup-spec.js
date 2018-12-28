@@ -46,6 +46,7 @@ import NavBarComponent from '../lib/components/nav-bar-component';
 import SideBarComponent from '../lib/components/sidebar-component';
 import NoSitesComponent from '../lib/components/no-sites-component';
 import SidebarComponent from '../lib/components/sidebar-component';
+import SitePreviewComponent from '../lib/components/site-preview-component.js';
 
 import * as SlackNotifier from '../lib/slack-notifier';
 
@@ -1149,7 +1150,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Basic sign up for a free site @parallel @email @ie11canary', function() {
+	describe.only( 'Basic sign up for a free site @parallel @email @ie11canary', function() {
 		const blogName = dataHelper.getNewBlogName();
 
 		before( async function() {
@@ -1206,14 +1207,19 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		step( 'Can then see the onboarding checklist', async function() {
-			const checklistPage = await ChecklistPage.Expect( driver );
-			const header = await checklistPage.headerExists();
-			const subheader = await checklistPage.subheaderExists();
+		step( 'Can then see the site preview', async function() {
+			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
 
-			assert( header, 'The checklist header does not exist.' );
+			const toolbar = await sitePreviewComponent.toolbar();
+			const placeholder = await sitePreviewComponent.contentPlaceholder();
 
-			return assert( subheader, 'The checklist subheader does not exist.' );
+			assert( toolbar, 'The preview toolbar does not exist.' );
+			assert( placeholder, 'The preview content placeholder does not exist.' );
+			await sitePreviewComponent.switchToIFrame();
+
+			const siteBody = await sitePreviewComponent.siteBody();
+
+			return assert( siteBody, 'The site body does not appear in the iframe.' );
 		} );
 	} );
 
