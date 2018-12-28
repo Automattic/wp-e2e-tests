@@ -162,9 +162,9 @@ describe( `Jetpack Connect: (${ screenSize })`, function() {
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
-		step( 'Can select Try it Free', async function() {
+		step( 'Can select Get Started', async function() {
 			const jetPackComPage = await JetpackComPage.Visit( driver );
-			return await jetPackComPage.selectTryItFree();
+			return await jetPackComPage.selectGetStarted();
 		} );
 
 		step( 'Can select free plan', async function() {
