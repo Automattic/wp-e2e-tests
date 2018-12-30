@@ -84,7 +84,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 			await gEditorComponent.openSidebar();
 			const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 			await gEditorSidebarComponent.selectDocumentTab();
-			await driver.sleep( 3000 );
+			await gEditorSidebarComponent.waitTillComponentsPanelIsDisplayed();
 			await gEditorSidebarComponent.collapseStatusAndVisibility(); // Status and visibility starts opened
 			await gEditorSidebarComponent.expandCategories();
 			await gEditorSidebarComponent.expandTags();
@@ -412,7 +412,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 				await gEditorComponent.openSidebar();
 				const gEditorSidebarComponent = await GutenbergEditorSidebarComponent.Expect( driver );
 				await gEditorSidebarComponent.selectDocumentTab();
-				await driver.sleep( 3000 );
+				await gEditorSidebarComponent.waitTillComponentsPanelIsDisplayed();
 				await gEditorSidebarComponent.collapseStatusAndVisibility(); // Status and visibility starts opened
 				await gEditorSidebarComponent.expandDiscussion();
 				return await gEditorSidebarComponent.setCommentsPreference( { allow: true } );
