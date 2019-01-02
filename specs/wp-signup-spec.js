@@ -198,6 +198,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can visit the start page', async function() {
 			await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale } ) );
+			await driver.sleep( 10000 );
 		} );
 
 		step( 'Can see the account page and enter account details', async function() {
@@ -260,7 +261,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a non-blog site on a premium paid plan through main flow in USD currency using a coupon @parallel @visdiff', function() {
+	xdescribe( 'Sign up for a non-blog site on a premium paid plan through main flow in USD currency using a coupon @parallel @visdiff', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
