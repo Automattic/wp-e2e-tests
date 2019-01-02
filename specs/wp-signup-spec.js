@@ -129,6 +129,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can see the plans page and pick the free plan', async function() {
 			const pickAPlanPage = await PickAPlanPage.Expect( driver );
+			this.driver.sleep();
 			return await pickAPlanPage.selectFreePlan();
 		} );
 
@@ -198,7 +199,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can visit the start page', async function() {
 			await StartPage.Visit( driver, StartPage.getStartURL( { culture: locale } ) );
-			await driver.sleep( 10000 );
 		} );
 
 		step( 'Can see the account page and enter account details', async function() {
