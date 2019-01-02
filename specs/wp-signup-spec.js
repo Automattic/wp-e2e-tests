@@ -129,7 +129,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can see the plans page and pick the free plan', async function() {
 			const pickAPlanPage = await PickAPlanPage.Expect( driver );
-			this.driver.sleep();
 			return await pickAPlanPage.selectFreePlan();
 		} );
 
