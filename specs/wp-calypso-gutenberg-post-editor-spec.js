@@ -365,16 +365,15 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 				await gSidebarComponent.trashPost();
 			} );
 
-			// Not working https://github.com/Automattic/wp-calypso/issues/28813
-			// step( 'Can then see the Posts page with a confirmation message', async function() {
-			// 	const postsPage = await PostsPage.Expect( driver );
-			// 	const displayed = await postsPage.successNoticeDisplayed();
-			// 	return assert.strictEqual(
-			// 		displayed,
-			// 		true,
-			// 		'The Posts page success notice for deleting the post is not displayed'
-			// 	);
-			// } );
+			step( 'Can then see the Posts page with a confirmation message', async function() {
+				const postsPage = await PostsPage.Expect( driver );
+				const displayed = await postsPage.successNoticeDisplayed();
+				return assert.strictEqual(
+					displayed,
+					true,
+					'The Posts page success notice for deleting the post is not displayed'
+				);
+			} );
 		} );
 	} );
 
@@ -758,7 +757,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	xdescribe( 'Trash Post: @parallel', function() {
+	describe( 'Trash Post: @parallel', function() {
 		describe( 'Trash a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
@@ -781,16 +780,15 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 				return await gSidebarComponent.trashPost();
 			} );
 
-			// Not working https://github.com/Automattic/wp-calypso/issues/28813
-			// step( 'Can then see the Posts page with a confirmation message', async function() {
-			// 	const postsPage = await PostsPage.Expect( driver );
-			// 	const displayed = await postsPage.successNoticeDisplayed();
-			// 	return assert.strictEqual(
-			// 		displayed,
-			// 		true,
-			// 		'The Posts page success notice for deleting the post is not displayed'
-			// 	);
-			// } );
+			step( 'Can then see the Posts page with a confirmation message', async function() {
+				const postsPage = await PostsPage.Expect( driver );
+				const displayed = await postsPage.successNoticeDisplayed();
+				return assert.strictEqual(
+					displayed,
+					true,
+					'The Posts page success notice for deleting the post is not displayed'
+				);
+			} );
 		} );
 	} );
 
