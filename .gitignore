@@ -18,3 +18,4 @@ config/local-*
 
 # http://direnv.net
 .envrc
+/temp-cookies/
