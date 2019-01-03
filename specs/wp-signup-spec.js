@@ -264,11 +264,19 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
+		const currencyValue = 'USD';
 		const expectedCurrencySymbol = '$';
 		let originalCartAmount;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
+		} );
+
+		step( 'We can set the sandbox cookie for payments', async function() {
+			const wPHomePage = await WPHomePage.Visit( driver );
+			await wPHomePage.checkURL( locale );
+			await wPHomePage.setSandboxModeForPayments( sandboxCookieValue );
+			return await wPHomePage.setCurrencyForPayments( currencyValue );
 		} );
 
 		step( 'Can visit the start page', async function() {
