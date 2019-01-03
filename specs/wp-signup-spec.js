@@ -185,6 +185,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
+
+		after( async function() {
+			return await driverHelper.clear_cache( driver );
+		} );
 	} );
 
 	describe( 'Sign up for a free site, see the onboarding checklist, activate email and can publish @parallel', function() {
@@ -257,6 +261,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+		} );
+
+		after( async function() {
+			return await driverHelper.clear_cache( driver );
 		} );
 	} );
 
@@ -380,6 +388,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 			let removedCouponAmount = await securePaymentComponent.cartTotalAmount();
 			assert.strictEqual( removedCouponAmount, originalCartAmount, 'Coupon not removed properly' );
+		} );
+
+		after( async function() {
+			return await driverHelper.clear_cache( driver );
 		} );
 	} );
 
@@ -514,6 +526,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
+
+		after( async function() {
+			return await driverHelper.clear_cache( driver );
+		} );
 	} );
 
 	describe( 'Sign up for a site on a premium paid plan coming in via /create as premium flow in JPY currency @parallel', function() {
@@ -641,6 +657,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
+
+		after( async function() {
+			return await driverHelper.clear_cache( driver );
+		} );
 	} );
 
 	describe( 'Sign up for a site on a personal paid plan coming in via /create as personal flow in GBP currency @parallel', function() {
@@ -767,6 +787,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+		} );
+
+		after( async function() {
+			return await driverHelper.clear_cache( driver );
 		} );
 	} );
 
@@ -969,6 +993,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 				);
 			} );
 		} );
+
+		after( async function() {
+			return await driverHelper.clear_cache( driver );
+		} );
 	} );
 
 	describe( 'Sign up for a site on a business paid plan w/ domain name coming in via /create as business flow in CAD currency @parallel', function() {
@@ -1147,6 +1175,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( siteName );
 		} );
+
+		after( async function() {
+			return await driverHelper.clear_cache( driver );
+		} );
 	} );
 
 	describe( 'Basic sign up for a free site @parallel @email @ie11canary', function() {
@@ -1214,6 +1246,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			assert( header, 'The checklist header does not exist.' );
 
 			return assert( subheader, 'The checklist subheader does not exist.' );
+		} );
+
+		after( async function() {
+			return await driverHelper.clear_cache( driver );
 		} );
 	} );
 
@@ -1339,6 +1375,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
+
+		after( async function() {
+			return await driverHelper.clear_cache( driver );
+		} );
 	} );
 
 	describe( 'Sign up for free subdomain site @parallel', function() {
@@ -1435,6 +1475,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			await sidebarComponent.selectSettings();
 			const settingsPage = await SettingsPage.Expect( driver );
 			return await settingsPage.deleteSite( expectedDomainName );
+		} );
+
+		after( async function() {
+			return await driverHelper.clear_cache( driver );
 		} );
 	} );
 
@@ -1535,6 +1579,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
+
+		after( async function() {
+			return await driverHelper.clear_cache( driver );
+		} );
 	} );
 
 	describe( 'Sign up for a Reader account @parallel', function() {
@@ -1586,6 +1634,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
+		} );
+
+		after( async function() {
+			return await driverHelper.clear_cache( driver );
 		} );
 	} );
 
@@ -1708,6 +1760,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
+
+		after( async function() {
+			return await driverHelper.clear_cache( driver );
+		} );
 	} );
 
 	describe( 'Sign up for a free WordPress.com site via the new onboarding flow', () => {
@@ -1794,6 +1850,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			if ( typeof undo === 'function' ) {
 				undo();
 			}
+
+			return await driverHelper.clear_cache( driver );
 		} );
 	} );
 
@@ -1906,6 +1964,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			if ( typeof undo === 'function' ) {
 				undo();
 			}
+
+			return await driverHelper.clear_cache( driver );
 		} );
 	} );
 } );
