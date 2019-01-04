@@ -1181,7 +1181,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Basic sign up for a free site @parallel @email @ie11canary', function() {
+	describe.only( 'Basic sign up for a free site @parallel @email @ie11canary', function() {
 		const blogName = dataHelper.getNewBlogName();
 
 		before( async function() {
@@ -1249,7 +1249,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
-			return await driverHelper.clear_cache( driver );
+			// ignore for ie11canary run
+			if ( global.browserName !== null && global.browserName === 'chrome' ) {
+				return await driverHelper.clear_cache( driver );
+			}
 		} );
 	} );
 
