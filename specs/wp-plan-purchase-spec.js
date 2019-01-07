@@ -12,7 +12,6 @@ import PlansPage from '../lib/pages/plans-page.js';
 import StatsPage from '../lib/pages/stats-page.js';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
-import SecurePaymentComponent from '../lib/components/secure-payment-component';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
