@@ -187,6 +187,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
+			await driver.sleep( 2000 );
 			return await driverHelper.clear_cache( driver );
 		} );
 	} );
@@ -264,11 +265,12 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
+			await driver.sleep( 2000 );
 			return await driverHelper.clear_cache( driver );
 		} );
 	} );
 
-	xdescribe( 'Sign up for a non-blog site on a premium paid plan through main flow in USD currency using a coupon @parallel @visdiff', function() {
+	describe( 'Sign up for a non-blog site on a premium paid plan through main flow in USD currency using a coupon @parallel @visdiff', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
@@ -391,6 +393,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
+			await driver.sleep( 2000 );
 			return await driverHelper.clear_cache( driver );
 		} );
 	} );
@@ -528,6 +531,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
+			await driver.sleep( 2000 );
 			return await driverHelper.clear_cache( driver );
 		} );
 	} );
@@ -659,6 +663,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
+			await driver.sleep( 2000 );
 			return await driverHelper.clear_cache( driver );
 		} );
 	} );
@@ -790,6 +795,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
+			await driver.sleep( 2000 );
 			return await driverHelper.clear_cache( driver );
 		} );
 	} );
@@ -995,6 +1001,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
+			await driver.sleep( 2000 );
 			return await driverHelper.clear_cache( driver );
 		} );
 	} );
