@@ -142,7 +142,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( async function() {
 			await driver.sleep( 2000 );
-			return await driverHelper.clear_cache( driver );
+			return await driverHelper.clearCache( driver );
 		} );
 	} );
 
