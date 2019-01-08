@@ -70,7 +70,8 @@
 		"jetpackFreePlanButtonPosition",
 		"removeUsername",
 		"showConciergeSessionUpsell",
-		"showConciergeSessionUpsellNonGSuite"
+		"showConciergeSessionUpsellNonGSuite",
+	    "builderReferralThemesBanner"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
