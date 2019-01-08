@@ -48,8 +48,7 @@ if ( screenSize !== 'mobile' ) {
 
 			step( 'Can create wporg site and connect Jetpack', async function() {
 				this.timeout( mochaTimeOut * 12 );
-				// const jnFlow = new JetpackConnectFlow( driver, 'jetpackConnectUser' );
-				const jnFlow = new JetpackConnectFlow( driver, 'jetpackConnectUser', 'gutenpack' );
+				const jnFlow = new JetpackConnectFlow( driver, 'jetpackConnectUser' );
 				await jnFlow.connectFromWPAdmin();
 				url = jnFlow.url;
 			} );
