@@ -147,11 +147,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 			assert( toolbar, 'The preview toolbar does not exist.' );
 			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.switchToIFrame();
+			await sitePreviewComponent.enterSitePreview();
 
 			const siteBody = await sitePreviewComponent.siteBody();
 
-			return assert( siteBody, 'The site body does not appear in the iframe.' );
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can log out and request a magic link', async function() {
@@ -258,11 +260,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 			assert( toolbar, 'The preview toolbar does not exist.' );
 			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.switchToIFrame();
+			await sitePreviewComponent.enterSitePreview();
 
 			const siteBody = await sitePreviewComponent.siteBody();
 
-			return assert( siteBody, 'The site body does not appear in the iframe.' );
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete our newly created account', async function() {
@@ -515,11 +519,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 			assert( toolbar, 'The preview toolbar does not exist.' );
 			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.switchToIFrame();
+			await sitePreviewComponent.enterSitePreview();
 
 			const siteBody = await sitePreviewComponent.siteBody();
 
-			return assert( siteBody, 'The site body does not appear in the iframe.' );
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete the plan', async function() {
@@ -647,11 +653,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 			assert( toolbar, 'The preview toolbar does not exist.' );
 			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.switchToIFrame();
+			await sitePreviewComponent.enterSitePreview();
 
 			const siteBody = await sitePreviewComponent.siteBody();
 
-			return assert( siteBody, 'The site body does not appear in the iframe.' );
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete the plan', async function() {
@@ -779,11 +787,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 			assert( toolbar, 'The preview toolbar does not exist.' );
 			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.switchToIFrame();
+			await sitePreviewComponent.enterSitePreview();
 
 			const siteBody = await sitePreviewComponent.siteBody();
 
-			return assert( siteBody, 'The site body does not appear in the iframe.' );
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete the plan', async function() {
@@ -1161,11 +1171,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 			assert( toolbar, 'The preview toolbar does not exist.' );
 			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.switchToIFrame();
+			await sitePreviewComponent.enterSitePreview();
 
 			const siteBody = await sitePreviewComponent.siteBody();
 
-			return assert( siteBody, 'The site body does not appear in the iframe.' );
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete the plan', async function() {
@@ -1244,11 +1256,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 			assert( toolbar, 'The preview toolbar does not exist.' );
 			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.switchToIFrame();
+			await sitePreviewComponent.enterSitePreview();
 
 			const siteBody = await sitePreviewComponent.siteBody();
 
-			return assert( siteBody, 'The site body does not appear in the iframe.' );
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 	} );
 
@@ -1463,16 +1477,16 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 			assert( toolbar, 'The preview toolbar does not exist.' );
 			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.switchToIFrame();
+			await sitePreviewComponent.enterSitePreview();
 
 			const siteBody = await sitePreviewComponent.siteBody();
 
-			return assert( siteBody, 'The site body does not appear in the iframe.' );
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete site', async function() {
-			driver.switchTo().defaultContent();
-
 			const sidebarComponent = await SidebarComponent.Expect( driver );
 			await sidebarComponent.ensureSidebarMenuVisible();
 			await sidebarComponent.selectSettings();
@@ -1573,11 +1587,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 			assert( toolbar, 'The preview toolbar does not exist.' );
 			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.switchToIFrame();
+			await sitePreviewComponent.enterSitePreview();
 
 			const siteBody = await sitePreviewComponent.siteBody();
 
-			return assert( siteBody, 'The site body does not appear in the iframe.' );
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete our newly created account', async function() {
@@ -1832,11 +1848,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 			assert( toolbar, 'The preview toolbar does not exist.' );
 			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.switchToIFrame();
+			await sitePreviewComponent.enterSitePreview();
 
 			const siteBody = await sitePreviewComponent.siteBody();
 
-			return assert( siteBody, 'The site body does not appear in the iframe.' );
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete our newly created account', async function() {
@@ -1949,11 +1967,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 			assert( toolbar, 'The preview toolbar does not exist.' );
 			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.switchToIFrame();
+			await sitePreviewComponent.enterSitePreview();
 
 			const siteBody = await sitePreviewComponent.siteBody();
 
-			return assert( siteBody, 'The site body does not appear in the iframe.' );
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete our newly created account', async function() {
