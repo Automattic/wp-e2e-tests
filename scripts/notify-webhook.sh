@@ -10,7 +10,7 @@ curl -X POST "https://72e6b435.ngrok.io/circleciwebhook" \
                 "status": "'"$1"'",
                 "build_url": "'"$CIRCLE_BUILD_URL"'",
                 "build_parameters": {
-                    "branch": "'"$buildBranch"'",
+                    "branch": "'"$BRANCHNAME"'",
                     "build_num": '"$CIRCLE_BUILD_NUM"',
                     "sha": "'"$sha"'",
                     "prContext": "'"$prContext"'",
