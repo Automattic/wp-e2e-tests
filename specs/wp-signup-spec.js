@@ -57,7 +57,7 @@ import ThemeDialogComponent from '../lib/components/theme-dialog-component';
 import SignUpStep from '../lib/flows/sign-up-step';
 import overrideABTest from '../lib/override-abtest';
 
-import * as sharedSteps from './shared-steps/wp-signup-spec';
+import * as sharedSteps from '../lib/shared-steps/wp-signup-spec';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
