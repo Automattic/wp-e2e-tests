@@ -70,6 +70,7 @@
 		"jetpackFreePlanButtonPosition",
 		"removeUsername",
 		"removeDomainsStepFromOnboarding",
+		"showConciergeSessionUpsell",
 		"showConciergeSessionUpsellNonGSuite",
 		"builderReferralThemesBanner"
 	],
