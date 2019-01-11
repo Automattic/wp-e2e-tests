@@ -57,6 +57,8 @@ import ThemeDialogComponent from '../lib/components/theme-dialog-component';
 import SignUpStep from '../lib/flows/sign-up-step';
 import overrideABTest from '../lib/override-abtest';
 
+import * as sharedSteps from './shared-steps/wp-signup-spec';
+
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
 const screenSize = driverManager.currentScreenSize();
@@ -70,7 +72,7 @@ let driver;
 
 before( async function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = await driverManager.startBrowser();
+	driver = await driverManager.getBrowserSingleton();
 } );
 
 describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
@@ -252,22 +254,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		step( 'Can then see the site preview', async function() {
-			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
-
-			const toolbar = await sitePreviewComponent.toolbar();
-			const placeholder = await sitePreviewComponent.contentPlaceholder();
-
-			assert( toolbar, 'The preview toolbar does not exist.' );
-			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.enterSitePreview();
-
-			const siteBody = await sitePreviewComponent.siteBody();
-
-			assert( siteBody, 'The site body does not appear in the iframe.' );
-
-			return sitePreviewComponent.leaveSitePreview();
-		} );
+		sharedSteps.stepWrapper( sharedSteps.canSeeTheSitePreview );
 
 		step( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
