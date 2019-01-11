@@ -36,7 +36,6 @@ import GSuiteUpsellPage from '../lib/pages/gsuite-upsell-page';
 import ThemesPage from '../lib/pages/themes-page';
 import ThemeDetailPage from '../lib/pages/theme-detail-page';
 import DesignTypePage from '../lib/pages/signup/design-type-page';
-import ChecklistPage from '../lib/pages/checklist-page';
 import SettingsPage from '../lib/pages/settings-page';
 import ImportPage from '../lib/pages/import-page';
 
@@ -46,6 +45,7 @@ import NavBarComponent from '../lib/components/nav-bar-component';
 import SideBarComponent from '../lib/components/sidebar-component';
 import NoSitesComponent from '../lib/components/no-sites-component';
 import SidebarComponent from '../lib/components/sidebar-component';
+import SitePreviewComponent from '../lib/components/site-preview-component.js';
 
 import * as SlackNotifier from '../lib/slack-notifier';
 
@@ -139,14 +139,21 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		step( 'Can then see the onboarding checklist', async function() {
-			const checklistPage = await ChecklistPage.Expect( driver );
-			const header = await checklistPage.headerExists();
-			const subheader = await checklistPage.subheaderExists();
+		step( 'Can then see the site preview', async function() {
+			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
 
-			assert( header, 'The checklist header does not exist.' );
+			const toolbar = await sitePreviewComponent.toolbar();
+			const placeholder = await sitePreviewComponent.contentPlaceholder();
 
-			return assert( subheader, 'The checklist subheader does not exist.' );
+			assert( toolbar, 'The preview toolbar does not exist.' );
+			assert( placeholder, 'The preview content placeholder does not exist.' );
+			await sitePreviewComponent.enterSitePreview();
+
+			const siteBody = await sitePreviewComponent.siteBody();
+
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can log out and request a magic link', async function() {
@@ -187,7 +194,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a free site, see the onboarding checklist, activate email and can publish @parallel', function() {
+	describe( 'Sign up for a free site, see the site preview, activate email and can publish @parallel', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
@@ -245,14 +252,21 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		step( 'Can then see the onboarding checklist', async function() {
-			const checklistPage = await ChecklistPage.Expect( driver );
-			const header = await checklistPage.headerExists();
-			const subheader = await checklistPage.subheaderExists();
+		step( 'Can then see the site preview', async function() {
+			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
 
-			assert( header, 'The checklist header does not exist.' );
+			const toolbar = await sitePreviewComponent.toolbar();
+			const placeholder = await sitePreviewComponent.contentPlaceholder();
 
-			return assert( subheader, 'The checklist subheader does not exist.' );
+			assert( toolbar, 'The preview toolbar does not exist.' );
+			assert( placeholder, 'The preview content placeholder does not exist.' );
+			await sitePreviewComponent.enterSitePreview();
+
+			const siteBody = await sitePreviewComponent.siteBody();
+
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete our newly created account', async function() {
@@ -484,14 +498,21 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await securePaymentComponent.waitForPageToDisappear();
 		} );
 
-		step( 'Can then see the onboarding checklist', async function() {
-			const checklistPage = await ChecklistPage.Expect( driver );
-			const header = await checklistPage.headerExists();
-			const subheader = await checklistPage.subheaderExists();
+		step( 'Can then see the site preview', async function() {
+			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
 
-			assert( header, 'The checklist header does not exist.' );
+			const toolbar = await sitePreviewComponent.toolbar();
+			const placeholder = await sitePreviewComponent.contentPlaceholder();
 
-			return assert( subheader, 'The checklist subheader does not exist.' );
+			assert( toolbar, 'The preview toolbar does not exist.' );
+			assert( placeholder, 'The preview content placeholder does not exist.' );
+			await sitePreviewComponent.enterSitePreview();
+
+			const siteBody = await sitePreviewComponent.siteBody();
+
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete the plan', async function() {
@@ -611,14 +632,21 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await securePaymentComponent.waitForPageToDisappear();
 		} );
 
-		step( 'Can then see the onboarding checklist', async function() {
-			const checklistPage = await ChecklistPage.Expect( driver );
-			const header = await checklistPage.headerExists();
-			const subheader = await checklistPage.subheaderExists();
+		step( 'Can then see the site preview', async function() {
+			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
 
-			assert( header, 'The checklist header does not exist.' );
+			const toolbar = await sitePreviewComponent.toolbar();
+			const placeholder = await sitePreviewComponent.contentPlaceholder();
 
-			return assert( subheader, 'The checklist subheader does not exist.' );
+			assert( toolbar, 'The preview toolbar does not exist.' );
+			assert( placeholder, 'The preview content placeholder does not exist.' );
+			await sitePreviewComponent.enterSitePreview();
+
+			const siteBody = await sitePreviewComponent.siteBody();
+
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete the plan', async function() {
@@ -738,14 +766,21 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await securePaymentComponent.waitForPageToDisappear();
 		} );
 
-		step( 'Can then see the onboarding checklist', async function() {
-			const checklistPage = await ChecklistPage.Expect( driver );
-			const header = await checklistPage.headerExists();
-			const subheader = await checklistPage.subheaderExists();
+		step( 'Can then see the site preview', async function() {
+			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
 
-			assert( header, 'The checklist header does not exist.' );
+			const toolbar = await sitePreviewComponent.toolbar();
+			const placeholder = await sitePreviewComponent.contentPlaceholder();
 
-			return assert( subheader, 'The checklist subheader does not exist.' );
+			assert( toolbar, 'The preview toolbar does not exist.' );
+			assert( placeholder, 'The preview content placeholder does not exist.' );
+			await sitePreviewComponent.enterSitePreview();
+
+			const siteBody = await sitePreviewComponent.siteBody();
+
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete the plan', async function() {
@@ -1115,14 +1150,21 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await gSuiteUpsellPage.declineEmail();
 		} );
 
-		step( 'Can then see the onboarding checklist', async function() {
-			const checklistPage = await ChecklistPage.Expect( driver );
-			const header = await checklistPage.headerExists();
-			const subheader = await checklistPage.subheaderExists();
+		step( 'Can then see the site preview', async function() {
+			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
 
-			assert( header, 'The checklist header does not exist.' );
+			const toolbar = await sitePreviewComponent.toolbar();
+			const placeholder = await sitePreviewComponent.contentPlaceholder();
 
-			return assert( subheader, 'The checklist subheader does not exist.' );
+			assert( toolbar, 'The preview toolbar does not exist.' );
+			assert( placeholder, 'The preview content placeholder does not exist.' );
+			await sitePreviewComponent.enterSitePreview();
+
+			const siteBody = await sitePreviewComponent.siteBody();
+
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete the plan', async function() {
@@ -1193,14 +1235,21 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		step( 'Can then see the onboarding checklist', async function() {
-			const checklistPage = await ChecklistPage.Expect( driver );
-			const header = await checklistPage.headerExists();
-			const subheader = await checklistPage.subheaderExists();
+		step( 'Can then see the site preview', async function() {
+			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
 
-			assert( header, 'The checklist header does not exist.' );
+			const toolbar = await sitePreviewComponent.toolbar();
+			const placeholder = await sitePreviewComponent.contentPlaceholder();
 
-			return assert( subheader, 'The checklist subheader does not exist.' );
+			assert( toolbar, 'The preview toolbar does not exist.' );
+			assert( placeholder, 'The preview content placeholder does not exist.' );
+			await sitePreviewComponent.enterSitePreview();
+
+			const siteBody = await sitePreviewComponent.siteBody();
+
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 	} );
 
@@ -1407,13 +1456,21 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		step( 'Can then see the onboarding checklist', async function() {
-			const checklistPage = await ChecklistPage.Expect( driver );
-			const header = await checklistPage.headerExists();
-			const subheader = await checklistPage.subheaderExists();
+		step( 'Can then see the site preview', async function() {
+			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
 
-			assert( header, 'The checklist header does not exist.' );
-			return assert( subheader, 'The checklist subheader does not exist.' );
+			const toolbar = await sitePreviewComponent.toolbar();
+			const placeholder = await sitePreviewComponent.contentPlaceholder();
+
+			assert( toolbar, 'The preview toolbar does not exist.' );
+			assert( placeholder, 'The preview content placeholder does not exist.' );
+			await sitePreviewComponent.enterSitePreview();
+
+			const siteBody = await sitePreviewComponent.siteBody();
+
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete site', async function() {
@@ -1509,14 +1566,21 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		step( 'Can then see the onboarding checklist', async function() {
-			const checklistPage = await ChecklistPage.Expect( driver );
-			const header = await checklistPage.headerExists();
-			const subheader = await checklistPage.subheaderExists();
+		step( 'Can then see the site preview', async function() {
+			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
 
-			assert( header, 'The checklist header does not exist.' );
+			const toolbar = await sitePreviewComponent.toolbar();
+			const placeholder = await sitePreviewComponent.contentPlaceholder();
 
-			return assert( subheader, 'The checklist subheader does not exist.' );
+			assert( toolbar, 'The preview toolbar does not exist.' );
+			assert( placeholder, 'The preview content placeholder does not exist.' );
+			await sitePreviewComponent.enterSitePreview();
+
+			const siteBody = await sitePreviewComponent.siteBody();
+
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete our newly created account', async function() {
@@ -1763,14 +1827,21 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await pickAPlanPage.selectFreePlan();
 		} );
 
-		step( 'Can then see the onboarding checklist', async function() {
-			const checklistPage = await ChecklistPage.Expect( driver );
-			const header = await checklistPage.headerExists();
-			const subheader = await checklistPage.subheaderExists();
+		step( 'Can then see the site preview', async function() {
+			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
 
-			assert( header, 'The checklist header does not exist.' );
+			const toolbar = await sitePreviewComponent.toolbar();
+			const placeholder = await sitePreviewComponent.contentPlaceholder();
 
-			return assert( subheader, 'The checklist subheader does not exist.' );
+			assert( toolbar, 'The preview toolbar does not exist.' );
+			assert( placeholder, 'The preview content placeholder does not exist.' );
+			await sitePreviewComponent.enterSitePreview();
+
+			const siteBody = await sitePreviewComponent.siteBody();
+
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete our newly created account', async function() {
@@ -1875,14 +1946,21 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await pickAPlanPage.selectFreePlan();
 		} );
 
-		step( 'Can then see the onboarding checklist', async function() {
-			const checklistPage = await ChecklistPage.Expect( driver );
-			const header = await checklistPage.headerExists();
-			const subheader = await checklistPage.subheaderExists();
+		step( 'Can then see the site preview', async function() {
+			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
 
-			assert( header, 'The checklist header does not exist.' );
+			const toolbar = await sitePreviewComponent.toolbar();
+			const placeholder = await sitePreviewComponent.contentPlaceholder();
 
-			return assert( subheader, 'The checklist subheader does not exist.' );
+			assert( toolbar, 'The preview toolbar does not exist.' );
+			assert( placeholder, 'The preview content placeholder does not exist.' );
+			await sitePreviewComponent.enterSitePreview();
+
+			const siteBody = await sitePreviewComponent.siteBody();
+
+			assert( siteBody, 'The site body does not appear in the iframe.' );
+
+			return sitePreviewComponent.leaveSitePreview();
 		} );
 
 		step( 'Can delete our newly created account', async function() {
