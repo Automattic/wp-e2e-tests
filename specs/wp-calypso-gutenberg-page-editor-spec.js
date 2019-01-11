@@ -562,7 +562,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Pages (${ screenSize })`, funct
 		} );
 
 		step(
-			'The payment button in our published page opens a new Paypal window for payment',
+			'The payment button in  our published page opens a new Paypal window for payment',
 			async function() {
 				let numberOfOpenBrowserWindows = await driverHelper.numberOfOpenWindows( driver );
 				assert.strictEqual(
