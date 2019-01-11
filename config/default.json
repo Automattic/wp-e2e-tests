@@ -69,9 +69,9 @@
 		"privateByDefault",
 		"jetpackFreePlanButtonPosition",
 		"removeUsername",
-		"showConciergeSessionUpsell",
+		"removeDomainsStepFromOnboarding",
 		"showConciergeSessionUpsellNonGSuite",
-	    "builderReferralThemesBanner"
+		"builderReferralThemesBanner"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -84,6 +84,7 @@
 		[ "privateByDefault_20181113", "public" ],
 		[ "jetpackFreePlanButtonPosition_20181212", "locationBottom" ],
 		[ "removeUsername_20181213", "showUsername" ],
+		[ "removeDomainsStepFromOnboarding_20181221", "keep" ],
 		[ "showConciergeSessionUpsell_20181214", "skip" ],
 		[ "showConciergeSessionUpsellNonGSuite_20181228", "skip" ]
 	]
