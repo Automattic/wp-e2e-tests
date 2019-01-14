@@ -874,7 +874,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'We can cancel the domain', async function() {
-			return ( async () => {
+			return await ( async () => {
 				await ReaderPage.Visit( driver );
 				const navBarComponent = await NavBarComponent.Expect( driver );
 				await navBarComponent.clickMySites();
