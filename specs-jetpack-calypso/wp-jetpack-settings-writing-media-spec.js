@@ -42,11 +42,6 @@ describe( `[${ host }] Jetpack Settings on Calypso: (${ screenSize }) @jetpack`,
 			assert( shown, "Can't see the media settings section under the Writing settings" );
 		} );
 
-		step( 'Can see the Photon toggle switch', async function() {
-			let shown = await this.settingsPage.photonToggleDisplayed();
-			assert( shown, "Can't see the Photon setting toggle under the Writing settings" );
-		} );
-
 		step( 'Can see the Carousel toggle switch', async function() {
 			let shown = await this.settingsPage.carouselToggleDisplayed();
 			assert( shown, "Can't see the carousel setting toggle under the Writing settings" );
@@ -58,6 +53,12 @@ describe( `[${ host }] Jetpack Settings on Calypso: (${ screenSize }) @jetpack`,
 				shown,
 				"Can't see the carousel background color setting toggle under the Writing settings"
 			);
+		} );
+
+		step( 'Can see the Photon toggle switch', async function() {
+			await this.settingsPage.selectPerformance();
+			let shown = await this.settingsPage.photonToggleDisplayed();
+			assert( shown, "Can't see the Photon setting toggle under the Writing settings" );
 		} );
 	} );
 } );

@@ -231,7 +231,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 			if ( fileDetails ) {
 				await mediaHelper.deleteFile( fileDetails );
 			}
-			await driverHelper.dismissAlertIfPresent();
+			await driverHelper.acceptAlertIfPresent( driver );
 		} );
 	} );
 
@@ -319,6 +319,10 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 				`The published post title '${ blogPostTitle }' was not displayed in activity log after publishing`
 			);
 		} );
+
+		after( async function() {
+			await driverHelper.acceptAlertIfPresent( driver );
+		} );
 	} );
 
 	describe( 'Schedule Basic Public Post @parallel', function() {
@@ -372,6 +376,10 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 					true,
 					'The Posts page success notice for deleting the post is not displayed'
 				);
+			} );
+
+			after( async function() {
+				await driverHelper.acceptAlertIfPresent( driver );
 			} );
 		} );
 	} );
@@ -490,6 +498,10 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 					true,
 					'Could not see the not found (404) page. Check that it is displayed'
 				);
+			} );
+
+			after( async function() {
+				await driverHelper.acceptAlertIfPresent( driver );
 			} );
 		} );
 	} );
@@ -752,6 +764,10 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 						')'
 				);
 			} );
+
+			after( async function() {
+				await driverHelper.acceptAlertIfPresent( driver );
+			} );
 		} );
 	} );
 
@@ -786,6 +802,10 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 					true,
 					'The Posts page success notice for deleting the post is not displayed'
 				);
+			} );
+
+			after( async function() {
+				await driverHelper.acceptAlertIfPresent( driver );
 			} );
 		} );
 	} );
@@ -885,6 +905,10 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 				} );
 			} );
 		} );
+
+		after( async function() {
+			await driverHelper.acceptAlertIfPresent( driver );
+		} );
 	} );
 
 	describe( 'Insert a contact form: @parallel', function() {
@@ -928,6 +952,10 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 					true,
 					'The published post does not contain the contact form'
 				);
+			} );
+
+			after( async function() {
+				await driverHelper.acceptAlertIfPresent( driver );
 			} );
 		} );
 	} );
@@ -1009,6 +1037,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		);
 
 		after( async function() {
+			await driverHelper.acceptAlertIfPresent( driver );
 			await driverHelper.ensurePopupsClosed( driver );
 		} );
 	} );
@@ -1051,6 +1080,10 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 				let isDraft = await gHeaderComponent.isDraft();
 				assert.strictEqual( isDraft, true, 'The post is not set as draft' );
 			} );
+		} );
+
+		after( async function() {
+			await driverHelper.acceptAlertIfPresent( driver );
 		} );
 	} );
 
@@ -1105,6 +1138,10 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 			await viewPostPage.embedContentDisplayed( this.instagramPostSelector ); // check Instagram content
 			this.instagramPostSelector = '.twitter-tweet-rendered';
 			return await viewPostPage.embedContentDisplayed( this.instagramPostSelector ); // check Twitter content
+		} );
+
+		after( async function() {
+			await driverHelper.acceptAlertIfPresent( driver );
 		} );
 	} );
 } );
