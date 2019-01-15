@@ -194,7 +194,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
-			await driver.sleep( 2000 );
 			return await driverHelper.clearCache( driver );
 		} );
 	} );
@@ -279,7 +278,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
-			await driver.sleep( 2000 );
 			return await driverHelper.clearCache( driver );
 		} );
 	} );
@@ -424,7 +422,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
-			await driver.sleep( 2000 );
 			return await driverHelper.clearCache( driver );
 		} );
 	} );
@@ -563,7 +560,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
-			await driver.sleep( 2000 );
 			return await driverHelper.clearCache( driver );
 		} );
 	} );
@@ -702,7 +698,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
-			await driver.sleep( 2000 );
 			return await driverHelper.clearCache( driver );
 		} );
 	} );
@@ -908,7 +903,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
-			await driver.sleep( 2000 );
 			return await driverHelper.clearCache( driver );
 		} );
 	} );
