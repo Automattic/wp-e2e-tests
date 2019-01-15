@@ -70,10 +70,10 @@ let driver;
 
 before( async function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = await driverManager.startBrowser();
+	driver = await driverManager.startBrowser( );
 } );
 
-describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
+describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 	this.timeout( mochaTimeOut );
 
 	describe( 'Sign up for a free WordPress.com site from the Jetpack new site page, and log in via a magic link @parallel @email', function() {
@@ -83,6 +83,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let magicLoginLink;
 
 		before( async function() {
+			driver = await driverManager.restartBrowser( driver );
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -195,7 +196,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( async function() {
 			await driver.sleep( 2000 );
-			return await driverHelper.clearCache( driver );
+			//return await driverHelper.clearCache( driver );
 		} );
 	} );
 
@@ -205,6 +206,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 
 		before( async function() {
+			driver = await driverManager.restartBrowser( driver );
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -280,7 +282,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( async function() {
 			await driver.sleep( 2000 );
-			return await driverHelper.clearCache( driver );
+			//return await driverHelper.clearCache( driver );
 		} );
 	} );
 
@@ -292,6 +294,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const expectedCurrencySymbol = '$';
 
 		before( async function() {
+			driver = await driverManager.restartBrowser( driver );
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -425,7 +428,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( async function() {
 			await driver.sleep( 2000 );
-			return await driverHelper.clearCache( driver );
+			//return await driverHelper.clearCache( driver );
 		} );
 	} );
 
@@ -438,6 +441,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const expectedCurrencySymbol = '¥';
 
 		before( async function() {
+			driver = await driverManager.restartBrowser( driver );
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -564,7 +568,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( async function() {
 			await driver.sleep( 2000 );
-			return await driverHelper.clearCache( driver );
+			//return await driverHelper.clearCache( driver );
 		} );
 	} );
 
@@ -576,6 +580,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const expectedCurrencySymbol = '£';
 
 		before( async function() {
+			driver = await driverManager.restartBrowser( driver );
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -703,7 +708,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( async function() {
 			await driver.sleep( 2000 );
-			return await driverHelper.clearCache( driver );
+			//return await driverHelper.clearCache( driver );
 		} );
 	} );
 
@@ -726,6 +731,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		before( async function() {
+			driver = await driverManager.restartBrowser( driver );
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -909,7 +915,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( async function() {
 			await driver.sleep( 2000 );
-			return await driverHelper.clearCache( driver );
+			//return await driverHelper.clearCache( driver );
 		} );
 	} );
 
@@ -932,6 +938,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		before( async function() {
+			driver = await driverManager.restartBrowser( driver );
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -1098,7 +1105,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
-			return await driverHelper.clearCache( driver );
+			//return await driverHelper.clearCache( driver );
 		} );
 	} );
 
@@ -1106,6 +1113,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const blogName = dataHelper.getNewBlogName();
 
 		before( async function() {
+			driver = await driverManager.restartBrowser( driver );
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -1179,7 +1187,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		after( async function() {
 			// ignore for ie11canary run
 			if ( global.browserName !== null && global.browserName === 'chrome' ) {
-				return await driverHelper.clearCache( driver );
+				//return await driverHelper.clearCache( driver );
 			}
 		} );
 	} );
@@ -1193,6 +1201,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let chosenThemeName = '';
 
 		before( async function() {
+			driver = await driverManager.restartBrowser( driver );
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -1308,7 +1317,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
-			return await driverHelper.clearCache( driver );
+			//return await driverHelper.clearCache( driver );
 		} );
 	} );
 
@@ -1327,6 +1336,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		before( async function() {
+			driver = await driverManager.restartBrowser( driver );
 			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -1417,7 +1427,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
-			return await driverHelper.clearCache( driver );
+			//return await driverHelper.clearCache( driver );
 		} );
 	} );
 
@@ -1427,6 +1437,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 
 		before( async function() {
+			driver = await driverManager.restartBrowser( driver );
 			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -1527,7 +1538,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
-			return await driverHelper.clearCache( driver );
+			//return await driverHelper.clearCache( driver );
 		} );
 	} );
 
@@ -1535,6 +1546,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const userName = dataHelper.getNewBlogName();
 
 		before( async function() {
+			driver = await driverManager.restartBrowser( driver );
 			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -1583,7 +1595,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
-			return await driverHelper.clearCache( driver );
+			//return await driverHelper.clearCache( driver );
 		} );
 	} );
 
@@ -1594,6 +1606,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const emailAddress = dataHelper.getEmailAddress( userName, signupInboxId );
 
 		before( async function() {
+			driver = await driverManager.restartBrowser( driver );
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -1708,7 +1721,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( async function() {
-			return await driverHelper.clearCache( driver );
+			//return await driverHelper.clearCache( driver );
 		} );
 	} );
 
@@ -1719,6 +1732,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let undo = null;
 
 		before( async function() {
+			driver = await driverManager.restartBrowser( driver );
 			undo = overrideABTest( 'improvedOnboarding_20181023', 'onboarding' );
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
@@ -1804,7 +1818,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 				undo();
 			}
 
-			return await driverHelper.clearCache( driver );
+			//return await driverHelper.clearCache( driver );
 		} );
 	} );
 
@@ -1814,6 +1828,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let undo = null;
 
 		before( async function() {
+			driver = await driverManager.restartBrowser( driver );
 			undo = overrideABTest( 'improvedOnboarding_20181023', 'onboarding' );
 			await driverManager.ensureNotLoggedIn( driver );
 		} );
@@ -1925,7 +1940,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 				undo();
 			}
 
-			return await driverHelper.clearCache( driver );
+			//return await driverHelper.clearCache( driver );
 		} );
 	} );
 } );
