@@ -353,6 +353,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			let removedCouponAmount = await securePaymentComponent.cartTotalAmount();
 			assert.strictEqual( removedCouponAmount, originalCartAmount, 'Coupon not removed properly' );
 		} );
+
+		step( 'Can delete our newly created account', async function() {
+			await WPHomePage.Visit( driver );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+		} );
 	} );
 
 	describe( 'Sign up for a site on a premium paid plan through main flow in USD currency @parallel @canary', function() {
@@ -885,37 +890,34 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'We can cancel the domain', async function() {
-			return ( async () => {
-				await ReaderPage.Visit( driver );
-				const navBarComponent = await NavBarComponent.Expect( driver );
-				await navBarComponent.clickMySites();
-				const sidebarComponent = await SideBarComponent.Expect( driver );
-				await sidebarComponent.selectSettings();
-				const domainOnlySettingsPage = await DomainOnlySettingsPage.Expect( driver );
-				await domainOnlySettingsPage.manageDomain();
-				const domainDetailsPage = await DomainDetailsPage.Expect( driver );
-				await domainDetailsPage.viewPaymentSettings();
+			await ReaderPage.Visit( driver );
+			const navBarComponent = await NavBarComponent.Expect( driver );
+			await navBarComponent.clickMySites();
+			const sidebarComponent = await SideBarComponent.Expect( driver );
+			await sidebarComponent.selectSettings();
+			const domainOnlySettingsPage = await DomainOnlySettingsPage.Expect( driver );
+			await domainOnlySettingsPage.manageDomain();
+			const domainDetailsPage = await DomainDetailsPage.Expect( driver );
+			await domainDetailsPage.viewPaymentSettings();
 
-				const managePurchasePage = await ManagePurchasePage.Expect( driver );
-				let domainDisplayed = await managePurchasePage.domainDisplayed();
-				assert.strictEqual(
-					domainDisplayed,
-					expectedDomainName,
-					'The domain displayed on the manage purchase page is unexpected'
-				);
-				await managePurchasePage.chooseCancelAndRefund();
+			const managePurchasePage = await ManagePurchasePage.Expect( driver );
+			let domainDisplayed = await managePurchasePage.domainDisplayed();
+			assert.strictEqual(
+				domainDisplayed,
+				expectedDomainName,
+				'The domain displayed on the manage purchase page is unexpected'
+			);
+			await managePurchasePage.chooseCancelAndRefund();
 
-				const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
-				await cancelPurchasePage.clickCancelPurchase();
+			const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
+			await cancelPurchasePage.clickCancelPurchase();
 
-				const cancelDomainPage = await CancelDomainPage.Expect( driver );
-				return await cancelDomainPage.completeSurveyAndConfirm();
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			const cancelDomainPage = await CancelDomainPage.Expect( driver );
+			return await cancelDomainPage.completeSurveyAndConfirm();
+		} );
+
+		step( 'Can delete our newly created account', async function() {
+			return await new DeleteAccountFlow( driver ).deleteAccount( siteName );
 		} );
 	} );
 
@@ -1147,6 +1149,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		);
 
 		sharedSteps.canSeeTheSitePreview();
+
+		step( 'Can delete our newly created account', async function() {
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+		} );
 	} );
 
 	describe( 'Sign up while purchasing premium theme in AUD currency @parallel @email', function() {
@@ -1360,6 +1366,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			await sidebarComponent.selectSettings();
 			const settingsPage = await SettingsPage.Expect( driver );
 			return await settingsPage.deleteSite( expectedDomainName );
+		} );
+
+		step( 'Can delete our newly created account', async function() {
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
