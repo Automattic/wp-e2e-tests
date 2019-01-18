@@ -82,6 +82,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		let magicLoginLink;
+		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -106,6 +107,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can see the "About" page, and enter some site information', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
+			isLoggedIn = true;
 			await aboutPage.enterSiteDetails( blogName, 'Electronics' );
 			return await aboutPage.submitForm();
 		} );
@@ -144,6 +146,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can log out and request a magic link', async function() {
 			await driverManager.ensureNotLoggedIn( driver );
+			isLoggedIn = false;
 			const loginPage = await LoginPage.Visit( driver );
 			return await loginPage.requestMagicLink( emailAddress );
 		} );
@@ -172,11 +175,15 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			await driver.get( magicLoginLink );
 			const magicLoginPage = await MagicLoginPage.Expect( driver );
 			await magicLoginPage.finishLogin();
-			return await ReaderPage.Expect( driver );
+			await ReaderPage.Expect( driver );
+			return ( isLoggedIn = true );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
-			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+		after( 'Can delete our newly created account', async function() {
+			if ( isLoggedIn ) {
+				await WPHomePage.Visit( driver );
+				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+			}
 		} );
 	} );
 
@@ -184,6 +191,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
+		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -204,6 +212,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can see the "About" page, and enter some site information', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
+			isLoggedIn = true;
 			await aboutPage.enterSiteDetails( blogName, 'Electronics' );
 			return await aboutPage.submitForm();
 		} );
@@ -240,8 +249,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		sharedSteps.canSeeTheSitePreview();
 
-		step( 'Can delete our newly created account', async function() {
-			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+		after( 'Can delete our newly created account', async function() {
+			if ( isLoggedIn ) {
+				await WPHomePage.Visit( driver );
+				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+			}
 		} );
 	} );
 
@@ -250,6 +262,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		let originalCartAmount;
+		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -270,6 +283,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can see the "About" page, and enter some site information', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
+			isLoggedIn = true;
 			return await aboutPage.enterSiteDetails( blogName, '', {
 				showcase: true,
 			} );
@@ -354,9 +368,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			assert.strictEqual( removedCouponAmount, originalCartAmount, 'Coupon not removed properly' );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
-			await WPHomePage.Visit( driver );
-			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+		after( 'Can delete our newly created account', async function() {
+			if ( isLoggedIn ) {
+				await WPHomePage.Visit( driver );
+				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+			}
 		} );
 	} );
 
@@ -366,6 +382,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const currencyValue = 'USD';
 		const expectedCurrencySymbol = '$';
+		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -393,6 +410,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can accept defaults for about page', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
+			isLoggedIn = true;
 			await aboutPage.enterSiteDetails( 'Step Back', 'Store Test Topic', { sell: true } );
 			await aboutPage.submitForm();
 			await driverHelper.waitTillNotPresent( driver, By.css( '.signup is-store-nux' ) ); // Wait for /start/store-nux/themes to load
@@ -480,8 +498,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await new DeletePlanFlow( driver ).deletePlan( 'premium' );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
-			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+		after( 'Can delete our newly created account', async function() {
+			if ( isLoggedIn ) {
+				await WPHomePage.Visit( driver );
+				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+			}
 		} );
 	} );
 
@@ -492,6 +513,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		const currencyValue = 'JPY';
 		const expectedCurrencySymbol = '¥';
+		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -522,6 +544,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can see the about page and accept defaults', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
+			isLoggedIn = true;
 			return await aboutPage.submitForm();
 		} );
 
@@ -599,8 +622,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await new DeletePlanFlow( driver ).deletePlan( 'premium' );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
-			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+		after( 'Can delete our newly created account', async function() {
+			if ( isLoggedIn ) {
+				await WPHomePage.Visit( driver );
+				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+			}
 		} );
 	} );
 
@@ -610,6 +636,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const currencyValue = 'GBP';
 		const expectedCurrencySymbol = '£';
+		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -640,6 +667,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can see the about page and accept defaults', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
+			isLoggedIn = true;
 			return await aboutPage.submitForm();
 		} );
 
@@ -718,8 +746,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await new DeletePlanFlow( driver ).deletePlan( 'personal' );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
-			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+		after( 'Can delete our newly created account', async function() {
+			if ( isLoggedIn ) {
+				await WPHomePage.Visit( driver );
+				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+			}
 		} );
 	} );
 
@@ -730,6 +761,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( emailAddress );
 		const currencyValue = 'EUR';
 		const expectedCurrencySymbol = '€';
+		let isLoggedIn = false;
 
 		before( async function() {
 			if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
@@ -788,6 +820,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			'Can see checkout page, choose domain privacy option and enter registrar details',
 			async function() {
 				let checkOutPage;
+				isLoggedIn = true;
 				try {
 					checkOutPage = await CheckOutPage.Expect( driver );
 				} catch ( err ) {
@@ -916,8 +949,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await cancelDomainPage.completeSurveyAndConfirm();
 		} );
 
-		step( 'Can delete our newly created account', async function() {
-			return await new DeleteAccountFlow( driver ).deleteAccount( siteName );
+		after( 'Can delete our newly created account', async function() {
+			if ( isLoggedIn ) {
+				await WPHomePage.Visit( driver );
+				return await new DeleteAccountFlow( driver ).deleteAccount( siteName );
+			}
 		} );
 	} );
 
@@ -928,6 +964,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( emailAddress );
 		const currencyValue = 'CAD';
 		const expectedCurrencySymbol = 'C$';
+		let isLoggedIn = false;
 
 		before( async function() {
 			if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
@@ -968,6 +1005,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can see the about page and accept defaults', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
+			isLoggedIn = true;
 			return await aboutPage.submitForm();
 		} );
 
@@ -1086,13 +1124,17 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			} );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
-			return await new DeleteAccountFlow( driver ).deleteAccount( siteName );
+		after( 'Can delete our newly created account', async function() {
+			if ( isLoggedIn ) {
+				await WPHomePage.Visit( driver );
+				return await new DeleteAccountFlow( driver ).deleteAccount( siteName );
+			}
 		} );
 	} );
 
 	describe( 'Basic sign up for a free site @parallel @email @ie11canary', function() {
 		const blogName = dataHelper.getNewBlogName();
+		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -1114,6 +1156,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can see the about page and accept defaults', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
+			isLoggedIn = true;
 			return await aboutPage.submitForm();
 		} );
 
@@ -1150,8 +1193,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		sharedSteps.canSeeTheSitePreview();
 
-		step( 'Can delete our newly created account', async function() {
-			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+		after( 'Can delete our newly created account', async function() {
+			if ( isLoggedIn ) {
+				await WPHomePage.Visit( driver );
+				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+			}
 		} );
 	} );
 
@@ -1162,6 +1208,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const currencyValue = 'AUD';
 		const expectedCurrencySymbol = 'A$';
 		let chosenThemeName = '';
+		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -1222,6 +1269,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the secure payment page with the chosen theme in the cart',
 			async function() {
+				isLoggedIn = true;
 				const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 				let products = await securePaymentComponent.getProductsNames();
 				assert(
@@ -1274,14 +1322,18 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await new DeletePlanFlow( driver ).deletePlan( 'theme' );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
-			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+		after( 'Can delete our newly created account', async function() {
+			if ( isLoggedIn ) {
+				await WPHomePage.Visit( driver );
+				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+			}
 		} );
 	} );
 
 	describe( 'Sign up for free subdomain site @parallel', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedDomainName = `${ blogName }.art.blog`;
+		let isLoggedIn = false;
 
 		before( async function() {
 			if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
@@ -1354,7 +1406,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
+				await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
+				return ( isLoggedIn = true );
 			}
 		);
 
@@ -1368,8 +1421,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await settingsPage.deleteSite( expectedDomainName );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
-			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+		after( 'Can delete our newly created account', async function() {
+			if ( isLoggedIn ) {
+				await WPHomePage.Visit( driver );
+				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+			}
 		} );
 	} );
 
@@ -1377,6 +1433,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const userName = dataHelper.getNewBlogName();
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
+		let isLoggedIn = false;
 
 		before( async function() {
 			await driverManager.ensureNotLoggedIn( driver );
@@ -1423,6 +1480,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can see the "About" page, and enter some site information', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
+			isLoggedIn = true;
 			await aboutPage.enterSiteDetails( blogName, 'Electronics' );
 			return await aboutPage.submitForm();
 		} );
@@ -1459,13 +1517,17 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		sharedSteps.canSeeTheSitePreview();
 
-		step( 'Can delete our newly created account', async function() {
-			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
+		after( 'Can delete our newly created account', async function() {
+			if ( isLoggedIn ) {
+				await WPHomePage.Visit( driver );
+				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
+			}
 		} );
 	} );
 
 	describe( 'Sign up for a Reader account @parallel', function() {
 		const userName = dataHelper.getNewBlogName();
+		let isLoggedIn = false;
 
 		before( async function() {
 			await driverManager.ensureNotLoggedIn( driver );
@@ -1503,7 +1565,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				return await new SignUpStep( driver ).continueAlong( userName, passwordForTestAccounts );
+				await new SignUpStep( driver ).continueAlong( userName, passwordForTestAccounts );
+				return ( isLoggedIn = true );
 			}
 		);
 
@@ -1511,8 +1574,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			await ReaderPage.Expect( driver );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
-			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
+		after( 'Can delete our newly created account', async function() {
+			if ( isLoggedIn ) {
+				await WPHomePage.Visit( driver );
+				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
+			}
 		} );
 	} );
 
@@ -1521,6 +1587,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const siteURL = 'https://hi6822.wixsite.com/eat-here-its-good';
 		const userName = dataHelper.getNewBlogName();
 		const emailAddress = dataHelper.getEmailAddress( userName, signupInboxId );
+		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -1606,6 +1673,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can then see the site importer pane and preview site to be imported', async function() {
+			isLoggedIn = true;
 			const importPage = await ImportPage.Expect( driver );
 
 			// Test that we have opened the correct importer and can see the preview.
@@ -1632,8 +1700,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			await driver.get( activationLink );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
-			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
+		after( 'Can delete our newly created account', async function() {
+			if ( isLoggedIn ) {
+				await WPHomePage.Visit( driver );
+				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
+			}
 		} );
 	} );
 
@@ -1642,6 +1713,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const blogName = dataHelper.getNewBlogName();
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		let undo = null;
+		let isLoggedIn = false;
 
 		before( async function() {
 			undo = overrideABTest( 'improvedOnboarding_20181023', 'onboarding' );
@@ -1662,6 +1734,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the "Site Type" page, and enter some site information', async function() {
+			isLoggedIn = true;
 			const siteTypePage = await SiteTypePage.Expect( driver );
 			await siteTypePage.selectBlogType();
 			return await siteTypePage.submitForm();
@@ -1705,8 +1778,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		sharedSteps.canSeeTheSitePreview();
 
-		step( 'Can delete our newly created account', async function() {
-			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
+		after( 'Can delete our newly created account', async function() {
+			if ( isLoggedIn ) {
+				await WPHomePage.Visit( driver );
+				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
+			}
 		} );
 
 		after( async function() {
@@ -1720,6 +1796,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const userName = dataHelper.getNewBlogName();
 		const blogName = dataHelper.getNewBlogName();
 		let undo = null;
+		let isLoggedIn = false;
 
 		before( async function() {
 			undo = overrideABTest( 'improvedOnboarding_20181023', 'onboarding' );
@@ -1750,7 +1827,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
+				await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
+				return ( isLoggedIn = true );
 			}
 		);
 
@@ -1809,8 +1887,11 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		sharedSteps.canSeeTheSitePreview();
 
-		step( 'Can delete our newly created account', async function() {
-			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
+		after( 'Can delete our newly created account', async function() {
+			if ( isLoggedIn ) {
+				await WPHomePage.Visit( driver );
+				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
+			}
 		} );
 
 		after( async function() {
