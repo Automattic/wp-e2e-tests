@@ -72,7 +72,8 @@
 		"removeDomainsStepFromOnboarding",
 		"showConciergeSessionUpsell",
 		"showConciergeSessionUpsellNonGSuite",
-		"builderReferralThemesBanner"
+		"builderReferralThemesBanner",
+		"gSuitePlan"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
@@ -87,6 +88,7 @@
 		[ "removeUsername_20181213", "showUsername" ],
 		[ "removeDomainsStepFromOnboarding_20181221", "keep" ],
 		[ "showConciergeSessionUpsell_20181214", "skip" ],
-		[ "showConciergeSessionUpsellNonGSuite_20181228", "skip" ]
+		[ "showConciergeSessionUpsellNonGSuite_20181228", "skip" ],
+		[ "gSuitePlan_20190117", "basic" ]
 	]
 }
