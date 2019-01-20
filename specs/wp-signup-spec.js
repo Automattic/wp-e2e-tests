@@ -181,7 +181,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( 'Can delete our newly created account', async function() {
 			if ( isLoggedIn ) {
-				await WPHomePage.Visit( driver );
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 			}
 		} );
@@ -251,7 +250,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( 'Can delete our newly created account', async function() {
 			if ( isLoggedIn ) {
-				await WPHomePage.Visit( driver );
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 			}
 		} );
@@ -370,7 +368,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( 'Can delete our newly created account', async function() {
 			if ( isLoggedIn ) {
-				await WPHomePage.Visit( driver );
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 			}
 		} );
@@ -500,7 +497,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( 'Can delete our newly created account', async function() {
 			if ( isLoggedIn ) {
-				await WPHomePage.Visit( driver );
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 			}
 		} );
@@ -624,7 +620,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( 'Can delete our newly created account', async function() {
 			if ( isLoggedIn ) {
-				await WPHomePage.Visit( driver );
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 			}
 		} );
@@ -748,7 +743,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( 'Can delete our newly created account', async function() {
 			if ( isLoggedIn ) {
-				await WPHomePage.Visit( driver );
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 			}
 		} );
@@ -951,7 +945,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( 'Can delete our newly created account', async function() {
 			if ( isLoggedIn ) {
-				await WPHomePage.Visit( driver );
 				return await new DeleteAccountFlow( driver ).deleteAccount( siteName );
 			}
 		} );
@@ -1126,7 +1119,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( 'Can delete our newly created account', async function() {
 			if ( isLoggedIn ) {
-				await WPHomePage.Visit( driver );
 				return await new DeleteAccountFlow( driver ).deleteAccount( siteName );
 			}
 		} );
@@ -1195,7 +1187,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( 'Can delete our newly created account', async function() {
 			if ( isLoggedIn ) {
-				await WPHomePage.Visit( driver );
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 			}
 		} );
@@ -1324,7 +1315,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( 'Can delete our newly created account', async function() {
 			if ( isLoggedIn ) {
-				await WPHomePage.Visit( driver );
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 			}
 		} );
@@ -1423,7 +1413,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( 'Can delete our newly created account', async function() {
 			if ( isLoggedIn ) {
-				await WPHomePage.Visit( driver );
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 			}
 		} );
@@ -1519,7 +1508,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( 'Can delete our newly created account', async function() {
 			if ( isLoggedIn ) {
-				await WPHomePage.Visit( driver );
 				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 			}
 		} );
@@ -1576,7 +1564,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( 'Can delete our newly created account', async function() {
 			if ( isLoggedIn ) {
-				await WPHomePage.Visit( driver );
 				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 			}
 		} );
@@ -1702,7 +1689,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( 'Can delete our newly created account', async function() {
 			if ( isLoggedIn ) {
-				await WPHomePage.Visit( driver );
 				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 			}
 		} );
@@ -1780,7 +1766,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( 'Can delete our newly created account', async function() {
 			if ( isLoggedIn ) {
-				await WPHomePage.Visit( driver );
 				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 			}
 		} );
@@ -1889,7 +1874,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		after( 'Can delete our newly created account', async function() {
 			if ( isLoggedIn ) {
-				await WPHomePage.Visit( driver );
 				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 			}
 		} );
