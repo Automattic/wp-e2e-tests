@@ -1554,12 +1554,12 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
 				await new SignUpStep( driver ).continueAlong( userName, passwordForTestAccounts );
-				return ( isLoggedIn = true );
 			}
 		);
 
 		step( 'We are then on the Reader page', async function() {
 			await ReaderPage.Expect( driver );
+			isLoggedIn = true;
 		} );
 
 		after( 'Can delete our newly created account', async function() {
@@ -1660,8 +1660,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can then see the site importer pane and preview site to be imported', async function() {
-			isLoggedIn = true;
 			const importPage = await ImportPage.Expect( driver );
+			isLoggedIn = true;
 
 			// Test that we have opened the correct importer and can see the preview.
 			await importPage.siteImporterInputPane();
@@ -1720,8 +1720,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the "Site Type" page, and enter some site information', async function() {
-			isLoggedIn = true;
 			const siteTypePage = await SiteTypePage.Expect( driver );
+			isLoggedIn = true;
 			await siteTypePage.selectBlogType();
 			return await siteTypePage.submitForm();
 		} );
@@ -1812,8 +1812,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
-				return ( isLoggedIn = true );
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1821,6 +1820,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			'We are then on the Reader page and have no sites - we click Create Site',
 			async function() {
 				await ReaderPage.Expect( driver );
+				isLoggedIn = true;
 				const navBarComponent = await NavBarComponent.Expect( driver );
 				await navBarComponent.clickMySites();
 				const noSitesComponent = await NoSitesComponent.Expect( driver );
