@@ -106,8 +106,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the "About" page, and enter some site information', async function() {
-			const aboutPage = await AboutPage.Expect( driver );
 			isLoggedIn = true;
+			const aboutPage = await AboutPage.Expect( driver );
 			await aboutPage.enterSiteDetails( blogName, 'Electronics' );
 			return await aboutPage.submitForm();
 		} );
@@ -175,8 +175,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			await driver.get( magicLoginLink );
 			const magicLoginPage = await MagicLoginPage.Expect( driver );
 			await magicLoginPage.finishLogin();
-			await ReaderPage.Expect( driver );
-			return ( isLoggedIn = true );
+			return await ReaderPage.Expect( driver );
 		} );
 
 		after( 'Can delete our newly created account', async function() {
@@ -210,8 +209,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the "About" page, and enter some site information', async function() {
-			const aboutPage = await AboutPage.Expect( driver );
 			isLoggedIn = true;
+			const aboutPage = await AboutPage.Expect( driver );
 			await aboutPage.enterSiteDetails( blogName, 'Electronics' );
 			return await aboutPage.submitForm();
 		} );
@@ -280,8 +279,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the "About" page, and enter some site information', async function() {
-			const aboutPage = await AboutPage.Expect( driver );
 			isLoggedIn = true;
+			const aboutPage = await AboutPage.Expect( driver );
 			return await aboutPage.enterSiteDetails( blogName, '', {
 				showcase: true,
 			} );
@@ -406,8 +405,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can accept defaults for about page', async function() {
-			const aboutPage = await AboutPage.Expect( driver );
 			isLoggedIn = true;
+			const aboutPage = await AboutPage.Expect( driver );
 			await aboutPage.enterSiteDetails( 'Step Back', 'Store Test Topic', { sell: true } );
 			await aboutPage.submitForm();
 			await driverHelper.waitTillNotPresent( driver, By.css( '.signup is-store-nux' ) ); // Wait for /start/store-nux/themes to load
@@ -539,8 +538,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the about page and accept defaults', async function() {
-			const aboutPage = await AboutPage.Expect( driver );
 			isLoggedIn = true;
+			const aboutPage = await AboutPage.Expect( driver );
 			return await aboutPage.submitForm();
 		} );
 
@@ -661,8 +660,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the about page and accept defaults', async function() {
-			const aboutPage = await AboutPage.Expect( driver );
 			isLoggedIn = true;
+			const aboutPage = await AboutPage.Expect( driver );
 			return await aboutPage.submitForm();
 		} );
 
@@ -806,6 +805,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				isLoggedIn = true;
 				return await new SignUpStep( driver ).continueAlong( siteName, passwordForTestAccounts );
 			}
 		);
@@ -814,7 +814,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			'Can see checkout page, choose domain privacy option and enter registrar details',
 			async function() {
 				let checkOutPage;
-				isLoggedIn = true;
 				try {
 					checkOutPage = await CheckOutPage.Expect( driver );
 				} catch ( err ) {
@@ -997,8 +996,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the about page and accept defaults', async function() {
-			const aboutPage = await AboutPage.Expect( driver );
 			isLoggedIn = true;
+			const aboutPage = await AboutPage.Expect( driver );
 			return await aboutPage.submitForm();
 		} );
 
@@ -1147,8 +1146,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the about page and accept defaults', async function() {
-			const aboutPage = await AboutPage.Expect( driver );
 			isLoggedIn = true;
+			const aboutPage = await AboutPage.Expect( driver );
 			return await aboutPage.submitForm();
 		} );
 
@@ -1253,6 +1252,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				isLoggedIn = true;
 				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
@@ -1260,7 +1260,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the secure payment page with the chosen theme in the cart',
 			async function() {
-				isLoggedIn = true;
 				const securePaymentComponent = await SecurePaymentComponent.Expect( driver );
 				let products = await securePaymentComponent.getProductsNames();
 				assert(
@@ -1396,8 +1395,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
-				return ( isLoggedIn = true );
+				isLoggedIn = true;
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
 
@@ -1452,6 +1451,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				isLoggedIn = true;
 				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
@@ -1469,7 +1469,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can see the "About" page, and enter some site information', async function() {
 			const aboutPage = await AboutPage.Expect( driver );
-			isLoggedIn = true;
 			await aboutPage.enterSiteDetails( blogName, 'Electronics' );
 			return await aboutPage.submitForm();
 		} );
@@ -1553,13 +1552,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				isLoggedIn = true;
 				await new SignUpStep( driver ).continueAlong( userName, passwordForTestAccounts );
 			}
 		);
 
 		step( 'We are then on the Reader page', async function() {
-			await ReaderPage.Expect( driver );
-			isLoggedIn = true;
+			return await ReaderPage.Expect( driver );
 		} );
 
 		after( 'Can delete our newly created account', async function() {
@@ -1660,8 +1659,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can then see the site importer pane and preview site to be imported', async function() {
-			const importPage = await ImportPage.Expect( driver );
 			isLoggedIn = true;
+			const importPage = await ImportPage.Expect( driver );
 
 			// Test that we have opened the correct importer and can see the preview.
 			await importPage.siteImporterInputPane();
@@ -1720,8 +1719,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the "Site Type" page, and enter some site information', async function() {
-			const siteTypePage = await SiteTypePage.Expect( driver );
 			isLoggedIn = true;
+			const siteTypePage = await SiteTypePage.Expect( driver );
 			await siteTypePage.selectBlogType();
 			return await siteTypePage.submitForm();
 		} );
@@ -1812,6 +1811,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
+				isLoggedIn = true;
 				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
@@ -1820,7 +1820,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			'We are then on the Reader page and have no sites - we click Create Site',
 			async function() {
 				await ReaderPage.Expect( driver );
-				isLoggedIn = true;
 				const navBarComponent = await NavBarComponent.Expect( driver );
 				await navBarComponent.clickMySites();
 				const noSitesComponent = await NoSitesComponent.Expect( driver );
