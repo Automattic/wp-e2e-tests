@@ -82,7 +82,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		let magicLoginLink;
-		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -106,7 +105,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the "About" page, and enter some site information', async function() {
-			isLoggedIn = true;
 			const aboutPage = await AboutPage.Expect( driver );
 			await aboutPage.enterSiteDetails( blogName, 'Electronics' );
 			return await aboutPage.submitForm();
@@ -146,7 +144,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		step( 'Can log out and request a magic link', async function() {
 			await driverManager.ensureNotLoggedIn( driver );
-			isLoggedIn = false;
 			const loginPage = await LoginPage.Visit( driver );
 			return await loginPage.requestMagicLink( emailAddress );
 		} );
@@ -179,9 +176,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			if ( isLoggedIn ) {
+			return ( async () => {
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			}
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 	} );
 
@@ -189,7 +191,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
-		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -209,7 +210,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the "About" page, and enter some site information', async function() {
-			isLoggedIn = true;
 			const aboutPage = await AboutPage.Expect( driver );
 			await aboutPage.enterSiteDetails( blogName, 'Electronics' );
 			return await aboutPage.submitForm();
@@ -248,9 +248,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		sharedSteps.canSeeTheSitePreview();
 
 		after( 'Can delete our newly created account', async function() {
-			if ( isLoggedIn ) {
+			return ( async () => {
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			}
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 	} );
 
@@ -259,7 +264,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		let originalCartAmount;
-		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -279,7 +283,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the "About" page, and enter some site information', async function() {
-			isLoggedIn = true;
 			const aboutPage = await AboutPage.Expect( driver );
 			return await aboutPage.enterSiteDetails( blogName, '', {
 				showcase: true,
@@ -366,9 +369,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			if ( isLoggedIn ) {
+			return ( async () => {
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			}
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 	} );
 
@@ -378,7 +386,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const currencyValue = 'USD';
 		const expectedCurrencySymbol = '$';
-		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -405,7 +412,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can accept defaults for about page', async function() {
-			isLoggedIn = true;
 			const aboutPage = await AboutPage.Expect( driver );
 			await aboutPage.enterSiteDetails( 'Step Back', 'Store Test Topic', { sell: true } );
 			await aboutPage.submitForm();
@@ -495,9 +501,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			if ( isLoggedIn ) {
+			return ( async () => {
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			}
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 	} );
 
@@ -508,7 +519,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		const currencyValue = 'JPY';
 		const expectedCurrencySymbol = '¥';
-		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -538,7 +548,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the about page and accept defaults', async function() {
-			isLoggedIn = true;
 			const aboutPage = await AboutPage.Expect( driver );
 			return await aboutPage.submitForm();
 		} );
@@ -618,9 +627,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			if ( isLoggedIn ) {
+			return ( async () => {
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			}
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 	} );
 
@@ -630,7 +644,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		const currencyValue = 'GBP';
 		const expectedCurrencySymbol = '£';
-		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -660,7 +673,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the about page and accept defaults', async function() {
-			isLoggedIn = true;
 			const aboutPage = await AboutPage.Expect( driver );
 			return await aboutPage.submitForm();
 		} );
@@ -741,9 +753,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			if ( isLoggedIn ) {
+			return ( async () => {
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			}
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 	} );
 
@@ -754,7 +771,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( emailAddress );
 		const currencyValue = 'EUR';
 		const expectedCurrencySymbol = '€';
-		let isLoggedIn = false;
 
 		before( async function() {
 			if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
@@ -805,7 +821,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				isLoggedIn = true;
 				return await new SignUpStep( driver ).continueAlong( siteName, passwordForTestAccounts );
 			}
 		);
@@ -915,37 +930,39 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return assert( exists, 'The settings menu option does not exist' );
 		} );
 
-		step( 'We can cancel the domain', async function() {
-			await ReaderPage.Visit( driver );
-			const navBarComponent = await NavBarComponent.Expect( driver );
-			await navBarComponent.clickMySites();
-			const sidebarComponent = await SideBarComponent.Expect( driver );
-			await sidebarComponent.selectSettings();
-			const domainOnlySettingsPage = await DomainOnlySettingsPage.Expect( driver );
-			await domainOnlySettingsPage.manageDomain();
-			const domainDetailsPage = await DomainDetailsPage.Expect( driver );
-			await domainDetailsPage.viewPaymentSettings();
+		after( 'We can cancel the domain and delete newly created account', async function() {
+			return ( async () => {
+				await ReaderPage.Visit( driver );
+				const navBarComponent = await NavBarComponent.Expect( driver );
+				await navBarComponent.clickMySites();
+				const sidebarComponent = await SideBarComponent.Expect( driver );
+				await sidebarComponent.selectSettings();
+				const domainOnlySettingsPage = await DomainOnlySettingsPage.Expect( driver );
+				await domainOnlySettingsPage.manageDomain();
+				const domainDetailsPage = await DomainDetailsPage.Expect( driver );
+				await domainDetailsPage.viewPaymentSettings();
 
-			const managePurchasePage = await ManagePurchasePage.Expect( driver );
-			let domainDisplayed = await managePurchasePage.domainDisplayed();
-			assert.strictEqual(
-				domainDisplayed,
-				expectedDomainName,
-				'The domain displayed on the manage purchase page is unexpected'
-			);
-			await managePurchasePage.chooseCancelAndRefund();
+				const managePurchasePage = await ManagePurchasePage.Expect( driver );
+				let domainDisplayed = await managePurchasePage.domainDisplayed();
+				assert.strictEqual(
+					domainDisplayed,
+					expectedDomainName,
+					'The domain displayed on the manage purchase page is unexpected'
+				);
+				await managePurchasePage.chooseCancelAndRefund();
 
-			const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
-			await cancelPurchasePage.clickCancelPurchase();
+				const cancelPurchasePage = await CancelPurchasePage.Expect( driver );
+				await cancelPurchasePage.clickCancelPurchase();
 
-			const cancelDomainPage = await CancelDomainPage.Expect( driver );
-			return await cancelDomainPage.completeSurveyAndConfirm();
-		} );
-
-		after( 'Can delete our newly created account', async function() {
-			if ( isLoggedIn ) {
+				const cancelDomainPage = await CancelDomainPage.Expect( driver );
+				await cancelDomainPage.completeSurveyAndConfirm();
 				return await new DeleteAccountFlow( driver ).deleteAccount( siteName );
-			}
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 	} );
 
@@ -956,7 +973,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const testDomainRegistarDetails = dataHelper.getTestDomainRegistarDetails( emailAddress );
 		const currencyValue = 'CAD';
 		const expectedCurrencySymbol = 'C$';
-		let isLoggedIn = false;
 
 		before( async function() {
 			if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
@@ -996,7 +1012,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the about page and accept defaults', async function() {
-			isLoggedIn = true;
 			const aboutPage = await AboutPage.Expect( driver );
 			return await aboutPage.submitForm();
 		} );
@@ -1117,15 +1132,19 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			if ( isLoggedIn ) {
+			return ( async () => {
 				return await new DeleteAccountFlow( driver ).deleteAccount( siteName );
-			}
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 	} );
 
 	describe( 'Basic sign up for a free site @parallel @email @ie11canary', function() {
 		const blogName = dataHelper.getNewBlogName();
-		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -1146,7 +1165,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the about page and accept defaults', async function() {
-			isLoggedIn = true;
 			const aboutPage = await AboutPage.Expect( driver );
 			return await aboutPage.submitForm();
 		} );
@@ -1185,9 +1203,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		sharedSteps.canSeeTheSitePreview();
 
 		after( 'Can delete our newly created account', async function() {
-			if ( isLoggedIn ) {
+			return ( async () => {
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			}
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 	} );
 
@@ -1198,7 +1221,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const currencyValue = 'AUD';
 		const expectedCurrencySymbol = 'A$';
 		let chosenThemeName = '';
-		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -1252,7 +1274,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				isLoggedIn = true;
 				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
@@ -1313,16 +1334,20 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			if ( isLoggedIn ) {
+			return ( async () => {
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			}
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 	} );
 
 	describe( 'Sign up for free subdomain site @parallel', function() {
 		const blogName = dataHelper.getNewBlogName();
 		const expectedDomainName = `${ blogName }.art.blog`;
-		let isLoggedIn = false;
 
 		before( async function() {
 			if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
@@ -1395,7 +1420,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				isLoggedIn = true;
 				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
@@ -1411,9 +1435,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			if ( isLoggedIn ) {
+			return ( async () => {
 				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			}
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 	} );
 
@@ -1421,7 +1450,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const userName = dataHelper.getNewBlogName();
 		const blogName = dataHelper.getNewBlogName();
 		const expectedBlogAddresses = dataHelper.getExpectedFreeAddresses( blogName );
-		let isLoggedIn = false;
 
 		before( async function() {
 			await driverManager.ensureNotLoggedIn( driver );
@@ -1451,7 +1479,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				isLoggedIn = true;
 				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
@@ -1506,15 +1533,19 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		sharedSteps.canSeeTheSitePreview();
 
 		after( 'Can delete our newly created account', async function() {
-			if ( isLoggedIn ) {
+			return ( async () => {
 				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
-			}
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 	} );
 
 	describe( 'Sign up for a Reader account @parallel', function() {
 		const userName = dataHelper.getNewBlogName();
-		let isLoggedIn = false;
 
 		before( async function() {
 			await driverManager.ensureNotLoggedIn( driver );
@@ -1552,8 +1583,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				isLoggedIn = true;
-				await new SignUpStep( driver ).continueAlong( userName, passwordForTestAccounts );
+				return await new SignUpStep( driver ).continueAlong( userName, passwordForTestAccounts );
 			}
 		);
 
@@ -1562,9 +1592,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			if ( isLoggedIn ) {
+			return ( async () => {
 				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
-			}
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 	} );
 
@@ -1573,7 +1608,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const siteURL = 'https://hi6822.wixsite.com/eat-here-its-good';
 		const userName = dataHelper.getNewBlogName();
 		const emailAddress = dataHelper.getEmailAddress( userName, signupInboxId );
-		let isLoggedIn = false;
 
 		before( async function() {
 			return await driverManager.ensureNotLoggedIn( driver );
@@ -1659,7 +1693,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can then see the site importer pane and preview site to be imported', async function() {
-			isLoggedIn = true;
 			const importPage = await ImportPage.Expect( driver );
 
 			// Test that we have opened the correct importer and can see the preview.
@@ -1687,9 +1720,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			if ( isLoggedIn ) {
+			return ( async () => {
 				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
-			}
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 	} );
 
@@ -1698,7 +1736,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const blogName = dataHelper.getNewBlogName();
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
 		let undo = null;
-		let isLoggedIn = false;
 
 		before( async function() {
 			undo = overrideABTest( 'improvedOnboarding_20181023', 'onboarding' );
@@ -1719,7 +1756,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		step( 'Can see the "Site Type" page, and enter some site information', async function() {
-			isLoggedIn = true;
 			const siteTypePage = await SiteTypePage.Expect( driver );
 			await siteTypePage.selectBlogType();
 			return await siteTypePage.submitForm();
@@ -1764,9 +1800,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		sharedSteps.canSeeTheSitePreview();
 
 		after( 'Can delete our newly created account', async function() {
-			if ( isLoggedIn ) {
+			return ( async () => {
 				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
-			}
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 
 		after( async function() {
@@ -1780,7 +1821,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		const userName = dataHelper.getNewBlogName();
 		const blogName = dataHelper.getNewBlogName();
 		let undo = null;
-		let isLoggedIn = false;
 
 		before( async function() {
 			undo = overrideABTest( 'improvedOnboarding_20181023', 'onboarding' );
@@ -1811,7 +1851,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		step(
 			'Can then see the sign up processing page which will finish automatically move along',
 			async function() {
-				isLoggedIn = true;
 				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
 			}
 		);
@@ -1872,9 +1911,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		sharedSteps.canSeeTheSitePreview();
 
 		after( 'Can delete our newly created account', async function() {
-			if ( isLoggedIn ) {
+			return ( async () => {
 				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
-			}
+			} )().catch( err => {
+				SlackNotifier.warn(
+					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
+					{ suppressDuplicateMessages: true }
+				);
+			} );
 		} );
 
 		after( async function() {
