@@ -45,7 +45,6 @@ import NavBarComponent from '../lib/components/nav-bar-component';
 import SideBarComponent from '../lib/components/sidebar-component';
 import NoSitesComponent from '../lib/components/no-sites-component';
 import SidebarComponent from '../lib/components/sidebar-component';
-import SitePreviewComponent from '../lib/components/site-preview-component.js';
 
 import * as SlackNotifier from '../lib/slack-notifier';
 
@@ -56,6 +55,8 @@ import DeletePlanFlow from '../lib/flows/delete-plan-flow';
 import ThemeDialogComponent from '../lib/components/theme-dialog-component';
 import SignUpStep from '../lib/flows/sign-up-step';
 import overrideABTest from '../lib/override-abtest';
+
+import * as sharedSteps from '../lib/shared-steps/wp-signup-spec';
 
 const mochaTimeOut = config.get( 'mochaTimeoutMS' );
 const startBrowserTimeoutMS = config.get( 'startBrowserTimeoutMS' );
@@ -70,7 +71,7 @@ let driver;
 
 before( async function() {
 	this.timeout( startBrowserTimeoutMS );
-	driver = await driverManager.startBrowser();
+	this.driver = driver = await driverManager.startBrowser();
 } );
 
 describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
@@ -139,22 +140,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		step( 'Can then see the site preview', async function() {
-			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
-
-			const toolbar = await sitePreviewComponent.toolbar();
-			const placeholder = await sitePreviewComponent.contentPlaceholder();
-
-			assert( toolbar, 'The preview toolbar does not exist.' );
-			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.enterSitePreview();
-
-			const siteBody = await sitePreviewComponent.siteBody();
-
-			assert( siteBody, 'The site body does not appear in the iframe.' );
-
-			return sitePreviewComponent.leaveSitePreview();
-		} );
+		sharedSteps.canSeeTheSitePreview();
 
 		step( 'Can log out and request a magic link', async function() {
 			await driverManager.ensureNotLoggedIn( driver );
@@ -252,22 +238,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		step( 'Can then see the site preview', async function() {
-			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
-
-			const toolbar = await sitePreviewComponent.toolbar();
-			const placeholder = await sitePreviewComponent.contentPlaceholder();
-
-			assert( toolbar, 'The preview toolbar does not exist.' );
-			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.enterSitePreview();
-
-			const siteBody = await sitePreviewComponent.siteBody();
-
-			assert( siteBody, 'The site body does not appear in the iframe.' );
-
-			return sitePreviewComponent.leaveSitePreview();
-		} );
+		sharedSteps.canSeeTheSitePreview();
 
 		step( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
@@ -498,22 +469,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await securePaymentComponent.waitForPageToDisappear();
 		} );
 
-		step( 'Can then see the site preview', async function() {
-			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
-
-			const toolbar = await sitePreviewComponent.toolbar();
-			const placeholder = await sitePreviewComponent.contentPlaceholder();
-
-			assert( toolbar, 'The preview toolbar does not exist.' );
-			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.enterSitePreview();
-
-			const siteBody = await sitePreviewComponent.siteBody();
-
-			assert( siteBody, 'The site body does not appear in the iframe.' );
-
-			return sitePreviewComponent.leaveSitePreview();
-		} );
+		sharedSteps.canSeeTheSitePreview();
 
 		step( 'Can delete the plan', async function() {
 			return await new DeletePlanFlow( driver ).deletePlan( 'premium' );
@@ -632,22 +588,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await securePaymentComponent.waitForPageToDisappear();
 		} );
 
-		step( 'Can then see the site preview', async function() {
-			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
-
-			const toolbar = await sitePreviewComponent.toolbar();
-			const placeholder = await sitePreviewComponent.contentPlaceholder();
-
-			assert( toolbar, 'The preview toolbar does not exist.' );
-			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.enterSitePreview();
-
-			const siteBody = await sitePreviewComponent.siteBody();
-
-			assert( siteBody, 'The site body does not appear in the iframe.' );
-
-			return sitePreviewComponent.leaveSitePreview();
-		} );
+		sharedSteps.canSeeTheSitePreview();
 
 		step( 'Can delete the plan', async function() {
 			return await new DeletePlanFlow( driver ).deletePlan( 'premium' );
@@ -766,22 +707,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await securePaymentComponent.waitForPageToDisappear();
 		} );
 
-		step( 'Can then see the site preview', async function() {
-			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
-
-			const toolbar = await sitePreviewComponent.toolbar();
-			const placeholder = await sitePreviewComponent.contentPlaceholder();
-
-			assert( toolbar, 'The preview toolbar does not exist.' );
-			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.enterSitePreview();
-
-			const siteBody = await sitePreviewComponent.siteBody();
-
-			assert( siteBody, 'The site body does not appear in the iframe.' );
-
-			return sitePreviewComponent.leaveSitePreview();
-		} );
+		sharedSteps.canSeeTheSitePreview();
 
 		step( 'Can delete the plan', async function() {
 			return await new DeletePlanFlow( driver ).deletePlan( 'personal' );
@@ -1150,22 +1076,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await gSuiteUpsellPage.declineEmail();
 		} );
 
-		step( 'Can then see the site preview', async function() {
-			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
-
-			const toolbar = await sitePreviewComponent.toolbar();
-			const placeholder = await sitePreviewComponent.contentPlaceholder();
-
-			assert( toolbar, 'The preview toolbar does not exist.' );
-			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.enterSitePreview();
-
-			const siteBody = await sitePreviewComponent.siteBody();
-
-			assert( siteBody, 'The site body does not appear in the iframe.' );
-
-			return sitePreviewComponent.leaveSitePreview();
-		} );
+		sharedSteps.canSeeTheSitePreview();
 
 		step( 'Can delete the plan', async function() {
 			return await new DeletePlanFlow( driver ).deletePlan( 'business', {
@@ -1235,22 +1146,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		step( 'Can then see the site preview', async function() {
-			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
-
-			const toolbar = await sitePreviewComponent.toolbar();
-			const placeholder = await sitePreviewComponent.contentPlaceholder();
-
-			assert( toolbar, 'The preview toolbar does not exist.' );
-			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.enterSitePreview();
-
-			const siteBody = await sitePreviewComponent.siteBody();
-
-			assert( siteBody, 'The site body does not appear in the iframe.' );
-
-			return sitePreviewComponent.leaveSitePreview();
-		} );
+		sharedSteps.canSeeTheSitePreview();
 	} );
 
 	describe( 'Sign up while purchasing premium theme in AUD currency @parallel @email', function() {
@@ -1456,22 +1352,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		step( 'Can then see the site preview', async function() {
-			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
-
-			const toolbar = await sitePreviewComponent.toolbar();
-			const placeholder = await sitePreviewComponent.contentPlaceholder();
-
-			assert( toolbar, 'The preview toolbar does not exist.' );
-			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.enterSitePreview();
-
-			const siteBody = await sitePreviewComponent.siteBody();
-
-			assert( siteBody, 'The site body does not appear in the iframe.' );
-
-			return sitePreviewComponent.leaveSitePreview();
-		} );
+		sharedSteps.canSeeTheSitePreview();
 
 		step( 'Can delete site', async function() {
 			const sidebarComponent = await SidebarComponent.Expect( driver );
@@ -1566,22 +1447,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		step( 'Can then see the site preview', async function() {
-			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
-
-			const toolbar = await sitePreviewComponent.toolbar();
-			const placeholder = await sitePreviewComponent.contentPlaceholder();
-
-			assert( toolbar, 'The preview toolbar does not exist.' );
-			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.enterSitePreview();
-
-			const siteBody = await sitePreviewComponent.siteBody();
-
-			assert( siteBody, 'The site body does not appear in the iframe.' );
-
-			return sitePreviewComponent.leaveSitePreview();
-		} );
+		sharedSteps.canSeeTheSitePreview();
 
 		step( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
@@ -1827,22 +1693,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await pickAPlanPage.selectFreePlan();
 		} );
 
-		step( 'Can then see the site preview', async function() {
-			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
-
-			const toolbar = await sitePreviewComponent.toolbar();
-			const placeholder = await sitePreviewComponent.contentPlaceholder();
-
-			assert( toolbar, 'The preview toolbar does not exist.' );
-			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.enterSitePreview();
-
-			const siteBody = await sitePreviewComponent.siteBody();
-
-			assert( siteBody, 'The site body does not appear in the iframe.' );
-
-			return sitePreviewComponent.leaveSitePreview();
-		} );
+		sharedSteps.canSeeTheSitePreview();
 
 		step( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
@@ -1946,22 +1797,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await pickAPlanPage.selectFreePlan();
 		} );
 
-		step( 'Can then see the site preview', async function() {
-			const sitePreviewComponent = await SitePreviewComponent.Expect( driver );
-
-			const toolbar = await sitePreviewComponent.toolbar();
-			const placeholder = await sitePreviewComponent.contentPlaceholder();
-
-			assert( toolbar, 'The preview toolbar does not exist.' );
-			assert( placeholder, 'The preview content placeholder does not exist.' );
-			await sitePreviewComponent.enterSitePreview();
-
-			const siteBody = await sitePreviewComponent.siteBody();
-
-			assert( siteBody, 'The site body does not appear in the iframe.' );
-
-			return sitePreviewComponent.leaveSitePreview();
-		} );
+		sharedSteps.canSeeTheSitePreview();
 
 		step( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
