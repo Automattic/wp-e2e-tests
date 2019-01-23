@@ -73,7 +73,8 @@
 		"showConciergeSessionUpsell",
 		"showConciergeSessionUpsellNonGSuite",
 		"builderReferralThemesBanner",
-		"gSuitePlan"
+		"gSuitePlan",
+		"domainSearchButtonStyles"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
