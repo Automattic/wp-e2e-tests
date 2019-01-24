@@ -176,14 +176,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -248,14 +241,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		sharedSteps.canSeeTheSitePreview();
 
 		after( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -369,14 +355,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -501,14 +480,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -627,14 +599,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -753,14 +718,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -1132,14 +1090,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				return await new DeleteAccountFlow( driver ).deleteAccount( siteName );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( siteName );
 		} );
 	} );
 
@@ -1203,14 +1154,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		sharedSteps.canSeeTheSitePreview();
 
 		after( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -1334,14 +1278,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -1435,14 +1372,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -1533,14 +1463,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		sharedSteps.canSeeTheSitePreview();
 
 		after( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
 	} );
 
@@ -1592,14 +1515,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
 	} );
 
@@ -1720,14 +1636,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 
 		after( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
 	} );
 
@@ -1800,14 +1709,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		sharedSteps.canSeeTheSitePreview();
 
 		after( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
 
 		after( async function() {
@@ -1911,14 +1813,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		sharedSteps.canSeeTheSitePreview();
 
 		after( 'Can delete our newly created account', async function() {
-			return ( async () => {
-				return await new DeleteAccountFlow( driver ).deleteAccount( userName );
-			} )().catch( err => {
-				SlackNotifier.warn(
-					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
-					{ suppressDuplicateMessages: true }
-				);
-			} );
+			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
 
 		after( async function() {
