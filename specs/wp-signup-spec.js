@@ -175,7 +175,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await ReaderPage.Expect( driver );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
+		after( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
@@ -240,7 +240,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		sharedSteps.canSeeTheOnboardingChecklist();
 
-		step( 'Can delete our newly created account', async function() {
+		after( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
@@ -352,6 +352,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 			let removedCouponAmount = await securePaymentComponent.cartTotalAmount();
 			assert.strictEqual( removedCouponAmount, originalCartAmount, 'Coupon not removed properly' );
+		} );
+
+		after( 'Can delete our newly created account', async function() {
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
 
@@ -475,7 +479,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await new DeletePlanFlow( driver ).deletePlan( 'premium' );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
+		after( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
@@ -594,7 +598,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await new DeletePlanFlow( driver ).deletePlan( 'premium' );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
+		after( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
@@ -713,7 +717,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await new DeletePlanFlow( driver ).deletePlan( 'personal' );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
+		after( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
@@ -884,7 +888,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return assert( exists, 'The settings menu option does not exist' );
 		} );
 
-		step( 'We can cancel the domain', async function() {
+		after( 'We can cancel the domain and delete newly created account', async function() {
 			return ( async () => {
 				await ReaderPage.Visit( driver );
 				const navBarComponent = await NavBarComponent.Expect( driver );
@@ -909,7 +913,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 				await cancelPurchasePage.clickCancelPurchase();
 
 				const cancelDomainPage = await CancelDomainPage.Expect( driver );
-				return await cancelDomainPage.completeSurveyAndConfirm();
+				await cancelDomainPage.completeSurveyAndConfirm();
+				return await new DeleteAccountFlow( driver ).deleteAccount( siteName );
 			} )().catch( err => {
 				SlackNotifier.warn(
 					`There was an error in the hooks that clean up the test account but since it is cleaning up we really don't care: '${ err }'`,
@@ -1084,7 +1089,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			} );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
+		after( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( siteName );
 		} );
 	} );
@@ -1147,6 +1152,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		);
 
 		sharedSteps.canSeeTheOnboardingChecklist();
+
+		after( 'Can delete our newly created account', async function() {
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+		} );
 	} );
 
 	describe( 'Sign up while purchasing premium theme in AUD currency @parallel @email', function() {
@@ -1268,7 +1277,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await new DeletePlanFlow( driver ).deletePlan( 'theme' );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
+		after( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
 		} );
 	} );
@@ -1361,6 +1370,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			const settingsPage = await SettingsPage.Expect( driver );
 			return await settingsPage.deleteSite( expectedDomainName );
 		} );
+
+		after( 'Can delete our newly created account', async function() {
+			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
+		} );
 	} );
 
 	describe( 'Sign up for an account only (no site) then add a site @parallel', function() {
@@ -1449,7 +1462,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		sharedSteps.canSeeTheOnboardingChecklist();
 
-		step( 'Can delete our newly created account', async function() {
+		after( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
 	} );
@@ -1498,10 +1511,10 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		);
 
 		step( 'We are then on the Reader page', async function() {
-			await ReaderPage.Expect( driver );
+			return await ReaderPage.Expect( driver );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
+		after( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
 	} );
@@ -1622,7 +1635,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			await driver.get( activationLink );
 		} );
 
-		step( 'Can delete our newly created account', async function() {
+		after( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
 	} );
@@ -1695,7 +1708,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		sharedSteps.canSeeTheSitePreview();
 
-		step( 'Can delete our newly created account', async function() {
+		after( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
 
@@ -1799,7 +1812,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 		sharedSteps.canSeeTheSitePreview();
 
-		step( 'Can delete our newly created account', async function() {
+		after( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
 		} );
 
