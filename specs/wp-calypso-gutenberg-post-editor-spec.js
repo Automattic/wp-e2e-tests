@@ -14,7 +14,7 @@ import PaypalCheckoutPage from '../lib/pages/external/paypal-checkout-page';
 
 import SidebarComponent from '../lib/components/sidebar-component.js';
 import NavBarComponent from '../lib/components/nav-bar-component.js';
-import PostPreviewComponent from '../lib/components/post-preview-component';
+import GutenbergPostPreviewComponent from '../lib/gutenberg/gutenberg-post-preview-component';
 import GutenbergEditorComponent from '../lib/gutenberg/gutenberg-editor-component';
 import GutenbergEditorSidebarComponent from '../lib/gutenberg/gutenberg-editor-sidebar-component';
 import SimplePaymentsBlockComponent from '../lib/gutenberg/blocks/payment-block-component';
@@ -121,8 +121,8 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 
 		step( 'Can see correct post title in preview', async function() {
-			this.postPreviewComponent = await PostPreviewComponent.Expect( driver );
-			let postTitle = await this.postPreviewComponent.postTitle();
+			this.gPostPreviewComponent = await GutenbergPostPreviewComponent.Expect( driver );
+			let postTitle = await this.gPostPreviewComponent.postTitle();
 			assert.strictEqual(
 				postTitle.toLowerCase(),
 				blogPostTitle.toLowerCase(),
@@ -131,7 +131,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 
 		step( 'Can see correct post content in preview', async function() {
-			let content = await this.postPreviewComponent.postContent();
+			let content = await this.gPostPreviewComponent.postContent();
 			assert.strictEqual(
 				content.indexOf( blogPostQuote ) > -1,
 				true,
