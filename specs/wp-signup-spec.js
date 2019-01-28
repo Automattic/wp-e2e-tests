@@ -140,7 +140,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		sharedSteps.canSeeTheSitePreview();
+		sharedSteps.canSeeTheOnboardingChecklist();
 
 		step( 'Can log out and request a magic link', async function() {
 			await driverManager.ensureNotLoggedIn( driver );
@@ -238,7 +238,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		sharedSteps.canSeeTheSitePreview();
+		sharedSteps.canSeeTheOnboardingChecklist();
 
 		after( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
@@ -473,7 +473,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await securePaymentComponent.waitForPageToDisappear();
 		} );
 
-		sharedSteps.canSeeTheSitePreview();
+		sharedSteps.canSeeTheOnboardingChecklist();
 
 		step( 'Can delete the plan', async function() {
 			return await new DeletePlanFlow( driver ).deletePlan( 'premium' );
@@ -592,7 +592,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await securePaymentComponent.waitForPageToDisappear();
 		} );
 
-		sharedSteps.canSeeTheSitePreview();
+		sharedSteps.canSeeTheOnboardingChecklist();
 
 		step( 'Can delete the plan', async function() {
 			return await new DeletePlanFlow( driver ).deletePlan( 'premium' );
@@ -711,7 +711,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await securePaymentComponent.waitForPageToDisappear();
 		} );
 
-		sharedSteps.canSeeTheSitePreview();
+		sharedSteps.canSeeTheOnboardingChecklist();
 
 		step( 'Can delete the plan', async function() {
 			return await new DeletePlanFlow( driver ).deletePlan( 'personal' );
@@ -1081,7 +1081,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await gSuiteUpsellPage.declineEmail();
 		} );
 
-		sharedSteps.canSeeTheSitePreview();
+		sharedSteps.canSeeTheOnboardingChecklist();
 
 		step( 'Can delete the plan', async function() {
 			return await new DeletePlanFlow( driver ).deletePlan( 'business', {
@@ -1151,7 +1151,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		sharedSteps.canSeeTheSitePreview();
+		sharedSteps.canSeeTheOnboardingChecklist();
 
 		after( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( blogName );
@@ -1361,7 +1361,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		sharedSteps.canSeeTheSitePreview();
+		sharedSteps.canSeeTheOnboardingChecklist();
 
 		step( 'Can delete site', async function() {
 			const sidebarComponent = await SidebarComponent.Expect( driver );
@@ -1460,7 +1460,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
-		sharedSteps.canSeeTheSitePreview();
+		sharedSteps.canSeeTheOnboardingChecklist();
 
 		after( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
