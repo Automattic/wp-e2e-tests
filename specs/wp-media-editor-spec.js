@@ -30,7 +30,7 @@ describe( `[${ host }] Media: Edit Media (${ screenSize }) @parallel @jetpack`, 
 	describe( 'Edit Existing Media:', function() {
 		before( async function() {
 			const loginFlow = new LoginFlow( driver );
-			await loginFlow.login( { useFreshLogin: true } );
+			await loginFlow.login();
 		} );
 
 		step( 'Can open the sidebar', async function() {
