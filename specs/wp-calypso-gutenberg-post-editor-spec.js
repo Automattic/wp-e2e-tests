@@ -144,7 +144,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 
 		step( 'Can see the post category in preview', async function() {
-			let categoryDisplayed = await this.postPreviewComponent.categoryDisplayed();
+			let categoryDisplayed = await this.gPostPreviewComponent.categoryDisplayed();
 			assert.strictEqual(
 				categoryDisplayed.toUpperCase(),
 				newCategoryName.toUpperCase(),
@@ -163,12 +163,12 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		// } );
 
 		step( 'Can see the image in preview', async function() {
-			let imageDisplayed = await this.postPreviewComponent.imageDisplayed( fileDetails );
+			let imageDisplayed = await this.gPostPreviewComponent.imageDisplayed( fileDetails );
 			assert.strictEqual( imageDisplayed, true, 'Could not see the image in the web preview' );
 		} );
 
 		step( 'Can close post preview', async function() {
-			await this.postPreviewComponent.close();
+			await this.gPostPreviewComponent.close();
 		} );
 
 		step( 'Can publish and view content', async function() {
