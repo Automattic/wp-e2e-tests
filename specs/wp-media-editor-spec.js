@@ -8,7 +8,6 @@ import assert from 'assert';
 
 import * as driverManager from '../lib/driver-manager.js';
 import * as dataHelper from '../lib/data-helper';
-import EditorPage from '../lib/pages/editor-page.js';
 import NavBarComponent from '../lib/components/nav-bar-component';
 import SideBarComponent from '../lib/components/sidebar-component';
 import MediaPage from '../lib/pages/media-page';
@@ -55,7 +54,7 @@ describe( `[${ host }] Media: Edit Media (${ screenSize }) @parallel @jetpack`, 
 
 		step( 'Select a random media item and click edit', async function() {
 			const mediaPage = await MediaPage.Expect( driver );
-			await new EditorPage( driver ).selectFirstImage();
+			await mediaPage.selectFirstImage();
 			await mediaPage.selectEditMedia();
 			return await mediaPage.mediaEditorShowing();
 		} );
