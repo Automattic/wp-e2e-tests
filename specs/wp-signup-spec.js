@@ -1810,7 +1810,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await pickAPlanPage.selectFreePlan();
 		} );
 
-		sharedSteps.canSeeTheSitePreview();
+		//sharedSteps.canSeeTheSitePreview();
 
 		after( 'Can delete our newly created account', async function() {
 			return await new DeleteAccountFlow( driver ).deleteAccount( userName );
