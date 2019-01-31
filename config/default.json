@@ -90,6 +90,6 @@
 		[ "showConciergeSessionUpsell_20181214", "skip" ],
 		[ "showConciergeSessionUpsellNonGSuite_20181228", "skip" ],
 		[ "gSuitePlan_20190117", "basic" ],
-                [ "improvedOnboarding_20190131", "main" ],
+		[ "improvedOnboarding_20190131", "main" ]
 	]
 }
