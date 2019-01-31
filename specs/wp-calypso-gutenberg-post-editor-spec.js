@@ -964,7 +964,9 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	describe( 'Insert a payment button: @parallel', function() {
+	xdescribe( 'Insert a payment button: @parallel', function() {
+		// disabled while URL issue is not solved
+		// https://github.com/Automattic/wp-calypso/pull/30307#issuecomment-458365266
 		const paymentButtonDetails = {
 			title: 'Button',
 			description: 'Description',
