@@ -1076,6 +1076,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		describe( 'Revert the post to draft', function() {
 			step( 'Can revert the post to draft', async function() {
 				const gHeaderComponent = await GutenbergEditorComponent.Expect( driver );
+				await gHeaderComponent.dismissSuccessNotice();
 				await gHeaderComponent.revertToDraft();
 				let isDraft = await gHeaderComponent.isDraft();
 				assert.strictEqual( isDraft, true, 'The post is not set as draft' );
