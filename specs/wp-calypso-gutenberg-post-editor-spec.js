@@ -325,7 +325,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	describe( 'Schedule Basic Public Post @parallel', function() {
+	xdescribe( 'Schedule Basic Public Post @parallel', function() {
 		describe( 'Schedule (and remove) a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = '“Worries shared are worries halved.”\n- Unknown';
@@ -508,7 +508,9 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	describe( 'Password Protected Posts: @parallel', function() {
+	xdescribe( 'Password Protected Posts: @parallel', function() {
+		// disabled while URL issue is not solved
+		// https://github.com/Automattic/wp-calypso/pull/30307#issuecomment-458365266
 		describe( 'Publish a Password Protected Post', function() {
 			let blogPostTitle = dataHelper.randomPhrase();
 			let blogPostQuote =
@@ -773,7 +775,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	describe( 'Trash Post: @parallel', function() {
+	xdescribe( 'Trash Post: @parallel', function() {
 		describe( 'Trash a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
