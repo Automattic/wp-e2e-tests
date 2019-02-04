@@ -182,7 +182,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Pages (${ screenSize })`, funct
 		} );
 	} );
 
-	xdescribe( 'Private Pages: @parallel', function() {
+	describe( 'Private Pages: @parallel', function() {
 		// same as Private posts
 		// disabled while URL issue is not solved
 		// https://github.com/Automattic/wp-calypso/pull/30307#issuecomment-458365266
@@ -255,7 +255,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Pages (${ screenSize })`, funct
 		} );
 	} );
 
-	xdescribe( 'Password Protected Pages: @parallel', function() {
+	describe( 'Password Protected Pages: @parallel', function() {
 		// Same as Password protected posts
 		// disabled while URL issue is not solved
 		// https://github.com/Automattic/wp-calypso/pull/30307#issuecomment-458365266
@@ -520,7 +520,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Pages (${ screenSize })`, funct
 		} );
 	} );
 
-	xdescribe( 'Insert a payment button into a page: @parallel', function() {
+	describe( 'Insert a payment button into a page: @parallel', function() {
 		// same as Payment button in Posts
 		// disabled while URL issue is not solved
 		// https://github.com/Automattic/wp-calypso/pull/30307#issuecomment-458365266

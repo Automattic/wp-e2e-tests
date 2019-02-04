@@ -325,7 +325,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	xdescribe( 'Schedule Basic Public Post @parallel', function() {
+	describe( 'Schedule Basic Public Post @parallel', function() {
 		describe( 'Schedule (and remove) a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote = '“Worries shared are worries halved.”\n- Unknown';
@@ -384,7 +384,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	xdescribe( 'Private Posts: @parallel', function() {
+	describe( 'Private Posts: @parallel', function() {
 		// disabled while URL issue is not solved
 		// https://github.com/Automattic/wp-calypso/pull/30307#issuecomment-458365266
 		describe( 'Publish a Private Post', function() {
@@ -508,7 +508,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	xdescribe( 'Password Protected Posts: @parallel', function() {
+	describe( 'Password Protected Posts: @parallel', function() {
 		// disabled while URL issue is not solved
 		// https://github.com/Automattic/wp-calypso/pull/30307#issuecomment-458365266
 		describe( 'Publish a Password Protected Post', function() {
@@ -775,7 +775,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	xdescribe( 'Trash Post: @parallel', function() {
+	describe( 'Trash Post: @parallel', function() {
 		describe( 'Trash a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
@@ -964,7 +964,7 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 		} );
 	} );
 
-	xdescribe( 'Insert a payment button: @parallel', function() {
+	describe( 'Insert a payment button: @parallel', function() {
 		// disabled while URL issue is not solved
 		// https://github.com/Automattic/wp-calypso/pull/30307#issuecomment-458365266
 		const paymentButtonDetails = {
