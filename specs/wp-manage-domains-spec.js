@@ -181,7 +181,13 @@ describe( `[${ host }] Managing Domains: (${ screenSize })`, function() {
 
 		step( 'Can add domain to the cart', async function() {
 			const enterADomainComponent = await EnterADomainComponent.Expect( driver );
-			return await enterADomainComponent.clickonAddButtonToAddDomainToTheCart();
+			await enterADomainComponent.clickonAddButtonToAddDomainToTheCart();
+			if ( await enterADomainComponent.isComMaintenanceActive() ) {
+				await SlackNotifier.warn( 'SKIPPING: .com domains are under maintenance ', {
+					suppressDuplicateMessages: true,
+				} );
+				return this.skip();
+			}
 		} );
 
 		step( 'Can see checkout page', async function() {
@@ -264,7 +270,13 @@ describe( `[${ host }] Managing Domains: (${ screenSize })`, function() {
 
 		step( 'Click transfer domain button', async function() {
 			const transferDomainPage = await TransferDomainPage.Expect( driver );
-			return await transferDomainPage.clickTransferDomain();
+			await transferDomainPage.clickTransferDomain();
+			if ( await transferDomainPage.isComMaintenanceActive() ) {
+				await SlackNotifier.warn( 'SKIPPING: .com domains are under maintenance ', {
+					suppressDuplicateMessages: true,
+				} );
+				return this.skip();
+			}
 		} );
 
 		step( 'Can see the transfer precheck page', async function() {
