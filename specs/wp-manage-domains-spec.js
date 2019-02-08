@@ -90,7 +90,15 @@ describe( `[${ host }] Managing Domains: (${ screenSize })`, function() {
 
 		step( 'Can select the .com search result and decline Google Apps for email', async function() {
 			const findADomainComponent = await FindADomainComponent.Expect( driver );
-			await findADomainComponent.selectDomainAddress( expectedDomainName );
+			if ( ! await findADomainComponent.selectDomainAddress( expectedDomainName ) ) {
+				await SlackNotifier.warn(
+					'SKIPPING: .com domain is not present. Check if .com domains are under maintenance ',
+					{
+						suppressDuplicateMessages: true,
+					}
+				);
+				return this.skip();
+			}
 			return await findADomainComponent.declineGoogleApps();
 		} );
 
