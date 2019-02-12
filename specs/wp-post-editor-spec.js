@@ -292,7 +292,7 @@ describe( `[${ host }] Editor: Posts (${ screenSize })`, function() {
 		} );
 	} );
 
-	describe( 'Basic Public Post @parallel @jetpack @canary', function() {
+	describe.only( 'Basic Public Post @parallel @jetpack @canary', function() {
 		describe( 'Publish a New Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
