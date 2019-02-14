@@ -1647,7 +1647,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let undo = null;
 
 		before( async function() {
-			undo = overrideABTest( 'improvedOnboarding_20190131', 'onboarding' );
+			undo = overrideABTest( 'improvedOnboarding_20190214', 'onboarding' );
 			return await driverManager.ensureNotLoggedIn( driver );
 		} );
 
@@ -1725,7 +1725,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let undo = null;
 
 		before( async function() {
-			undo = overrideABTest( 'improvedOnboarding_20190131', 'onboarding' );
+			undo = overrideABTest( 'improvedOnboarding_20190214', 'onboarding' );
 			await driverManager.ensureNotLoggedIn( driver );
 		} );
 
