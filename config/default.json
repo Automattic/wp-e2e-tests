@@ -76,7 +76,8 @@
 		"builderReferralThemesBanner",
 		"gSuitePlan",
 		"domainSearchButtonStyles",
-		"twoYearPlanByDefault"
+		"twoYearPlanByDefault",
+		"pluginFeaturedTitle"
 	],
 	"overrideABTests": [
 		[ "businessPlanDescriptionAT_20170605", "original" ],
