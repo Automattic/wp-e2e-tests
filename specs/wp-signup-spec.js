@@ -1608,6 +1608,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			);
 		} );
 
+		step(
+			'Can then see the sign up processing page which will finish automatically move along',
+			async function() {
+				return await new SignUpStep( driver ).continueAlong( userName, passwordForTestAccounts );
+			}
+		);
+
 		step( 'Can then see the site importer pane and preview site to be imported', async function() {
 			const importPage = await ImportPage.Expect( driver );
 
