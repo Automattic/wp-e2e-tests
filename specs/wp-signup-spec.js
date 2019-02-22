@@ -1656,7 +1656,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		before( async function() {
 			await driverManager.ensureNotLoggedIn( driver );
 			undo = await overrideABTest( 'improvedOnboarding_20190214', 'onboarding' );
-
 		} );
 
 		step( 'Can visit the start page', async function() {
