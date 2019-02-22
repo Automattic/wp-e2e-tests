@@ -74,7 +74,7 @@ before( async function() {
 	this.driver = driver = await driverManager.startBrowser();
 } );
 
-describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
+describe.only( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 	this.timeout( mochaTimeOut );
 
 	describe( 'Sign up for a free WordPress.com site from the Jetpack new site page, and log in via a magic link @parallel @email', function() {
@@ -1654,8 +1654,9 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let undo = null;
 
 		before( async function() {
-			undo = overrideABTest( 'improvedOnboarding_20190214', 'onboarding' );
-			return await driverManager.ensureNotLoggedIn( driver );
+			await driverManager.ensureNotLoggedIn( driver );
+			undo = await overrideABTest( 'improvedOnboarding_20190214', 'onboarding' );
+
 		} );
 
 		step( 'Can visit the start page', async function() {
@@ -1732,8 +1733,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let undo = null;
 
 		before( async function() {
-			undo = overrideABTest( 'improvedOnboarding_20190214', 'onboarding' );
 			await driverManager.ensureNotLoggedIn( driver );
+			undo = await overrideABTest( 'improvedOnboarding_20190214', 'onboarding' );
 		} );
 
 		step( 'Can enter the account flow and see the account details page', async function() {
