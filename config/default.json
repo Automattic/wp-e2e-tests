@@ -94,7 +94,7 @@
 		[ "showConciergeSessionUpsell_20181214", "skip" ],
 		[ "showConciergeSessionUpsellNonGSuite_20190104", "skip" ],
 		[ "improvedOnboarding_20190214", "main" ],
-		[ "skipSiteInformation_20190130", "hide" ],
+		[ "skipBusinessInformation_20190130", "hide" ],
 		[ "twoYearPlanByDefault_20190207", "originalFlavor" ]
 	]
 }
