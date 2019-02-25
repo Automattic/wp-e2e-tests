@@ -1642,8 +1642,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let undo = null;
 
 		before( async function() {
-			undo = overrideABTest( 'improvedOnboarding_20190214', 'onboarding' );
-			return await driverManager.ensureNotLoggedIn( driver );
+			await driverManager.ensureNotLoggedIn( driver );
+			undo = await overrideABTest( 'improvedOnboarding_20190214', 'onboarding' );
 		} );
 
 		step( 'Can visit the start page', async function() {
@@ -1720,8 +1720,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let undo = null;
 
 		before( async function() {
-			undo = overrideABTest( 'improvedOnboarding_20190214', 'onboarding' );
 			await driverManager.ensureNotLoggedIn( driver );
+			undo = await overrideABTest( 'improvedOnboarding_20190214', 'onboarding' );
 		} );
 
 		step( 'Can enter the account flow and see the account details page', async function() {
