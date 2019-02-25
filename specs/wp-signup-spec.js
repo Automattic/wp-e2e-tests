@@ -816,12 +816,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					true,
 					"The cart doesn't contain the .live domain product"
 				);
-				const privateWhoISInCart = await securePaymentComponent.containsPrivateWhois();
-				assert.strictEqual(
-					privateWhoISInCart,
-					true,
-					"The cart doesn't contain the private domain product"
-				);
 				const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
 				return assert.strictEqual(
 					numberOfProductsInCart,
@@ -1024,12 +1018,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					domainInCart,
 					true,
 					"The cart doesn't contain the .live domain product"
-				);
-				const privateWhoISInCart = await securePaymentComponent.containsPrivateWhois();
-				assert.strictEqual(
-					privateWhoISInCart,
-					true,
-					"The cart doesn't contain the private domain product"
 				);
 				const businessPlanInCart = await securePaymentComponent.containsBusinessPlan();
 				assert.strictEqual(
