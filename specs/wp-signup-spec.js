@@ -816,12 +816,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					true,
 					"The cart doesn't contain the .live domain product"
 				);
-				const privateWhoISInCart = await securePaymentComponent.containsPrivateWhois();
-				assert.strictEqual(
-					privateWhoISInCart,
-					true,
-					"The cart doesn't contain the private domain product"
-				);
 				const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
 				return assert.strictEqual(
 					numberOfProductsInCart,
@@ -1024,12 +1018,6 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 					domainInCart,
 					true,
 					"The cart doesn't contain the .live domain product"
-				);
-				const privateWhoISInCart = await securePaymentComponent.containsPrivateWhois();
-				assert.strictEqual(
-					privateWhoISInCart,
-					true,
-					"The cart doesn't contain the private domain product"
 				);
 				const businessPlanInCart = await securePaymentComponent.containsBusinessPlan();
 				assert.strictEqual(
@@ -1608,6 +1596,13 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			);
 		} );
 
+		step(
+			'Can then see the sign up processing page which will finish automatically move along',
+			async function() {
+				return await new SignUpStep( driver ).continueAlong( userName, passwordForTestAccounts );
+			}
+		);
+
 		step( 'Can then see the site importer pane and preview site to be imported', async function() {
 			const importPage = await ImportPage.Expect( driver );
 
@@ -1647,8 +1642,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let undo = null;
 
 		before( async function() {
-			undo = overrideABTest( 'improvedOnboarding_20190214', 'onboarding' );
-			return await driverManager.ensureNotLoggedIn( driver );
+			await driverManager.ensureNotLoggedIn( driver );
+			undo = await overrideABTest( 'improvedOnboarding_20190214', 'onboarding' );
 		} );
 
 		step( 'Can visit the start page', async function() {
@@ -1725,8 +1720,8 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		let undo = null;
 
 		before( async function() {
-			undo = overrideABTest( 'improvedOnboarding_20190214', 'onboarding' );
 			await driverManager.ensureNotLoggedIn( driver );
+			undo = await overrideABTest( 'improvedOnboarding_20190214', 'onboarding' );
 		} );
 
 		step( 'Can enter the account flow and see the account details page', async function() {
