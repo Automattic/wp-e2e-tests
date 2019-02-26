@@ -78,9 +78,7 @@ describe( `[${ host }] Comments: (${ screenSize })`, function() {
 		} );
 	} );
 
-	xdescribe( 'Commenting and replying to newly created post in Gutenberg Editor: @parallel', function() {
-		// disabled while URL issue is not solved
-		// https://github.com/Automattic/wp-calypso/pull/30307#issuecomment-458365266
+	describe( 'Commenting and replying to newly created post in Gutenberg Editor: @parallel', function() {
 		step( 'Can login and create a new post', async function() {
 			this.loginFlow = new LoginFlow( driver, 'gutenbergSimpleSiteUser' );
 			await this.loginFlow.loginAndStartNewPost( null, true );
