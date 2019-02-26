@@ -183,9 +183,6 @@ describe( `[${ host }] Calypso Gutenberg Editor: Pages (${ screenSize })`, funct
 	} );
 
 	describe( 'Private Pages: @parallel', function() {
-		// same as Private posts
-		// disabled while URL issue is not solved
-		// https://github.com/Automattic/wp-calypso/pull/30307#issuecomment-458365266
 		let pageTitle = dataHelper.randomPhrase();
 		let pageQuote =
 			'Few people know how to take a walk. The qualifications are endurance, plain clothes, old shoes, an eye for nature, good humor, vast curiosity, good speech, good silence and nothing too much.\n— Ralph Waldo Emerson';
@@ -256,9 +253,6 @@ describe( `[${ host }] Calypso Gutenberg Editor: Pages (${ screenSize })`, funct
 	} );
 
 	describe( 'Password Protected Pages: @parallel', function() {
-		// Same as Password protected posts
-		// disabled while URL issue is not solved
-		// https://github.com/Automattic/wp-calypso/pull/30307#issuecomment-458365266
 		const pageTitle = dataHelper.randomPhrase();
 		const pageQuote =
 			'If you don’t like something, change it. If you can’t change it, change the way you think about it.\n— Mary Engelbreit';
@@ -521,9 +515,6 @@ describe( `[${ host }] Calypso Gutenberg Editor: Pages (${ screenSize })`, funct
 	} );
 
 	describe( 'Insert a payment button into a page: @parallel', function() {
-		// same as Payment button in Posts
-		// disabled while URL issue is not solved
-		// https://github.com/Automattic/wp-calypso/pull/30307#issuecomment-458365266
 		const paymentButtonDetails = {
 			title: 'Button',
 			description: 'Description',

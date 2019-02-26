@@ -385,8 +385,6 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 	} );
 
 	describe( 'Private Posts: @parallel', function() {
-		// disabled while URL issue is not solved
-		// https://github.com/Automattic/wp-calypso/pull/30307#issuecomment-458365266
 		describe( 'Publish a Private Post', function() {
 			const blogPostTitle = dataHelper.randomPhrase();
 			const blogPostQuote =
@@ -509,8 +507,6 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 	} );
 
 	describe( 'Password Protected Posts: @parallel', function() {
-		// disabled while URL issue is not solved
-		// https://github.com/Automattic/wp-calypso/pull/30307#issuecomment-458365266
 		describe( 'Publish a Password Protected Post', function() {
 			let blogPostTitle = dataHelper.randomPhrase();
 			let blogPostQuote =
@@ -965,8 +961,6 @@ describe( `[${ host }] Calypso Gutenberg Editor: Posts (${ screenSize })`, funct
 	} );
 
 	describe( 'Insert a payment button: @parallel', function() {
-		// disabled while URL issue is not solved
-		// https://github.com/Automattic/wp-calypso/pull/30307#issuecomment-458365266
 		const paymentButtonDetails = {
 			title: 'Button',
 			description: 'Description',
