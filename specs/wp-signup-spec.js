@@ -722,7 +722,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a domain only purchase coming in from wordpress.com/domains in EUR currency @parallel', function() {
+	xdescribe( 'Sign up for a domain only purchase coming in from wordpress.com/domains in EUR currency @parallel', function() {
 		const siteName = dataHelper.getNewBlogName();
 		const expectedDomainName = `${ siteName }.live`;
 		const emailAddress = dataHelper.getEmailAddress( siteName, signupInboxId );
@@ -819,7 +819,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 				const numberOfProductsInCart = await securePaymentComponent.numberOfProductsInCart();
 				return assert.strictEqual(
 					numberOfProductsInCart,
-					2,
+					1,
 					"The cart doesn't contain the expected number of products"
 				);
 			}
