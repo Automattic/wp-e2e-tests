@@ -1272,7 +1272,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 
 	describe( 'Sign up for free subdomain site @parallel', function() {
 		const blogName = dataHelper.getNewBlogName();
-		const expectedDomainName = `${ blogName }.art.blog`;
+		const expectedDomainName = `${ blogName }.school.blog`;
 
 		before( async function() {
 			if ( process.env.SKIP_DOMAIN_TESTS === 'true' ) {
@@ -1294,7 +1294,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 				StartPage.getStartURL( {
 					culture: locale,
 					flow: 'subdomain',
-					query: 'vertical=a8c.1',
+					query: 'vertical=Education',
 				} )
 			);
 			const designTypePage = await DesignTypePage.Expect( driver );
@@ -1310,7 +1310,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		);
 
 		step(
-			'Can then see the domains page, and Can search for a blog name, can see and select a free .art.blog address in the results',
+			'Can then see the domains page, and Can search for a blog name, can see and select a free .school.blog address in the results',
 			async function() {
 				const findADomainComponent = await FindADomainComponent.Expect( driver );
 				await findADomainComponent.searchForBlogNameAndWaitForResults( blogName );
