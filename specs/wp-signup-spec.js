@@ -1708,6 +1708,9 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			}
 		);
 
+		if ( screenSize === 'mobile' ) {
+			sharedSteps.canSeeTheInlineHelpCongratulations();
+		}
 		sharedSteps.canSeeTheSitePreview();
 
 		after( 'Can delete our newly created account', async function() {
