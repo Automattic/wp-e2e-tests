@@ -1635,7 +1635,7 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 		} );
 	} );
 
-	describe( 'Sign up for a free WordPress.com site via the new onboarding flow', () => {
+	describe( 'Sign up for a free WordPress.com site via the new onboarding flow @parallel', () => {
 		const userName = dataHelper.getNewBlogName();
 		const blogName = dataHelper.getNewBlogName();
 		const emailAddress = dataHelper.getEmailAddress( blogName, signupInboxId );
@@ -1701,6 +1701,14 @@ describe( `[${ host }] Sign Up  (${ screenSize }, ${ locale })`, function() {
 			return await pickAPlanPage.selectFreePlan();
 		} );
 
+		step(
+			'Can then see the sign up processing page which will finish automatically move along',
+			async function() {
+				return await new SignUpStep( driver ).continueAlong( blogName, passwordForTestAccounts );
+			}
+		);
+
+		sharedSteps.canSeeTheInlineHelpCongratulations();
 		sharedSteps.canSeeTheSitePreview();
 
 		after( 'Can delete our newly created account', async function() {
