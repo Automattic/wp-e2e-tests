@@ -75,6 +75,7 @@
 		"builderReferralThemesBanner",
 		"domainSearchButtonStyles",
 		"twoYearPlanByDefault",
+		"conciergeQuickstartSession",
 		"pluginFeaturedTitle",
 	  	"builderReferralHelpPopover",
 		"checklistSiteLogo"
@@ -94,6 +95,7 @@
 		[ "showConciergeSessionUpsellNonGSuite_20190104", "skip" ],
 		[ "improvedOnboarding_20190214", "main" ],
 		[ "twoYearPlanByDefault_20190207", "originalFlavor" ],
+		[ "conciergeQuickstartSession_20190409", "controlSupportSession" ],
 	  	[ "builderReferralHelpPopover_20190227", "original" ],
 		[ "checklistSiteLogo_20190305", "icon" ]
 	]
