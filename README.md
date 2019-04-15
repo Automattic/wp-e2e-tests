@@ -1,8 +1,9 @@
 # WordPress.com End to End Tests
 
-Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Automattic/wp-calypso) client and WordPress.com in general.
 
-[![Circle CI](https://circleci.com/gh/Automattic/wp-e2e-tests/tree/master.svg?style=svg)](https://circleci.com/gh/Automattic/wp-e2e-tests/tree/master)
+## NOTE: This repo has been merged in to [wp-calypso](https://github.com/Automattic/wp-calypso) and the tests can be found in the `/test/e2e` directory.
+
+Automated end-to-end acceptance tests for the [wp-calypso](https://github.com/Automattic/wp-calypso) client and WordPress.com in general.
 
 ## Table of contents
 
