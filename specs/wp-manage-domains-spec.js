@@ -90,7 +90,15 @@ describe( `[${ host }] Managing Domains: (${ screenSize })`, function() {
 
 		step( 'Can select the .com search result and decline Google Apps for email', async function() {
 			const findADomainComponent = await FindADomainComponent.Expect( driver );
-			await findADomainComponent.selectDomainAddress( expectedDomainName );
+			if ( ! await findADomainComponent.selectDomainAddress( expectedDomainName ) ) {
+				await SlackNotifier.warn(
+					'SKIPPING: .com domain is not present. Check if .com domains are under maintenance ',
+					{
+						suppressDuplicateMessages: true,
+					}
+				);
+				return this.skip();
+			}
 			return await findADomainComponent.declineGoogleApps();
 		} );
 
@@ -181,7 +189,13 @@ describe( `[${ host }] Managing Domains: (${ screenSize })`, function() {
 
 		step( 'Can add domain to the cart', async function() {
 			const enterADomainComponent = await EnterADomainComponent.Expect( driver );
-			return await enterADomainComponent.clickonAddButtonToAddDomainToTheCart();
+			await enterADomainComponent.clickonAddButtonToAddDomainToTheCart();
+			if ( await enterADomainComponent.isComMaintenanceActive() ) {
+				await SlackNotifier.warn( 'SKIPPING: .com domains are under maintenance ', {
+					suppressDuplicateMessages: true,
+				} );
+				return this.skip();
+			}
 		} );
 
 		step( 'Can see checkout page', async function() {
@@ -264,7 +278,13 @@ describe( `[${ host }] Managing Domains: (${ screenSize })`, function() {
 
 		step( 'Click transfer domain button', async function() {
 			const transferDomainPage = await TransferDomainPage.Expect( driver );
-			return await transferDomainPage.clickTransferDomain();
+			await transferDomainPage.clickTransferDomain();
+			if ( await transferDomainPage.isComMaintenanceActive() ) {
+				await SlackNotifier.warn( 'SKIPPING: .com domains are under maintenance ', {
+					suppressDuplicateMessages: true,
+				} );
+				return this.skip();
+			}
 		} );
 
 		step( 'Can see the transfer precheck page', async function() {
